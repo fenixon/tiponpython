@@ -1,4 +1,4 @@
-Esta es una aplicación de escritorio cuyo desarrollo se lleva a cabo por los alumnos del Tecnólogo en Informática de Paysandú generación 2009.
+Esta es una aplicaci&oacute;n de escritorio cuyo desarrollo se lleva a cabo por los alumnos del Tecn&oacute;logo en Inform&aacute;tica de Paysand&uacute; generaci&oacute;n 2009.
 
-La aplicación se está haciendo en conjunto con Regional Norte, quienes darán uso a la aplicación una vez finalizada.
+La aplicaci&oacute;n se est&aacute; haciendo en conjunto con Regional Norte, quienes dar&aacute;n uso a la aplicaci&oacute;n una vez finalizada.
 

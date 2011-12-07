@@ -20,15 +20,18 @@ class Ui_frmNuevoProyecto(object):
         frmNuevoProyecto.setObjectName(_fromUtf8("frmNuevoProyecto"))
         frmNuevoProyecto.resize(366, 193)
         frmNuevoProyecto.setWindowTitle(QtGui.QApplication.translate("frmNuevoProyecto", "Crear un nuevo proyecto", None, QtGui.QApplication.UnicodeUTF8))
+		
         self.btnNuevo = QtGui.QPushButton(frmNuevoProyecto)
         self.btnNuevo.setGeometry(QtCore.QRect(240, 150, 99, 23))
         self.btnNuevo.setText(QtGui.QApplication.translate("frmNuevoProyecto", "Nuevo", None, QtGui.QApplication.UnicodeUTF8))
         self.btnNuevo.setObjectName(_fromUtf8("btnNuevo"))
-        self.btnCancelar = QtGui.QPushButton(frmNuevoProyecto)
+        
+		self.btnCancelar = QtGui.QPushButton(frmNuevoProyecto)
         self.btnCancelar.setGeometry(QtCore.QRect(120, 150, 99, 23))
         self.btnCancelar.setText(QtGui.QApplication.translate("frmNuevoProyecto", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
         self.btnCancelar.setObjectName(_fromUtf8("btnCancelar"))
-        self.cmbMetodoSolucion = QtGui.QComboBox(frmNuevoProyecto)
+        
+		self.cmbMetodoSolucion = QtGui.QComboBox(frmNuevoProyecto)
         self.cmbMetodoSolucion.setGeometry(QtCore.QRect(120, 10, 221, 23))
         self.cmbMetodoSolucion.setAutoFillBackground(False)
         self.cmbMetodoSolucion.setStyleSheet(_fromUtf8(""))
@@ -37,20 +40,22 @@ class Ui_frmNuevoProyecto(object):
         
         metodos = ['Metodito Primero', 'Metodito Segundo', 'Metodito Tercero']
         self.cmbMetodoSolucion.addItems(metodos)
-        
-        
+                
         self.txtParam1 = QtGui.QLineEdit(frmNuevoProyecto)
         self.txtParam1.setGeometry(QtCore.QRect(120, 50, 113, 22))
         self.txtParam1.setText(QtGui.QApplication.translate("frmNuevoProyecto", "1", None, QtGui.QApplication.UnicodeUTF8))
         self.txtParam1.setObjectName(_fromUtf8("txtParam1"))
-        self.txtParam2 = QtGui.QLineEdit(frmNuevoProyecto)
+        
+		self.txtParam2 = QtGui.QLineEdit(frmNuevoProyecto)
         self.txtParam2.setGeometry(QtCore.QRect(120, 100, 113, 22))
         self.txtParam2.setText(QtGui.QApplication.translate("frmNuevoProyecto", "2", None, QtGui.QApplication.UnicodeUTF8))
         self.txtParam2.setObjectName(_fromUtf8("txtParam2"))
-
         self.retranslateUi(frmNuevoProyecto)
+		
         QtCore.QObject.connect(self.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Nuevo)
+		
         QtCore.QObject.connect(self.btnCancelar, QtCore.SIGNAL(_fromUtf8("clicked()")), frmNuevoProyecto.close)
+		
         QtCore.QMetaObject.connectSlotsByName(frmNuevoProyecto)
         
     def Nuevo(self):

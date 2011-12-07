@@ -68,6 +68,9 @@ class Ui_MainWindow(object):
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
         ui.setupUi(frmNuevoProyecto)
+
+        
+        
         frmNuevoProyecto.exec_()
      
 

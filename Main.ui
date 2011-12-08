@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuInicio">
@@ -37,7 +37,22 @@
     </property>
     <addaction name="actionAcerca_de"/>
    </widget>
+   <widget class="QMenu" name="menuDatos">
+    <property name="title">
+     <string>Datos</string>
+    </property>
+    <widget class="QMenu" name="menuCaudal_de_bombeo">
+     <property name="title">
+      <string>Caudal de bombeo</string>
+     </property>
+     <addaction name="actionIngresar"/>
+     <addaction name="actionImportar"/>
+    </widget>
+    <addaction name="menuCaudal_de_bombeo"/>
+    <addaction name="actionObservaciones"/>
+   </widget>
    <addaction name="menuInicio"/>
+   <addaction name="menuDatos"/>
    <addaction name="menuAyuda"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -59,6 +74,21 @@
   <action name="actionSalir">
    <property name="text">
     <string>Salir</string>
+   </property>
+  </action>
+  <action name="actionObservaciones">
+   <property name="text">
+    <string>Observaciones</string>
+   </property>
+  </action>
+  <action name="actionImportar">
+   <property name="text">
+    <string>Importar</string>
+   </property>
+  </action>
+  <action name="actionIngresar">
+   <property name="text">
+    <string>Ingresar</string>
    </property>
   </action>
  </widget>

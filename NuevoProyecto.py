@@ -60,6 +60,9 @@ class Ui_frmNuevoProyecto(object):
         QtCore.QObject.connect(self.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Nuevo)
                 
         QtCore.QObject.connect(self.btnCancelar, QtCore.SIGNAL(_fromUtf8("clicked()")), frmNuevoProyecto.close)
+
+        #Conectamos la señal de clickeo de nuevo, con la señal de clickeo de cancelar
+        QtCore.QObject.connect(self.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.btnCancelar, QtCore.SIGNAL(_fromUtf8("clicked()")))
                 
         QtCore.QMetaObject.connectSlotsByName(frmNuevoProyecto)
         
@@ -69,7 +72,7 @@ class Ui_frmNuevoProyecto(object):
         print self.nuevoProyecto.metodoSolucion.nombre
         print self.nuevoProyecto.metodoSolucion.param1
         print self.nuevoProyecto.metodoSolucion.param2
-        
+                
 
     def retranslateUi(self, frmNuevoProyecto):
         pass

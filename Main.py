@@ -67,12 +67,17 @@ class Ui_MainWindow(object):
     def ventanaNuevoProyecto(self):
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
-        ui.setupUi(frmNuevoProyecto)
+        ui.setupUi(frmNuevoProyecto)       
 
-        
-        
+        #Vamos a intentar conectar la señal del dialogo
+        QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.crearDominio)
+
         frmNuevoProyecto.exec_()
-     
+
+       
+
+    def crearDominio(self):
+        print "hola boton nuevo"
 
       
 

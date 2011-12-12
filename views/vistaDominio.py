@@ -84,7 +84,7 @@ class box(QtGui.QGroupBox):
 
     def dropEvent(self, e):
         position = e.pos()
-        #self.button.move(position)
+
 
         boton = QtGui.QPushButton("hola", self)
         boton.setGeometry(QtCore.QRect(position.x(), position.y(), 50, 50))
@@ -101,18 +101,21 @@ class box(QtGui.QGroupBox):
 
 class Ui_Form(object):
     def setupUi(self, Form):
+        
+        """
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(552, 460)
         Form.setWindowTitle(QtGui.QApplication.translate("Form", "Form", None, QtGui.QApplication.UnicodeUTF8))
         Form.setStyleSheet(_fromUtf8("QtGui.QPushButton{margin: 8px;}"))
-         
+        """
+        
         self.frame = QtGui.QFrame(Form)
         self.frame.setGeometry(QtCore.QRect(100, 40, 471, 351))
         self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
         self.frame.setObjectName(_fromUtf8("frame"))
-
+        self.frame.setEnabled(True)
         #Caja de elementos para el dominio
         self.Dominio = box(self.frame)
 
@@ -127,9 +130,9 @@ class Ui_Form(object):
 
  
             
-        self.pozo = boton(QtGui.QIcon("../content/images/DotIcon.png"), "", self.groupBox, "pozo")
+        self.pozo = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self.groupBox, "pozo")
 
-        self.barrera = boton(QtGui.QIcon("../content/images/barrera.png"), "", self.groupBox, "barrera")
+        self.barrera = boton(QtGui.QIcon("content/images/barrera.png"), "", self.groupBox, "barrera")
 
         self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
 
@@ -193,9 +196,13 @@ class Ui_Form(object):
         self.spinBox.setProperty("value", 1)
         self.spinBox.setObjectName(_fromUtf8("spinBox"))
 
+        """
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
+        """
 
+        self.frame.show()
+        
     def retranslateUi(self, Form):
         pass
 

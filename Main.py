@@ -12,6 +12,7 @@ import sys
 import NuevoProyecto
 sys.path.append("views") 
 import importarCaudal
+from views.vistaDominio import Ui_Form
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -23,6 +24,11 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Tipon Python", None, QtGui.QApplication.UnicodeUTF8))
+
+        #Adherimos la vista del dominio
+        self.ui = Ui_Form()
+        self.ui.setupUi(MainWindow)
+    
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         MainWindow.setCentralWidget(self.centralwidget)

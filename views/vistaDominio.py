@@ -6,12 +6,105 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
+
+class boton(QtGui.QPushButton):
+
+    
+    def __init__(self, icono, texto, padre, tooltip):
+        super(boton, self).__init__(icono, texto, padre)
+        self.init(tooltip)
+        self.tooltip = ""
+
+    def init(self, tooltip):
+        
+        self.tooltip = tooltip
+
+        self.setGeometry(QtCore.QRect(50, 20, 41, 23))
+        self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+        self.setMouseTracking(True)
+        self.setAcceptDrops(True)
+        self.setToolTip(QtGui.QApplication.translate("Form", tooltip, None, QtGui.QApplication.UnicodeUTF8))
+        self.setStyleSheet(_fromUtf8("margin 3px;\n"
+                                    "border-top-color: rgb(255, 0, 0);\n"
+                                    "border-left-color: rgb(255, 0, 0);\n"
+                                    "border-bottom-color: rgb(255, 0, 0);\n"
+                                    "border-right-color: rgb(255, 0, 0);"))
+
+        #self.setText(QtGui.QApplication.translate("Form", "pozo", None, QtGui.QApplication.UnicodeUTF8))
+
+        #self.setObjectName(_fromUtf8("pushButton"))
+
+        
+    def mouseMoveEvent(self, e):
+                
+        mimedata = QtCore.QMimeData()
+                               
+        drag = QtGui.QDrag(self)
+                                
+        pixmap = QtGui.QPixmap("../content/images/DotIcon.png")
+                                
+        drag.setPixmap(pixmap)
+        drag.setMimeData(mimedata)
+        drag.setHotSpot(e.pos() - self.rect().topLeft())
+        dropAction = drag.start(QtCore.Qt.MoveAction)
+    
+#Definimos clase que agrupa elementos, junto con la sobreescritura
+#de los eventos dragEnterEvent y dropEvent para manejar arrastre y tirada
+#sobre el elemento
+        
+class box(QtGui.QGroupBox):
+    def __init__(self, padre):
+        super(box, self).__init__(padre)
+        self.init()
+
+    def init(self):
+
+        self.setAcceptDrops(True)
+        
+        self.setGeometry(QtCore.QRect(20, 27, 231, 271))
+
+        
+        #self.setCursor(QtGui.QCursor(QtCore.Qt.BlankCursor))
+
+        self.setStyleSheet(_fromUtf8("color: rgb(85, 170, 0);\n"
+                                    "background-color: rgb(0, 255, 127);"))
+               
+        self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
+
+        self.setObjectName(_fromUtf8("Dominio"))
+
+        self.botones = []
+        
+    def dragEnterEvent(self, e):
+
+                
+        e.accept()
+
+                
+
+    def dropEvent(self, e):
+        position = e.pos()
+        #self.button.move(position)
+
+        boton = QtGui.QPushButton("hola", self)
+        boton.setGeometry(QtCore.QRect(position.x(), position.y(), 50, 50))
+
+        self.botones.append(boton)
+
+        boton.show()
+        
+        print len(self.botones)
+
+        e.setDropAction(QtCore.Qt.MoveAction)
+        e.accept()
+        
+
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName(_fromUtf8("Form"))
         Form.resize(552, 460)
         Form.setWindowTitle(QtGui.QApplication.translate("Form", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        Form.setStyleSheet(_fromUtf8("QtGui.QPushButton"))
+        Form.setStyleSheet(_fromUtf8("QtGui.QPushButton{margin: 8px;}"))
          
         self.frame = QtGui.QFrame(Form)
         self.frame.setGeometry(QtCore.QRect(100, 40, 471, 351))
@@ -19,44 +112,27 @@ class Ui_Form(object):
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
         self.frame.setObjectName(_fromUtf8("frame"))
-        self.Dominio = QtGui.QGroupBox(self.frame)
-        self.Dominio.setGeometry(QtCore.QRect(20, 27, 231, 271))
-        self.Dominio.setCursor(QtGui.QCursor(QtCore.Qt.BlankCursor))
-        self.Dominio.setStyleSheet(_fromUtf8("color: rgb(85, 170, 0);\n"
-                                    "background-color: rgb(0, 255, 127);"))
-        self.Dominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
-        self.Dominio.setObjectName(_fromUtf8("Dominio"))
+
+        #Caja de elementos para el dominio
+        self.Dominio = box(self.frame)
+
+        
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
+
         self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.groupBox.setStyleSheet(_fromUtf8("border-color: rgb(255, 85, 0);\n"))
         self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
-        self.pushButton = QtGui.QPushButton(self.groupBox)
-        self.pushButton.setGeometry(QtCore.QRect(50, 20, 41, 23))
-        self.pushButton.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
-        self.pushButton.setMouseTracking(True)
-        self.pushButton.setAcceptDrops(True)
-        self.pushButton.setToolTip(QtGui.QApplication.translate("Form", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setStyleSheet(_fromUtf8("margin 3px;\n"
-                                        "border-top-color: rgb(255, 0, 0);\n"
-                                        "border-left-color: rgb(255, 0, 0);\n"
-                                        "border-bottom-color: rgb(255, 0, 0);\n"
-                                        "border-right-color: rgb(255, 0, 0);"))
-        self.pushButton.setText(QtGui.QApplication.translate("Form", "pozo", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.pushButton_2 = QtGui.QPushButton(self.groupBox)
-        self.pushButton_2.setGeometry(QtCore.QRect(50, 50, 41, 20))
-        self.pushButton_2.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
-        self.pushButton_2.setMouseTracking(True)
-        self.pushButton_2.setAcceptDrops(True)
-        self.pushButton_2.setToolTip(QtGui.QApplication.translate("Form", "Barrera ", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_2.setStyleSheet(_fromUtf8("border-top-color: rgb(255, 0, 0);\n"
-                                        "border-left-color: rgb(255, 0, 0);\n"
-                                        "border-bottom-color: rgb(255, 0, 0);\n"
-                                        "border-right-color: rgb(255, 0, 0);"))
-        self.pushButton_2.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
+
+ 
+            
+        self.pozo = boton(QtGui.QIcon("../content/images/DotIcon.png"), "", self.groupBox, "pozo")
+
+        self.barrera = boton(QtGui.QIcon("../content/images/barrera.png"), "", self.groupBox, "barrera")
+
+        self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
+
         self.groupBox_2 = QtGui.QGroupBox(self.frame)
         self.groupBox_2.setGeometry(QtCore.QRect(260, 110, 151, 181))
         self.groupBox_2.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 255);"))

@@ -10,8 +10,10 @@
 from PyQt4 import QtCore, QtGui
 import sys
 import NuevoProyecto
-sys.path.append("views") 
+sys.path.append("views")
+sys.path.append("models") 
 import importarCaudal
+import controlador
 from vistaDominio import  *
 
 try:
@@ -22,6 +24,10 @@ except AttributeError:
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
+        ##Se instancia el controlador        
+        global ContEnsayo
+        ContEnsayo=controlador.Proyecto()
+        
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Tipon Python", None, QtGui.QApplication.UnicodeUTF8))
@@ -68,24 +74,38 @@ class Ui_MainWindow(object):
         self.actionIngresar = QtGui.QAction(MainWindow)
         self.actionIngresar.setText(QtGui.QApplication.translate("MainWindow", "Ingresar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionIngresar.setObjectName(_fromUtf8("actionIngresar"))
+        
+        self.actionVerBombeo = QtGui.QAction(MainWindow)
+        self.actionVerBombeo.setText(QtGui.QApplication.translate("MainWindow", "Ver", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionVerBombeo.setObjectName(_fromUtf8("actionVerBombeo"))
+
+        
         self.menuInicio.addAction(self.actionNuevo_Proyecto)
         self.menuInicio.addAction(self.actionCerrar)
         self.menuInicio.addAction(self.actionSalir)
         self.menuAyuda.addAction(self.actionAcerca_de)
+        
         self.menuCaudal_de_bombeo.addAction(self.actionIngresar)
         self.menuCaudal_de_bombeo.addAction(self.actionImportar)
+        self.menuCaudal_de_bombeo.addAction(self.actionVerBombeo)
+
+        
         self.menuDatos.addAction(self.menuCaudal_de_bombeo.menuAction())
         self.menuDatos.addAction(self.actionObservaciones)
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
         self.menubar.addAction(self.menuAyuda.menuAction())
+        
 
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionSalir, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QObject.connect(self.actionNuevo_Proyecto, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaNuevoProyecto)
         QtCore.QObject.connect(self.actionImportar, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaImportarProyecto)
+        QtCore.QObject.connect(self.actionVerBombeo, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerBombeo) 
         
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+        
 
         #Adherimos la vista del dominio
         self.ui = Ui_Form()
@@ -96,6 +116,8 @@ class Ui_MainWindow(object):
         pass
 
     def ventanaNuevoProyecto(self):
+        global ContEnsayo
+        print "Verficiar el utlimo id" + (str(ContEnsayo.traerid()))
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
         ui.setupUi(frmNuevoProyecto)
@@ -110,14 +132,26 @@ class Ui_MainWindow(object):
     def crearDominio():
         print "hola"     
 
+        ui.setupUi(frmNuevoProyecto)          
+        frmNuevoProyecto.exec_()
 
     def ventanaImportarProyecto(self):
-         
-        frmImpProyecto = QtGui.QDialog()
+        global ContEnsayo
+        frmImpCaudal = QtGui.QDialog()
         ui = importarCaudal.Ui_Dialog()
-        ui.setupUi(frmImpProyecto)  
-        
-        frmImpProyecto.exec_()
+        ## Se envia al nuevo formulario el controlador instanciado         
+        ui.setupUi(frmImpCaudal, ContEnsayo)  
+        self.importar=frmImpCaudal
+        frmImpCaudal.exec_()
+
+    def ventanaVerBombeo(self):
+        global ContEnsayo
+        frmVerBombeo = QtGui.QDialog()
+        ui = importarCaudal.Ui_Dialog()
+        ## Se envia al nuevo formulario el controlador instanciado         
+        ui.setupUi(frmVerBombeo, ContEnsayo)  
+        self.importar=frmVerBombeo
+        frmVerBombeo.exec_()   
         
       
 if __name__ == "__main__":

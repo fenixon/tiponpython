@@ -1,9 +1,9 @@
 class observacionesensayo(object):
-    def __init__(self,observaciones):
+    def __init__(self,observaciones, ido):
         self.__observaciones=observaciones
-        self.id=self.generarId()
+        self.id=ido
+##        self.id=self.generarId()
 
-    def generarId():
+##    def generarId(self):
         #a implementar un mecanismo para generar id
-        return 1
-        
+##        return 1        

@@ -68,11 +68,15 @@ class Ui_MainWindow(object):
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
         ui.setupUi(frmNuevoProyecto)
-
         
-        
+                
         frmNuevoProyecto.exec_()
-     
+
+        QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.crearDominio)
+        
+
+    def crearDominio():
+        print "hola"     
 
       
 

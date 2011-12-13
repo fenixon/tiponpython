@@ -19,7 +19,7 @@ class Ui_frmNuevoProyecto(object):
     def setupUi(self, frmNuevoProyecto):
 
         #Indicamos que el dialogo va a ser eliminado en la salida
-        frmNuevoProyecto.setAttribute(QtCore.Qt.WA_DeleteOnClose, on = True)
+        #frmNuevoProyecto.setAttribute(QtCore.Qt.WA_DeleteOnClose, on = True)
 
         
         frmNuevoProyecto.setObjectName(_fromUtf8("frmNuevoProyecto"))
@@ -60,6 +60,8 @@ class Ui_frmNuevoProyecto(object):
         QtCore.QObject.connect(self.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.Nuevo)
                 
         QtCore.QObject.connect(self.btnCancelar, QtCore.SIGNAL(_fromUtf8("clicked()")), frmNuevoProyecto.close)
+
+        QtCore.QObject.connect(self.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.btnCancelar,  QtCore.SIGNAL(_fromUtf8("clicked()")))
                 
         QtCore.QMetaObject.connectSlotsByName(frmNuevoProyecto)
         

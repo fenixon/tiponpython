@@ -6,19 +6,31 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
+class elementoDominio(object):
+
+    elementoDominio = 0
+    
+    def __init__(self):
+        super(elementoDominio, self).__init__()
+        
 
 class boton(QtGui.QPushButton):
 
+    global elementoDominio
     
     def __init__(self, icono, texto, padre, tooltip):
         super(boton, self).__init__(icono, texto, padre)
         self.init(tooltip)
-        self.tooltip = ""
+        
+         
 
     def init(self, tooltip):
         
+        self.setAcceptDrops(True)
+        
         self.tooltip = tooltip
 
+        
         self.setGeometry(QtCore.QRect(50, 20, 41, 23))
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         self.setMouseTracking(True)
@@ -30,29 +42,40 @@ class boton(QtGui.QPushButton):
                                     "border-bottom-color: rgb(255, 0, 0);\n"
                                     "border-right-color: rgb(255, 0, 0);"))
 
-        #self.setText(QtGui.QApplication.translate("Form", "pozo", None, QtGui.QApplication.UnicodeUTF8))
 
-        #self.setObjectName(_fromUtf8("pushButton"))
 
         
     def mouseMoveEvent(self, e):
-                
-        mimedata = QtCore.QMimeData()
-                               
+
+        
+        mimedata = QtCore.QMimeData()                             
         drag = QtGui.QDrag(self)
-                                
-        pixmap = QtGui.QPixmap("../content/images/DotIcon.png")
-                                
-        drag.setPixmap(pixmap)
+        if self.tooltip == "pozo":
+            pixmap = QtGui.QPixmap("content/images/DotIcon.png")                                    
+            drag.setPixmap(pixmap)
+            elementoDominio.elementoDominio = 0
+            
+        else:
+            pixmap = QtGui.QPixmap("content/images/barrera.png")                                    
+            drag.setPixmap(pixmap)
+            elementoDominio.elementoDominio = 1
+
+        
+
         drag.setMimeData(mimedata)
         drag.setHotSpot(e.pos() - self.rect().topLeft())
         dropAction = drag.start(QtCore.Qt.MoveAction)
+
+        
     
 #Definimos clase que agrupa elementos, junto con la sobreescritura
 #de los eventos dragEnterEvent y dropEvent para manejar arrastre y tirada
 #sobre el elemento
         
 class box(QtGui.QGroupBox):
+
+    global elementoDominio
+   
     def __init__(self, padre):
         super(box, self).__init__(padre)
         self.init()
@@ -63,8 +86,6 @@ class box(QtGui.QGroupBox):
         
         self.setGeometry(QtCore.QRect(20, 27, 231, 271))
 
-        
-        #self.setCursor(QtGui.QCursor(QtCore.Qt.BlankCursor))
 
         self.setStyleSheet(_fromUtf8("color: rgb(85, 170, 0);\n"
                                     "background-color: rgb(0, 255, 127);"))
@@ -74,27 +95,33 @@ class box(QtGui.QGroupBox):
         self.setObjectName(_fromUtf8("Dominio"))
 
         self.botones = []
-        
-    def dragEnterEvent(self, e):
 
-                
+        
+        
+    def dragEnterEvent(self, e):                
         e.accept()
 
                 
 
     def dropEvent(self, e):
+        
         position = e.pos()
 
-
-        boton = QtGui.QPushButton("hola", self)
-        boton.setGeometry(QtCore.QRect(position.x(), position.y(), 50, 50))
-
-        self.botones.append(boton)
-
-        boton.show()
+        b = ""
         
-        print len(self.botones)
+        print elementoDominio.elementoDominio
+                
+        if elementoDominio.elementoDominio == 0:        
+            b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
+        else:
+            b = boton(QtGui.QIcon("content/images/barrera.png"), "", self, "barrera")
+        
+        b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
+        
+        self.botones.append(b)
 
+        b.show()
+        
         e.setDropAction(QtCore.Qt.MoveAction)
         e.accept()
         
@@ -127,8 +154,6 @@ class Ui_Form(object):
         self.groupBox.setStyleSheet(_fromUtf8("border-color: rgb(255, 85, 0);\n"))
         self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
-
- 
             
         self.pozo = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self.groupBox, "pozo")
 

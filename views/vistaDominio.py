@@ -135,6 +135,9 @@ class boton(QtGui.QPushButton):
                                     "border-right-color: rgb(255, 0, 0);"))
 
     def mousePressEvent(self, e):
+        
+        self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+        
         if elementoDominio.reloj == False:
             reloj = QtCore.QTimer()
             reloj.singleShot(800, self.apagar)
@@ -142,8 +145,9 @@ class boton(QtGui.QPushButton):
             elementoDominio.reloj = True
         
     def mouseMoveEvent(self, e):        
-        if elementoDominio.reloj == True and elementoDominio.transicion == False:            
-            print "ahora pasop por el otro"        
+        if elementoDominio.reloj == True and elementoDominio.transicion == False:
+            self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+            print "Ahora paso por el otro"        
             mimedata = QtCore.QMimeData()                             
             drag = QtGui.QDrag(self)
 
@@ -185,7 +189,9 @@ class boton(QtGui.QPushButton):
     def mouseReleaseEvent(self, e):
         elementoDominio.transicion = False
         elementoDominio.reloj = False
-        
+        self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+
+
          
     
 #Definimos clase que agrupa elementos, junto con la sobreescritura
@@ -256,6 +262,9 @@ class box(QtGui.QGroupBox):
             for x in self.botones:
                 if x.id == elementoDominio.idElemento:
                     x.move(position)
+
+        elementoDominio.transicion = False
+        elementoDominio.reloj = False
 
         e.setDropAction(QtCore.Qt.MoveAction)
         e.accept()

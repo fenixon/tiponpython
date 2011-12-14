@@ -46,8 +46,7 @@ class boton(QtGui.QPushButton):
 
         
     def mouseMoveEvent(self, e):
-
-        
+            
         mimedata = QtCore.QMimeData()                             
         drag = QtGui.QDrag(self)
         if self.tooltip == "pozo":
@@ -75,6 +74,12 @@ class boton(QtGui.QPushButton):
 class box(QtGui.QGroupBox):
 
     global elementoDominio
+
+    global boton
+
+    id = 0
+
+    existe = False
    
     def __init__(self, padre):
         super(box, self).__init__(padre)
@@ -98,30 +103,38 @@ class box(QtGui.QGroupBox):
 
         
         
-    def dragEnterEvent(self, e):                
+    def dragEnterEvent(self, e):
         e.accept()
-
+        print "comenzamos"
                 
 
     def dropEvent(self, e):
-        
+
         position = e.pos()
 
-        b = ""
-        
-        print elementoDominio.elementoDominio
-                
-        if elementoDominio.elementoDominio == 0:        
-            b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
-        else:
-            b = boton(QtGui.QIcon("content/images/barrera.png"), "", self, "barrera")
-        
-        b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
-        
-        self.botones.append(b)
+        if self.existe == False:
+            
+            b = ""        
+                    
+            if elementoDominio.elementoDominio == 0:        
+                b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
+            else:
+                b = boton(QtGui.QIcon("content/images/barrera.png"), "", self, "barrera")
+            
+            b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
 
-        b.show()
-        
+            b.id = len(self.botones)
+                    
+            self.botones.append(b)
+
+            b.show()           
+
+            for x in self.botones:
+                print "Numero ", x.id
+
+        else:
+            print  "Ya existe"
+
         e.setDropAction(QtCore.Qt.MoveAction)
         e.accept()
         

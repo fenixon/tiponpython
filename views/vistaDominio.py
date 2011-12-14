@@ -9,6 +9,10 @@ except AttributeError:
 class elementoDominio(object):
 
     elementoDominio = 0
+
+    existe = False
+
+    idElemento = 1000
     
     def __init__(self):
         super(elementoDominio, self).__init__()
@@ -17,6 +21,8 @@ class elementoDominio(object):
 class boton(QtGui.QPushButton):
 
     global elementoDominio
+
+    id = 1000
     
     def __init__(self, icono, texto, padre, tooltip):
         super(boton, self).__init__(icono, texto, padre)
@@ -59,7 +65,12 @@ class boton(QtGui.QPushButton):
             drag.setPixmap(pixmap)
             elementoDominio.elementoDominio = 1
 
-        
+        if self.id == 1000:           
+            elementoDominio.existe = False
+        else:
+            elementoDominio.existe = True
+            
+        elementoDominio.idElemento = self.id
 
         drag.setMimeData(mimedata)
         drag.setHotSpot(e.pos() - self.rect().topLeft())
@@ -78,8 +89,6 @@ class box(QtGui.QGroupBox):
     global boton
 
     id = 0
-
-    existe = False
    
     def __init__(self, padre):
         super(box, self).__init__(padre)
@@ -112,7 +121,7 @@ class box(QtGui.QGroupBox):
 
         position = e.pos()
 
-        if self.existe == False:
+        if elementoDominio.existe == False:
             
             b = ""        
                     
@@ -133,7 +142,10 @@ class box(QtGui.QGroupBox):
                 print "Numero ", x.id
 
         else:
-            print  "Ya existe"
+            for x in self.botones:
+                print "Estamos moviendo ", x.id, elementoDominio.idElemento
+                if x.id == elementoDominio.idElemento:
+                    x.move(position)
 
         e.setDropAction(QtCore.Qt.MoveAction)
         e.accept()

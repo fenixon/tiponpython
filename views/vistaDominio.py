@@ -85,6 +85,8 @@ class elementoDominio(object):
     existe = False
 
     idElemento = 1000
+
+    listaBH = {}
     
     def __init__(self):
         super(elementoDominio, self).__init__()
@@ -102,7 +104,9 @@ class boton(QtGui.QPushButton):
     global elementoDominio
 
     id = 1000
-    
+
+    posicion = 0
+     
     def __init__(self, icono, texto, padre, tooltip):
         super(boton, self).__init__(icono, texto, padre)
         self.init(tooltip)
@@ -123,12 +127,10 @@ class boton(QtGui.QPushButton):
                                     "border-left-color: rgb(255, 0, 0);\n"
                                     "border-bottom-color: rgb(255, 0, 0);\n"
                                     "border-right-color: rgb(255, 0, 0);"))
-
-
-
+  
         
-    def mouseMoveEvent(self, e):
-        
+    def mousePressEvent(self, e):      
+        #print elementoDominio.listaBH['pozo'].y()        
         mimedata = QtCore.QMimeData()                             
         drag = QtGui.QDrag(self)
 
@@ -151,8 +153,9 @@ class boton(QtGui.QPushButton):
         # se evalua si el elemento es nuevo o ya existe en el dominio.
         #dependiendo de la evaluacion el atrinuto existe sera verdadero o falso
         
-        if self.id == 1000:           
+        if self.id == 1000 or self.id == 1001:           
             elementoDominio.existe = False
+            print (elementoDominio.listaBH['pozo'] - e.pos()).manhattanLength()           
         else:
             elementoDominio.existe = True
 
@@ -206,7 +209,7 @@ class box(QtGui.QGroupBox):
 
         #Obtenemos la posicion relativa del lugar en que el
         #elemento es soltado
-        position = e.pos()
+        position = e.pos()       
 
         #Si el elemento no existe creamos uno nuevo, en caso contrario
         #arrastramos el elemento ya existente a una nueva posicion en el
@@ -254,6 +257,7 @@ class Ui_Form(object):
         Form.setWindowTitle(QtGui.QApplication.translate("Form", "Form", None, QtGui.QApplication.UnicodeUTF8))
         Form.setStyleSheet(_fromUtf8("QtGui.QPushButton{margin: 8px;}"))
         """
+
         
         #Seteo del formulario que contendra todos los widgets del dominio
         self.frame = QtGui.QFrame(Form)
@@ -278,9 +282,15 @@ class Ui_Form(object):
             
         #Creacion de botones de la barra de herramientas
         self.pozo = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self.groupBox, "pozo")
-        self.barrera = boton(QtGui.QIcon("content/images/barrera.png"), "", self.groupBox, "barrera")
-        self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
+        
+        elementoDominio.listaBH['pozo'] = QtCore.QPoint(self.pozo.pos())
 
+        self.barrera = boton(QtGui.QIcon("content/images/barrera.png"), "", self.groupBox, "barrera")
+
+        self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
+        self.barrera.id = 1001
+        
+        elementoDominio.listaBH['barrera'] = QtCore.QPoint(self.barrera.pos())
 
         self.groupBox_2 = QtGui.QGroupBox(self.frame)
         self.groupBox_2.setGeometry(QtCore.QRect(260, 110, 151, 181))
@@ -361,6 +371,7 @@ class Ui_Form(object):
         
     def retranslateUi(self, Form):
         pass
+
 
     
 if __name__ == "__main__":

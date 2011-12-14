@@ -87,6 +87,12 @@ class elementoDominio(object):
     idElemento = 1000
 
     listaBH = {}
+
+    reloj = False
+
+    transicion = False
+
+    
     
     def __init__(self):
         super(elementoDominio, self).__init__()
@@ -127,46 +133,60 @@ class boton(QtGui.QPushButton):
                                     "border-left-color: rgb(255, 0, 0);\n"
                                     "border-bottom-color: rgb(255, 0, 0);\n"
                                     "border-right-color: rgb(255, 0, 0);"))
-  
-        
-    def mousePressEvent(self, e):      
-        #print elementoDominio.listaBH['pozo'].y()        
-        mimedata = QtCore.QMimeData()                             
-        drag = QtGui.QDrag(self)
 
-        #Sentencia que representa en el margen superior
-        #izquierdo del mouse al elemento que esta siendo
-        #arrastrado por la ventana.
+    def mousePressEvent(self, e):
+        if elementoDominio.reloj == False:
+            reloj = QtCore.QTimer()
+            reloj.singleShot(800, self.apagar)
+            elementoDominio.transicion = True
+            elementoDominio.reloj = True
         
-        if self.tooltip == "pozo":
-            pixmap = QtGui.QPixmap("content/images/DotIcon.png")                                    
-            drag.setPixmap(pixmap)
-            elementoDominio.elementoDominio = 0
+    def mouseMoveEvent(self, e):        
+        if elementoDominio.reloj == True and elementoDominio.transicion == False:            
+            print "ahora pasop por el otro"        
+            mimedata = QtCore.QMimeData()                             
+            drag = QtGui.QDrag(self)
+
+            #Sentencia que representa en el margen superior
+            #izquierdo del mouse al elemento que esta siendo
+            #arrastrado por la ventana.
             
-        else:
-            pixmap = QtGui.QPixmap("content/images/barrera.png")                                    
-            drag.setPixmap(pixmap)
-            elementoDominio.elementoDominio = 1
+            if self.tooltip == "pozo":
+                pixmap = QtGui.QPixmap("content/images/DotIcon.png")                                    
+                drag.setPixmap(pixmap)
+                elementoDominio.elementoDominio = 0                
+            else:
+                pixmap = QtGui.QPixmap("content/images/barrera.png")                                    
+                drag.setPixmap(pixmap)
+                elementoDominio.elementoDominio = 1
 
 
-        #Como se describiese en la enunciacion de la clase elementoDominio
-        # se evalua si el elemento es nuevo o ya existe en el dominio.
-        #dependiendo de la evaluacion el atrinuto existe sera verdadero o falso
-        
-        if self.id == 1000 or self.id == 1001:           
-            elementoDominio.existe = False
-            print (elementoDominio.listaBH['pozo'] - e.pos()).manhattanLength()           
-        else:
-            elementoDominio.existe = True
-
+            #Como se describiese en la enunciacion de la clase elementoDominio
+            # se evalua si el elemento es nuevo o ya existe en el dominio.
+            #dependiendo de la evaluacion el atrinuto existe sera verdadero o falso
             
-        elementoDominio.idElemento = self.id
+            if self.id == 1000 or self.id == 1001:           
+                elementoDominio.existe = False
+                print (elementoDominio.listaBH['pozo'] - e.pos()).manhattanLength()           
+            else:
+                elementoDominio.existe = True
 
-        drag.setMimeData(mimedata)
-        drag.setHotSpot(e.pos() - self.rect().topLeft())
-        dropAction = drag.start(QtCore.Qt.MoveAction)
+                
+            elementoDominio.idElemento = self.id
 
+            drag.setMimeData(mimedata)
+            drag.setHotSpot(e.pos() - self.rect().topLeft())
+            dropAction = drag.start(QtCore.Qt.MoveAction)
+
+    def apagar(self):
+        print "se ha apagado"
+        elementoDominio.transicion = False
+
+    def mouseReleaseEvent(self, e):
+        elementoDominio.transicion = False
+        elementoDominio.reloj = False
         
+         
     
 #Definimos clase que agrupa elementos, junto con la sobreescritura
 #de los eventos dragEnterEvent y dropEvent para manejar arrastre y tirada
@@ -206,7 +226,7 @@ class box(QtGui.QGroupBox):
     #Evento que es llamado cuando se suelta un elemento
     #dentro del groupbox
     def dropEvent(self, e):
-
+        elementoDominio.reloj = False
         #Obtenemos la posicion relativa del lugar en que el
         #elemento es soltado
         position = e.pos()       

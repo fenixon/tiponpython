@@ -92,6 +92,8 @@ class elementoDominio(object):
 
     transicion = False
 
+    ContEnsayo = ""
+
     
     
     def __init__(self):
@@ -116,6 +118,7 @@ class boton(QtGui.QPushButton):
     def __init__(self, icono, texto, padre, tooltip):
         super(boton, self).__init__(icono, texto, padre)
         self.init(tooltip)
+        
         
          
 
@@ -211,7 +214,6 @@ class box(QtGui.QGroupBox):
         self.init()
 
     def init(self):
-
         self.setAcceptDrops(True)       
         self.setGeometry(QtCore.QRect(20, 27, 231, 271))
         
@@ -246,6 +248,7 @@ class box(QtGui.QGroupBox):
                     
             if elementoDominio.elementoDominio == 0:        
                 b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
+                elementoDominio.ContEnsayo.agregarPozo(len(self.botones), position.x(), position.y())                
             else:
                 b = boton(QtGui.QIcon("content/images/barrera.png"), "", self, "barrera")
             
@@ -257,11 +260,15 @@ class box(QtGui.QGroupBox):
 
             b.show()           
 
-
         else:
             for x in self.botones:
                 if x.id == elementoDominio.idElemento:
                     x.move(position)
+                    if x.tooltip == "pozo":
+                        elementoDominio.ContEnsayo.moverPozo(x.id, position.x(), position.y())
+                        print "pasamos"
+
+
 
         elementoDominio.transicion = False
         elementoDominio.reloj = False
@@ -278,7 +285,9 @@ crear dominio
 
 class Ui_Form(object):
 
-    def setupUi(self, Form):
+    def setupUi(self, Form, ContEnsayo):
+
+
         
         """
         Form.setObjectName(_fromUtf8("Form"))
@@ -287,6 +296,7 @@ class Ui_Form(object):
         Form.setStyleSheet(_fromUtf8("QtGui.QPushButton{margin: 8px;}"))
         """
 
+        elementoDominio.ContEnsayo = ContEnsayo
         
         #Seteo del formulario que contendra todos los widgets del dominio
         self.frame = QtGui.QFrame(Form)

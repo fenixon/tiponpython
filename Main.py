@@ -26,6 +26,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         ##Se instancia el controlador        
         global ContEnsayo
+        
         ContEnsayo=controlador.Proyecto()
         
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
@@ -110,7 +111,7 @@ class Ui_MainWindow(object):
         #Adherimos la vista del dominio
         self.ui = Ui_Form()
 
-        self.ui.setupUi(MainWindow)
+        self.ui.setupUi(MainWindow, ContEnsayo)
 
     def retranslateUi(self, MainWindow):
         pass

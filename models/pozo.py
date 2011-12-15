@@ -1,4 +1,7 @@
 class pozo(object):
+
+        id = 0
+        
         def __init__(self, x,y):
                 self.x = x
                 self.y = y
@@ -8,3 +11,6 @@ class pozo(object):
                 self.__observaciones.append(observaciones)
         def agregarEnsayo(self, ensayo):
                 self.__ensayos.append(ensayo)
+        def actualizarCoordenadas(self, x, y):
+                self.x = x
+                self.y = y

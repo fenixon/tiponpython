@@ -265,6 +265,10 @@ class box(QtGui.QGroupBox):
         self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
         self.setObjectName(_fromUtf8("Dominio"))
 
+        self.presionandoRecta = False
+
+        self.idRecta = 1000
+        
         self.botones = []
 
         self.bGiratorios = []
@@ -330,10 +334,12 @@ class box(QtGui.QGroupBox):
         self.update()
 
     def mouseMoveEvent(self, e):
+        #Buscamos si las coordenadas actuales estan cerca de algun punto de alguna recta
         lista = elementoDominio.ContEnsayo.buscarPuntoEnRecta(np.float32(e.pos().x()), np.float32(e.pos().y()))
-
-        botonGiratorio = QtGui.QPushButton(self)
         
+        botonGiratorio = QtGui.QPushButton(self)
+        #Si hay puntos entonces cambiamos icono del mouse, y mostramos boton.DrawChildren De lo contrario
+        #eliminamos el boton mostrado.
         if  len(lista) > 0:
             if lista['eje'] == "x":
                 self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
@@ -342,14 +348,29 @@ class box(QtGui.QGroupBox):
             botonGiratorio.setGeometry (lista['punto'].x(), lista['punto'].y(), 10, 10)
             self.bGiratorios.append(botonGiratorio)
             botonGiratorio.show()
+            self.idRecta = lista['id']
         else:
-            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+            if not self.presionandoRecta:
+                self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
             botonGiratorio.hide()
             for x in self.bGiratorios:
                 x.hide()
                 self.bGiratorios.remove(x)
-        
-        
+
+    def mousePressEvent(self, e):
+        if np.int(self.cursor().shape()) == 8 or np.int(self.cursor().shape()) == 7:
+            self.presionandoRecta = True
+
+    def mouseReleaseEvent(self, e):
+        if np.int(self.cursor().shape()) == 8:
+            self.presionandoRecta = False
+            elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "Q")
+            self.update()
+        if np.int(self.cursor().shape()) == 7:
+            self.presionandoRecta = False
+            elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "R")
+            self.update()
+
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
 su funcion es agregar los elementos correspondientes a la vista de

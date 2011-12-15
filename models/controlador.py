@@ -56,6 +56,7 @@ class Proyecto(object):
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2):        
         r = barrera(x1, x2, y1, y2, tipo)
+        r.id = len(self.listaRecta)
         self.listaRecta.append(r)        
 
     def dibujarRecta(self):
@@ -81,6 +82,7 @@ class Proyecto(object):
                 lista = {}
                 lista['punto'] = puntoQ
                 lista['eje'] = "x"
+                lista['id'] = barrera.id
                 return lista
             
             #Recta proxima a las y
@@ -88,6 +90,18 @@ class Proyecto(object):
                 lista = {}
                 lista['punto'] = puntoR
                 lista['eje'] = "y"
+                lista['id'] = barrera.id
                 return lista
         lista = {}
         return lista
+
+    def actualizarRecta(self, idRecta, x, y, tipoPunto):
+        for barrera in self.listaRecta:
+            if barrera.id == idRecta:
+                if tipoPunto == "R":   
+                    barrera.x2 = x
+                    barrera.y2 = y
+                else:
+                    barrera.x1 = x
+                    barrera.y1 = y
+                return

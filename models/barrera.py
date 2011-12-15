@@ -1,5 +1,7 @@
 class barrera():
 
+        id = 0
+        
 	def __init__(self, x1, x2, y1, y2, tipo):
 
 		self.x1 = x1

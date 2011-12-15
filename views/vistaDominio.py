@@ -354,8 +354,9 @@ class box(QtGui.QGroupBox):
                 self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
             botonGiratorio.hide()
             for x in self.bGiratorios:
-                x.hide()
-                self.bGiratorios.remove(x)
+                if self.bGiratorios.count(x) > 0:
+                    x.hide()
+                    self.bGiratorios.remove(x)
 
     def mousePressEvent(self, e):
         if np.int(self.cursor().shape()) == 8 or np.int(self.cursor().shape()) == 7:

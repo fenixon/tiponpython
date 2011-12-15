@@ -9,6 +9,7 @@ Creado por TIPONPYTHON Cooperative
 
 from PyQt4 import QtCore, QtGui
 import sys
+import numpy as np
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -255,7 +256,8 @@ class box(QtGui.QGroupBox):
         self.init()
 
     def init(self):
-        self.setAcceptDrops(True)       
+        self.setAcceptDrops(True)
+        self.setMouseTracking(True) 
         self.setGeometry(QtCore.QRect(20, 27, 231, 271))
         
         self.setStyleSheet(_fromUtf8("background-color: rgb(0, 255, 127)"))
@@ -264,6 +266,8 @@ class box(QtGui.QGroupBox):
         self.setObjectName(_fromUtf8("Dominio"))
 
         self.botones = []
+
+        self.bGiratorios = []
         
     #Sobreescribimos dragEnterEvent para pemitir
     #la accion de este evento.
@@ -290,17 +294,8 @@ class box(QtGui.QGroupBox):
                 self.botones.append(b)
                 b.show()           
             else:
-                r = QtCore.QLineF(position.x(), position.y(), (position.x() + 30), (position.y() + 30))                
-                 
-                """
-                elementoDominio.painter.begin(self)
-                elementoDominio.painter.setPen(QtCore.Qt.blue)
-                elementoDominio.painter.drawLine(50, 88, 70, 88)
-                #elementoDominio.painter.drawLine(r)
-                elementoDominio.painter.end()
-                """
-
-
+                r = QtCore.QLineF(position.x(), position.y(), (position.x() + 30), (position.y() + 30))
+                elementoDominio.ContEnsayo.agregarRecta("Negativo", np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))                
         else:
             for x in self.botones:
                 if x.id == elementoDominio.idElemento:
@@ -316,7 +311,7 @@ class box(QtGui.QGroupBox):
 
         e.setDropAction(QtCore.Qt.MoveAction)
         e.accept()
-     
+    #Definicion de la funcion para comenzar a dibujar
     def paintEvent(self, e):
         painter = QtGui.QPainter()
         painter.begin(self)
@@ -326,12 +321,35 @@ class box(QtGui.QGroupBox):
         painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
         self.dibujarRectas(painter)
         painter.end()
-    
+        
+    #Funcion de dibujado de lineas    
     def dibujarRectas(self, painter):
-        for x in self.botones:  
-            painter.drawLine(x.x(), x.y(), (x.y() + 40), (x.y() + 40))
+        self.rectas = elementoDominio.ContEnsayo.dibujarRecta()
+        for x in self.rectas:  
+            painter.drawLine(x.x1, x.y1, x.x2, x.y2)
         self.update()
-    
+
+    def mouseMoveEvent(self, e):
+        lista = elementoDominio.ContEnsayo.buscarPuntoEnRecta(np.float32(e.pos().x()), np.float32(e.pos().y()))
+
+        botonGiratorio = QtGui.QPushButton(self)
+        
+        if  len(lista) > 0:
+            if lista['eje'] == "x":
+                self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
+            else:
+                self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
+            botonGiratorio.setGeometry (lista['punto'].x(), lista['punto'].y(), 10, 10)
+            self.bGiratorios.append(botonGiratorio)
+            botonGiratorio.show()
+        else:
+            self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+            botonGiratorio.hide()
+            for x in self.bGiratorios:
+                x.hide()
+                self.bGiratorios.remove(x)
+        
+        
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
 su funcion es agregar los elementos correspondientes a la vista de

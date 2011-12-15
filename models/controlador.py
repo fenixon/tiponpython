@@ -36,16 +36,19 @@ class Proyecto(object):
     def traerid(self):
         return self.ultimoIdEns
 
+    #CRUD de pozos
     def agregarPozo(self, identificador, x, y):        
         p = pozo(x, y)
         p.id = identificador
         self.listaPozo.append(p)
+        for x in self.listaPozo:
+            print x.id
+        
 
     def moverPozo(self, idElemento, x, y):
         for x in self.listaPozo:
             if x.id == idElemento:
                 x.actualizarCoordenadas(x, y)
-                print "Se ha actualizado"
                 return
 
         

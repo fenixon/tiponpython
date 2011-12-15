@@ -75,6 +75,49 @@ el dominio. Se guarda el identificador del elemento.
 
 idElemento es cambiado en la funcion mouseMoveEvent, y es evaluada en
 la funcion dropEvent de la clase box.
+-----------
+
+Descripcion de  reloj y transicion
+
+Son banderas de control que le dice a la aplicacion, dependiendo de sus
+estados, cuando se puede comenzar a arrastrar un boton.
+
+El estado inicial de estos elementos en cada boton es:
+
+reloj = False
+transicion = False
+
+Para cada boton, estas banderas comenzaran a cambiar en el momento en
+que se presione el boton. En la funcion mousePressEvent.
+
+El estado luego de este evento es:
+
+reloj = True
+transicion = True
+
+La funcion apagar, tiene como cometido liberar el bloqueo del arrastre
+seteando los siguientes estados:
+
+reloj = True
+transicion = False
+
+En la funcion mouseMoveEvent se encuentra el control necesario de dichos estados.
+Para que el usuario pueda arrastrar el boton una vez finalizado el tiempo.
+
+Cuando el usuario suelta el boton en el objeto de la clase box, o cuando presiona
+y luego libera el boton el estado es el siguiente:
+
+reloj = False
+transicion = False
+
+-----
+
+Descripcion de ConEnsayo
+
+Básicamente se guarda la instancia del controlador global creado en
+el archivo principal. Este hace las veces de controlador, por ende las
+operaciones con los modelos se hacen delegandole dichas tareas a este.
+
 
 """
 
@@ -86,18 +129,18 @@ class elementoDominio(object):
 
     idElemento = 1000
 
-    listaBH = {}
-
     reloj = False
 
     transicion = False
 
     ContEnsayo = ""
 
-    
+    painter = ""
     
     def __init__(self):
         super(elementoDominio, self).__init__()
+        
+
         
 """
 Clase boton, hereda de QPushButton elemento del modulo QtGui
@@ -118,9 +161,6 @@ class boton(QtGui.QPushButton):
     def __init__(self, icono, texto, padre, tooltip):
         super(boton, self).__init__(icono, texto, padre)
         self.init(tooltip)
-        
-        
-         
 
     def init(self, tooltip):
 
@@ -137,8 +177,12 @@ class boton(QtGui.QPushButton):
                                     "border-bottom-color: rgb(255, 0, 0);\n"
                                     "border-right-color: rgb(255, 0, 0);"))
 
+
     def mousePressEvent(self, e):
         
+        #Cambiamos el cursor, y luego procedemos a evaluar estado del reloj
+        #Si no existe creamos un temporizador, cuando alcanze el tiempo dado
+        #el usuario va a poder arrastrar el boton.
         self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
         
         if elementoDominio.reloj == False:
@@ -147,10 +191,11 @@ class boton(QtGui.QPushButton):
             elementoDominio.transicion = True
             elementoDominio.reloj = True
         
-    def mouseMoveEvent(self, e):        
+    def mouseMoveEvent(self, e):
+        
+        #Evaluacion que se entiende como, 'El usuario puede comenzar a arrastrar el boton'
         if elementoDominio.reloj == True and elementoDominio.transicion == False:
             self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
-            print "Ahora paso por el otro"        
             mimedata = QtCore.QMimeData()                             
             drag = QtGui.QDrag(self)
 
@@ -173,8 +218,7 @@ class boton(QtGui.QPushButton):
             #dependiendo de la evaluacion el atrinuto existe sera verdadero o falso
             
             if self.id == 1000 or self.id == 1001:           
-                elementoDominio.existe = False
-                print (elementoDominio.listaBH['pozo'] - e.pos()).manhattanLength()           
+                elementoDominio.existe = False  
             else:
                 elementoDominio.existe = True
 
@@ -186,7 +230,6 @@ class boton(QtGui.QPushButton):
             dropAction = drag.start(QtCore.Qt.MoveAction)
 
     def apagar(self):
-        print "se ha apagado"
         elementoDominio.transicion = False
 
     def mouseReleaseEvent(self, e):
@@ -205,8 +248,6 @@ class box(QtGui.QGroupBox):
 
     global elementoDominio
 
-    global boton
-
     id = 0
    
     def __init__(self, padre):
@@ -217,14 +258,12 @@ class box(QtGui.QGroupBox):
         self.setAcceptDrops(True)       
         self.setGeometry(QtCore.QRect(20, 27, 231, 271))
         
-        self.setStyleSheet(_fromUtf8("color: rgb(85, 170, 0);\n"
-                                    "background-color: rgb(0, 255, 127);"))
+        self.setStyleSheet(_fromUtf8("background-color: rgb(0, 255, 127)"))
                
         self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
         self.setObjectName(_fromUtf8("Dominio"))
 
         self.botones = []
-
         
     #Sobreescribimos dragEnterEvent para pemitir
     #la accion de este evento.
@@ -243,22 +282,24 @@ class box(QtGui.QGroupBox):
         #arrastramos el elemento ya existente a una nueva posicion en el
         #dominio.
         if elementoDominio.existe == False:
-           
-            b = ""        
-                    
             if elementoDominio.elementoDominio == 0:        
                 b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
                 elementoDominio.ContEnsayo.agregarPozo(len(self.botones), position.x(), position.y())                
+                b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
+                b.id = len(self.botones)
+                self.botones.append(b)
+                b.show()           
             else:
-                b = boton(QtGui.QIcon("content/images/barrera.png"), "", self, "barrera")
-            
-            b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
+                r = QtCore.QLineF(position.x(), position.y(), (position.x() + 30), (position.y() + 30))                
+                 
+                """
+                elementoDominio.painter.begin(self)
+                elementoDominio.painter.setPen(QtCore.Qt.blue)
+                elementoDominio.painter.drawLine(50, 88, 70, 88)
+                #elementoDominio.painter.drawLine(r)
+                elementoDominio.painter.end()
+                """
 
-            b.id = len(self.botones)
-                    
-            self.botones.append(b)
-
-            b.show()           
 
         else:
             for x in self.botones:
@@ -266,7 +307,7 @@ class box(QtGui.QGroupBox):
                     x.move(position)
                     if x.tooltip == "pozo":
                         elementoDominio.ContEnsayo.moverPozo(x.id, position.x(), position.y())
-                        print "pasamos"
+                        
 
 
 
@@ -275,8 +316,22 @@ class box(QtGui.QGroupBox):
 
         e.setDropAction(QtCore.Qt.MoveAction)
         e.accept()
-        
-
+     
+    def paintEvent(self, e):
+        painter = QtGui.QPainter()
+        painter.begin(self)
+        painter.setPen(QtCore.Qt.blue)
+        painter.setBrush(QtGui.QColor(0, 255, 127))
+        painter.setBackground(painter.brush())
+        painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
+        self.dibujarRectas(painter)
+        painter.end()
+    
+    def dibujarRectas(self, painter):
+        for x in self.botones:  
+            painter.drawLine(x.x(), x.y(), (x.y() + 40), (x.y() + 40))
+        self.update()
+    
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
 su funcion es agregar los elementos correspondientes a la vista de
@@ -286,8 +341,6 @@ crear dominio
 class Ui_Form(object):
 
     def setupUi(self, Form, ContEnsayo):
-
-
         
         """
         Form.setObjectName(_fromUtf8("Form"))
@@ -307,10 +360,14 @@ class Ui_Form(object):
         self.frame.setObjectName(_fromUtf8("frame"))
         self.frame.setEnabled(True)
 
+        self.groupBoxDominio = QtGui.QGroupBox(self.frame)
+        self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 231, 271))
+        self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: rgb(255, 85, 0);\n"))
+        self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
         #Caja de elementos especifica del dominio
-        self.Dominio = box(self.frame)
-
+        self.Dominio = box(self.groupBoxDominio)
         
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
@@ -322,15 +379,11 @@ class Ui_Form(object):
         #Creacion de botones de la barra de herramientas
         self.pozo = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self.groupBox, "pozo")
         
-        elementoDominio.listaBH['pozo'] = QtCore.QPoint(self.pozo.pos())
-
         self.barrera = boton(QtGui.QIcon("content/images/barrera.png"), "", self.groupBox, "barrera")
 
         self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
         self.barrera.id = 1001
         
-        elementoDominio.listaBH['barrera'] = QtCore.QPoint(self.barrera.pos())
-
         self.groupBox_2 = QtGui.QGroupBox(self.frame)
         self.groupBox_2.setGeometry(QtCore.QRect(260, 110, 151, 181))
         self.groupBox_2.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 255);"))

@@ -8,8 +8,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-import bombeo
-import ensayobombeo
+import observacion
+import observacionesensayo
 import sys
 import zipfile
 import xml.dom.minidom
@@ -28,9 +28,9 @@ class Ui_Dialog(QtGui.QDialog):
         ContEnsayo=cont
         self.archivo=""
         
-        Dialog.setObjectName(_fromUtf8("ImportarCaudalBombeado"))
+        Dialog.setObjectName(_fromUtf8("ImportarObservacionesEnsayo"))
         Dialog.resize(572, 130)
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Importar Caudal Bombeado", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Importar Observaciones Ensayo", None, QtGui.QApplication.UnicodeUTF8))
         self.label = QtGui.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(60, 30, 46, 13))
         self.label.setText(QtGui.QApplication.translate("Dialog", "Archivito", None, QtGui.QApplication.UnicodeUTF8))
@@ -81,11 +81,12 @@ class Ui_Dialog(QtGui.QDialog):
         else:
             self.textEdit.setText(self.archivo)
             self.ext=ext
+            
 
     def accionaceptar(self):
         print "aceptar"
 ##      se inicializa el array de bombeos        
-        bombeos=[]
+        observaciones=[]
         global ContEnsayo
 
         if self.ext=="txt":
@@ -105,11 +106,11 @@ class Ui_Dialog(QtGui.QDialog):
 ##              Se esa lina tiene dos columnas se procesa si no no
                 if (len(datos)>=2):
                     t=int(datos[0])
-                    c=float(datos[1])
+                    n=float(datos[1])
                     print "tiempo: "+str(t)
-                    print "caudal: "+str(c)
-                    b=bombeo.bombeo(t,c)
-                    bombeos.append(b)
+                    print "nivel: "+str(n)
+                    o=observacion.observacion(t,n)
+                    observaciones.append(o)
         else:
             
             f= zipfile.ZipFile((str(self.archivo))) 
@@ -126,26 +127,25 @@ class Ui_Dialog(QtGui.QDialog):
                             print "tiempo: "+str(t)
                             i=1
                         else:
-                            c=float(ch.data)
-                            print "caudal: "+str(c)
-                            b=bombeo.bombeo(t,c)
-                            bombeos.append(b)                            
-                            i=0                   
+                            n=float(ch.data)
+                            print "nivel: "+str(n)
+                            o=observacion.observacion(t,n)
+                            observaciones.append(o)                           
+                            i=0
 
-##      Se manda al controlador los bombeos y te retorna el ultimo ensayo creado
-        e=ContEnsayo.agregarEnsayo(bombeos)
+##      Se manda al controlador las observaciones y se retorna el id de las observaciones                           
+        obse=ContEnsayo.agregarObservacion(observaciones)                
           
         reply = QtGui.QMessageBox.information(self,
                 "Informacion",
-                "Se ha creado un nuevo ensayo de bombeo en el sistema. El id es: " + str(e.id))
-        
+                "Se ha creado un nuevo conjunto de observaciones en el sistema. El id es:" + str(obse.id))
         if reply == QtGui.QMessageBox.Ok:
             print "OK"
             self.guardar.close()            
         else:
             print "Escape"
 
-####        for b in e.devolverB():
+##        for b in e.devolverB():
 ##            print "bombeo "+ str(e.id)
 ##            for i in range(2):
 ##                print "at " + str(b.devolverAt(i))

@@ -14,6 +14,11 @@ sys.path.append("views")
 sys.path.append("models") 
 import importarCaudal
 import controlador
+import verensayos
+import ingresarCaudal
+import importarObservaciones
+import ingresarObservaciones
+import verObservaciones
 from vistaDominio import  *
 
 try:
@@ -21,8 +26,7 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
-
-class Ui_MainWindow(object):
+class Ui_MainWindow(QtGui.QDialog):
     def setupUi(self, MainWindow):
         ##Se instancia el controlador        
         global ContEnsayo
@@ -46,11 +50,15 @@ class Ui_MainWindow(object):
         self.menuAyuda.setObjectName(_fromUtf8("menuAyuda"))
         self.menuDatos = QtGui.QMenu(self.menubar)
         self.menuDatos.setTitle(QtGui.QApplication.translate("MainWindow", "Datos", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuDatos.setObjectName(_fromUtf8("menuDatos"))
+        self.menuDatos.setObjectName(_fromUtf8("menuDatos"))        
         self.menuCaudal_de_bombeo = QtGui.QMenu(self.menuDatos)
         self.menuCaudal_de_bombeo.setTitle(QtGui.QApplication.translate("MainWindow", "Caudal de bombeo", None, QtGui.QApplication.UnicodeUTF8))
-        self.menuCaudal_de_bombeo.setObjectName(_fromUtf8("menuCaudal_de_bombeo"))
+        self.menuCaudal_de_bombeo.setObjectName(_fromUtf8("menuCaudal_de_bombeo"))        
+        self.menuObservaciones = QtGui.QMenu(self.menuDatos)
+        self.menuObservaciones.setTitle(QtGui.QApplication.translate("MainWindow", "Observaciones", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuObservaciones.setObjectName(_fromUtf8("menuObservaciones"))        
         MainWindow.setMenuBar(self.menubar)
+        
         self.statusbar = QtGui.QStatusBar(MainWindow)
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
@@ -65,21 +73,29 @@ class Ui_MainWindow(object):
         self.actionCerrar.setObjectName(_fromUtf8("actionCerrar"))
         self.actionSalir = QtGui.QAction(MainWindow)
         self.actionSalir.setText(QtGui.QApplication.translate("MainWindow", "Salir", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionSalir.setObjectName(_fromUtf8("actionSalir"))
-        self.actionObservaciones = QtGui.QAction(MainWindow)
-        self.actionObservaciones.setText(QtGui.QApplication.translate("MainWindow", "Observaciones", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionObservaciones.setObjectName(_fromUtf8("actionObservaciones"))
+        self.actionSalir.setObjectName(_fromUtf8("actionSalir"))       
+
+        
         self.actionImportar = QtGui.QAction(MainWindow)
         self.actionImportar.setText(QtGui.QApplication.translate("MainWindow", "Importar", None, QtGui.QApplication.UnicodeUTF8))
         self.actionImportar.setObjectName(_fromUtf8("actionImportar"))
         self.actionIngresar = QtGui.QAction(MainWindow)
         self.actionIngresar.setText(QtGui.QApplication.translate("MainWindow", "Ingresar", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionIngresar.setObjectName(_fromUtf8("actionIngresar"))
-        
-        self.actionVerBombeo = QtGui.QAction(MainWindow)
+        self.actionIngresar.setObjectName(_fromUtf8("actionIngresar"))        
+        self.actionVerBombeo = QtGui.QAction(MainWindow)   
         self.actionVerBombeo.setText(QtGui.QApplication.translate("MainWindow", "Ver", None, QtGui.QApplication.UnicodeUTF8))
         self.actionVerBombeo.setObjectName(_fromUtf8("actionVerBombeo"))
 
+
+        self.actionImpObs = QtGui.QAction(MainWindow)
+        self.actionImpObs.setText(QtGui.QApplication.translate("MainWindow", "Importar", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionImpObs.setObjectName(_fromUtf8("actionImpObs"))
+        self.actionIngObs = QtGui.QAction(MainWindow)
+        self.actionIngObs.setText(QtGui.QApplication.translate("MainWindow", "Ingresar", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionIngObs.setObjectName(_fromUtf8("actionIngObs"))        
+        self.actionVerObs = QtGui.QAction(MainWindow)
+        self.actionVerObs.setText(QtGui.QApplication.translate("MainWindow", "Ver", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionVerObs.setObjectName(_fromUtf8("actionVerObs"))
         
         self.menuInicio.addAction(self.actionNuevo_Proyecto)
         self.menuInicio.addAction(self.actionCerrar)
@@ -90,32 +106,44 @@ class Ui_MainWindow(object):
         self.menuCaudal_de_bombeo.addAction(self.actionImportar)
         self.menuCaudal_de_bombeo.addAction(self.actionVerBombeo)
 
-        
+        self.menuObservaciones.addAction(self.actionIngObs)
+        self.menuObservaciones.addAction(self.actionImpObs)
+        self.menuObservaciones.addAction(self.actionVerObs)        
+
         self.menuDatos.addAction(self.menuCaudal_de_bombeo.menuAction())
-        self.menuDatos.addAction(self.actionObservaciones)
+        self.menuDatos.addAction(self.menuObservaciones.menuAction())
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
-        self.menubar.addAction(self.menuAyuda.menuAction())
-        
+        self.menubar.addAction(self.menuAyuda.menuAction())        
 
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionSalir, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QObject.connect(self.actionNuevo_Proyecto, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaNuevoProyecto)
         QtCore.QObject.connect(self.actionImportar, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaImportarProyecto)
-        QtCore.QObject.connect(self.actionVerBombeo, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerBombeo) 
-        
-        QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        QtCore.QObject.connect(self.actionVerBombeo, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerBombeo)        
+        QtCore.QObject.connect(self.actionIngresar, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngresarBombeo)
+        QtCore.QObject.connect(self.actionImpObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaImpoObs)
+        QtCore.QObject.connect(self.actionVerObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerObs)        
+        QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
-        
+        QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
+        QtCore.QObject.connect(self.menuObservaciones, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despligueObservacion)       
+        QtCore.QMetaObject.connectSlotsByName(MainWindow)       
 
         #Adherimos la vista del dominio
         self.ui = Ui_Form()
-
+        
         self.ui.setupUi(MainWindow, ContEnsayo)
 
     def retranslateUi(self, MainWindow):
         pass
 
+    def despliegueCaudal(self):
+        print "abre caudal"
+
+    def despligueObservacion(self):
+        print "abre observaciones"
+    
     def ventanaNuevoProyecto(self):
         global ContEnsayo
         print "Verficiar el utlimo id" + (str(ContEnsayo.traerid()))
@@ -128,7 +156,7 @@ class Ui_MainWindow(object):
 
 
         QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.crearDominio)
-        
+
 
     def crearDominio():
         print "hola"     
@@ -136,6 +164,7 @@ class Ui_MainWindow(object):
         ui.setupUi(frmNuevoProyecto)          
         frmNuevoProyecto.exec_()
 
+                                                          
     def ventanaImportarProyecto(self):
         global ContEnsayo
         frmImpCaudal = QtGui.QDialog()
@@ -147,12 +176,53 @@ class Ui_MainWindow(object):
 
     def ventanaVerBombeo(self):
         global ContEnsayo
-        frmVerBombeo = QtGui.QDialog()
-        ui = importarCaudal.Ui_Dialog()
-        ## Se envia al nuevo formulario el controlador instanciado         
-        ui.setupUi(frmVerBombeo, ContEnsayo)  
-        self.importar=frmVerBombeo
-        frmVerBombeo.exec_()   
+        enss=ContEnsayo.ensayos           
+        if len(enss)<=0 :
+            QtGui.QMessageBox.information(self,
+                "Informacion",
+                "Aún no se ha ingresado ningún ensayo de bombeo")            
+        else:
+            frmVerBombeo = QtGui.QDialog()
+            ui = verensayos.Ui_Dialog()
+            ## Se envia al nuevo formulario el controlador instanciado         
+            ui.setupUi(frmVerBombeo, ContEnsayo)  
+            frmVerBombeo.exec_()   
+
+    def ventanaIngresarBombeo(self):
+        global ContEnsayo    
+        frmIngBombeo = QtGui.QDialog()
+        ui = ingresarCaudal.Ui_Dialog()       
+        ui.setupUi(frmIngBombeo, ContEnsayo)  
+        frmIngBombeo.exec_()
+
+    def ventanaImpoObs(self):
+        global ContEnsayo
+        frmimpobs=QtGui.QDialog()
+        ui= importarObservaciones.Ui_Dialog()
+        ui.setupUi(frmimpobs, ContEnsayo)
+        frmimpobs.exec_()
+        
+    def ventanaVerObs(self):
+
+        global ContEnsayo
+        obss=ContEnsayo.observaciones
+        if len(obss)<=0 :
+            QtGui.QMessageBox.information(self,
+                "Informacion",
+                "Aún no se ha ingresado ninguna Observación de ensayo")
+        else:
+            frmverobs=QtGui.QDialog()
+            ui= verObservaciones.Ui_Dialog()
+            ui.setupUi(frmverobs, ContEnsayo)
+            frmverobs.exec_()
+        
+    def ventanaIngObs(self):
+        global ContEnsayo
+        frmingobs=QtGui.QDialog()
+        ui= ingresarObservaciones.Ui_Dialog()
+        ui.setupUi(frmingobs, ContEnsayo)
+        frmingobs.exec_()
+
         
       
 if __name__ == "__main__":

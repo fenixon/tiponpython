@@ -2,6 +2,10 @@ from PyQt4 import QtCore, QtGui
 from pozo  import pozo
 from barrera import barrera
 import numpy as np
+import observacion
+import observacionesensayo
+import bombeo
+import ensayobombeo
 
 class Proyecto(object):
     
@@ -15,28 +19,17 @@ class Proyecto(object):
         self.listaPozo = []
         self.listaRecta = []
         
-    def obtenerIdEns(self):
-
-##        print "tentgo: "+ str(self.ultimoIdEns)            
-
+    def agregarEnsayo(self, bombeos):
         self.ultimoIdEns=self.ultimoIdEns + 1
+        e=ensayobombeo.ensayobombeo(bombeos, self.ultimoIdEns)
+        self.ensayos.append(e)
+        return e
 
-##        print "devuelvo: "+ str(self.ultimoIdEns)
-
-        return self.ultimoIdEns
-    
-    def agregarEnsayo(self, ensayo):
-        self.ensayos.append(ensayo)
-        
-    def obtenerIdObs(self):
+    def agregarObservacion(self, observaciones):
         self.ultimoIdObs=self.ultimoIdObs + 1
-        return self.ultimoIdObs
-    
-    def agregarObservacion(self,obser):
-        self.observaciones.append(obser)
-        
-    def traerid(self):
-        return self.ultimoIdEns
+        obse=observacionesensayo.observacionesensayo(observaciones, self.ultimoIdObs)
+        self.observaciones.append(obse)
+        return obse
 
     #CRUD de pozos
     def agregarPozo(self, identificador, x, y):        

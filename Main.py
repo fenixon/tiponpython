@@ -9,9 +9,9 @@
 
 from PyQt4 import QtCore, QtGui
 import sys
-import NuevoProyecto
 sys.path.append("views")
-sys.path.append("models") 
+sys.path.append("models")
+import NuevoProyecto
 import importarCaudal
 import controlador
 import verensayos
@@ -143,28 +143,13 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def despligueObservacion(self):
         print "abre observaciones"
-    
+
     def ventanaNuevoProyecto(self):
-        global ContEnsayo
-        print "Verficiar el utlimo id" + (str(ContEnsayo.traerid()))
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
-        ui.setupUi(frmNuevoProyecto)
-        
-                
+        ui.setupUi(frmNuevoProyecto,ContEnsayo)
         frmNuevoProyecto.exec_()
 
-
-        QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.crearDominio)
-
-
-    def crearDominio():
-        print "hola"     
-
-        ui.setupUi(frmNuevoProyecto)          
-        frmNuevoProyecto.exec_()
-
-                                                          
     def ventanaImportarProyecto(self):
         global ContEnsayo
         frmImpCaudal = QtGui.QDialog()

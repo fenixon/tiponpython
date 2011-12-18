@@ -6,6 +6,7 @@ import observacion
 import observacionesensayo
 import bombeo
 import ensayobombeo
+import dominio
 
 class Proyecto(object):
     
@@ -14,6 +15,7 @@ class Proyecto(object):
         self.ultimoIdObs=0
         self.ensayos=[]
         self.observaciones=[]
+        self.dominio = dominio.dominio()
 
         #Lista que guardan pozo y recta
         self.listaPozo = []

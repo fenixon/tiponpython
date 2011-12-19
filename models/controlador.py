@@ -20,6 +20,10 @@ class Proyecto(object):
         #Lista que guardan pozo y recta
         self.listaPozo = []
         self.listaRecta = []
+
+        #Ultima recta y pozo agregados
+        self.idP = 0
+        self.idR = 0
         
     def agregarEnsayo(self, bombeos):
         self.ultimoIdEns=self.ultimoIdEns + 1
@@ -36,8 +40,10 @@ class Proyecto(object):
     #CRUD de pozos
     def agregarPozo(self, identificador, x, y):        
         p = pozo(x, y)
-        p.id = identificador
+        self.idP = self.idP + 1
+        p.id = self.idP
         self.listaPozo.append(p)
+        return p.id
                 
 
     def moverPozo(self, idElemento, x, y):
@@ -47,6 +53,11 @@ class Proyecto(object):
                 return
             
     def removerPozo(self, idElemento):
+        print "Identificador a eliminar", idElemento
+
+        for p in self.listaPozo:
+            print "Identificadores de los pozos", p.id
+            
         for x in self.listaPozo:
             if x.id == idElemento:
                 self.listaPozo.remove(x)
@@ -54,6 +65,20 @@ class Proyecto(object):
 
         for x in self.listaPozo:
             print x.id
+
+    def retornarCoordenadas(self, idElemento):
+        listaRetorno = {}
+
+        for x in self.listaPozo:
+            if x.id == idElemento:
+                listaRetorno["x"] = x.x
+                listaRetorno["y"] = x.y
+                
+                return listaRetorno
+            
+        print "NADA HE ENCONTRADO"
+        return listaRetorno
+        
 
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2):        

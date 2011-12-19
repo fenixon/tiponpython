@@ -404,6 +404,7 @@ class menu(QtGui.QListView):
         for indices in selected.first().indexes():
             valor = indices.data()
             if valor.toString() == "Salir":
+                self.reset()
                 self.hide()
                 return
             if valor.toString() == "Eliminar":
@@ -419,7 +420,7 @@ class menu(QtGui.QListView):
 
                     elementoDominio.selectedMenuMouse["tipo"] == ""
                     elementoDominio.selectedMenuMouse["id"] == -1
-
+                    self.reset()
                     self.hide()    
 
 

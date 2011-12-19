@@ -227,7 +227,14 @@ class boton(QtGui.QPushButton):
        else:
            elementoDominio.selectedMenuMouse["tipo"] = "punto"
            elementoDominio.selectedMenuMouse["id"] = self.id
+
+           #self.coordenadas = {}
            
+           #self.coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(self.id)
+           
+           elementoDominio.menuMouse.move(200, 200)
+
+          
            elementoDominio.menuMouse.show()
            
     def mouseMoveEvent(self, e):
@@ -409,6 +416,8 @@ class box(QtGui.QGroupBox):
                     print "Sobrepaso de rangos, advertencia simple"
 
     def mousePressEvent(self, e):
+        print e.pos().x(), e.pos().y()
+        print e.globalX(), e.globalY()
         #Si el dominio esta comenzado a ser presionado por un cursor que sea
         #utilizado cuando se trabaja con barreras, entonces se setea el atributo
         #self.presionandoRecta a verdadero.
@@ -523,7 +532,7 @@ class Ui_Form(object):
 
         #Definimos la instancia global del menu y le asociamo
         #un padre.
-        elementoDominio.menuMouse = menu(self.Dominio)
+        elementoDominio.menuMouse = menu(Form)
         
         
         self.groupBox = QtGui.QGroupBox(self.frame)

@@ -7,6 +7,10 @@ class pozo(object):
                 self.y = y
                 self.__ensayos=[]
                 self.__observaciones=[]
+
+
+
+                
         def agregarObservaciones(self, observaciones):
                 self.__observaciones.append(observaciones)
         def agregarEnsayo(self, ensayo):

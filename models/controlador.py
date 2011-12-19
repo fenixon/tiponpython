@@ -66,6 +66,20 @@ class Proyecto(object):
         for x in self.listaPozo:
             print x.id
 
+    def retornarCoordenadas(self, idElemento):
+        listaRetorno = {}
+
+        for x in self.listaPozo:
+            if x.id == idElemento:
+                listaRetorno["x"] = x.x
+                listaRetorno["y"] = x.y
+                
+                return listaRetorno
+            
+        print "NADA HE ENCONTRADO"
+        return listaRetorno
+        
+
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2):        
         r = barrera(x1, x2, y1, y2, tipo)

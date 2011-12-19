@@ -38,9 +38,7 @@ class Proyecto(object):
         p = pozo(x, y)
         p.id = identificador
         self.listaPozo.append(p)
-        for x in self.listaPozo:
-            print x.id
-        
+                
 
     def moverPozo(self, idElemento, x, y):
         for x in self.listaPozo:
@@ -59,6 +57,8 @@ class Proyecto(object):
             
     def buscarPuntoEnRecta(self, x, y):
 
+        #print "X = ", x, " Y = ", y
+        
         for barrera in self.listaRecta:
 
             recta = QtCore.QLine(barrera.x1, barrera.y1, barrera.x2, barrera.y2)
@@ -71,9 +71,13 @@ class Proyecto(object):
             puntoR = QtCore.QPoint(recta.x2(), recta.y2())
 
             rectaw = QtCore.QLine(puntoP, puntoR)           
+
+            valor1 = np.absolute(recta.dx() /2)
+            valor2 = np.absolute(recta.dy() /2)
+            #print "Valor absoluto de la recta recta recta.dx() =", valor1, " recta.dy() = ", valor2    
             
             #Recta prozima a las x
-            if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):               
+            if  np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):               
                 lista = {}
                 lista['punto'] = puntoQ
                 lista['eje'] = "x"
@@ -93,10 +97,18 @@ class Proyecto(object):
     def actualizarRecta(self, idRecta, x, y, tipoPunto):
         for barrera in self.listaRecta:
             if barrera.id == idRecta:
-                if tipoPunto == "R":   
-                    barrera.x2 = x
-                    barrera.y2 = y
-                else:
-                    barrera.x1 = x
-                    barrera.y1 = y
-                return
+                
+                if tipoPunto == "R":                    
+                    recta = QtCore.QLine(barrera.x1, barrera.y1, x, y)
+                    
+                    if np.absolute(recta.dy()) > 1 and  np.absolute(recta.dx()) > 1:
+                        barrera.x2 = x
+                        barrera.y2 = y
+                    
+                else:                
+                    recta = QtCore.QLine(x, y, barrera.x2, barrera.y2)
+                    
+                    if np.absolute(recta.dx()) > 1 and np.absolute(recta.dy()) > 1:
+                        barrera.x1 = x
+                        barrera.y1 = y
+                

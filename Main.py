@@ -11,7 +11,6 @@ from PyQt4 import QtCore, QtGui
 import sys
 sys.path.append("views")
 sys.path.append("models")
-import NuevoProyecto
 import importarCaudal
 import controlador
 import verensayos

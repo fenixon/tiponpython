@@ -137,6 +137,10 @@ class elementoDominio(object):
     ContEnsayo = ""
 
     painter = ""
+
+    menuMouse = ""
+
+    selectedMenuMouse = {}
     
     def __init__(self):
         super(elementoDominio, self).__init__()
@@ -193,7 +197,13 @@ class boton(QtGui.QPushButton):
                 reloj.singleShot(800, self.apagar)
                 elementoDominio.transicion = True
                 elementoDominio.reloj = True
-            
+
+       else:
+           elementoDominio.selectedMenuMouse["tipo"] = "punto"
+           elementoDominio.selectedMenuMouse["id"] = self.id
+           
+           elementoDominio.menuMouse.show()
+           
     def mouseMoveEvent(self, e):
         
         #Evaluacion que se entiende como, 'El usuario puede comenzar a arrastrar el boton'
@@ -375,6 +385,44 @@ class box(QtGui.QGroupBox):
                 elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "R")
                 self.update()
 
+#Menun utilizado en definir dominio
+class menu(QtGui.QListView):
+    def __init__(self, padre):
+        super(menu, self).__init__(padre)
+        self.init()
+
+    def init(self):
+        self.items = QtCore.QStringList()
+        self.items << "MENU" << "Eliminar" << "Salir"    
+        modelo = QtGui.QStringListModel(self.items)
+        self.setModel(modelo)
+        
+        self.setGeometry(QtCore.QRect(60, 60, 131, 31))
+        self.hide()
+
+    def selectionChanged(self, selected,  deselected):
+        for indices in selected.first().indexes():
+            valor = indices.data()
+            if valor.toString() == "Salir":
+                self.hide()
+                return
+            if valor.toString() == "Eliminar":
+                if elementoDominio.selectedMenuMouse["tipo"] == "punto":
+                    
+                    elementoDominio.ContEnsayo.removerPozo(id)
+
+
+                    for x in self.parent().botones:
+                        if x.id == elementoDominio.selectedMenuMouse["id"]:
+                            self.parent().botones[x.id].hide()
+                            self.parent().botones.remove(x)
+
+                    elementoDominio.selectedMenuMouse["tipo"] == ""
+                    elementoDominio.selectedMenuMouse["id"] == -1
+
+                    self.hide()    
+
+
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
 su funcion es agregar los elementos correspondientes a la vista de
@@ -411,6 +459,9 @@ class Ui_Form(object):
 
         #Caja de elementos especifica del dominio
         self.Dominio = box(self.groupBoxDominio)
+
+        elementoDominio.menuMouse = menu(self.Dominio)
+        
         
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))

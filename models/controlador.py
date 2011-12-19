@@ -45,6 +45,15 @@ class Proyecto(object):
             if x.id == idElemento:
                 x.actualizarCoordenadas(x, y)
                 return
+            
+    def removerPozo(self, idElemento):
+        for x in self.listaPozo:
+            if x.id == idElemento:
+                self.listaPozo.remove(x)
+                print "Pozo eliminado"
+
+        for x in self.listaPozo:
+            print x.id
 
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2):        

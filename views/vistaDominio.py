@@ -208,6 +208,7 @@ class boton(QtGui.QPushButton):
                                     "border-bottom-color: rgb(255, 0, 0);\n"
                                     "border-right-color: rgb(255, 0, 0);"))
 
+      
 
     def mousePressEvent(self, e):
         
@@ -227,12 +228,8 @@ class boton(QtGui.QPushButton):
        else:
            elementoDominio.selectedMenuMouse["tipo"] = "punto"
            elementoDominio.selectedMenuMouse["id"] = self.id
-
-           #self.coordenadas = {}
-           
-           #self.coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(self.id)
-           
-           elementoDominio.menuMouse.move(20, 50)
+          
+           elementoDominio.menuMouse.move(self.pos())
 
           
            elementoDominio.menuMouse.show()
@@ -416,13 +413,30 @@ class box(QtGui.QGroupBox):
                     print "Sobrepaso de rangos, advertencia simple"
 
     def mousePressEvent(self, e):
-        print e.pos().x(), e.pos().y()
-        print e.globalX(), e.globalY()
-        #Si el dominio esta comenzado a ser presionado por un cursor que sea
-        #utilizado cuando se trabaja con barreras, entonces se setea el atributo
-        #self.presionandoRecta a verdadero.
-        if np.int(self.cursor().shape()) == 8 or np.int(self.cursor().shape()) == 7:
-            self.presionandoRecta = True
+
+        if e.button() == QtCore.Qt.RightButton:
+
+            elementoDominio.selectedMenuMouse["tipo"] = "recta"
+            elementoDominio.selectedMenuMouse["id"] = 0
+
+
+            if np.int(self.cursor().shape()) == 8:
+                elementoDominio.selectedMenuMouse["id"] = elementoDominio.ContEnsayo.buscarPuntoPorQ(e.pos().x(), e.pos().y())
+                 
+
+            if np.int(self.cursor().shape()) == 7:
+                elementoDominio.selectedMenuMouse["id"] = elementoDominio.ContEnsayo.buscarPuntoPorR(e.pos().x(), e.pos().y())
+                 
+            elementoDominio.menuMouse.move(e.pos())                
+            elementoDominio.menuMouse.show()
+
+        else:
+
+            #Si el dominio esta comenzado a ser presionado por un cursor que sea
+            #utilizado cuando se trabaja con barreras, entonces se setea el atributo
+            #self.presionandoRecta a verdadero.
+            if np.int(self.cursor().shape()) == 8 or np.int(self.cursor().shape()) == 7:
+                self.presionandoRecta = True
 
     def mouseReleaseEvent(self, e):
         #Dependiendo del tipo de cursos con el que se este modificando la recta
@@ -485,12 +499,15 @@ class menu(QtGui.QListView):
                             break
                         except ValueError:
                             print "Punto a eliminar no encontrado, advertencia simple"
-                        
+
+                if elementoDominio.selectedMenuMouse["tipo"] == "recta":
+                    elementoDominio.ContEnsayo.eliminarRecta(elementoDominio.selectedMenuMouse["id"])
+                    self.update()
                     
-                    elementoDominio.selectedMenuMouse["tipo"] == ""
-                    elementoDominio.selectedMenuMouse["id"] == -1
-                    self.reset()
-                    self.hide()    
+                elementoDominio.selectedMenuMouse["tipo"] == ""
+                elementoDominio.selectedMenuMouse["id"] == -1
+                self.reset()
+                self.hide()   
 
 
 """
@@ -532,8 +549,7 @@ class Ui_Form(object):
 
         #Definimos la instancia global del menu y le asociamo
         #un padre.
-        elementoDominio.menuMouse = menu(self.Dominio)
-        
+        elementoDominio.menuMouse = menu(self.Dominio)       
         
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))

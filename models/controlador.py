@@ -83,7 +83,9 @@ class Proyecto(object):
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2):        
         r = barrera(x1, x2, y1, y2, tipo)
-        r.id = len(self.listaRecta)
+        self.idR = self.idR + 1
+        r.id = self.idR
+
         self.listaRecta.append(r)        
 
     def dibujarRecta(self):
@@ -108,9 +110,10 @@ class Proyecto(object):
 
             valor1 = np.absolute(recta.dx() /2)
             valor2 = np.absolute(recta.dy() /2)
+
             #print "Valor absoluto de la recta recta recta.dx() =", valor1, " recta.dy() = ", valor2    
             
-            #Recta prozima a las x
+            #Recta proxima a las x
             if  np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):               
                 lista = {}
                 lista['punto'] = puntoQ
@@ -145,4 +148,40 @@ class Proyecto(object):
                     if np.absolute(recta.dx()) > 1 and np.absolute(recta.dy()) > 1:
                         barrera.x1 = x
                         barrera.y1 = y
+
+    def buscarPuntoPorQ(self, x, y):
+        for Q in self.listaRecta:
+            
+            recta = QtCore.QLine(Q.x1, Q.y1, Q.x2, Q.y2)
+
+            puntoP = QtCore.QPoint(x, y)
+
+            puntoQ = QtCore.QPoint(recta.x1(), recta.y1())
+
+            rectax = QtCore.QLine(puntoP, puntoQ)   
+
+            #Recta proxima a las x
+            if  np.absolute(rectax.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectax.dy()) < np.absolute((recta.dy() / 2)):               
+
+                return Q.id
+
+    def buscarPuntoPorR(self, x, y):
+        for R in self.listaRecta:
+            
+            recta = QtCore.QLine(R.x1, R.y1, R.x2, R.y2)
+
+            puntoP = QtCore.QPoint(x, y)
+
+            puntoR = QtCore.QPoint(recta.x2(), recta.y2())
+
+            rectay = QtCore.QLine(puntoP, puntoR)   
+
+            #Recta proxima a las x
+            if  np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):               
                 
+                return R.id
+
+    def eliminarRecta(self, idElemento):
+        for recta in self.listaRecta:
+            if recta.id == idElemento:
+                self.listaRecta.remove(recta)

@@ -334,9 +334,9 @@ class box(QtGui.QGroupBox):
         if elementoDominio.existe == False:
             if elementoDominio.elementoDominio == 0:        
                 b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
-                elementoDominio.ContEnsayo.agregarPozo(len(self.botones), position.x(), position.y())                
+                b.id = elementoDominio.ContEnsayo.agregarPozo(len(self.botones), position.x(), position.y())                
                 b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
-                b.id = len(self.botones)
+                 
                 self.botones.append(b)
                 b.show()           
             else:
@@ -461,13 +461,13 @@ class menu(QtGui.QListView):
                 
                 if elementoDominio.selectedMenuMouse["tipo"] == "punto":
                     
-                    elementoDominio.ContEnsayo.removerPozo(id)
+                    elementoDominio.ContEnsayo.removerPozo(elementoDominio.selectedMenuMouse["id"])
 
                     self.aEliminar = []
                     
                     for x in self.parent().botones:
                         if x.id == elementoDominio.selectedMenuMouse["id"]:
-                            self.parent().botones[x.id].hide()
+                            x.hide()
                             self.aEliminar.append(x)
 
                     for x in self.aEliminar:

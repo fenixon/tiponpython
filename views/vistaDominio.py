@@ -119,6 +119,34 @@ Básicamente se guarda la instancia del controlador global creado en
 el archivo principal. Este hace las veces de controlador, por ende las
 operaciones con los modelos se hacen delegandole dichas tareas a este.
 
+------
+
+Descripcion de menuMouse
+
+Es una instancia global de la clase menu(QtGui.QListView)
+
+En su funcion de inicio se setean las acciones estaticas, como
+salir o eliminar.
+
+la funcion selectionChanged es sobre escrita para identificar cual
+ha sido la accion seleccionado por el usuario.
+
+----------------
+
+Descripcion de selectedMenuMouse
+
+Contiene una referencia al tipo de elemento en el dominio sobre el cual
+el usuario hubo aplicacdo un click derecho.
+selectedMenuMouse es un diccionario que contiene las claves/valor:
+
+Tipo = ['Punto' | 'Barrera']
+id = Identificador del elemento
+
+Esto permite identificar al elemento del dominio sobe el cual se deben
+de efectuar las acciones del menu desplegado.
+
+--------------
+
 
 """
 
@@ -135,8 +163,6 @@ class elementoDominio(object):
     transicion = False
 
     ContEnsayo = ""
-
-    painter = ""
 
     menuMouse = ""
 
@@ -245,6 +271,9 @@ class boton(QtGui.QPushButton):
     def apagar(self):
         elementoDominio.transicion = False
 
+    #Cuando se suelta el mouse luego de un arrastre
+    #incondicionalmente se setean las banderas globales con los siguientes
+    #valores
     def mouseReleaseEvent(self, e):        
         elementoDominio.transicion = False
         elementoDominio.reloj = False
@@ -267,15 +296,16 @@ class box(QtGui.QGroupBox):
         super(box, self).__init__(padre)
         self.init()
 
+    #Propiedades y atributos iniciales del QGroupBox
     def init(self):
+        
         self.setAcceptDrops(True)
         self.setMouseTracking(True) 
         self.setGeometry(QtCore.QRect(20, 27, 231, 271))
-        
         self.setStyleSheet(_fromUtf8("background-color: rgb(0, 255, 127)"))
-               
         self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
         self.setObjectName(_fromUtf8("Dominio"))
+
 
         self.presionandoRecta = False
 
@@ -304,9 +334,9 @@ class box(QtGui.QGroupBox):
         if elementoDominio.existe == False:
             if elementoDominio.elementoDominio == 0:        
                 b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
-                elementoDominio.ContEnsayo.agregarPozo(len(self.botones), position.x(), position.y())                
+                b.id = elementoDominio.ContEnsayo.agregarPozo(len(self.botones), position.x(), position.y())                
                 b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
-                b.id = len(self.botones)
+                 
                 self.botones.append(b)
                 b.show()           
             else:
@@ -327,6 +357,7 @@ class box(QtGui.QGroupBox):
 
         e.setDropAction(QtCore.Qt.MoveAction)
         e.accept()
+        
     #Definicion de la funcion para comenzar a dibujar
     def paintEvent(self, e):
         painter = QtGui.QPainter()
@@ -350,7 +381,7 @@ class box(QtGui.QGroupBox):
         lista = elementoDominio.ContEnsayo.buscarPuntoEnRecta(np.float32(e.pos().x()), np.float32(e.pos().y()))
         
         botonGiratorio = QtGui.QPushButton(self)
-        #Si hay puntos entonces cambiamos icono del mouse, y mostramos boton.DrawChildren De lo contrario
+        #Si hay puntos entonces cambiamos icono del mouse, y mostramos boton. De lo contrario
         #eliminamos el boton mostrado.
         if  len(lista) > 0:
             if lista['eje'] == "x":
@@ -365,16 +396,28 @@ class box(QtGui.QGroupBox):
             if not self.presionandoRecta:
                 self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
             botonGiratorio.hide()
-            for x in self.bGiratorios:
-                if self.bGiratorios.count(x) > 0:
-                    x.hide()
+            self.aEliminar = []
+            for x in self.bGiratorios:                
+                x.hide()
+                self.aEliminar.append(x)
+
+            for x in self.aEliminar:
+                try:
                     self.bGiratorios.remove(x)
+                    break
+                except ValueError:
+                    print "Sobrepaso de rangos, advertencia simple"
 
     def mousePressEvent(self, e):
+        #Si el dominio esta comenzado a ser presionado por un cursor que sea
+        #utilizado cuando se trabaja con barreras, entonces se setea el atributo
+        #self.presionandoRecta a verdadero.
         if np.int(self.cursor().shape()) == 8 or np.int(self.cursor().shape()) == 7:
             self.presionandoRecta = True
 
     def mouseReleaseEvent(self, e):
+        #Dependiendo del tipo de cursos con el que se este modificando la recta
+        #se sabra cual es el punto en la misma que hay que modificar
         if e.button() == QtCore.Qt.LeftButton:
             if np.int(self.cursor().shape()) == 8:
                 self.presionandoRecta = False
@@ -392,15 +435,22 @@ class menu(QtGui.QListView):
         self.init()
 
     def init(self):
+        #Valores iniciales del menu, incluido el modelo
         self.items = QtCore.QStringList()
         self.items << "MENU" << "Eliminar" << "Salir"    
         modelo = QtGui.QStringListModel(self.items)
-        self.setModel(modelo)
-        
+        self.setModel(modelo)        
         self.setGeometry(QtCore.QRect(60, 60, 131, 31))
         self.hide()
 
     def selectionChanged(self, selected,  deselected):
+        #indices es un iterador de la lista de QItemSelection que se retorna
+        #al momento de una seleccion en la vista.
+        #la funcion first del QItemSelection retorna un QModelIndex
+        #que es un indice dentro del mapeo del modelo MVC de Qt
+        #Los datos son obtenidos a traves de la funcion data, para la secuencial
+        #evaluacion.
+        
         for indices in selected.first().indexes():
             valor = indices.data()
             if valor.toString() == "Salir":
@@ -408,16 +458,26 @@ class menu(QtGui.QListView):
                 self.hide()
                 return
             if valor.toString() == "Eliminar":
+                
                 if elementoDominio.selectedMenuMouse["tipo"] == "punto":
                     
-                    elementoDominio.ContEnsayo.removerPozo(id)
+                    elementoDominio.ContEnsayo.removerPozo(elementoDominio.selectedMenuMouse["id"])
 
-
+                    self.aEliminar = []
+                    
                     for x in self.parent().botones:
                         if x.id == elementoDominio.selectedMenuMouse["id"]:
-                            self.parent().botones[x.id].hide()
-                            self.parent().botones.remove(x)
+                            x.hide()
+                            self.aEliminar.append(x)
 
+                    for x in self.aEliminar:
+                        try:
+                            self.parent().botones.remove(x)
+                            break
+                        except ValueError:
+                            print "Punto a eliminar no encontrado, advertencia simple"
+                        
+                    
                     elementoDominio.selectedMenuMouse["tipo"] == ""
                     elementoDominio.selectedMenuMouse["id"] == -1
                     self.reset()
@@ -461,6 +521,8 @@ class Ui_Form(object):
         #Caja de elementos especifica del dominio
         self.Dominio = box(self.groupBoxDominio)
 
+        #Definimos la instancia global del menu y le asociamo
+        #un padre.
         elementoDominio.menuMouse = menu(self.Dominio)
         
         

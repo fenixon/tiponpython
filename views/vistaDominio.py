@@ -181,17 +181,19 @@ class boton(QtGui.QPushButton):
 
     def mousePressEvent(self, e):
         
-        #Cambiamos el cursor, y luego procedemos a evaluar estado del reloj
-        #Si no existe creamos un temporizador, cuando alcanze el tiempo dado
-        #el usuario va a poder arrastrar el boton.
-        self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
-        
-        if elementoDominio.reloj == False:
-            reloj = QtCore.QTimer()
-            reloj.singleShot(800, self.apagar)
-            elementoDominio.transicion = True
-            elementoDominio.reloj = True
-        
+       if e.button() == QtCore.Qt.LeftButton:
+            
+            #Cambiamos el cursor, y luego procedemos a evaluar estado del reloj
+            #Si no existe creamos un temporizador, cuando alcanze el tiempo dado
+            #el usuario va a poder arrastrar el boton.
+            self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+            
+            if elementoDominio.reloj == False:
+                reloj = QtCore.QTimer()
+                reloj.singleShot(800, self.apagar)
+                elementoDominio.transicion = True
+                elementoDominio.reloj = True
+            
     def mouseMoveEvent(self, e):
         
         #Evaluacion que se entiende como, 'El usuario puede comenzar a arrastrar el boton'
@@ -233,7 +235,7 @@ class boton(QtGui.QPushButton):
     def apagar(self):
         elementoDominio.transicion = False
 
-    def mouseReleaseEvent(self, e):
+    def mouseReleaseEvent(self, e):        
         elementoDominio.transicion = False
         elementoDominio.reloj = False
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
@@ -363,14 +365,15 @@ class box(QtGui.QGroupBox):
             self.presionandoRecta = True
 
     def mouseReleaseEvent(self, e):
-        if np.int(self.cursor().shape()) == 8:
-            self.presionandoRecta = False
-            elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "Q")
-            self.update()
-        if np.int(self.cursor().shape()) == 7:
-            self.presionandoRecta = False
-            elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "R")
-            self.update()
+        if e.button() == QtCore.Qt.LeftButton:
+            if np.int(self.cursor().shape()) == 8:
+                self.presionandoRecta = False
+                elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "Q")
+                self.update()
+            if np.int(self.cursor().shape()) == 7:
+                self.presionandoRecta = False
+                elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "R")
+                self.update()
 
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.

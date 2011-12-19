@@ -232,7 +232,7 @@ class boton(QtGui.QPushButton):
            
            #self.coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(self.id)
            
-           elementoDominio.menuMouse.move(200, 200)
+           elementoDominio.menuMouse.move(20, 50)
 
           
            elementoDominio.menuMouse.show()
@@ -532,7 +532,7 @@ class Ui_Form(object):
 
         #Definimos la instancia global del menu y le asociamo
         #un padre.
-        elementoDominio.menuMouse = menu(Form)
+        elementoDominio.menuMouse = menu(self.Dominio)
         
         
         self.groupBox = QtGui.QGroupBox(self.frame)

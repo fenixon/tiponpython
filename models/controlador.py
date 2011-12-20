@@ -42,7 +42,7 @@ class Proyecto(object):
         return obse
 
     #CRUD de pozos
-    def agregarPozo(self, identificador, x, y):        
+    def agregarPozo(self, x, y):        
         p = pozo(x, y)
         self.idP = self.idP + 1
         p.id = self.idP
@@ -190,9 +190,9 @@ class Proyecto(object):
             if recta.id == idElemento:
                 self.listaRecta.remove(recta)
 
-    def agregarRectaCandidata(self, tipo, x1, y1, x2, y2):        
+    def agregarRectaCandidata(self, tipo, x1, y1, x2, y2):
         self.rectaCandidata = barrera(x1, x2, y1, y2, tipo)
-        
+           
     def hayRectaCandidata(self):
 
         if self.rectaCandidata:
@@ -202,3 +202,9 @@ class Proyecto(object):
 
     def eliminarRectaCandidata(self):
         self.rectaCandidata = ""
+
+    def incluirCandidata(self):
+        self.idR = self.idR + 1
+        self.rectaCandidata.id = self.idR
+        self.listaRecta.append(self.rectaCandidata)
+        self.rectaCandidata = None

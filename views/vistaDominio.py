@@ -357,7 +357,7 @@ class box(QtGui.QGroupBox):
         if elementoDominio.existe == False:
             if elementoDominio.elementoDominio == 0:        
                 b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
-                b.id = elementoDominio.ContEnsayo.agregarPozo(len(self.botones), position.x(), position.y())                
+                b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())                
                 b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
                  
                 self.botones.append(b)
@@ -397,9 +397,16 @@ class box(QtGui.QGroupBox):
         self.rectas = elementoDominio.ContEnsayo.dibujarRecta()
         for x in self.rectas:  
             painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+
+        
+
         if elementoDominio.ContEnsayo.hayRectaCandidata():
-            rc = elementoDominio.ContEnsayo.rectaCandidata
-            painter.drawLine(rc.x1, rc.y1, rc.x2, rc.y2)
+            #?rc = elementoDominio.ContEnsayo.rectaCandidata
+            #painter.drawLine(rc.x1, rc.y1, rc.x2, rc.y2)
+
+            painter.drawLine(elementoDominio.ContEnsayo.rectaCandidata.x1, elementoDominio.ContEnsayo.rectaCandidata.y1,
+                             elementoDominio.ContEnsayo.rectaCandidata.x2, elementoDominio.ContEnsayo.rectaCandidata.y2)
+
         self.update()
 
     def mouseMoveEvent(self, e):
@@ -749,6 +756,46 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.btnPrevia.setVisible(True)
         
     def setAceptar(self):
+
+        print "Antes de pasar"
+        if self.label.text() == "Pozo":
+            print "Pasando"
+            if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
+                if not elementoDominio.hayPozoCandidato:
+                    elementoDominio.pozoCandidato = QtGui.QPushButton(elementoDominio.Dominio)
+                    elementoDominio.hayPozoCandidato = True
+                    elementoDominio.pozoCandidato.setGeometry(QtCore.QRect(np.int32(self.lineEdit.text()),
+                                                                           np.int32(self.lineEdit_2.text()), 25, 20))
+                    elementoDominio.pozoCandidato.show()
+            
+            
+            b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", elementoDominio.Dominio, "pozo")
+
+            b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
+
+            b.setGeometry(QtCore.QRect(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y(), 24, 24))
+                 
+            elementoDominio.Dominio.botones.append(b)
+
+            b.show()
+            elementoDominio.pozoCandidato.hide()
+            elementoDominio.pozoCandidato = None
+            elementoDominio.hayPozoCandidato = False
+
+            print "Pasamos"
+
+            
+
+        else:                                   
+            if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
+                if not elementoDominio.ContEnsayo.hayRectaCandidata():
+                    elementoDominio.ContEnsayo.agregarRecta("Positivo", np.int32(self.lineEdit.text()),
+                                                                     np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+                                                                     np.int32(self.lineEdit_4.text()))
+                else:
+                    elementoDominio.ContEnsayo.incluirCandidata()
+                self.update()
+
         #Etiqueta de Tipo 
         self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setVisible(False)
@@ -788,6 +835,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Vista Previa
         self.btnPrevia.setVisible(False)
+
         
     def setCancelar(self):
         
@@ -836,9 +884,10 @@ class gbCoordenadas(QtGui.QGroupBox):
         if elementoDominio.hayPozoCandidato:
             elementoDominio.hayPozoCandidato = False
             elementoDominio.pozoCandidato.hide()
-            elementoDominio.pozoCandidato = ""
+            elementoDominio.pozoCandidato = None
 
     def setPrevia(self):
+        
         if self.label.text() == "Pozo":
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
                 if not elementoDominio.hayPozoCandidato:
@@ -846,10 +895,11 @@ class gbCoordenadas(QtGui.QGroupBox):
                     elementoDominio.hayPozoCandidato = True
                 elementoDominio.pozoCandidato.setGeometry(QtCore.QRect(np.int32(self.lineEdit.text()),
                                                                        np.int32(self.lineEdit_2.text()), 25, 20))
+                elementoDominio.pozoCandidato.setStyleSheet(_fromUtf8("background-color: red;\n"))
                 elementoDominio.pozoCandidato.show()
-        else:
-            
-                        
+                
+
+        else:                                   
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 
                 elementoDominio.ContEnsayo.agregarRectaCandidata("Positivo", np.int32(self.lineEdit.text()),

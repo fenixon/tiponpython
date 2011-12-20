@@ -757,9 +757,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         
     def setAceptar(self):
 
-        print "Antes de pasar"
         if self.label.text() == "Pozo":
-            print "Pasando"
+
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
                 if not elementoDominio.hayPozoCandidato:
                     elementoDominio.pozoCandidato = QtGui.QPushButton(elementoDominio.Dominio)
@@ -767,22 +766,20 @@ class gbCoordenadas(QtGui.QGroupBox):
                     elementoDominio.pozoCandidato.setGeometry(QtCore.QRect(np.int32(self.lineEdit.text()),
                                                                            np.int32(self.lineEdit_2.text()), 25, 20))
                     elementoDominio.pozoCandidato.show()
+                            
             
-            
-            b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", elementoDominio.Dominio, "pozo")
+                b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", elementoDominio.Dominio, "pozo")
 
-            b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
+                b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
 
-            b.setGeometry(QtCore.QRect(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y(), 24, 24))
-                 
-            elementoDominio.Dominio.botones.append(b)
+                b.setGeometry(QtCore.QRect(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y(), 24, 24))
+                     
+                elementoDominio.Dominio.botones.append(b)
 
-            b.show()
-            elementoDominio.pozoCandidato.hide()
-            elementoDominio.pozoCandidato = None
-            elementoDominio.hayPozoCandidato = False
-
-            print "Pasamos"
+                b.show()
+                elementoDominio.pozoCandidato.hide()
+                elementoDominio.pozoCandidato = None
+                elementoDominio.hayPozoCandidato = False
 
             
 

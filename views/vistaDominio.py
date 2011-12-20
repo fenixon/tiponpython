@@ -167,6 +167,8 @@ class elementoDominio(object):
     menuMouse = ""
 
     selectedMenuMouse = {}
+
+    gbCoord = ""
     
     def __init__(self):
         super(elementoDominio, self).__init__()
@@ -180,15 +182,20 @@ basicamente es un boton para presionar y generar acciones.
 Contiene una referencia al elemento global elementoDominio.
 Por defecto el identificador de toda instancia es 1000
 
+1000 = Boton Pozo
+1001 = Boton Recta
+
 """
 class boton(QtGui.QPushButton):
 
     global elementoDominio
 
-    id = 1000
+    id = 1000  
 
     posicion = 0
-     
+
+    accionCoord = {}
+    
     def __init__(self, icono, texto, padre, tooltip):
         super(boton, self).__init__(icono, texto, padre)
         self.init(tooltip)
@@ -218,6 +225,11 @@ class boton(QtGui.QPushButton):
             #Si no existe creamos un temporizador, cuando alcanze el tiempo dado
             #el usuario va a poder arrastrar el boton.
             self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+
+            if self.id == 1000:
+                elementoDominio.gbCoord.setPozo()
+            elif self.id == 1001:
+                elementoDominio.gbCoord.setRecta()
             
             if elementoDominio.reloj == False:
                 reloj = QtCore.QTimer()
@@ -285,11 +297,11 @@ class boton(QtGui.QPushButton):
 
 
          
-    
-#Definimos clase que agrupa elementos, junto con la sobreescritura
-#de los eventos dragEnterEvent y dropEvent para manejar arrastre y tirada
-#sobre el elemento
-        
+"""    
+Definimos clase que agrupa elementos, junto con la sobreescritura
+de los eventos dragEnterEvent y dropEvent para manejar arrastre y tirada
+sobre el elemento
+"""        
 class box(QtGui.QGroupBox):
 
     global elementoDominio
@@ -451,7 +463,11 @@ class box(QtGui.QGroupBox):
                 elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "R")
                 self.update()
 
-#Menun utilizado en definir dominio
+"""
+Menun utilizado en definir dominio
+Brinda opciones de operacion sobre los elementos
+cuando se le aplica a los mismos un click derecho
+"""
 class menu(QtGui.QListView):
     def __init__(self, padre):
         super(menu, self).__init__(padre)
@@ -510,6 +526,274 @@ class menu(QtGui.QListView):
                 self.hide()   
 
 
+
+"""
+Clase que maneja la interfaz de coordenadas
+"""
+class gbCoordenadas(QtGui.QGroupBox):
+    def __init__(self, padre):
+        super(gbCoordenadas, self).__init__(padre)
+        self.init()
+
+    def init(self):
+        self.setGeometry(QtCore.QRect(260, 110, 151, 181))
+        self.setTitle("Coordenadas")
+
+        #Etiqueta de Tipo 
+        self.label = QtGui.QLabel(self)
+        self.label.setGeometry(QtCore.QRect(10, 20, 91, 16))
+        self.label.setText(QtGui.QApplication.translate("Form", "Recta Pozo", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setObjectName(_fromUtf8("label"))
+        self.label.setVisible(False)
+
+        #X1
+        self.lineEdit = QtGui.QLineEdit(self)
+        self.lineEdit.setGeometry(QtCore.QRect(40, 50, 25, 20))
+        self.lineEdit.setStyleSheet(_fromUtf8("border-color: rgb(255, 0, 0);"))
+        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
+        self.lineEdit.setVisible(False)
+
+        #Y1
+        self.lineEdit_2 = QtGui.QLineEdit(self)
+        self.lineEdit_2.setGeometry(QtCore.QRect(100, 50, 25, 20))
+        self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
+        self.lineEdit_2.setVisible(False)
+
+        #X2
+        self.lineEdit_3 = QtGui.QLineEdit(self)
+        self.lineEdit_3.setGeometry(QtCore.QRect(40, 110, 25, 20))
+        self.lineEdit_3.setObjectName(_fromUtf8("lineEdit_3"))
+        self.lineEdit_3.setVisible(False)
+
+        #Y2
+        self.lineEdit_4 = QtGui.QLineEdit(self)
+        self.lineEdit_4.setGeometry(QtCore.QRect(100, 110, 25, 20))
+        self.lineEdit_4.setObjectName(_fromUtf8("lineEdit_4"))
+        self.lineEdit_4.setVisible(False)
+
+        #X1
+        self.label_2 = QtGui.QLabel(self)
+        self.label_2.setGeometry(QtCore.QRect(10, 50, 25, 20))
+        self.label_2.setStyleSheet(_fromUtf8("border-top-color: rgb(255, 0, 0);\n"
+                                    "border-left-color: rgb(255, 0, 0);\n"
+                                    "border-bottom-color: rgb(255, 0, 0);\n"
+                                    "border-right-color: rgb(255, 0, 0);"))
+        self.label_2.setText("X1")
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.label_2.setVisible(False)
+
+
+        #Y1
+        self.label_3 = QtGui.QLabel(self)
+        self.label_3.setGeometry(QtCore.QRect(75, 50, 25, 20))
+        self.label_3.setStyleSheet(_fromUtf8("border-top-color: rgb(255, 0, 0);\n"
+                                   "border-left-color: rgb(255, 0, 0);\n"
+                                   "border-bottom-color: rgb(255, 0, 0);\n"
+                                   "border-right-color: rgb(255, 0, 0);"))
+        self.label_3.setText("Y1")
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.label_3.setVisible(False)
+
+
+        #X2
+        self.label_4 = QtGui.QLabel(self)
+        self.label_4.setGeometry(QtCore.QRect(10, 110, 25, 20))
+        self.label_4.setStyleSheet(_fromUtf8("border: 3px; \n"
+                                    "border-top-color: rgb(255, 0, 0);\n"
+                                    "border-left-color: rgb(255, 0, 0);\n"
+                                    "border-bottom-color: rgb(255, 0, 0);\n"
+                                    "border-right-color: rgb(255, 0, 0);"))
+        self.label_4.setText("X2")
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.label_4.setVisible(False)
+
+        #Y2
+        self.label_5 = QtGui.QLabel(self)
+        self.label_5.setGeometry(QtCore.QRect(75, 110, 25, 20))
+        self.label_5.setStyleSheet("border-top-color: rgb(255, 0, 0);\n"
+                                    "border-left-color: rgb(255, 0, 0);\n"
+                                    "border-bottom-color: rgb(255, 0, 0);\n"
+                                    "border-right-color: rgb(255, 0, 0);")
+        self.label_5.setText("Y2")
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.label_5.setVisible(False)
+
+
+        #Boton Aceptar
+        self.btnAceptar = QtGui.QPushButton(self)
+        self.btnAceptar.setGeometry(QtCore.QRect(10, 150, 50, 20))
+        self.btnAceptar.setText("Aceptar")
+        self.btnAceptar.setVisible(False)
+           
+        #Boton Cancelar
+        self.btnCancelar = QtGui.QPushButton(self)
+        self.btnCancelar.setGeometry(QtCore.QRect(80, 150, 50, 20))
+        self.btnCancelar.setText("Cancelar")
+        self.btnCancelar.setVisible(False)
+
+        QtCore.QObject.connect(self.btnAceptar, QtCore.SIGNAL('clicked()'), self.setAceptar)
+        QtCore.QObject.connect(self.btnCancelar, QtCore.SIGNAL('clicked()'), self.setCancelar)
+
+    def setPozo(self):
+        #Etiqueta de Tipo 
+        self.label.setText(QtGui.QApplication.translate("Form", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setVisible(True)
+
+        #X1
+        self.lineEdit.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit.setVisible(True)
+
+        #Y1
+        self.lineEdit_2.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_2.setVisible(True)
+
+        #X2
+        self.lineEdit_3.setVisible(False)
+
+        #Y2
+        self.lineEdit_4.setVisible(False)
+
+        #X1
+        self.label_2.setVisible(True)
+
+
+        #Y1
+        self.label_3.setVisible(True)
+
+
+        #X2
+        self.label_4.setVisible(False)
+
+        #Y2
+        self.label_5.setVisible(False)
+
+
+        #Boton Aceptar
+        self.btnAceptar.setVisible(True)
+           
+        #Boton Cancelar
+        self.btnCancelar.setVisible(True)
+
+
+    def setRecta(self):
+        #Etiqueta de Tipo 
+        self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setVisible(True)
+
+        #X1
+        self.lineEdit.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit.setVisible(True)
+
+        #Y1
+        self.lineEdit_2.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_2.setVisible(True)
+
+        #X2
+        self.lineEdit_3.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_3.setVisible(True)
+
+        #Y2
+        self.lineEdit_4.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_4.setVisible(True)
+
+        #X1
+        self.label_2.setVisible(True)
+
+
+        #Y1
+        self.label_3.setVisible(True)
+
+
+        #X2
+        self.label_4.setVisible(True)
+
+        #Y2
+        self.label_5.setVisible(True)
+
+
+        #Boton Aceptar
+        self.btnAceptar.setVisible(True)
+           
+        #Boton Cancelar
+        self.btnCancelar.setVisible(True)
+        
+    def setAceptar(self):
+        #Etiqueta de Tipo 
+        self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setVisible(False)
+
+        #X1
+        self.lineEdit.setVisible(False)
+
+        #Y1
+        self.lineEdit_2.setVisible(False)
+
+        #X2
+        self.lineEdit_3.setVisible(False)
+
+        #Y2
+        self.lineEdit_4.setVisible(False)
+
+        #X1
+        self.label_2.setVisible(False)
+
+
+        #Y1
+        self.label_3.setVisible(False)
+
+
+        #X2
+        self.label_4.setVisible(False)
+
+        #Y2
+        self.label_5.setVisible(False)
+
+
+        #Boton Aceptar
+        self.btnAceptar.setVisible(False)
+           
+        #Boton Cancelar
+        self.btnCancelar.setVisible(False)
+        
+    def setCancelar(self):
+        
+        #Etiqueta de Tipo 
+        self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setVisible(False)
+
+        #X1
+        self.lineEdit.setVisible(False)
+
+        #Y1
+        self.lineEdit_2.setVisible(False)
+
+        #X2
+        self.lineEdit_3.setVisible(False)
+
+        #Y2
+        self.lineEdit_4.setVisible(False)
+
+        #X1
+        self.label_2.setVisible(False)
+
+
+        #Y1
+        self.label_3.setVisible(False)
+
+
+        #X2
+        self.label_4.setVisible(False)
+
+        #Y2
+        self.label_5.setVisible(False)
+
+
+        #Boton Aceptar
+        self.btnAceptar.setVisible(False)
+           
+        #Boton Cancelar
+        self.btnCancelar.setVisible(False)
+
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
 su funcion es agregar los elementos correspondientes a la vista de
@@ -519,13 +803,7 @@ crear dominio
 class Ui_Form(object):
 
     def setupUi(self, Form, ContEnsayo):
-        
-        """
-        Form.setObjectName(_fromUtf8("Form"))
-        Form.resize(552, 460)
-        Form.setWindowTitle(QtGui.QApplication.translate("Form", "Form", None, QtGui.QApplication.UnicodeUTF8))
-        Form.setStyleSheet(_fromUtf8("QtGui.QPushButton{margin: 8px;}"))
-        """
+
 
         elementoDominio.ContEnsayo = ContEnsayo
         
@@ -566,80 +844,9 @@ class Ui_Form(object):
         self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
         self.barrera.id = 1001
         
-        self.groupBox_2 = QtGui.QGroupBox(self.frame)
-        self.groupBox_2.setGeometry(QtCore.QRect(260, 110, 151, 181))
-        self.groupBox_2.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 255);"))
-        self.groupBox_2.setTitle(QtGui.QApplication.translate("Form", "Coordenadas", None, QtGui.QApplication.UnicodeUTF8))
-        self.groupBox_2.setObjectName(_fromUtf8("groupBox_2"))
 
-        self.label = QtGui.QLabel(self.groupBox_2)
-        self.label.setGeometry(QtCore.QRect(10, 20, 91, 16))
-        self.label.setText(QtGui.QApplication.translate("Form", "Recta Pozo", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setObjectName(_fromUtf8("label"))
+        elementoDominio.gbCoord = gbCoordenadas(self.frame)
 
-        self.lineEdit = QtGui.QLineEdit(self.groupBox_2)
-        self.lineEdit.setGeometry(QtCore.QRect(40, 50, 61, 20))
-        self.lineEdit.setStyleSheet(_fromUtf8("border-color: rgb(255, 0, 0);"))
-        self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
-
-        self.lineEdit_2 = QtGui.QLineEdit(self.groupBox_2)
-        self.lineEdit_2.setGeometry(QtCore.QRect(40, 80, 61, 20))
-        self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
-
-        self.lineEdit_3 = QtGui.QLineEdit(self.groupBox_2)
-        self.lineEdit_3.setGeometry(QtCore.QRect(40, 110, 61, 20))
-        self.lineEdit_3.setObjectName(_fromUtf8("lineEdit_3"))
-
-        self.lineEdit_4 = QtGui.QLineEdit(self.groupBox_2)
-        self.lineEdit_4.setGeometry(QtCore.QRect(40, 140, 61, 20))
-        self.lineEdit_4.setObjectName(_fromUtf8("lineEdit_4"))
-
-        self.label_2 = QtGui.QLabel(self.groupBox_2)
-        self.label_2.setGeometry(QtCore.QRect(10, 50, 31, 16))
-        self.label_2.setStyleSheet(_fromUtf8("border-top-color: rgb(255, 0, 0);\n"
-                                    "border-left-color: rgb(255, 0, 0);\n"
-                                    "border-bottom-color: rgb(255, 0, 0);\n"
-                                    "border-right-color: rgb(255, 0, 0);"))
-        self.label_2.setText(QtGui.QApplication.translate("Form", "X1", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_2.setObjectName(_fromUtf8("label_2"))
-
-        self.label_3 = QtGui.QLabel(self.groupBox_2)
-        self.label_3.setGeometry(QtCore.QRect(10, 80, 21, 16))
-        self.label_3.setStyleSheet(_fromUtf8("border-top-color: rgb(255, 0, 0);\n"
-                                   "border-left-color: rgb(255, 0, 0);\n"
-                                   "border-bottom-color: rgb(255, 0, 0);\n"
-                                   "border-right-color: rgb(255, 0, 0);"))
-        self.label_3.setText(QtGui.QApplication.translate("Form", "Y1", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_3.setObjectName(_fromUtf8("label_3"))
-
-        self.label_4 = QtGui.QLabel(self.groupBox_2)
-        self.label_4.setGeometry(QtCore.QRect(10, 110, 21, 20))
-        self.label_4.setStyleSheet(_fromUtf8("border: 3px; \n"
-                                    "border-top-color: rgb(255, 0, 0);\n"
-                                    "border-left-color: rgb(255, 0, 0);\n"
-                                    "border-bottom-color: rgb(255, 0, 0);\n"
-                                    "border-right-color: rgb(255, 0, 0);"))
-        self.label_4.setText(QtGui.QApplication.translate("Form", "X2", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_4.setObjectName(_fromUtf8("label_4"))
-
-        self.label_5 = QtGui.QLabel(self.groupBox_2)
-        self.label_5.setGeometry(QtCore.QRect(10, 140, 21, 20))
-        self.label_5.setStyleSheet("border-top-color: rgb(255, 0, 0);\n"
-                                    "border-left-color: rgb(255, 0, 0);\n"
-                                    "border-bottom-color: rgb(255, 0, 0);\n"
-                                    "border-right-color: rgb(255, 0, 0);")
-        self.label_5.setText(QtGui.QApplication.translate("Form", "Y2", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_5.setObjectName(_fromUtf8("label_5"))
-
-        self.spinBox = QtGui.QSpinBox(self.groupBox_2)
-        self.spinBox.setGeometry(QtCore.QRect(90, 20, 42, 22))
-        self.spinBox.setProperty("value", 1)
-        self.spinBox.setObjectName(_fromUtf8("spinBox"))
-
-        """
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
-        """
 
         self.frame.show()
         

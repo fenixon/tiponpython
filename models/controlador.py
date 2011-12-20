@@ -24,6 +24,10 @@ class Proyecto(object):
         #Ultima recta y pozo agregados
         self.idP = 0
         self.idR = 0
+
+        #Recta candidata a ser agregada
+        self.rectaCandidata = ""
+
         
     def agregarEnsayo(self, bombeos):
         self.ultimoIdEns=self.ultimoIdEns + 1
@@ -78,7 +82,7 @@ class Proyecto(object):
             
         print "NADA HE ENCONTRADO"
         return listaRetorno
-        
+       
 
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2):        
@@ -185,3 +189,16 @@ class Proyecto(object):
         for recta in self.listaRecta:
             if recta.id == idElemento:
                 self.listaRecta.remove(recta)
+
+    def agregarRectaCandidata(self, tipo, x1, y1, x2, y2):        
+        self.rectaCandidata = barrera(x1, x2, y1, y2, tipo)
+        
+    def hayRectaCandidata(self):
+
+        if self.rectaCandidata:
+            return True
+
+        return False
+
+    def eliminarRectaCandidata(self):
+        self.rectaCandidata = ""

@@ -169,6 +169,13 @@ class elementoDominio(object):
     selectedMenuMouse = {}
 
     gbCoord = ""
+
+    Dominio = ""
+
+    #Pozo candidato a ser agregado
+    pozoCandidato = ""
+    hayPozoCandidato = False
+
     
     def __init__(self):
         super(elementoDominio, self).__init__()
@@ -390,6 +397,9 @@ class box(QtGui.QGroupBox):
         self.rectas = elementoDominio.ContEnsayo.dibujarRecta()
         for x in self.rectas:  
             painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+        if elementoDominio.ContEnsayo.hayRectaCandidata():
+            rc = elementoDominio.ContEnsayo.rectaCandidata
+            painter.drawLine(rc.x1, rc.y1, rc.x2, rc.y2)
         self.update()
 
     def mouseMoveEvent(self, e):
@@ -561,13 +571,13 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #X2
         self.lineEdit_3 = QtGui.QLineEdit(self)
-        self.lineEdit_3.setGeometry(QtCore.QRect(40, 110, 25, 20))
+        self.lineEdit_3.setGeometry(QtCore.QRect(40, 100, 25, 20))
         self.lineEdit_3.setObjectName(_fromUtf8("lineEdit_3"))
         self.lineEdit_3.setVisible(False)
 
         #Y2
         self.lineEdit_4 = QtGui.QLineEdit(self)
-        self.lineEdit_4.setGeometry(QtCore.QRect(100, 110, 25, 20))
+        self.lineEdit_4.setGeometry(QtCore.QRect(100, 100, 25, 20))
         self.lineEdit_4.setObjectName(_fromUtf8("lineEdit_4"))
         self.lineEdit_4.setVisible(False)
 
@@ -597,7 +607,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #X2
         self.label_4 = QtGui.QLabel(self)
-        self.label_4.setGeometry(QtCore.QRect(10, 110, 25, 20))
+        self.label_4.setGeometry(QtCore.QRect(10, 100, 25, 20))
         self.label_4.setStyleSheet(_fromUtf8("border: 3px; \n"
                                     "border-top-color: rgb(255, 0, 0);\n"
                                     "border-left-color: rgb(255, 0, 0);\n"
@@ -609,7 +619,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y2
         self.label_5 = QtGui.QLabel(self)
-        self.label_5.setGeometry(QtCore.QRect(75, 110, 25, 20))
+        self.label_5.setGeometry(QtCore.QRect(75, 100, 25, 20))
         self.label_5.setStyleSheet("border-top-color: rgb(255, 0, 0);\n"
                                     "border-left-color: rgb(255, 0, 0);\n"
                                     "border-bottom-color: rgb(255, 0, 0);\n"
@@ -621,19 +631,35 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Boton Aceptar
         self.btnAceptar = QtGui.QPushButton(self)
-        self.btnAceptar.setGeometry(QtCore.QRect(10, 150, 50, 20))
+        self.btnAceptar.setGeometry(QtCore.QRect(10, 155, 50, 20))
         self.btnAceptar.setText("Aceptar")
         self.btnAceptar.setVisible(False)
            
         #Boton Cancelar
         self.btnCancelar = QtGui.QPushButton(self)
-        self.btnCancelar.setGeometry(QtCore.QRect(80, 150, 50, 20))
+        self.btnCancelar.setGeometry(QtCore.QRect(80, 155, 50, 20))
         self.btnCancelar.setText("Cancelar")
         self.btnCancelar.setVisible(False)
 
+        #Boton de Vista Previa
+        self.btnPrevia = QtGui.QPushButton(self)
+        self.btnPrevia.setGeometry(QtCore.QRect(10, 130, 100, 20))
+        self.btnPrevia.setText("Vista Previa")
+        self.btnPrevia.setVisible(False)
+
+
         QtCore.QObject.connect(self.btnAceptar, QtCore.SIGNAL('clicked()'), self.setAceptar)
         QtCore.QObject.connect(self.btnCancelar, QtCore.SIGNAL('clicked()'), self.setCancelar)
+        QtCore.QObject.connect(self.btnPrevia, QtCore.SIGNAL('clicked()'), self.setPrevia)
 
+        #Validacion
+        self.validador = QtGui.QIntValidator(0, 900, self)
+
+        self.lineEdit.setValidator(self.validador)
+        self.lineEdit_2.setValidator(self.validador)
+        self.lineEdit_3.setValidator(self.validador)
+        self.lineEdit_4.setValidator(self.validador)
+        
     def setPozo(self):
         #Etiqueta de Tipo 
         self.label.setText(QtGui.QApplication.translate("Form", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
@@ -674,6 +700,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Boton Cancelar
         self.btnCancelar.setVisible(True)
 
+        #Vista Previa
+        self.btnPrevia.setVisible(True)
 
     def setRecta(self):
         #Etiqueta de Tipo 
@@ -716,6 +744,9 @@ class gbCoordenadas(QtGui.QGroupBox):
            
         #Boton Cancelar
         self.btnCancelar.setVisible(True)
+
+        #Vista Previa
+        self.btnPrevia.setVisible(True)
         
     def setAceptar(self):
         #Etiqueta de Tipo 
@@ -754,6 +785,9 @@ class gbCoordenadas(QtGui.QGroupBox):
            
         #Boton Cancelar
         self.btnCancelar.setVisible(False)
+
+        #Vista Previa
+        self.btnPrevia.setVisible(False)
         
     def setCancelar(self):
         
@@ -776,7 +810,6 @@ class gbCoordenadas(QtGui.QGroupBox):
         #X1
         self.label_2.setVisible(False)
 
-
         #Y1
         self.label_3.setVisible(False)
 
@@ -793,6 +826,37 @@ class gbCoordenadas(QtGui.QGroupBox):
            
         #Boton Cancelar
         self.btnCancelar.setVisible(False)
+
+        #Vista Previa
+        self.btnPrevia.setVisible(False)
+
+
+        if elementoDominio.ContEnsayo.hayRectaCandidata:
+            elementoDominio.ContEnsayo.eliminarRectaCandidata()
+        if elementoDominio.hayPozoCandidato:
+            elementoDominio.hayPozoCandidato = False
+            elementoDominio.pozoCandidato.hide()
+            elementoDominio.pozoCandidato = ""
+
+    def setPrevia(self):
+        if self.label.text() == "Pozo":
+            if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
+                if not elementoDominio.hayPozoCandidato:
+                    elementoDominio.pozoCandidato = QtGui.QPushButton(elementoDominio.Dominio)
+                    elementoDominio.hayPozoCandidato = True
+                elementoDominio.pozoCandidato.setGeometry(QtCore.QRect(np.int32(self.lineEdit.text()),
+                                                                       np.int32(self.lineEdit_2.text()), 25, 20))
+                elementoDominio.pozoCandidato.show()
+        else:
+            
+                        
+            if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
+
+                elementoDominio.ContEnsayo.agregarRectaCandidata("Positivo", np.int32(self.lineEdit.text()),
+                                                                 np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+                                                                 np.int32(self.lineEdit_4.text()))
+            
+
 
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
@@ -823,11 +887,11 @@ class Ui_Form(object):
         self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
         #Caja de elementos especifica del dominio
-        self.Dominio = box(self.groupBoxDominio)
+        elementoDominio.Dominio = box(self.groupBoxDominio)
 
         #Definimos la instancia global del menu y le asociamo
         #un padre.
-        elementoDominio.menuMouse = menu(self.Dominio)       
+        elementoDominio.menuMouse = menu(elementoDominio.Dominio)       
         
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))

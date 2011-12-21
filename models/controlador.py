@@ -51,36 +51,35 @@ class Proyecto(object):
                 
 
     def moverPozo(self, idElemento, x, y):
-        for x in self.listaPozo:
-            if x.id == idElemento:
-                x.actualizarCoordenadas(x, y)
+        
+        for pozo in self.listaPozo:
+            if pozo.id == idElemento:
+                pozo.actualizarCoordenadas(x, y)
                 return
             
     def removerPozo(self, idElemento):
-        print "Identificador a eliminar", idElemento
-
-        for p in self.listaPozo:
-            print "Identificadores de los pozos", p.id
+ 
             
         for x in self.listaPozo:
             if x.id == idElemento:
                 self.listaPozo.remove(x)
                 print "Pozo eliminado"
 
-        for x in self.listaPozo:
-            print x.id
+
 
     def retornarCoordenadas(self, idElemento):
         listaRetorno = {}
+        listaRetorno["x"] = 0
+        listaRetorno["y"] = 0
 
-        for x in self.listaPozo:
-            if x.id == idElemento:
-                listaRetorno["x"] = x.x
-                listaRetorno["y"] = x.y
+        for pozo in self.listaPozo:
+            if pozo.id == idElemento:
+                print pozo.x, pozo.y
+                listaRetorno["x"] = pozo.x
+                listaRetorno["y"] = pozo.y
                 
                 return listaRetorno
             
-        print "NADA HE ENCONTRADO"
         return listaRetorno
        
 

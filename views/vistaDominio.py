@@ -244,6 +244,10 @@ class boton(QtGui.QPushButton):
                 elementoDominio.transicion = True
                 elementoDominio.reloj = True
 
+            if self.id != 1000 and self.id != 1001:
+                #Se muestran sus coordenadas
+                elementoDominio.gbCoord.setPozoExistente(self.id)
+
        else:
            elementoDominio.selectedMenuMouse["tipo"] = "punto"
            elementoDominio.selectedMenuMouse["id"] = self.id
@@ -290,6 +294,10 @@ class boton(QtGui.QPushButton):
             drag.setMimeData(mimedata)
             drag.setHotSpot(e.pos() - self.rect().topLeft())
             dropAction = drag.start(QtCore.Qt.MoveAction)
+
+        if self.id != 1000 and self.id != 1001:
+            #Se muestran sus coordenadas
+            elementoDominio.gbCoord.setPozoExistente(self.id)
 
     def apagar(self):
         elementoDominio.transicion = False
@@ -654,10 +662,16 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.btnPrevia.setText("Vista Previa")
         self.btnPrevia.setVisible(False)
 
+        #Boton Actualizar
+        self.btnActualizar = QtGui.QPushButton(self)
+        self.btnActualizar.setGeometry(QtCore.QRect(10,130, 100, 20))
+        self.btnActualizar.setText("Actualizar")
+        self.btnActualizar.setVisible(False)
 
         QtCore.QObject.connect(self.btnAceptar, QtCore.SIGNAL('clicked()'), self.setAceptar)
         QtCore.QObject.connect(self.btnCancelar, QtCore.SIGNAL('clicked()'), self.setCancelar)
         QtCore.QObject.connect(self.btnPrevia, QtCore.SIGNAL('clicked()'), self.setPrevia)
+        QtCore.QObject.connect(self.btnActualizar, QtCore.SIGNAL('clicked()'), self.setActualizar)
 
         #Validacion
         self.validador = QtGui.QIntValidator(0, 900, self)
@@ -710,6 +724,9 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Vista Previa
         self.btnPrevia.setVisible(True)
 
+        #Boton Actualizar
+        self.btnActualizar.setVisible(False)
+
     def setRecta(self):
         #Etiqueta de Tipo 
         self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
@@ -754,6 +771,9 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Vista Previa
         self.btnPrevia.setVisible(True)
+
+        #Boton Actualizar
+        self.btnActualizar.setVisible(False)
         
     def setAceptar(self):
 
@@ -902,7 +922,38 @@ class gbCoordenadas(QtGui.QGroupBox):
                 elementoDominio.ContEnsayo.agregarRectaCandidata("Positivo", np.int32(self.lineEdit.text()),
                                                                  np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
                                                                  np.int32(self.lineEdit_4.text()))
+
+    def setPozoExistente(self, idPozo):
+
+        coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(idPozo)
+
+        self.lineEdit.setText(QtCore.QString.number(coordenadas['x'], 10))
+        self.lineEdit_2.setText(QtCore.QString.number(coordenadas['y'], 10))
+
+        self.idElemento = idPozo
+        self.tipoElemento = "pozo"
+        
+        if not self.btnActualizar.isVisible():
+            self.btnActualizar.setVisible(True)
+            self.btnAceptar.setVisible(False)
+            self.btnCancelar.setVisible(False)
+            self.btnPrevia.setVisible(False)
+
+            self.lineEdit.setVisible(True)
+            self.lineEdit_2.setVisible(True)
+
+    def setActualizar(self):
+        if self.tipoElemento == "pozo":
             
+            elementoDominio.ContEnsayo.moverPozo(self.idElemento, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
+
+            for pozo in elementoDominio.Dominio.botones:
+                if pozo.id == self.idElemento:
+                    pozo.move(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
+
+    def setRectaExistente(self):
+        pass
+    
 
 
 """

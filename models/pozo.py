@@ -18,3 +18,4 @@ class pozo(object):
         def actualizarCoordenadas(self, x, y):
                 self.x = x
                 self.y = y
+               

@@ -63,7 +63,7 @@ class Proyecto(object):
         for x in self.listaPozo:
             if x.id == idElemento:
                 self.listaPozo.remove(x)
-                print "Pozo eliminado"
+
 
 
 
@@ -74,7 +74,6 @@ class Proyecto(object):
 
         for pozo in self.listaPozo:
             if pozo.id == idElemento:
-                print pozo.x, pozo.y
                 listaRetorno["x"] = pozo.x
                 listaRetorno["y"] = pozo.y
                 
@@ -89,14 +88,17 @@ class Proyecto(object):
         self.idR = self.idR + 1
         r.id = self.idR
 
-        self.listaRecta.append(r)        
+        self.listaRecta.append(r)
+
+    def buscarRecta(self, idElemento):
+        for recta in self.listaRecta:
+            if recta.id == idElemento:
+                return recta
 
     def dibujarRecta(self):
         return self.listaRecta
             
     def buscarPuntoEnRecta(self, x, y):
-
-        #print "X = ", x, " Y = ", y
         
         for barrera in self.listaRecta:
 
@@ -113,13 +115,12 @@ class Proyecto(object):
 
             valor1 = np.absolute(recta.dx() /2)
             valor2 = np.absolute(recta.dy() /2)
-
-            #print "Valor absoluto de la recta recta recta.dx() =", valor1, " recta.dy() = ", valor2    
             
             #Recta proxima a las x
             if  np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):               
                 lista = {}
                 lista['punto'] = puntoQ
+
                 lista['eje'] = "x"
                 lista['id'] = barrera.id
                 return lista
@@ -128,6 +129,7 @@ class Proyecto(object):
             if np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
                 lista = {}
                 lista['punto'] = puntoR
+               
                 lista['eje'] = "y"
                 lista['id'] = barrera.id
                 return lista
@@ -151,6 +153,12 @@ class Proyecto(object):
                     if np.absolute(recta.dx()) > 1 and np.absolute(recta.dy()) > 1:
                         barrera.x1 = x
                         barrera.y1 = y
+
+    def actualizarRectaCoord(self, idElemento, x1, y1, x2, y2, tipo):
+        for recta in self.listaRecta:
+            if recta.id == idElemento:
+                recta.actualizarBarrera(x1, x2, y1, y2, tipo)
+                return
 
     def buscarPuntoPorQ(self, x, y):
         for Q in self.listaRecta:

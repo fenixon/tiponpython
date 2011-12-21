@@ -176,6 +176,8 @@ class elementoDominio(object):
     pozoCandidato = ""
     hayPozoCandidato = False
 
+    pozoSeleccionado = 0
+
     
     def __init__(self):
         super(elementoDominio, self).__init__()
@@ -244,9 +246,23 @@ class boton(QtGui.QPushButton):
                 elementoDominio.transicion = True
                 elementoDominio.reloj = True
 
-            if self.id != 1000 and self.id != 1001:
+            if self.id != 1000 and self.id != 1001:                
                 #Se muestran sus coordenadas
                 elementoDominio.gbCoord.setPozoExistente(self.id)
+
+                if elementoDominio.pozoSeleccionado == 0:
+                    elementoDominio.pozoSeleccionado = self.id
+                    self.setStyleSheet("background-color: red")
+                    
+                    elementoDominio.gbCoord.actualizarCoordenadasPozo(self.id)
+                    elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
+                
+            else:
+                #Reseteo de recta seleccionada
+                elementoDominio.Dominio.rectaSeleccionada['id'] = 0
+                self.update()
+                elementoDominio.gbCoord.eliminarPlacebos()
+
 
        else:
            elementoDominio.selectedMenuMouse["tipo"] = "punto"
@@ -345,6 +361,10 @@ class box(QtGui.QGroupBox):
         self.botones = []
 
         self.bGiratorios = []
+
+        self.rectaSeleccionada = {}
+        self.rectaSeleccionada['id'] = 0
+
         
     #Sobreescribimos dragEnterEvent para pemitir
     #la accion de este evento.
@@ -393,8 +413,7 @@ class box(QtGui.QGroupBox):
     def paintEvent(self, e):
         painter = QtGui.QPainter()
         painter.begin(self)
-        painter.setPen(QtCore.Qt.blue)
-        painter.setBrush(QtGui.QColor(0, 255, 127))
+        painter.setBrush(QtGui.QColor(0, 255, 127))        
         painter.setBackground(painter.brush())
         painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
         self.dibujarRectas(painter)
@@ -404,13 +423,20 @@ class box(QtGui.QGroupBox):
     def dibujarRectas(self, painter):
         self.rectas = elementoDominio.ContEnsayo.dibujarRecta()
         for x in self.rectas:  
-            painter.drawLine(x.x1, x.y1, x.x2, x.y2)
-
-        
+            if len(self.rectaSeleccionada) > 0:
+                if self.rectaSeleccionada['id'] == x.id:
+                    painter.setPen(QtCore.Qt.red)
+                    painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+                    #self.rectaSeleccionada[0] = 0
+                else:
+                    painter.setPen(QtCore.Qt.blue)
+                    painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+            else:                
+                painter.setPen(QtCore.Qt.blue)
+                painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+            
 
         if elementoDominio.ContEnsayo.hayRectaCandidata():
-            #?rc = elementoDominio.ContEnsayo.rectaCandidata
-            #painter.drawLine(rc.x1, rc.y1, rc.x2, rc.y2)
 
             painter.drawLine(elementoDominio.ContEnsayo.rectaCandidata.x1, elementoDominio.ContEnsayo.rectaCandidata.y1,
                              elementoDominio.ContEnsayo.rectaCandidata.x2, elementoDominio.ContEnsayo.rectaCandidata.y2)
@@ -429,6 +455,11 @@ class box(QtGui.QGroupBox):
                 self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
             else:
                 self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
+
+            
+            #Enviamos identificador a funcion que expresa las coordenadas de manera grafica
+            elementoDominio.gbCoord.setRectaExistente(lista['id'], self.rectaSeleccionada['id'])
+
             botonGiratorio.setGeometry (lista['punto'].x(), lista['punto'].y(), 10, 10)
             self.bGiratorios.append(botonGiratorio)
             botonGiratorio.show()
@@ -474,6 +505,17 @@ class box(QtGui.QGroupBox):
             #self.presionandoRecta a verdadero.
             if np.int(self.cursor().shape()) == 8 or np.int(self.cursor().shape()) == 7:
                 self.presionandoRecta = True
+                
+                recta = elementoDominio.ContEnsayo.buscarPuntoEnRecta(e.pos().x(), e.pos().y())
+                
+                if len(recta) > 0:
+                    self.rectaSeleccionada['id'] = recta['id']
+
+                    for pozo in elementoDominio.Dominio.botones:
+                            if pozo.id == elementoDominio.pozoSeleccionado:
+                                pozo.setStyleSheet('background-color: green')                    
+                                elementoDominio.pozoSeleccionado = 0
+                    
 
     def mouseReleaseEvent(self, e):
         #Dependiendo del tipo de cursos con el que se este modificando la recta
@@ -812,6 +854,10 @@ class gbCoordenadas(QtGui.QGroupBox):
                 else:
                     elementoDominio.ContEnsayo.incluirCandidata()
                 self.update()
+                
+        #Reseteo de recta seleccionada
+        elementoDominio.Dominio.rectaSeleccionada['id'] = 0
+        self.update()
 
         #Etiqueta de Tipo 
         self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
@@ -913,7 +959,9 @@ class gbCoordenadas(QtGui.QGroupBox):
                 elementoDominio.pozoCandidato.setGeometry(QtCore.QRect(np.int32(self.lineEdit.text()),
                                                                        np.int32(self.lineEdit_2.text()), 25, 20))
                 elementoDominio.pozoCandidato.setStyleSheet(_fromUtf8("background-color: red;\n"))
+                
                 elementoDominio.pozoCandidato.show()
+                 
                 
 
         else:                                   
@@ -925,24 +973,55 @@ class gbCoordenadas(QtGui.QGroupBox):
 
     def setPozoExistente(self, idPozo):
 
-        coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(idPozo)
+        if elementoDominio.Dominio.rectaSeleccionada['id'] == 0:
 
-        self.lineEdit.setText(QtCore.QString.number(coordenadas['x'], 10))
-        self.lineEdit_2.setText(QtCore.QString.number(coordenadas['y'], 10))
+            coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(idPozo)
+            
+            if elementoDominio.pozoSeleccionado == 0:
+                self.lineEdit.setText(QtCore.QString.number(coordenadas['x'], 10))
+                self.lineEdit_2.setText(QtCore.QString.number(coordenadas['y'], 10))                
 
-        self.idElemento = idPozo
-        self.tipoElemento = "pozo"
-        
-        if not self.btnActualizar.isVisible():
-            self.btnActualizar.setVisible(True)
-            self.btnAceptar.setVisible(False)
-            self.btnCancelar.setVisible(False)
-            self.btnPrevia.setVisible(False)
+            self.idElemento = idPozo
+            self.tipoElemento = "pozo"
+            
+            if not self.btnActualizar.isVisible():
+                self.btnActualizar.setVisible(True)
+                self.btnAceptar.setVisible(False)
+                self.btnCancelar.setVisible(False)
+                self.btnPrevia.setVisible(False)
 
-            self.lineEdit.setVisible(True)
-            self.lineEdit_2.setVisible(True)
+                self.lineEdit.setVisible(True)
+                self.lineEdit_2.setVisible(True)
+                self.eliminarPlacebos()
+
+            self.lineEdit_3.setVisible(False)
+            self.lineEdit_4.setVisible(False)
+            self.label_4.setVisible(False)
+            self.label_5.setVisible(False)
+
+            self.label.setText(QtGui.QApplication.translate("Form", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
 
     def setActualizar(self):
+        
+        elementoDominio.Dominio.rectaSeleccionada['id'] = 0       
+        
+        if elementoDominio.pozoSeleccionado != 0:
+            for pozo in elementoDominio.Dominio.botones:
+                if pozo.id == elementoDominio.pozoSeleccionado:
+                    pozo.setStyleSheet("background-color: green")
+
+                    for pozo in elementoDominio.Dominio.botones:
+                        if pozo.id == elementoDominio.pozoSeleccionado:
+
+                            elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
+
+                            pozo.move(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
+                    
+                    elementoDominio.pozoSeleccionado = 0
+                    return
+
+
+
         if self.tipoElemento == "pozo":
             
             elementoDominio.ContEnsayo.moverPozo(self.idElemento, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
@@ -951,10 +1030,70 @@ class gbCoordenadas(QtGui.QGroupBox):
                 if pozo.id == self.idElemento:
                     pozo.move(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
 
-    def setRectaExistente(self):
-        pass
-    
+        if self.tipoElemento == "barrera":
+             
+            elementoDominio.ContEnsayo.actualizarRectaCoord(self.idElemento, np.int32(self.lineEdit.text()),
+                                                       np.int32(self.lineEdit_2.text()),  np.int32(self.lineEdit_3.text()),
+                                                       np.int32(self.lineEdit_4.text()), "Negativo")
+            self.update()
+            
+    def setRectaExistente(self, idElemento, irRE):
 
+        if elementoDominio.pozoSeleccionado == 0:            
+            self.tipoElemento = "barrera"
+            self.idElemento = idElemento
+
+            recta = elementoDominio.ContEnsayo.buscarRecta(self.idElemento)
+
+            if irRE == 0:
+                self.lineEdit.setText(QtCore.QString.number(recta.x1, 10))
+                self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
+                self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
+                self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+            else:
+                recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
+                
+                self.lineEdit.setText(QtCore.QString.number(recta.x1, 10))
+                self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
+                self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
+                self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+            
+
+            if not self.btnActualizar.isVisible():
+                
+                self.btnActualizar.setVisible(True)
+
+                self.btnAceptar.setVisible(False)
+                self.btnCancelar.setVisible(False)
+                self.btnPrevia.setVisible(False)
+
+                self.lineEdit.setVisible(True)
+                self.lineEdit_2.setVisible(True)
+                self.eliminarPlacebos()
+
+            self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))            
+            self.lineEdit_3.setVisible(True)
+            self.lineEdit_4.setVisible(True)
+            self.label_4.setVisible(True)
+            self.label_5.setVisible(True)
+
+    def actualizarCoordenadasPozo(self, idPozo):
+        for pozo in elementoDominio.Dominio.botones:
+            if pozo.id == idPozo:
+                self.lineEdit.setText(QtCore.QString.number(pozo.x(), 10))
+                self.lineEdit_2.setText(QtCore.QString.number(pozo.y(), 10))
+                elementoDominio.Dominio.rectaSeleccionada['id'] = 0
+                self.setPozoExistente(idPozo)
+
+
+    def eliminarPlacebos(self):
+        if elementoDominio.ContEnsayo.hayRectaCandidata():
+            elementoDominio.ContEnsayo.eliminarRectaCandidata()
+
+        if elementoDominio.hayPozoCandidato:
+            elementoDominio.pozoCandidato.hide()
+            elementoDominio.pozoCandidato = None
+            elementoDominio.hayPozoCandidato = False
 
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.

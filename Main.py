@@ -102,7 +102,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionVerObs.setObjectName(_fromUtf8("actionVerObs"))
 
         self.actionGenerar_graficas = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", "&Generar graficas", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Generar gráficas", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenerar_graficas.setObjectName(_fromUtf8("actionGenerar_graficas"))
 
         self.actionGenerar_video = QtGui.QAction(MainWindow)
@@ -235,7 +235,7 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def generar_video(self):
 
-        print 'Proximamente se exportara un video con esta opcion'
+        print 'Próximamente se exportará un video con esta opción'
 
 if __name__ == "__main__":
     import sys

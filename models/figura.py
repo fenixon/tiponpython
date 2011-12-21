@@ -2,11 +2,11 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
-from matplotlib.figure import Figure #Clase para contener las gr·ficas
-from mpl_toolkits.mplot3d.axes3d import Axes3D #Clase para trabajar con gr·ficas 3d
-import matplotlib#Quitar luego, solo est· para propÛsitos de generar los ejemplos
-import matplotlib.mlab as mlab#Quitar luego, solo est· para propÛsitos de generar los ejemplos
-from matplotlib import cm#Para los colores de la gr·fica 3d
+from matplotlib.figure import Figure #Clase para contener las gr√°ficas
+from mpl_toolkits.mplot3d.axes3d import Axes3D #Clase para trabajar con gr√°ficas 3d
+import matplotlib#Quitar luego, solo est√° para prop√≥sitos de generar los ejemplos
+import matplotlib.mlab as mlab#Quitar luego, solo est√° para prop√≥sitos de generar los ejemplos
+from matplotlib import cm#Para los colores de la gr√°fica 3d
 import numpy as np
 
 class figura():
@@ -21,18 +21,18 @@ class figura():
         fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
         self.fig = fig
 
-    def plotU(self):#Tengo que ver como voy a hacer para igualar el tamaÒo de los arreglos para x e y
+    def plotU(self):#Tengo que ver como voy a hacer para igualar el tama√±o de los arreglos para x e y
 
         ax = self.axu
-        x = np.arange(0, 10, .05)#Descensos (h), son n˙meros que representan el nivel piezomÈtrico
-        y = np.arange(0, 10, .05)#Tiempos (t), se supone est· en dÌas
+        x = np.arange(0, 10, .05)#Descensos (h), son n√∫meros que representan el nivel piezom√©trico
+        y = np.arange(0, 10, .05)#Tiempos (t), se supone est√°n en d√≠as
         ax.set_title('Descensos h en tiempo t')
         ax.set_xlabel('h')
         ax.set_ylabel('t')
         ax.plot(x,y)
         print 'First plot loaded...'
 
-    def plotD(self):#Tengo que ver como voy a hacer para igualar el tamaÒo de los arreglos para los tres ejes
+    def plotD(self):#Tengo que ver como voy a hacer para igualar el tama√±o de los arreglos para los tres ejes
 
         print 'Loading second plot...'
         matplotlib.rcParams['xtick.direction'] = 'out'
@@ -58,9 +58,9 @@ class figura():
         ax.set_title('Propagacion')
         print 'Second plot loaded...'
 
-    def plotT(self):#Tengo que ver como voy a hacer para igualar el tamaÒo de los arreglos para los tres ejes
+    def plotT(self):#Tengo que ver como voy a hacer para igualar el tama√±o de los arreglos para los tres ejes
 
-        #add_subplot(filas, columnas, numero de grafica/posicion, tipo de grafica)
+        #add_subplot(filas, columnas, n√∫mero de gr√°fica/posici√≥n, tipo de gr√°fica)
         print 'Loading third plot...'
         ax = self.axt
         #X = np.arange(-5, 5, 0.25)
@@ -75,7 +75,7 @@ class figura():
         #Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
         #Z = 10.0 * (Z2 - Z1)
         #print 'Z: \n' + str(Z)
-        #Esto de abajo tiene volar una vez definidas correctamente las matrices
+        #Esto de abajo va a volar una vez definidas correctamente las matrices
         Z = [[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
             ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
             ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
@@ -103,7 +103,7 @@ class figura():
         ax.set_zlim3d(9.5, 10)# viewrange for z-axis should be [-4,4]
         ax.set_ylim3d(0, 20)# viewrange for y-axis should be [-2,2]
         ax.set_xlim3d(0, 20)
-        ax.set_title('Representacion 3d')
+        ax.set_title(u'Representaci√≥n 3d')
         print 'Third plot loaded...'
 #            fig.colorbar(surf, shrink=0.5, aspect=10)
 

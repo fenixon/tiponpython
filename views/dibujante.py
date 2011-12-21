@@ -2,10 +2,10 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
-from PyQt4.QtGui import * #Para la interf�z gr�fica
-from PyQt4.QtCore import * #Para la interf�z gr�fica
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas #Clase para dibujar las gr�ficas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar #Clase para dibujar la barra de herramientas de navegaci�n
+from PyQt4.QtGui import * #Para la interfáz gráfica
+from PyQt4.QtCore import * #Para la interfáz gráfica
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas #Clase para dibujar las gráficas
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar #Clase para dibujar la barra de herramientas de navegación
 
 from models.figura import figura as fm
 
@@ -20,7 +20,7 @@ class dibujante(QMainWindow):
         self.fm.plotT()
         self.fm.plotC()
         self.main_frame = QWidget()
-        self.setWindowTitle('Prueba')
+        self.setWindowTitle(u'Gráficas')
         self.setMaximumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi())
         self.setMinimumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi())
         print 'width: ' + str(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi()) + ', height: ' +str(self.fm.fig.get_figheight() * self.fm.fig.get_dpi()) + ', dpi: ' + str(self.fm.fig.get_dpi())

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
-#
+#Acá se van a calcular las gráficas
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 from matplotlib.figure import Figure #Clase para contener las gráficas
 from mpl_toolkits.mplot3d.axes3d import Axes3D #Clase para trabajar con gráficas 3d
@@ -55,7 +55,7 @@ class figura():
         #CS = contour(X, Y, Z)
         ax.contour(X, Y, Z)
         #clabel(CS, inline=1, fontsize=10)
-        ax.set_title('Propagacion')
+        ax.set_title(u'Propagación')
         print 'Second plot loaded...'
 
     def plotT(self):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes

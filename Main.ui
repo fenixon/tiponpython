@@ -51,8 +51,16 @@
     <addaction name="menuCaudal_de_bombeo"/>
     <addaction name="actionObservaciones"/>
    </widget>
+   <widget class="QMenu" name="menuGraficar">
+    <property name="title">
+     <string>Graficar</string>
+    </property>
+    <addaction name="actionGenerar_graficas"/>
+    <addaction name="actionGenerar_video"/>
+   </widget>
    <addaction name="menuInicio"/>
    <addaction name="menuDatos"/>
+   <addaction name="menuGraficar"/>
    <addaction name="menuAyuda"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -89,6 +97,16 @@
   <action name="actionIngresar">
    <property name="text">
     <string>Ingresar</string>
+   </property>
+  </action>
+  <action name="actionGenerar_graficas">
+   <property name="text">
+    <string>Generar graficas</string>
+   </property>
+  </action>
+  <action name="actionGenerar_video">
+   <property name="text">
+    <string>Generar video...</string>
    </property>
   </action>
  </widget>

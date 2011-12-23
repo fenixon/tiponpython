@@ -444,7 +444,6 @@ class box(QtGui.QGroupBox):
                 painter.drawLine(x.x1, x.y1, x.x3, x.y3)
                 painter.drawLine(x.x4, x.y4, x.x2, x.y2)
                 
-                
             
 
         if elementoDominio.ContEnsayo.hayRectaCandidata():

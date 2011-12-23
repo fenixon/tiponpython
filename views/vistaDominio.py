@@ -583,6 +583,8 @@ class menu(QtGui.QListView):
                 return
             if valor.toString() == "Eliminar":
                 
+                elementoDominio.gbCoord.ocultarFormulario()                
+                
                 if elementoDominio.selectedMenuMouse["tipo"] == "punto":
                     
                     elementoDominio.ContEnsayo.removerPozo(elementoDominio.selectedMenuMouse["id"])
@@ -702,11 +704,21 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_5.setText("Y2")
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.label_5.setVisible(False)
+        
+        #Combo box
+        self.cbTipo = QtGui.QComboBox( self )
+        self.cbTipo.setGeometry(QtCore.QRect(60,20, 60, 20))
+        listaStrings = QtCore.QStringList()
+        listaStrings << "Negativo" << "Positivo"
+        
+        self.cbTipo.addItems(listaStrings)
+        self.cbTipo.setVisible(False)
+        
 
 
         #Boton Aceptar
         self.btnAceptar = QtGui.QPushButton(self)
-        self.btnAceptar.setGeometry(QtCore.QRect(10, 155, 50, 20))
+        self.btnAceptar.setGeometry(QtCore.QRect(80, 155, 50, 20))
         self.btnAceptar.setText("Aceptar")
         self.btnAceptar.setVisible(False)
            
@@ -773,7 +785,9 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y2
         self.label_5.setVisible(False)
-
+    
+        #Combo
+        self.cbTipo.setVisible(False)
 
         #Boton Aceptar
         self.btnAceptar.setVisible(True)
@@ -821,6 +835,9 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y2
         self.label_5.setVisible(True)
+
+        #Combo
+        self.cbTipo.setVisible(True)
 
 
         #Boton Aceptar
@@ -907,6 +924,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Y2
         self.label_5.setVisible(False)
 
+        #Combo
+        self.cbTipo.setVisible(False)
 
         #Boton Aceptar
         self.btnAceptar.setVisible(False)
@@ -949,6 +968,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Y2
         self.label_5.setVisible(False)
 
+        #Combo
+        self.cbTipo.setVisible(False)
 
         #Boton Aceptar
         self.btnAceptar.setVisible(False)
@@ -1016,6 +1037,8 @@ class gbCoordenadas(QtGui.QGroupBox):
             self.lineEdit_4.setVisible(False)
             self.label_4.setVisible(False)
             self.label_5.setVisible(False)
+            self.cbTipo.setVisible(False)
+
 
             self.label.setText(QtGui.QApplication.translate("Form", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -1094,6 +1117,8 @@ class gbCoordenadas(QtGui.QGroupBox):
             self.lineEdit_4.setVisible(True)
             self.label_4.setVisible(True)
             self.label_5.setVisible(True)
+            self.cbTipo.setVisible(True)
+
 
     def actualizarCoordenadasPozo(self, idPozo):
         for pozo in elementoDominio.Dominio.botones:
@@ -1102,6 +1127,56 @@ class gbCoordenadas(QtGui.QGroupBox):
                 self.lineEdit_2.setText(QtCore.QString.number(pozo.y(), 10))
                 elementoDominio.Dominio.rectaSeleccionada['id'] = 0
                 self.setPozoExistente(idPozo)
+
+    def ocultarFormulario ( self ):
+        #Etiqueta de Tipo 
+        self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setVisible(False)
+
+        #X1
+        self.lineEdit.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit.setVisible(False)
+
+        #Y1
+        self.lineEdit_2.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_2.setVisible(False)
+
+        #X2
+        self.lineEdit_3.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_3.setVisible(False)
+
+        #Y2
+        self.lineEdit_4.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_4.setVisible(False)
+
+        #X1
+        self.label_2.setVisible(False)
+
+
+        #Y1
+        self.label_3.setVisible(False)
+
+        #X2
+        self.label_4.setVisible(False)
+
+        #Y2
+        self.label_5.setVisible(False)
+
+        #Combo
+        self.cbTipo.setVisible(False)
+
+
+        #Boton Aceptar
+        self.btnAceptar.setVisible(False)
+           
+        #Boton Cancelar
+        self.btnCancelar.setVisible(False)
+
+        #Vista Previa
+        self.btnPrevia.setVisible(False)
+
+        #Boton Actualizar
+        self.btnActualizar.setVisible(False)
 
 
     def eliminarPlacebos(self):

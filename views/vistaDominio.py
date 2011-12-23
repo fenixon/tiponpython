@@ -426,23 +426,31 @@ class box(QtGui.QGroupBox):
             if len(self.rectaSeleccionada) > 0:
                 if self.rectaSeleccionada['id'] == x.id:
                     painter.setPen(QtCore.Qt.red)
-                    painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+                    painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2 ))
                     if x.x1 < x.x2 :
-                        painter.drawLine(x.x1, x.y1, x.x3, x.y3)
-                        painter.drawLine(x.x4, x.y4, x.x2, x.y2)
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+                        painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
                     else:
-                        painter.drawLine(x.x1, x.y1, x.x4, x.y4)
-                        painter.drawLine(x.x3, x.y3, x.x2, x.y2)
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+                        painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
                 else:
                     painter.setPen(QtCore.Qt.blue)
-                    painter.drawLine(x.x1, x.y1, x.x2, x.y2)
-                    painter.drawLine(x.x1, x.y1, x.x3, x.y3)
-                    painter.drawLine(x.x4, x.y4, x.x2, x.y2)
+                    painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+                    if x.x1 < x.x2 :
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+                        painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+                    else:
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+                        painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
             else:                
                 painter.setPen(QtCore.Qt.blue)
-                painter.drawLine(x.x1, x.y1, x.x2, x.y2)
-                painter.drawLine(x.x1, x.y1, x.x3, x.y3)
-                painter.drawLine(x.x4, x.y4, x.x2, x.y2)
+                painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+                if x.x1 < x.x2 :
+                      painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+                      painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+                else:
+                      painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+                      painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
                 
             
 
@@ -726,7 +734,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         QtCore.QObject.connect(self.btnActualizar, QtCore.SIGNAL('clicked()'), self.setActualizar)
 
         #Validacion
-        self.validador = QtGui.QIntValidator(0, 900, self)
+        self.validador = QtGui.QIntValidator(-100, 900, self)
 
         self.lineEdit.setValidator(self.validador)
         self.lineEdit_2.setValidator(self.validador)

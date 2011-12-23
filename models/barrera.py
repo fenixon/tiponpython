@@ -1,3 +1,5 @@
+import numpy as np
+
 class barrera():
                 
                 id = 0
@@ -23,8 +25,9 @@ class barrera():
       
                                 self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
                                 self. n = 0
-                                xPorm = self.m * self.x2
+                                xPorm = self.m * self.x1
                                 print "____"
+                                print self.m
                                 print xPorm
                                 if xPorm < 0 :
                                                 self.n = self.y1 +  xPorm

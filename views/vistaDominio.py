@@ -718,7 +718,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Boton Aceptar
         self.btnAceptar = QtGui.QPushButton(self)
-        self.btnAceptar.setGeometry(QtCore.QRect(80, 155, 50, 20))
+        self.btnAceptar.setGeometry(QtCore.QRect(10, 155, 50, 20))
         self.btnAceptar.setText("Aceptar")
         self.btnAceptar.setVisible(False)
            

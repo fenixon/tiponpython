@@ -427,13 +427,23 @@ class box(QtGui.QGroupBox):
                 if self.rectaSeleccionada['id'] == x.id:
                     painter.setPen(QtCore.Qt.red)
                     painter.drawLine(x.x1, x.y1, x.x2, x.y2)
-                    #self.rectaSeleccionada[0] = 0
+                    if x.x1 < x.x2 :
+                        painter.drawLine(x.x1, x.y1, x.x3, x.y3)
+                        painter.drawLine(x.x4, x.y4, x.x2, x.y2)
+                    else:
+                        painter.drawLine(x.x1, x.y1, x.x4, x.y4)
+                        painter.drawLine(x.x3, x.y3, x.x2, x.y2)
                 else:
                     painter.setPen(QtCore.Qt.blue)
                     painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+                    painter.drawLine(x.x1, x.y1, x.x3, x.y3)
+                    painter.drawLine(x.x4, x.y4, x.x2, x.y2)
             else:                
                 painter.setPen(QtCore.Qt.blue)
                 painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+                painter.drawLine(x.x1, x.y1, x.x3, x.y3)
+                painter.drawLine(x.x4, x.y4, x.x2, x.y2)
+                
             
 
         if elementoDominio.ContEnsayo.hayRectaCandidata():

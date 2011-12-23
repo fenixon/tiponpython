@@ -144,15 +144,12 @@ class Proyecto(object):
                     recta = QtCore.QLine(barrera.x1, barrera.y1, x, y)
                     
                     if np.absolute(recta.dy()) > 1 and  np.absolute(recta.dx()) > 1:
-                        barrera.x2 = x
-                        barrera.y2 = y
-                    
+                        barrera.actualizarBarrera(barrera.x1, x, barrera.y1, y, "Negativo")
                 else:                
                     recta = QtCore.QLine(x, y, barrera.x2, barrera.y2)
                     
                     if np.absolute(recta.dx()) > 1 and np.absolute(recta.dy()) > 1:
-                        barrera.x1 = x
-                        barrera.y1 = y
+                       barrera.actualizarBarrera(x, barrera.x2,  y, barrera.y2, "Negativo")
 
     def actualizarRectaCoord(self, idElemento, x1, y1, x2, y2, tipo):
         for recta in self.listaRecta:

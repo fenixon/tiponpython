@@ -219,10 +219,10 @@ class boton(QtGui.QPushButton):
         self.setMouseTracking(True)
         self.setToolTip(QtGui.QApplication.translate("Form", tooltip, None, QtGui.QApplication.UnicodeUTF8))
         self.setStyleSheet(_fromUtf8("margin 3px;\n"
-                                    "border-top-color: rgb(255, 0, 0);\n"
-                                    "border-left-color: rgb(255, 0, 0);\n"
-                                    "border-bottom-color: rgb(255, 0, 0);\n"
-                                    "border-right-color: rgb(255, 0, 0);"))
+                                    "border-top-color: yellow;\n"
+                                    "border-left-color: yellow;\n"
+                                    "border-bottom-color: yellow;\n"
+                                    "border-right-color: yellow;"))
 
       
 
@@ -349,7 +349,7 @@ class box(QtGui.QGroupBox):
         self.setAcceptDrops(True)
         self.setMouseTracking(True) 
         self.setGeometry(QtCore.QRect(20, 27, 231, 271))
-        self.setStyleSheet(_fromUtf8("background-color: rgb(0, 255, 127)"))
+        self.setStyleSheet(_fromUtf8("background-color: green"))
         self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
         self.setObjectName(_fromUtf8("Dominio"))
 
@@ -426,14 +426,33 @@ class box(QtGui.QGroupBox):
             if len(self.rectaSeleccionada) > 0:
                 if self.rectaSeleccionada['id'] == x.id:
                     painter.setPen(QtCore.Qt.red)
-                    painter.drawLine(x.x1, x.y1, x.x2, x.y2)
-                    #self.rectaSeleccionada[0] = 0
+                    painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2 ))
+                    if x.x1 < x.x2 :
+                        print "Menor"
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+                        painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+                    else:
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+                        painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
                 else:
                     painter.setPen(QtCore.Qt.blue)
-                    painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+                    painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+                    if x.x1 < x.x2 :
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+                        painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+                    else:
+                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+                        painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
             else:                
                 painter.setPen(QtCore.Qt.blue)
-                painter.drawLine(x.x1, x.y1, x.x2, x.y2)
+                painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+                if x.x1 < x.x2 :
+                      painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+                      painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+                else:
+                      painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+                      painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
+                
             
 
         if elementoDominio.ContEnsayo.hayRectaCandidata():
@@ -494,9 +513,10 @@ class box(QtGui.QGroupBox):
 
             if np.int(self.cursor().shape()) == 7:
                 elementoDominio.selectedMenuMouse["id"] = elementoDominio.ContEnsayo.buscarPuntoPorR(e.pos().x(), e.pos().y())
-                 
-            elementoDominio.menuMouse.move(e.pos())                
-            elementoDominio.menuMouse.show()
+            
+            if elementoDominio.selectedMenuMouse["id"]  != 0:     
+                elementoDominio.menuMouse.move(e.pos())                
+                elementoDominio.menuMouse.show()
 
         else:
 
@@ -565,20 +585,22 @@ class menu(QtGui.QListView):
                 return
             if valor.toString() == "Eliminar":
                 
+                elementoDominio.gbCoord.ocultarFormulario()                
+                
                 if elementoDominio.selectedMenuMouse["tipo"] == "punto":
                     
                     elementoDominio.ContEnsayo.removerPozo(elementoDominio.selectedMenuMouse["id"])
 
                     self.aEliminar = []
                     
-                    for x in self.parent().botones:
+                    for x in elementoDominio.Dominio.botones:
                         if x.id == elementoDominio.selectedMenuMouse["id"]:
                             x.hide()
                             self.aEliminar.append(x)
 
                     for x in self.aEliminar:
                         try:
-                            self.parent().botones.remove(x)
+                            elementoDominio.Dominio.botones.remove(x)
                             break
                         except ValueError:
                             print "Punto a eliminar no encontrado, advertencia simple"
@@ -616,7 +638,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         #X1
         self.lineEdit = QtGui.QLineEdit(self)
         self.lineEdit.setGeometry(QtCore.QRect(40, 50, 25, 20))
-        self.lineEdit.setStyleSheet(_fromUtf8("border-color: rgb(255, 0, 0);"))
+        self.lineEdit.setStyleSheet(_fromUtf8("border-color: yellow;"))
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.lineEdit.setVisible(False)
 
@@ -641,10 +663,10 @@ class gbCoordenadas(QtGui.QGroupBox):
         #X1
         self.label_2 = QtGui.QLabel(self)
         self.label_2.setGeometry(QtCore.QRect(10, 50, 25, 20))
-        self.label_2.setStyleSheet(_fromUtf8("border-top-color: rgb(255, 0, 0);\n"
-                                    "border-left-color: rgb(255, 0, 0);\n"
-                                    "border-bottom-color: rgb(255, 0, 0);\n"
-                                    "border-right-color: rgb(255, 0, 0);"))
+        self.label_2.setStyleSheet(_fromUtf8("border-top-color:yellow;\n"
+                                    "border-left-color: yellow;\n"
+                                    "border-bottom-color: yellow;\n"
+                                    "border-right-color: yellow;"))
         self.label_2.setText("X1")
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.label_2.setVisible(False)
@@ -653,10 +675,10 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Y1
         self.label_3 = QtGui.QLabel(self)
         self.label_3.setGeometry(QtCore.QRect(75, 50, 25, 20))
-        self.label_3.setStyleSheet(_fromUtf8("border-top-color: rgb(255, 0, 0);\n"
-                                   "border-left-color: rgb(255, 0, 0);\n"
-                                   "border-bottom-color: rgb(255, 0, 0);\n"
-                                   "border-right-color: rgb(255, 0, 0);"))
+        self.label_3.setStyleSheet(_fromUtf8("border-top-color: yellow;\n"
+                                   "border-left-color: yellow;\n"
+                                   "border-bottom-color: yellow;\n"
+                                   "border-right-color: yellow;"))
         self.label_3.setText("Y1")
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.label_3.setVisible(False)
@@ -666,10 +688,10 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_4 = QtGui.QLabel(self)
         self.label_4.setGeometry(QtCore.QRect(10, 100, 25, 20))
         self.label_4.setStyleSheet(_fromUtf8("border: 3px; \n"
-                                    "border-top-color: rgb(255, 0, 0);\n"
-                                    "border-left-color: rgb(255, 0, 0);\n"
-                                    "border-bottom-color: rgb(255, 0, 0);\n"
-                                    "border-right-color: rgb(255, 0, 0);"))
+                                    "border-top-color: yellow;\n"
+                                    "border-left-color: yellow;\n"
+                                    "border-bottom-color: yellow;\n"
+                                    "border-right-color: yellow;"))
         self.label_4.setText("X2")
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.label_4.setVisible(False)
@@ -677,13 +699,23 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Y2
         self.label_5 = QtGui.QLabel(self)
         self.label_5.setGeometry(QtCore.QRect(75, 100, 25, 20))
-        self.label_5.setStyleSheet("border-top-color: rgb(255, 0, 0);\n"
-                                    "border-left-color: rgb(255, 0, 0);\n"
-                                    "border-bottom-color: rgb(255, 0, 0);\n"
-                                    "border-right-color: rgb(255, 0, 0);")
+        self.label_5.setStyleSheet("border-top-color: yellow;\n"
+                                    "border-left-color: yellow;\n"
+                                    "border-bottom-color: yellow;\n"
+                                    "border-right-color: yellow;")
         self.label_5.setText("Y2")
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.label_5.setVisible(False)
+        
+        #Combo box
+        self.cbTipo = QtGui.QComboBox( self )
+        self.cbTipo.setGeometry(QtCore.QRect(60,20, 60, 20))
+        listaStrings = QtCore.QStringList()
+        listaStrings << "Negativo" << "Positivo"
+        
+        self.cbTipo.addItems(listaStrings)
+        self.cbTipo.setVisible(False)
+        
 
 
         #Boton Aceptar
@@ -716,7 +748,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         QtCore.QObject.connect(self.btnActualizar, QtCore.SIGNAL('clicked()'), self.setActualizar)
 
         #Validacion
-        self.validador = QtGui.QIntValidator(0, 900, self)
+        self.validador = QtGui.QIntValidator(-100, 900, self)
 
         self.lineEdit.setValidator(self.validador)
         self.lineEdit_2.setValidator(self.validador)
@@ -755,7 +787,9 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y2
         self.label_5.setVisible(False)
-
+    
+        #Combo
+        self.cbTipo.setVisible(False)
 
         #Boton Aceptar
         self.btnAceptar.setVisible(True)
@@ -803,6 +837,9 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y2
         self.label_5.setVisible(True)
+
+        #Combo
+        self.cbTipo.setVisible(True)
 
 
         #Boton Aceptar
@@ -889,6 +926,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Y2
         self.label_5.setVisible(False)
 
+        #Combo
+        self.cbTipo.setVisible(False)
 
         #Boton Aceptar
         self.btnAceptar.setVisible(False)
@@ -931,6 +970,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         #Y2
         self.label_5.setVisible(False)
 
+        #Combo
+        self.cbTipo.setVisible(False)
 
         #Boton Aceptar
         self.btnAceptar.setVisible(False)
@@ -998,6 +1039,8 @@ class gbCoordenadas(QtGui.QGroupBox):
             self.lineEdit_4.setVisible(False)
             self.label_4.setVisible(False)
             self.label_5.setVisible(False)
+            self.cbTipo.setVisible(False)
+
 
             self.label.setText(QtGui.QApplication.translate("Form", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -1076,6 +1119,8 @@ class gbCoordenadas(QtGui.QGroupBox):
             self.lineEdit_4.setVisible(True)
             self.label_4.setVisible(True)
             self.label_5.setVisible(True)
+            self.cbTipo.setVisible(True)
+
 
     def actualizarCoordenadasPozo(self, idPozo):
         for pozo in elementoDominio.Dominio.botones:
@@ -1084,6 +1129,56 @@ class gbCoordenadas(QtGui.QGroupBox):
                 self.lineEdit_2.setText(QtCore.QString.number(pozo.y(), 10))
                 elementoDominio.Dominio.rectaSeleccionada['id'] = 0
                 self.setPozoExistente(idPozo)
+
+    def ocultarFormulario ( self ):
+        #Etiqueta de Tipo 
+        self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setVisible(False)
+
+        #X1
+        self.lineEdit.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit.setVisible(False)
+
+        #Y1
+        self.lineEdit_2.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_2.setVisible(False)
+
+        #X2
+        self.lineEdit_3.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_3.setVisible(False)
+
+        #Y2
+        self.lineEdit_4.setText(QtGui.QApplication.translate("Form", "", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_4.setVisible(False)
+
+        #X1
+        self.label_2.setVisible(False)
+
+
+        #Y1
+        self.label_3.setVisible(False)
+
+        #X2
+        self.label_4.setVisible(False)
+
+        #Y2
+        self.label_5.setVisible(False)
+
+        #Combo
+        self.cbTipo.setVisible(False)
+
+
+        #Boton Aceptar
+        self.btnAceptar.setVisible(False)
+           
+        #Boton Cancelar
+        self.btnCancelar.setVisible(False)
+
+        #Vista Previa
+        self.btnPrevia.setVisible(False)
+
+        #Boton Actualizar
+        self.btnActualizar.setVisible(False)
 
 
     def eliminarPlacebos(self):
@@ -1120,7 +1215,7 @@ class Ui_Form(object):
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
         self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 231, 271))
         self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: rgb(255, 85, 0);\n"))
+        self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: black;\n"))
         self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
         #Caja de elementos especifica del dominio
@@ -1128,12 +1223,12 @@ class Ui_Form(object):
 
         #Definimos la instancia global del menu y le asociamo
         #un padre.
-        elementoDominio.menuMouse = menu(elementoDominio.Dominio)       
+        elementoDominio.menuMouse = menu(self.frame)       
         
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
         self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBox.setStyleSheet(_fromUtf8("border-color: rgb(255, 85, 0);\n"))
+        self.groupBox.setStyleSheet(_fromUtf8("border-color: yellow;\n"))
         self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
             

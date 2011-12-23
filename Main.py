@@ -235,7 +235,7 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def generar_video(self):
 
-        print 'Próximamente se exportará un video con esta opción'
+        print 'Proximamente se exportara un video con esta opcon'
 
 if __name__ == "__main__":
     import sys

@@ -563,10 +563,10 @@ class menu(QtGui.QListView):
     def init(self):
         #Valores iniciales del menu, incluido el modelo
         self.items = QtCore.QStringList()
-        self.items << "MENU" << "Eliminar" << "Salir"    
+        self.items << "MENU" << "Asociar" << "Eliminar" << "Salir"    
         modelo = QtGui.QStringListModel(self.items)
         self.setModel(modelo)        
-        self.setGeometry(QtCore.QRect(60, 60, 131, 31))
+        self.setGeometry(QtCore.QRect(60, 60, 131, 131))
         self.hide()
 
     def selectionChanged(self, selected,  deselected):
@@ -608,13 +608,20 @@ class menu(QtGui.QListView):
                 if elementoDominio.selectedMenuMouse["tipo"] == "recta":
                     elementoDominio.ContEnsayo.eliminarRecta(elementoDominio.selectedMenuMouse["id"])
                     self.update()
-                    
+
+
                 elementoDominio.selectedMenuMouse["tipo"] == ""
                 elementoDominio.selectedMenuMouse["id"] == -1
                 self.reset()
                 self.hide()   
 
-
+            if valor.toString() == "Asociar":
+                print "Mandamos a la interfaz el dominio siguiente", elementoDominio.selectedMenuMouse["id"]
+                elementoDominio.widget = QtGui.QGroupBox()
+                elementoDominio.widget.setGeometry(QtCore.QRect(260, 20, 151, 81))
+                elementoDominio.widget.show()
+                self.hide()
+                
 
 """
 Clase que maneja la interfaz de coordenadas

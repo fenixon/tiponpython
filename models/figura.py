@@ -8,6 +8,7 @@ import matplotlib#Quitar luego, solo está para propósitos de generar los ejemp
 import matplotlib.mlab as mlab#Quitar luego, solo está para propósitos de generar los ejemplos
 from matplotlib import cm#Para los colores de la gráfica 3d
 import numpy as np
+import random
 
 class figura():
 
@@ -20,31 +21,36 @@ class figura():
         self.axc = fig.add_subplot(2, 2, 4)
         fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
         self.fig = fig
+        self.matrix = matrix
 
-    def plotU(self):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para x e y
+    def plotU(self, ran):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para x e y
 
         ax = self.axu
-        x = np.arange(0, 10, .05)#Descensos (h), son números que representan el nivel piezométrico
-        y = np.arange(0, 10, .05)#Tiempos (t), se supone están en días
+        ax.cla()
+        x = np.arange(0, ran, .05)
+        print 'Aleatorio: ' + str(ran)
+        #x = np.arange(0, 10, .05)#Descensos (h), son números que representan el nivel piezométrico
+        #y = np.arange(0, 10, .05)#Tiempos (t), se supone están en días
+        y = np.sin(x) + ran*2
         ax.set_title('Descensos h en tiempo t')
         ax.set_xlabel('h')
         ax.set_ylabel('t')
         ax.plot(x,y)
         print 'First plot loaded...'
 
-    def plotD(self):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes
+    def plotD(self, ran, t):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes
 
         print 'Loading second plot...'
         matplotlib.rcParams['xtick.direction'] = 'out'
         matplotlib.rcParams['ytick.direction'] = 'out'
 
         delta = 0.025
-        x = np.arange(-3.0, 3.0, delta)
-        y = np.arange(-2.0, 2.0, delta)
+        x = np.arange(-3.00, 3.00, delta)
+        y = np.arange(-2.00, 2.00, delta)
         X, Y = np.meshgrid(x, y)
         Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)
         Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
-        # difference of Gaussians
+        #difference of Gaussians
         Z = 10.0 * (Z2 - Z1)
 
         # Create a simple contour plot with labels using default colors.  The
@@ -52,17 +58,19 @@ class figura():
         # over the line segments of the contour, removing the lines beneath
         # the label
         ax = self.axd
+        ax.cla()
         #CS = contour(X, Y, Z)
         ax.contour(X, Y, Z)
         #clabel(CS, inline=1, fontsize=10)
         ax.set_title(u'Propagación')
         print 'Second plot loaded...'
 
-    def plotT(self):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes
+    def plotT(self, ran, t):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes
 
         #add_subplot(filas, columnas, número de gráfica/posición, tipo de gráfica)
         print 'Loading third plot...'
         ax = self.axt
+        ax.cla()
         #X = np.arange(-5, 5, 0.25)
         #Y = np.arange(-5, 5, 0.25)
         X = np.arange(0, 20)
@@ -107,10 +115,11 @@ class figura():
         print 'Third plot loaded...'
 #            fig.colorbar(surf, shrink=0.5, aspect=10)
 
-    def plotC(self):
+    def plotC(self, ran, t):
 
         print 'Loading fourth plot...'
         ax = self.axc
+        ax.cla()
         #x = np.linspace(0,10,11)
         #y = np.linspace(0,15,16)
         x = np.arange(0, 10, 0.5)

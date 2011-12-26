@@ -21,6 +21,8 @@ import verObservaciones
 from vistaDominio import  *
 from views.dibujante import dibujante
 
+import random#Solo para pruebas
+
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -33,6 +35,8 @@ class Ui_MainWindow(QtGui.QDialog):
         global ContEnsayo
 
         ContEnsayo=controlador.Proyecto()
+
+        self.dibujante = None
 
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
@@ -212,8 +216,8 @@ class Ui_MainWindow(QtGui.QDialog):
         obss=ContEnsayo.observaciones
         if len(obss)<=0 :
             QtGui.QMessageBox.information(self,
-                "Informacion",
-                "Aún no se ha ingresado ninguna Observación de ensayo")
+                u"Información",
+                u"Aún no se ha ingresado ninguna Observación de ensayo")
         else:
             frmverobs=QtGui.QDialog()
             ui= verObservaciones.Ui_Dialog()
@@ -229,13 +233,35 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def generar_graficas(self):
 
-        dib = dibujante(self)#Hay que pasarle la ventana principal
-        dib.show()
-        print 'Dibujante invocado'
+        if self.dibujante != None:
+
+            print u'Ya hay una instancia corriendo'
+
+        else:
+
+            ran = random.randint(10, 30)
+            print 'ran: ' + str(ran)
+            zcol = []
+
+            for i in range(0, ran):
+                z = np.random.multivariate_normal((1, 1), [[ran, 0], [0, ran]], ran).T
+                z = z**2
+                zcol.append(z)
+
+            matrix = [np.arange(0, ran), zcol]
+            print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
+            self.dibujante = dibujante(self, matrix)#Hay que pasarle la ventana principal
+            self.dibujante.show()
+            QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
+            print 'Dibujante invocado'
+
+    def limpiarDibujante(self):
+
+        self.dibujante = None
 
     def generar_video(self):
 
-        print 'Proximamente se exportara un video con esta opcon'
+        print u'Próximamente se exportará un video con esta opción'
 
 if __name__ == "__main__":
     import sys

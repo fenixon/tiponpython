@@ -219,11 +219,6 @@ class boton(QtGui.QPushButton):
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         self.setMouseTracking(True)
         self.setToolTip(QtGui.QApplication.translate("Form", tooltip, None, QtGui.QApplication.UnicodeUTF8))
-        self.setStyleSheet(_fromUtf8("margin 3px;\n"
-                                    "border-top-color: yellow;\n"
-                                    "border-left-color: yellow;\n"
-                                    "border-bottom-color: yellow;\n"
-                                    "border-right-color: yellow;"))
 
       
 
@@ -238,6 +233,11 @@ class boton(QtGui.QPushButton):
 
             if self.id == 1000:
                 elementoDominio.gbCoord.setPozo()
+
+		#Volvemos al color normal del pozo seleccionado
+		for boton in elementoDominio.Dominio.botones:
+			boton.setIcon(QtGui.QIcon("content/images/blackDotIcon.png"))
+			
             elif self.id == 1001:
                 elementoDominio.gbCoord.setRecta()
             
@@ -251,13 +251,16 @@ class boton(QtGui.QPushButton):
                 #Se muestran sus coordenadas
                 elementoDominio.gbCoord.setPozoExistente(self.id)
 
-                if elementoDominio.pozoSeleccionado == 0:
-                    elementoDominio.pozoSeleccionado = self.id
-                    self.setStyleSheet("background-color: red")
-                    
-                    elementoDominio.gbCoord.actualizarCoordenadasPozo(self.id)
-                    elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
-                
+                elementoDominio.pozoSeleccionado = self.id                                       
+                elementoDominio.gbCoord.actualizarCoordenadasPozo(self.id)
+                elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
+		
+		for pozo in elementoDominio.Dominio.botones:
+		    if pozo.id != self.id:
+		        pozo.setIcon(QtGui.QIcon("content/images/blackDotIcon.png"))
+
+		self.setIcon(QtGui.QIcon("content/images/redDotIcon.png"))
+
             else:
                 #Reseteo de recta seleccionada
                 elementoDominio.Dominio.rectaSeleccionada['id'] = 0
@@ -287,11 +290,11 @@ class boton(QtGui.QPushButton):
             #arrastrado por la ventana.
             
             if self.tooltip == "pozo":
-                pixmap = QtGui.QPixmap("content/images/DotIcon.png")                                    
+                pixmap = QtGui.QPixmap("content/images/blackDotIcon.png")                                    
                 drag.setPixmap(pixmap)
                 elementoDominio.elementoDominio = 0                
             else:
-                pixmap = QtGui.QPixmap("content/images/barrera.png")                                    
+                pixmap = QtGui.QPixmap("content/images/blackBarrera.png")                                    
                 drag.setPixmap(pixmap)
                 elementoDominio.elementoDominio = 1
 
@@ -327,7 +330,6 @@ class boton(QtGui.QPushButton):
         elementoDominio.reloj = False
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
-
          
 """    
 Definimos clase que agrupa elementos, junto con la sobreescritura
@@ -350,7 +352,6 @@ class box(QtGui.QGroupBox):
         self.setAcceptDrops(True)
         self.setMouseTracking(True) 
         self.setGeometry(QtCore.QRect(20, 27, 231, 271))
-        self.setStyleSheet(_fromUtf8("background-color: green"))
         self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
         self.setObjectName(_fromUtf8("Dominio"))
 
@@ -385,7 +386,7 @@ class box(QtGui.QGroupBox):
         #dominio.
         if elementoDominio.existe == False:
             if elementoDominio.elementoDominio == 0:        
-                b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self, "pozo")
+                b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self, "pozo")
                 b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())                
                 b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
                  
@@ -400,8 +401,7 @@ class box(QtGui.QGroupBox):
                     x.move(position)
                     if x.tooltip == "pozo":
                         elementoDominio.ContEnsayo.moverPozo(x.id, position.x(), position.y())
-                        
-
+		        elementoDominio.gbCoord.actualizarCoordenadasPozo(x.id)
 
 
         elementoDominio.transicion = False
@@ -533,9 +533,9 @@ class box(QtGui.QGroupBox):
                     self.rectaSeleccionada['id'] = recta['id']
 
                     for pozo in elementoDominio.Dominio.botones:
-                            if pozo.id == elementoDominio.pozoSeleccionado:
-                                pozo.setStyleSheet('background-color: green')                    
-                                elementoDominio.pozoSeleccionado = 0
+                	    if pozo.id == elementoDominio.pozoSeleccionado:                 
+				    pozo.setIcon(QtGui.QIcon("content/images/blackDotIcon.png"))
+				    elementoDominio.pozoSeleccionado = 0
                     
 
     def mouseReleaseEvent(self, e):
@@ -550,6 +550,7 @@ class box(QtGui.QGroupBox):
                 self.presionandoRecta = False
                 elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "R")
                 self.update()
+
 
 """
 Menun utilizado en definir dominio
@@ -881,7 +882,7 @@ class gbCoordenadas(QtGui.QGroupBox):
                     elementoDominio.pozoCandidato.show()
                             
             
-                b = boton(QtGui.QIcon("content/images/DotIcon.png"), "", elementoDominio.Dominio, "pozo")
+                b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", elementoDominio.Dominio, "pozo")
 
                 b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
 
@@ -1013,7 +1014,8 @@ class gbCoordenadas(QtGui.QGroupBox):
                     elementoDominio.hayPozoCandidato = True
                 elementoDominio.pozoCandidato.setGeometry(QtCore.QRect(np.int32(self.lineEdit.text()),
                                                                        np.int32(self.lineEdit_2.text()), 25, 20))
-                elementoDominio.pozoCandidato.setStyleSheet(_fromUtf8("background-color: red;\n"))
+                elementoDominio.pozoCandidato.setIcon(QtGui.QIcon("content/images/redDotIcon.png"))
+
                 
                 elementoDominio.pozoCandidato.show()
                  
@@ -1065,7 +1067,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         if elementoDominio.pozoSeleccionado != 0:
             for pozo in elementoDominio.Dominio.botones:
                 if pozo.id == elementoDominio.pozoSeleccionado:
-                    pozo.setStyleSheet("background-color: green")
+                    pozo.setIcon(QtGui.QIcon("content/images/blackDotIcon.png"))
 
                     for pozo in elementoDominio.Dominio.botones:
                         if pozo.id == elementoDominio.pozoSeleccionado:
@@ -1136,10 +1138,10 @@ class gbCoordenadas(QtGui.QGroupBox):
             self.cbTipo.setVisible(True)
 
 
-    def actualizarCoordenadasPozo(self, idPozo):
+    def actualizarCoordenadasPozo(self, idPozo):        
         for pozo in elementoDominio.Dominio.botones:
             if pozo.id == idPozo:
-                self.lineEdit.setText(QtCore.QString.number(pozo.x(), 10))
+	        self.lineEdit.setText(QtCore.QString.number(pozo.x(), 10))
                 self.lineEdit_2.setText(QtCore.QString.number(pozo.y(), 10))
                 elementoDominio.Dominio.rectaSeleccionada['id'] = 0
                 self.setPozoExistente(idPozo)
@@ -1247,9 +1249,8 @@ class Ui_Form(object):
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
             
         #Creacion de botones de la barra de herramientas
-        self.pozo = boton(QtGui.QIcon("content/images/DotIcon.png"), "", self.groupBox, "pozo")
-        
-        self.barrera = boton(QtGui.QIcon("content/images/barrera.png"), "", self.groupBox, "barrera")
+        self.pozo = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.groupBox, "pozo")        
+        self.barrera = boton(QtGui.QIcon("content/images/blackBarrera.png"), "", self.groupBox, "barrera")
 
         self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
         self.barrera.id = 1001

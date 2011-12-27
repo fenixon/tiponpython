@@ -35,11 +35,23 @@ class Proyecto(object):
         self.ensayos.append(e)
         return e
 
+    def eliminarEnsayo(self, e):
+        self.ensayos.remove(e)
+
     def agregarObservacion(self, observaciones):
         self.ultimoIdObs=self.ultimoIdObs + 1
         obse=observacionesensayo.observacionesensayo(observaciones, self.ultimoIdObs)
         self.observaciones.append(obse)
         return obse
+
+    def eliminarObservaciones(self, obse):
+        self.observaciones.remove(obse)
+        
+####        for ob in self.observaciones:
+##            if ob.id == observacion.id:
+                
+
+      
 
     #CRUD de pozos
     def agregarPozo(self, x, y):        
@@ -56,6 +68,12 @@ class Proyecto(object):
             if pozo.id == idElemento:
                 pozo.actualizarCoordenadas(x, y)
                 return
+
+    def buscarPozo(self, idElemento): 
+            
+        for p in self.listaPozo:
+            if p.id == idElemento:
+                return p
             
     def removerPozo(self, idElemento):
  

@@ -2,8 +2,8 @@ import numpy
 
 class metodoSolucion(object):
 
-    def __init__(self, dominio):
-        self.dominio = dominio
+    def __init__(self):
+        #self.dominio = dominio
         self.listaParametros = [] 
         print 'self.matrizDescenso = numpy.zeros(1,3)'
         print "Se ha creado el Metodo de Solucion"

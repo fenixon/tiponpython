@@ -10,6 +10,7 @@ Creado por TIPONPYTHON Cooperative
 from PyQt4 import QtCore, QtGui
 import sys
 import numpy as np
+import asociarEnsayos
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -617,9 +618,15 @@ class menu(QtGui.QListView):
 
             if valor.toString() == "Asociar":
                 print "Mandamos a la interfaz el dominio siguiente", elementoDominio.selectedMenuMouse["id"]
-                elementoDominio.widget = QtGui.QGroupBox()
-                elementoDominio.widget.setGeometry(QtCore.QRect(260, 20, 151, 81))
-                elementoDominio.widget.show()
+
+                frmasociar=QtGui.QDialog()
+                ui= asociarEnsayos.Ui_Dialog()
+                ui.setupUi(frmasociar, elementoDominio.selectedMenuMouse["id"], elementoDominio.ContEnsayo)
+                frmasociar.exec_()
+                
+                elementoDominio.widget = frmasociar
+                #elementoDominio.widget.setGeometry(QtCore.QRect(260, 20, 151, 81))
+                #elementoDominio.widget.show()
                 self.hide()
                 
 

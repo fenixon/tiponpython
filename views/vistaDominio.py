@@ -211,7 +211,7 @@ class boton(QtGui.QPushButton):
         self.init(tooltip)
 
     def init(self, tooltip):
-
+        
         #Seteo inicial del boton
         self.setAcceptDrops(True)        
         self.tooltip = tooltip       
@@ -219,7 +219,6 @@ class boton(QtGui.QPushButton):
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         self.setMouseTracking(True)
         self.setToolTip(QtGui.QApplication.translate("Form", tooltip, None, QtGui.QApplication.UnicodeUTF8))
-
       
 
     def mousePressEvent(self, e):
@@ -386,15 +385,20 @@ class box(QtGui.QGroupBox):
         #dominio.
         if elementoDominio.existe == False:
             if elementoDominio.elementoDominio == 0:        
+
                 b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self, "pozo")
-                b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())                
+                b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())   
+		b.setStyleSheet("border: none")             
                 b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
                  
                 self.botones.append(b)
                 b.show()           
+
             else:
+
                 r = QtCore.QLineF(position.x(), position.y(), (position.x() + 30), (position.y() + 30))
-                elementoDominio.ContEnsayo.agregarRecta("Negativo", np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))                
+		elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))                
+
         else:
             for x in self.botones:
                 if x.id == elementoDominio.idElemento:
@@ -428,8 +432,7 @@ class box(QtGui.QGroupBox):
                 if self.rectaSeleccionada['id'] == x.id:
                     painter.setPen(QtCore.Qt.red)
                     painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2 ))
-                    if x.x1 < x.x2 :
-                        print "Menor"
+                    if x.x1 < x.x2 :                        
                         painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
                         painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
                     else:
@@ -618,9 +621,8 @@ class menu(QtGui.QListView):
                 self.hide()   
 
             if valor.toString() == "Asociar":
-                print "Mandamos a la interfaz el dominio siguiente", elementoDominio.selectedMenuMouse["id"]
-
-                frmasociar=QtGui.QDialog()
+                
+	  	frmasociar=QtGui.QDialog()
                 ui= asociarEnsayos.Ui_Dialog()
                 ui.setupUi(frmasociar, elementoDominio.selectedMenuMouse["id"], elementoDominio.ContEnsayo)
                 frmasociar.exec_()
@@ -653,7 +655,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         #X1
         self.lineEdit = QtGui.QLineEdit(self)
         self.lineEdit.setGeometry(QtCore.QRect(40, 50, 25, 20))
-        self.lineEdit.setStyleSheet(_fromUtf8("border-color: yellow;"))
+        self.lineEdit.setStyleSheet(_fromUtf8("border-color: yellow"))
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.lineEdit.setVisible(False)
 
@@ -681,7 +683,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_2.setStyleSheet(_fromUtf8("border-top-color:yellow;\n"
                                     "border-left-color: yellow;\n"
                                     "border-bottom-color: yellow;\n"
-                                    "border-right-color: yellow;"))
+                                    "border-right-color: yellow"))
         self.label_2.setText("X1")
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.label_2.setVisible(False)
@@ -693,7 +695,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_3.setStyleSheet(_fromUtf8("border-top-color: yellow;\n"
                                    "border-left-color: yellow;\n"
                                    "border-bottom-color: yellow;\n"
-                                   "border-right-color: yellow;"))
+                                   "border-right-color: yellow"))
         self.label_3.setText("Y1")
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.label_3.setVisible(False)
@@ -706,7 +708,7 @@ class gbCoordenadas(QtGui.QGroupBox):
                                     "border-top-color: yellow;\n"
                                     "border-left-color: yellow;\n"
                                     "border-bottom-color: yellow;\n"
-                                    "border-right-color: yellow;"))
+                                    "border-right-color: yellow"))
         self.label_4.setText("X2")
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.label_4.setVisible(False)
@@ -717,7 +719,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_5.setStyleSheet("border-top-color: yellow;\n"
                                     "border-left-color: yellow;\n"
                                     "border-bottom-color: yellow;\n"
-                                    "border-right-color: yellow;")
+                                    "border-right-color: yellow")
         self.label_5.setText("Y2")
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.label_5.setVisible(False)
@@ -886,8 +888,6 @@ class gbCoordenadas(QtGui.QGroupBox):
 
                 b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
 
-                b.setGeometry(QtCore.QRect(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y(), 24, 24))
-                     
                 elementoDominio.Dominio.botones.append(b)
 
                 b.show()
@@ -900,11 +900,12 @@ class gbCoordenadas(QtGui.QGroupBox):
         else:                                   
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
                 if not elementoDominio.ContEnsayo.hayRectaCandidata():
-                    elementoDominio.ContEnsayo.agregarRecta("Positivo", np.int32(self.lineEdit.text()),
-                                                                     np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+                    elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
+np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
                                                                      np.int32(self.lineEdit_4.text()))
                 else:
-                    elementoDominio.ContEnsayo.incluirCandidata()
+                    elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
+
                 self.update()
                 
         #Reseteo de recta seleccionada
@@ -1023,9 +1024,9 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         else:                                   
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
-
-                elementoDominio.ContEnsayo.agregarRectaCandidata("Positivo", np.int32(self.lineEdit.text()),
-                                                                 np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+		
+                elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), 
+np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
                                                                  np.int32(self.lineEdit_4.text()))
 
     def setPozoExistente(self, idPozo):
@@ -1092,8 +1093,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         if self.tipoElemento == "barrera":
              
             elementoDominio.ContEnsayo.actualizarRectaCoord(self.idElemento, np.int32(self.lineEdit.text()),
-                                                       np.int32(self.lineEdit_2.text()),  np.int32(self.lineEdit_3.text()),
-                                                       np.int32(self.lineEdit_4.text()), "Negativo")
+                                                       np.int32(self.lineEdit_2.text()),  
+np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.currentText())
             self.update()
             
     def setRectaExistente(self, idElemento, irRE):
@@ -1109,6 +1110,12 @@ class gbCoordenadas(QtGui.QGroupBox):
                 self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
                 self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
                 self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+		 
+		if recta.tipo == "Positivo":
+		    self.cbTipo.setCurrentIndex(1)
+		else:
+		    self.cbTipo.setCurrentIndex(0)
+
             else:
                 recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
                 
@@ -1116,6 +1123,11 @@ class gbCoordenadas(QtGui.QGroupBox):
                 self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
                 self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
                 self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+
+		if recta.tipo == "Positivo":
+		    self.cbTipo.setCurrentIndex(1)
+		else:
+		    self.cbTipo.setCurrentIndex(0)
             
 
             if not self.btnActualizar.isVisible():
@@ -1133,9 +1145,13 @@ class gbCoordenadas(QtGui.QGroupBox):
             self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))            
             self.lineEdit_3.setVisible(True)
             self.lineEdit_4.setVisible(True)
-            self.label_4.setVisible(True)
             self.label_5.setVisible(True)
+            self.label_4.setVisible(True)
+            self.label_3.setVisible(True)
+	    self.label_2.setVisible(True)
+            self.label.setVisible(True)
             self.cbTipo.setVisible(True)
+
 
 
     def actualizarCoordenadasPozo(self, idPozo):        
@@ -1231,7 +1247,7 @@ class Ui_Form(object):
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
         self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 231, 271))
         self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: black;\n"))
+        self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: black"))
         self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
         #Caja de elementos especifica del dominio
@@ -1244,7 +1260,7 @@ class Ui_Form(object):
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
         self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBox.setStyleSheet(_fromUtf8("border-color: yellow;\n"))
+        self.groupBox.setStyleSheet(_fromUtf8("border-color: yellow"))
         self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
             

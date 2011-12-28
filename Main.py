@@ -20,6 +20,7 @@ import ingresarObservaciones
 import verObservaciones
 from vistaDominio import  *
 from views.dibujante import dibujante
+from views.dibujante_interpolacion import dibujante2
 
 import random#Solo para pruebas
 
@@ -37,6 +38,7 @@ class Ui_MainWindow(QtGui.QDialog):
         ContEnsayo=controlador.Proyecto()
 
         self.dibujante = None
+        self.dibujaten2=None
 
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
@@ -109,6 +111,11 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Generar gráficas", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenerar_graficas.setObjectName(_fromUtf8("actionGenerar_graficas"))
 
+        self.actionGenerar_graficas2 = QtGui.QAction(MainWindow)
+        self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Generar gráficas2", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))
+
+
         self.actionGenerar_video = QtGui.QAction(MainWindow)
         self.actionGenerar_video.setText(QtGui.QApplication.translate("MainWindow", "Generar video...", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenerar_video.setObjectName(_fromUtf8("actionGenerar_video"))
@@ -130,6 +137,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuDatos.addAction(self.menuObservaciones.menuAction())
 
         self.menuGraficar.addAction(self.actionGenerar_graficas)
+        self.menuGraficar.addAction(self.actionGenerar_graficas2)
         self.menuGraficar.addAction(self.actionGenerar_video)
 
         self.menubar.addAction(self.menuInicio.menuAction())
@@ -148,6 +156,7 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
+        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas2)
         QtCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
 
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
@@ -254,6 +263,14 @@ class Ui_MainWindow(QtGui.QDialog):
             self.dibujante.show()
             QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
             print 'Dibujante invocado'
+
+
+    def generar_graficas2(self):
+        global ContEnsayo
+        self.dibujante2 = dibujante2(self, ContEnsayo)#Hay que pasarle la ventana principal
+        self.dibujante2.show()
+        print 'Dibujante invocado'
+            
 
     def limpiarDibujante(self):
 

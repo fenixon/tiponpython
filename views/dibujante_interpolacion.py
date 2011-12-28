@@ -2,19 +2,19 @@
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
 #
 #-----------------------------------------------------------------------------------------------------------------------------------------------#
-from PyQt4.QtGui import * #Para la interfáz gráfica
-from PyQt4.QtCore import * #Para la interfáz gráfica
-from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas #Clase para dibujar las gráficas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar #Clase para dibujar la barra de herramientas de navegación
+from PyQt4.QtGui import * 
+from PyQt4.QtCore import * 
+from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas 
+from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar
 
 import theis as fm
 
-class dibujante(QMainWindow):
+class dibujante2(QMainWindow):
 
-    def __init__(self, parent):#Hay que pasarle la ventana que lo invoca
+    def __init__(self, parent, cont):#Hay que pasarle la ventana que lo invoca
 
         QMainWindow.__init__(self, parent)
-        self.fm = fm.Theis()
+        self.fm = fm.Theis(cont)
         self.fm.calcular()
 
         self.main_frame = QWidget()

@@ -102,6 +102,8 @@ class Ui_Dialog(QtGui.QDialog):
         global ContEnsayo
         ## Al hacer click en un item del listado se recupera el objeto        
         self.oe=self.model.objeto(item)
+        print 'selecciono un dato'
+        print self.oe
 
     def cancelar(self):
         self.guardar.close()

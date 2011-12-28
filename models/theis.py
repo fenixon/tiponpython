@@ -65,19 +65,19 @@ class Theis(metodoSolucion.metodoSolucion):
 ##y 11
 #9.9134
 
-        print x
-        print y
+##        print x
+##        print y
 
-        print z       
+##        print z       
         
         newfunc=interp2d(x,y,z,kind='linear')
 ### ak tiene que configurarse todo el dominio en xx e yy
         xx = numpy.arange(0, 30, 1)
         yy=xx
 
-        print "todo el dominio"
+##        print "todo el dominio"
         
-        print xx
+##        print xx
 
         ## A la funcion le pasas x e y
         print "x: 1  y: 7 - "+str(newfunc(1,7))
@@ -129,20 +129,32 @@ class Theis(metodoSolucion.metodoSolucion):
         y0=pozoBombeo.y
 
         ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
-        ensayob=pozoBombeo.ensayos[0]    
+        bombeos=pozoBombeo.ensayos[0].devolverB()    
         
         # Recorrer todo el dominio
         d=ContEnsayo.obtenerDominio()
         #### Recuperar los valores de T y el S guardados en el dominio, ver como obtenerlo siguiendo el modelo de dominio
         T=1000
         S=0.0001
+        Q=500
+        r=1
 
         #####ver como llamar la matriz de los tiempos
         ## por ahora consideramos que va a ser lineal que arranca en el tiempo 0 al 10
-        self.matrizDescenso=numpy.zeros((len(ensayob),d.ancho,d.alto), int)   
 
-        for x in d.ancho:
-            for y in d.alto:
+        ##el tiempo va desde 0 a 4, el 0 no se usa      
+        self.matrizDescenso=numpy.zeros((len(bombeos)+1,d.ancho,d.alto), int)   
+
+        print 
+        print self.matrizDescenso[1]
+
+        ##dominio en x        
+        xx = numpy.arange(0, d.ancho, 1)
+        ### dominio en y
+        yy = numpy.arange(0, d.alto, 1)
+
+        for x in xx:
+            for y in yy:
                 #calculo de la distancia radial            
                 #sqrt(|X0-X1|^2 + |y0-y1|^2)
                 r=numpy.sqrt(numpy.square(x0-x) + numpy.square(y0-y))
@@ -150,11 +162,22 @@ class Theis(metodoSolucion.metodoSolucion):
                 #Obtener el Ho llamando a la clase dominio
                 H0=d.calcularH0(x,y)
 
-                for bom in ensayob:
+                for bom in bombeos:
+##                  El tiempo t nunca puede ser 0, sino t da error                    
                     t=bom.tiempo
                     Q=bom.caudal
-                    #llamar al metodo Theis: lo que nos da la función es el descenso "s"
-                    s, dsdT, dsdS=calcularpozo(self, r, t, Q, T, S)
+
+#Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
+## Esto son los parametros q se mandan
+                    
+####                    print 'r '+str(r)
+##                    print 't '+str(t)
+##                    print 'Q '+str(Q)
+##                    print 'T '+str(T)
+##                    print 'S '+str(S)
+                    
+                    s,dsdT,dsdS=self.calcularpozo(r, t, Q, T, S)
+                    
                 
                     #el nivel "h" se calcula como "h=Ho-s"
                     h=H0-s
@@ -162,10 +185,32 @@ class Theis(metodoSolucion.metodoSolucion):
                     ##La matriz es tiempo t y despues x,y
                     self.matrizDescenso[t,x,y]=h
 
-        print m
+        
+
+        
+        X, Y = numpy.meshgrid(xx, yy)
+##      se soluciona desd el tiempo 1 porque el t=0 da error al dividir        
+        zz = self.matrizDescenso[1]
+
+        print zz
+
+        fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
+        self.axu = fig.add_subplot(2, 2, 1)
+        self.axd = fig.add_subplot(2, 2, 2)
+        self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
+        self.axc = fig.add_subplot(2, 2, 4)
+        fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
+        self.fig = fig
+        
+        ax = self.axt
+        surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
+        
+
+        return self.matrizDescenso
 
 
-    def cacularpozo(self,r,t,Q,T,S):
+
+    def calcularpozo(self,r,t,Q,T,S):
         
         # [s, dsdT, dsdS]=Theis(r,t,Q,T,S)
         # nro de valores que devuelve la funcion, esto lo vemos dps xq varia
@@ -176,7 +221,7 @@ class Theis(metodoSolucion.metodoSolucion):
  
         #u=r^2*S/T/t/4;
         u=numpy.power(r,2)*S/T/t/4;
-        print 'S: '+str(S)+'T: '+str(T)+'t: '+str(t) + 'U: ' + str(round(u,2))
+##        print 'S: '+str(S)+'T: '+str(T)+'t: '+str(t) + 'U: ' + str(round(u,2))
         
         if (nargout == 1):
             w=self.WTheis(u) ; 
@@ -186,10 +231,10 @@ class Theis(metodoSolucion.metodoSolucion):
             ## se captura en dos parametros la lista q devuelve            
             w,dWdu=self.WTheis(u) ;
 
-            print "u.. " + str(u)            
+##            print "u.. " + str(u)            
 ##          w=lista[0]           
 ##          dWdu=lista[1]
-            print "dw.. " + str(dWdu)
+##            print "dw.. " + str(dWdu)
             
             s=Q/4/numpy.pi/T*w;
             #print str(s)
@@ -197,21 +242,21 @@ class Theis(metodoSolucion.metodoSolucion):
 
             aux1=dWdu*(-u/T)/w
 
-            print "T " + str(T)
+##            print "T " + str(T)
             
             aux2=-1.0/T
 
-            print "aux1 " + str(aux1)
-            print "aux2 " + str(aux2)
+##            print "aux1 " + str(aux1)
+##            print "aux2 " + str(aux2)
             
             dsdT=s*(aux2 + aux1);
 
-            print "dsdT " + str(dsdT)
+##            print "dsdT " + str(dsdT)
             
             dsdS=s/w*dWdu*u/S ;
 
 
-        print str(s)+" "+str(dsdT)+" "+str(dsdS)
+##        print str(s)+" "+str(dsdT)+" "+str(dsdS)
 
         return [s, dsdT, dsdS]
 
@@ -271,12 +316,12 @@ class Theis(metodoSolucion.metodoSolucion):
 
 
 if __name__ == "__main__":
-
-    ui = Theis()
+    cont=1
+    ui = Theis(cont)
 ##    Calcula bien el metodo de tezis para un pozo solo
-##    ui.cacularpozo(1,1,500,1000,0.0001)
+    ui.calcularpozo(1,1,500,1000,0.0001)
                                  
-    ui.calcular()
+##    ui.calcular()
     
 
 

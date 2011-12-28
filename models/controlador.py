@@ -78,7 +78,7 @@ class Proyecto(object):
             if p.id == idElemento:
                 return p
 
-    def obtenerPozoBombeo(self)
+    def obtenerPozoBombeo(self):
         for p in self.listaPozo:
             ## si tiene ensayos entonces es de bombeo se recupera el primero           
             if len(p.ensayos)>0:

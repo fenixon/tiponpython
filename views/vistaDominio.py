@@ -211,7 +211,7 @@ class boton(QtGui.QPushButton):
         self.init(tooltip)
 
     def init(self, tooltip):
-
+        
         #Seteo inicial del boton
         self.setAcceptDrops(True)        
         self.tooltip = tooltip       
@@ -219,7 +219,6 @@ class boton(QtGui.QPushButton):
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         self.setMouseTracking(True)
         self.setToolTip(QtGui.QApplication.translate("Form", tooltip, None, QtGui.QApplication.UnicodeUTF8))
-
       
 
     def mousePressEvent(self, e):
@@ -388,7 +387,8 @@ class box(QtGui.QGroupBox):
             if elementoDominio.elementoDominio == 0:        
 
                 b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self, "pozo")
-                b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())                
+                b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())   
+		b.setStyleSheet("border: none")             
                 b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
                  
                 self.botones.append(b)

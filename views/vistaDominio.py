@@ -428,8 +428,7 @@ class box(QtGui.QGroupBox):
                 if self.rectaSeleccionada['id'] == x.id:
                     painter.setPen(QtCore.Qt.red)
                     painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2 ))
-                    if x.x1 < x.x2 :
-                        print "Menor"
+                    if x.x1 < x.x2 :                        
                         painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
                         painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
                     else:
@@ -618,9 +617,8 @@ class menu(QtGui.QListView):
                 self.hide()   
 
             if valor.toString() == "Asociar":
-                print "Mandamos a la interfaz el dominio siguiente", elementoDominio.selectedMenuMouse["id"]
-
-                frmasociar=QtGui.QDialog()
+                
+	  	frmasociar=QtGui.QDialog()
                 ui= asociarEnsayos.Ui_Dialog()
                 ui.setupUi(frmasociar, elementoDominio.selectedMenuMouse["id"], elementoDominio.ContEnsayo)
                 frmasociar.exec_()
@@ -886,8 +884,6 @@ class gbCoordenadas(QtGui.QGroupBox):
 
                 b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
 
-                b.setGeometry(QtCore.QRect(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y(), 24, 24))
-                     
                 elementoDominio.Dominio.botones.append(b)
 
                 b.show()
@@ -900,6 +896,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         else:                                   
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
                 if not elementoDominio.ContEnsayo.hayRectaCandidata():
+		    print self.cbTipo.currentText()
+		    print "Hola mundo"
                     elementoDominio.ContEnsayo.agregarRecta("Positivo", np.int32(self.lineEdit.text()),
                                                                      np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
                                                                      np.int32(self.lineEdit_4.text()))

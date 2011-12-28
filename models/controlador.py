@@ -51,7 +51,10 @@ class Proyecto(object):
 ##            if ob.id == observacion.id:
                 
 
-      
+
+    def obtenerDominio(self):
+        return self.dominio
+    
 
     #CRUD de pozos
     def agregarPozo(self, x, y):        
@@ -74,7 +77,13 @@ class Proyecto(object):
         for p in self.listaPozo:
             if p.id == idElemento:
                 return p
-            
+
+    def obtenerPozoBombeo(self)
+        for p in self.listaPozo:
+            ## si tiene ensayos entonces es de bombeo se recupera el primero           
+            if len(p.ensayos)>0:
+                return p
+         
     def removerPozo(self, idElemento):
  
             

@@ -13,18 +13,22 @@ import matplotlib.mlab as mlab
 
 from matplotlib import cm
 import numpy as np
+import controlador
 
 
 from scipy.special import j0
 
 class Theis(metodoSolucion.metodoSolucion):
 
-    def __init__(self):
+    def __init__(self, cont):
+        global ContEnsayo
+        ContEnsayo=cont
+        
         print 'venta'
         #metodoSolucion.metodoSolucion.__init__(self, 2)
 
     
-    def calcular(self):
+    def calcularold(self):
 #ver como obtener los datos para pasarlo al otro
 #recorrer todos los pozos de observacion
 ## se va generando la matriz
@@ -111,6 +115,55 @@ class Theis(metodoSolucion.metodoSolucion):
         ax = self.axt
         surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
         
+
+    ## Este meotod tiene que llamar alvoro al momento de graficar y le devuelve la matriz
+    def calcular(self):
+        # Se indentifica donde esta el pozo de bombeo
+        global ContEnsayo
+        ContEnsayo                
+        # Por ahora tomar el primero de bombeo que se detecte. Luego cambia cuando hayan mas pozos
+        
+        ###Esto se podria obtener desde el dominio        
+        pozoBombeo=ContEnsayo.obtenerPozoBombeo()
+        x0=pozoBombeo.x
+        y0=pozoBombeo.y
+
+        ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
+        ensayob=pozoBombeo.ensayos[0]    
+        
+        # Recorrer todo el dominio
+        d=ContEnsayo.obtenerDominio()
+        #### Recuperar los valores de T y el S guardados en el dominio, ver como obtenerlo siguiendo el modelo de dominio
+        T=1000
+        S=0.0001
+
+        #####ver como llamar la matriz de los tiempos
+        ## por ahora consideramos que va a ser lineal que arranca en el tiempo 0 al 10
+        self.matrizDescenso=numpy.zeros((len(ensayob),d.ancho,d.alto), int)   
+
+        for x in d.ancho:
+            for y in d.alto:
+                #calculo de la distancia radial            
+                #sqrt(|X0-X1|^2 + |y0-y1|^2)
+                r=numpy.sqrt(numpy.square(x0-x) + numpy.square(y0-y))
+
+                #Obtener el Ho llamando a la clase dominio
+                H0=d.calcularH0(x,y)
+
+                for bom in ensayob:
+                    t=bom.tiempo
+                    Q=bom.caudal
+                    #llamar al metodo Theis: lo que nos da la función es el descenso "s"
+                    s, dsdT, dsdS=calcularpozo(self, r, t, Q, T, S)
+                
+                    #el nivel "h" se calcula como "h=Ho-s"
+                    h=H0-s
+                    #Operar y generar la matriz
+                    ##La matriz es tiempo t y despues x,y
+                    self.matrizDescenso[t,x,y]=h
+
+        print m
+
 
     def cacularpozo(self,r,t,Q,T,S):
         
@@ -221,6 +274,9 @@ if __name__ == "__main__":
 
     ui = Theis()
 ##    Calcula bien el metodo de tezis para un pozo solo
+##    ui.cacularpozo(1,1,500,1000,0.0001)
+                                 
     ui.calcular()
+    
 
 

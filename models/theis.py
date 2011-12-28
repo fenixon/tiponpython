@@ -127,6 +127,13 @@ class Theis(metodoSolucion.metodoSolucion):
         pozoBombeo=ContEnsayo.obtenerPozoBombeo()
         x0=pozoBombeo.x
         y0=pozoBombeo.y
+        #comentar cuando el pozo de bombeo esta bien posicioando
+        x0=5
+        y0=5
+
+
+        print 'x0: ' + str(x0)
+        print 'y0: ' + str(y0)
 
         ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
         bombeos=pozoBombeo.ensayos[0].devolverB()    
@@ -134,19 +141,18 @@ class Theis(metodoSolucion.metodoSolucion):
         # Recorrer todo el dominio
         d=ContEnsayo.obtenerDominio()
         #### Recuperar los valores de T y el S guardados en el dominio, ver como obtenerlo siguiendo el modelo de dominio
-        T=1000
-        S=0.0001
-        Q=500
-        r=1
+        T=500
+        S=0.000000001
+        #Q=500
+        #r=1
 
         #####ver como llamar la matriz de los tiempos
         ## por ahora consideramos que va a ser lineal que arranca en el tiempo 0 al 10
 
         ##el tiempo va desde 0 a 4, el 0 no se usa      
-        self.matrizDescenso=numpy.zeros((len(bombeos)+1,d.ancho,d.alto), int)   
+        self.matrizDescenso=numpy.zeros((len(bombeos)+1,d.ancho,d.alto), float)   
 
-        print 
-        print self.matrizDescenso[1]
+        #print self.matrizDescenso[1]
 
         ##dominio en x        
         xx = numpy.arange(0, d.ancho, 1)
@@ -161,6 +167,8 @@ class Theis(metodoSolucion.metodoSolucion):
 
                 #Obtener el Ho llamando a la clase dominio
                 H0=d.calcularH0(x,y)
+
+                print 'x: '+ str(x)+ 'y: '+str(y)+' r: '+str(r)
 
                 for bom in bombeos:
 ##                  El tiempo t nunca puede ser 0, sino t da error                    
@@ -181,6 +189,10 @@ class Theis(metodoSolucion.metodoSolucion):
                 
                     #el nivel "h" se calcula como "h=Ho-s"
                     h=H0-s
+
+                    print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)
+                    
+                    
                     #Operar y generar la matriz
                     ##La matriz es tiempo t y despues x,y
                     self.matrizDescenso[t,x,y]=h

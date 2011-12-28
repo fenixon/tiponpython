@@ -32,8 +32,7 @@ class barrera():
                                 else:
                                                 self.n = self.y1 -  xPorm
 
-                                print self.n
-
+ 
                                 self.x3 = self.x1 - 600
 
                                 self.y3 = (self.m * self.x3) + self.n

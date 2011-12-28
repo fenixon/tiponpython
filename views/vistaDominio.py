@@ -386,15 +386,19 @@ class box(QtGui.QGroupBox):
         #dominio.
         if elementoDominio.existe == False:
             if elementoDominio.elementoDominio == 0:        
+
                 b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self, "pozo")
                 b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())                
                 b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
                  
                 self.botones.append(b)
                 b.show()           
+
             else:
+
                 r = QtCore.QLineF(position.x(), position.y(), (position.x() + 30), (position.y() + 30))
-                elementoDominio.ContEnsayo.agregarRecta("Negativo", np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))                
+		elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))                
+
         else:
             for x in self.botones:
                 if x.id == elementoDominio.idElemento:
@@ -896,13 +900,12 @@ class gbCoordenadas(QtGui.QGroupBox):
         else:                                   
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
                 if not elementoDominio.ContEnsayo.hayRectaCandidata():
-		    print self.cbTipo.currentText()
-		    print "Hola mundo"
-                    elementoDominio.ContEnsayo.agregarRecta("Positivo", np.int32(self.lineEdit.text()),
-                                                                     np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+                    elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
+np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
                                                                      np.int32(self.lineEdit_4.text()))
                 else:
-                    elementoDominio.ContEnsayo.incluirCandidata()
+                    elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
+
                 self.update()
                 
         #Reseteo de recta seleccionada
@@ -1021,9 +1024,9 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         else:                                   
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
-
-                elementoDominio.ContEnsayo.agregarRectaCandidata("Positivo", np.int32(self.lineEdit.text()),
-                                                                 np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+		
+                elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), 
+np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
                                                                  np.int32(self.lineEdit_4.text()))
 
     def setPozoExistente(self, idPozo):
@@ -1090,8 +1093,8 @@ class gbCoordenadas(QtGui.QGroupBox):
         if self.tipoElemento == "barrera":
              
             elementoDominio.ContEnsayo.actualizarRectaCoord(self.idElemento, np.int32(self.lineEdit.text()),
-                                                       np.int32(self.lineEdit_2.text()),  np.int32(self.lineEdit_3.text()),
-                                                       np.int32(self.lineEdit_4.text()), "Negativo")
+                                                       np.int32(self.lineEdit_2.text()),  
+np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.currentText())
             self.update()
             
     def setRectaExistente(self, idElemento, irRE):
@@ -1107,6 +1110,12 @@ class gbCoordenadas(QtGui.QGroupBox):
                 self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
                 self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
                 self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+		 
+		if recta.tipo == "Positivo":
+		    self.cbTipo.setCurrentIndex(1)
+		else:
+		    self.cbTipo.setCurrentIndex(0)
+
             else:
                 recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
                 
@@ -1114,6 +1123,11 @@ class gbCoordenadas(QtGui.QGroupBox):
                 self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
                 self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
                 self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+
+		if recta.tipo == "Positivo":
+		    self.cbTipo.setCurrentIndex(1)
+		else:
+		    self.cbTipo.setCurrentIndex(0)
             
 
             if not self.btnActualizar.isVisible():
@@ -1131,9 +1145,13 @@ class gbCoordenadas(QtGui.QGroupBox):
             self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))            
             self.lineEdit_3.setVisible(True)
             self.lineEdit_4.setVisible(True)
-            self.label_4.setVisible(True)
             self.label_5.setVisible(True)
+            self.label_4.setVisible(True)
+            self.label_3.setVisible(True)
+	    self.label_2.setVisible(True)
+            self.label.setVisible(True)
             self.cbTipo.setVisible(True)
+
 
 
     def actualizarCoordenadasPozo(self, idPozo):        

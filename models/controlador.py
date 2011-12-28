@@ -162,12 +162,12 @@ class Proyecto(object):
                     recta = QtCore.QLine(barrera.x1, barrera.y1, x, y)
                     
                     if np.absolute(recta.dy()) > 1 and  np.absolute(recta.dx()) > 1:
-                        barrera.actualizarBarrera(barrera.x1, x, barrera.y1, y, "Negativo")
+                        barrera.actualizarBarrera(barrera.x1, x, barrera.y1, y, barrera.tipo)
                 else:                
                     recta = QtCore.QLine(x, y, barrera.x2, barrera.y2)
                     
                     if np.absolute(recta.dx()) > 1 and np.absolute(recta.dy()) > 1:
-                       barrera.actualizarBarrera(x, barrera.x2,  y, barrera.y2, "Negativo")
+                       barrera.actualizarBarrera(x, barrera.x2,  y, barrera.y2, barrera.tipo)
 
     def actualizarRectaCoord(self, idElemento, x1, y1, x2, y2, tipo):
         for recta in self.listaRecta:
@@ -225,8 +225,9 @@ class Proyecto(object):
     def eliminarRectaCandidata(self):
         self.rectaCandidata = ""
 
-    def incluirCandidata(self):
+    def incluirCandidata(self, signo):
         self.idR = self.idR + 1
         self.rectaCandidata.id = self.idR
+	self.rectaCandidata.tipo = signo
         self.listaRecta.append(self.rectaCandidata)
         self.rectaCandidata = None

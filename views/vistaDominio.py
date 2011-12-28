@@ -655,7 +655,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         #X1
         self.lineEdit = QtGui.QLineEdit(self)
         self.lineEdit.setGeometry(QtCore.QRect(40, 50, 25, 20))
-        self.lineEdit.setStyleSheet(_fromUtf8("border-color: yellow;"))
+        self.lineEdit.setStyleSheet(_fromUtf8("border-color: yellow"))
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.lineEdit.setVisible(False)
 
@@ -683,7 +683,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_2.setStyleSheet(_fromUtf8("border-top-color:yellow;\n"
                                     "border-left-color: yellow;\n"
                                     "border-bottom-color: yellow;\n"
-                                    "border-right-color: yellow;"))
+                                    "border-right-color: yellow"))
         self.label_2.setText("X1")
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.label_2.setVisible(False)
@@ -695,7 +695,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_3.setStyleSheet(_fromUtf8("border-top-color: yellow;\n"
                                    "border-left-color: yellow;\n"
                                    "border-bottom-color: yellow;\n"
-                                   "border-right-color: yellow;"))
+                                   "border-right-color: yellow"))
         self.label_3.setText("Y1")
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.label_3.setVisible(False)
@@ -708,7 +708,7 @@ class gbCoordenadas(QtGui.QGroupBox):
                                     "border-top-color: yellow;\n"
                                     "border-left-color: yellow;\n"
                                     "border-bottom-color: yellow;\n"
-                                    "border-right-color: yellow;"))
+                                    "border-right-color: yellow"))
         self.label_4.setText("X2")
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.label_4.setVisible(False)
@@ -719,7 +719,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.label_5.setStyleSheet("border-top-color: yellow;\n"
                                     "border-left-color: yellow;\n"
                                     "border-bottom-color: yellow;\n"
-                                    "border-right-color: yellow;")
+                                    "border-right-color: yellow")
         self.label_5.setText("Y2")
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.label_5.setVisible(False)
@@ -1247,7 +1247,7 @@ class Ui_Form(object):
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
         self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 231, 271))
         self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: black;\n"))
+        self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: black"))
         self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
         #Caja de elementos especifica del dominio
@@ -1260,7 +1260,7 @@ class Ui_Form(object):
         self.groupBox = QtGui.QGroupBox(self.frame)
         self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
         self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBox.setStyleSheet(_fromUtf8("border-color: yellow;\n"))
+        self.groupBox.setStyleSheet(_fromUtf8("border-color: yellow"))
         self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
             

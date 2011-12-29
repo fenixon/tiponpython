@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>366</width>
-    <height>193</height>
+    <width>427</width>
+    <height>568</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,7 @@
    <property name="geometry">
     <rect>
      <x>240</x>
-     <y>150</y>
+     <y>530</y>
      <width>99</width>
      <height>23</height>
     </rect>
@@ -26,63 +26,241 @@
     <string>Nuevo</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="btnCancelar">
+  <widget class="QGroupBox" name="gbDimensionesDominio">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>150</y>
-     <width>99</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Cancelar</string>
-   </property>
-  </widget>
-  <widget class="QComboBox" name="cmbMetodoSolucion">
-   <property name="geometry">
-    <rect>
-     <x>120</x>
+     <x>30</x>
      <y>10</y>
-     <width>221</width>
-     <height>23</height>
+     <width>361</width>
+     <height>121</height>
     </rect>
    </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
+   <property name="title">
+    <string>Dimensiones del dominio</string>
    </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-   <property name="editable">
-    <bool>true</bool>
-   </property>
+   <widget class="QLineEdit" name="txtAlto">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>40</y>
+      <width>113</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtAncho">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>80</y>
+      <width>113</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblAlto">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>40</y>
+      <width>70</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Alto</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblAncho">
+    <property name="geometry">
+     <rect>
+      <x>70</x>
+      <y>80</y>
+      <width>70</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Ancho</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QLineEdit" name="txtParam1">
+  <widget class="QGroupBox" name="gbParametrosDominio">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>50</y>
-     <width>113</width>
-     <height>22</height>
+     <x>30</x>
+     <y>140</y>
+     <width>361</width>
+     <height>121</height>
     </rect>
    </property>
-   <property name="text">
-    <string>1</string>
+   <property name="title">
+    <string>Parametros del dominio</string>
    </property>
+   <widget class="QLineEdit" name="TransitividlineEdit_2txtad">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>40</y>
+      <width>113</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtCoefAlmacenamiento">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>80</y>
+      <width>113</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblTransitividad">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>40</y>
+      <width>101</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Transitividad</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblCoefAlmacenamiento">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>171</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Coef. almacenamiento</string>
+    </property>
+   </widget>
   </widget>
-  <widget class="QLineEdit" name="txtParam2">
+  <widget class="QGroupBox" name="gbMetodo">
    <property name="geometry">
     <rect>
-     <x>120</x>
-     <y>100</y>
-     <width>113</width>
-     <height>22</height>
+     <x>30</x>
+     <y>280</y>
+     <width>361</width>
+     <height>241</height>
     </rect>
    </property>
-   <property name="text">
-    <string>2</string>
+   <property name="title">
+    <string>Metodos de solucion</string>
    </property>
+   <widget class="QLineEdit" name="txtParametro1">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>120</y>
+      <width>113</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="txtParametro2">
+    <property name="geometry">
+     <rect>
+      <x>202</x>
+      <y>160</y>
+      <width>111</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cmbTipo">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>40</y>
+      <width>111</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="cmbMetodo">
+    <property name="geometry">
+     <rect>
+      <x>200</x>
+      <y>80</y>
+      <width>111</width>
+      <height>28</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblTipo">
+    <property name="geometry">
+     <rect>
+      <x>60</x>
+      <y>40</y>
+      <width>70</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Tipo</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblMetodo">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>80</y>
+      <width>70</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Metodo</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblParametro1">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>120</y>
+      <width>101</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lblParametro2">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>160</y>
+      <width>91</width>
+      <height>18</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Parametro</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnCondicionesExternas">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>181</width>
+      <height>27</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Condiciones Externas</string>
+    </property>
+   </widget>
   </widget>
  </widget>
  <resources/>
@@ -100,22 +278,6 @@
     <hint type="destinationlabel">
      <x>292</x>
      <y>95</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>btnCancelar</sender>
-   <signal>clicked()</signal>
-   <receiver>frmNuevoProyecto</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>169</x>
-     <y>154</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>54</x>
-     <y>139</y>
     </hint>
    </hints>
   </connection>

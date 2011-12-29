@@ -1250,6 +1250,8 @@ class Ui_Form(object):
         self.groupBoxDominio.setStyleSheet(_fromUtf8("border-color: black"))
         self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
+        self.groupBoxDominio.setStyleSheet("background-color: white;")
+
         #Caja de elementos especifica del dominio
         elementoDominio.Dominio = box(self.groupBoxDominio)
 
@@ -1263,6 +1265,7 @@ class Ui_Form(object):
         self.groupBox.setStyleSheet(_fromUtf8("border-color: yellow"))
         self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
+
             
         #Creacion de botones de la barra de herramientas
         self.pozo = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.groupBox, "pozo")        

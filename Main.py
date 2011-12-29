@@ -283,7 +283,10 @@ if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
     app.setStartDragDistance(10)
-    app.setStyleSheet("QGroupBox{color: green}")
+    app.setStyleSheet("QGroupBox{color: green} \n"
+                      "QLineEdit{color: blue} \n"
+                      "QLabel{color: red} \n"
+                      "QPushButton{color: navy}")
     MainWindow = QtGui.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)

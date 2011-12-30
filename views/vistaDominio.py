@@ -470,7 +470,8 @@ class box(QtGui.QGroupBox):
         #Buscamos si las coordenadas actuales estan cerca de algun punto de alguna recta
         lista = elementoDominio.ContEnsayo.buscarPuntoEnRecta(np.float32(e.pos().x()), np.float32(e.pos().y()))
         
-        botonGiratorio = QtGui.QPushButton(self)
+        botonGiratorio = boton(QtGui.QIcon("content/images/redDotIcon.png"), "",  elementoDominio.Dominio, "pozo")
+	#QtGui.QPushButton(self)
         #Si hay puntos entonces cambiamos icono del mouse, y mostramos boton. De lo contrario
         #eliminamos el boton mostrado.
         if  len(lista) > 0:

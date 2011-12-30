@@ -1225,6 +1225,9 @@ class Ui_Form(object):
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
         self.frame.setObjectName(_fromUtf8("frame"))
         self.frame.setEnabled(True)
+	self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
+					"border: 2px solid green; \n"
+					"border-radius: 25px}")
 
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
         self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 231, 271))
@@ -1247,7 +1250,8 @@ class Ui_Form(object):
         self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
 
-	self.groupBox.setStyleSheet("border: 2px solid green")
+	self.groupBox.setStyleSheet("QGroupBox{border: 2px solid green} \n"
+				"QPushButton{border: 2px solid red;}")
 
         self.groupBox.setObjectName(_fromUtf8("groupBox"))
 
@@ -1261,7 +1265,8 @@ class Ui_Form(object):
         
 
         elementoDominio.gbCoord = gbCoordenadas(self.frame)
-	elementoDominio.gbCoord.setStyleSheet("border: 2px solid green")
+	elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green} \n"
+						"QLabel, QPushButton{border: 2px solid red;}")
 
 
 

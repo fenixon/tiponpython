@@ -13,6 +13,7 @@ import condicionExterna
 import metodoSolucion
 import parametros
 import CondicionesExternas
+import numpy as np
 
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
@@ -123,14 +124,16 @@ class Ui_frmNuevoProyecto(object):
         frmCondicionesExternas.exec_()
 
     def guardarSalir(self):
-        controlador.dominio.alto = self.txtAlto.text()
-        controlador.dominio.ancho = self.txtAncho.text()
+
+        controlador.dominio.alto = np.int32(self.txtAlto.text())
+        controlador.dominio.ancho = np.int32(self.txtAncho.text())
         controlador.metodoSolucion = metodoSolucion.metodoNumerico(controlador.dominio)
         param1 = parametros.parametros('primerParametro',self.txtParametro1.text(),'pihas')
         param2 = parametros.parametros('segundoParametro',self.txtParametro2.text(),'pihas')
         controlador.metodoSolucion.listaParametros.insert(1,param1)
         controlador.metodoSolucion.listaParametros.insert(2,param2)
         ventana.close()
+	
 
     def cambioTipo(self, tipo):
         self.cmbMetodo.clear()

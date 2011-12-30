@@ -161,10 +161,7 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
         QtCore.QObject.connect(self.menuObservaciones, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despligueObservacion)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-
-        #Adherimos la vista del dominio
-        self.ui = Ui_Form()
-        self.ui.setupUi(MainWindow, ContEnsayo)
+ 
 
     def retranslateUi(self, MainWindow):
         pass
@@ -178,8 +175,19 @@ class Ui_MainWindow(QtGui.QDialog):
     def ventanaNuevoProyecto(self):
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
+        
+	#Adherimos la vista del dominio
+        self.ui = Ui_Form()
+
         ui.setupUi(frmNuevoProyecto,ContEnsayo)
-        frmNuevoProyecto.exec_()
+        
+	QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL('clicked()'), self.abrirDominio)
+
+	frmNuevoProyecto.exec_()
+
+    def abrirDominio(self):
+	self.ui.setupUi(MainWindow, ContEnsayo)
+         
 
     def ventanaImportarProyecto(self):
         global ContEnsayo
@@ -282,7 +290,7 @@ class Ui_MainWindow(QtGui.QDialog):
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-    app.setStartDragDistance(10)
+
     app.setStyleSheet("QGroupBox{color: green} \n"
                       "QLineEdit{color: blue} \n"
                       "QLabel{color: red} \n"

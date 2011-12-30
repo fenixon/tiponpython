@@ -1220,7 +1220,7 @@ class Ui_Form(object):
         
         #Seteo del formulario que contendra todos los widgets del dominio
         self.frame = QtGui.QFrame(Form)
-        self.frame.setGeometry(QtCore.QRect(100, 40, 471, 351))
+        self.frame.setGeometry(QtCore.QRect(170, 80, 471, 351))
         self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
@@ -1231,7 +1231,7 @@ class Ui_Form(object):
 					"border-radius: 25px}")
 
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
-        self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 231, 271))
+        self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27,  elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
         self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 

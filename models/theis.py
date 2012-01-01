@@ -4,273 +4,103 @@ sys.path.append("models")
 import numpy
 
 import metodoSolucion
-from scipy.interpolate import interp2d
+##from scipy.interpolate import interp2d
 from numpy import hypot, mgrid, linspace
 
-from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d.axes3d import Axes3D
-import matplotlib.mlab as mlab
-
-from matplotlib import cm
 import numpy as np
 import controlador
 
 
 from scipy.special import j0
 
-class Theis(metodoSolucion.metodoSolucion):
+class Theis(metodoSolucion.metodoAnalitico):
 
-    def __init__(self, cont):
-        global ContEnsayo
-        ContEnsayo=cont
-        
-        print 'venta'
-        #metodoSolucion.metodoSolucion.__init__(self, 2)
+    def __init__(self, dominio, parametros):
+        self.dominio=dominio
+
+        ## Asociar el metodo al dominio
+        self.dominio.metodo=self                      
+        self.listaParametros=[]
+
+        ##Lista de cardinales de los parametros que utiliza el metodo
+        ##Parametros 0: S, parametro 1:T
+        self.paramcard=[0,1]
+        for i in self.paramcard:
+            self.listaParametros.append(parametros[i])
+
+        #### Llamar al constructor del metodo de solucion
+        ## probar llamar al metodo padre
+        #metodoSolucion.metodoSolucion.__init__(self, 2)    
 
     
-    def calcularold(self):
-#ver como obtener los datos para pasarlo al otro
-#recorrer todos los pozos de observacion
-## se va generando la matriz
 
-        ##Para un determinado tiempo
-        ## obtener x e y y el z
-        
-#        x,y = mgrid[0:2,0:2]
+    def calcularpozo(self,r,t,Q):
 
-        x=numpy.vstack([[2 ,7],[6,4]])
-        y=numpy.vstack([[10,15],[12,11]])
-        
-##        x,y = mgrid[1:4,1:4]
-##        z=hypot(x,y)
+        #### Recuperar los valores de T y el S guardados en el dominio y en el metodo,
+        ## ver como obtenerlo siguiendo el modelo de dominio
+        T=self.listaParametros[0].valoresParametro.valor
+        S=self.listaParametros[1].valoresParametro.valor
 
-        z=numpy.vstack([[9.9756,10.0000],[9.9965,9.9134]])
-        
-
-##primer pozo
-#####x 2
-##y 10
-##9.9756	
-
-##segundo pozo
-####x 7
-##y 15
-##10.0000
-
-##x 6
-##y 12
-##9.9965
-
-####x 4
-##y 11
-#9.9134
-
-##        print x
-##        print y
-
-##        print z       
-        
-        newfunc=interp2d(x,y,z,kind='linear')
-### ak tiene que configurarse todo el dominio en xx e yy
-        xx = numpy.arange(0, 30, 1)
-        yy=xx
-
-##        print "todo el dominio"
-        
-##        print xx
-
-        ## A la funcion le pasas x e y
-        print "x: 1  y: 7 - "+str(newfunc(1,7))
-        print "x: 7  y: 15  - "+str(newfunc(7,15))
-        print "x: 2  y: 10  - "+str(newfunc(2,10))
-        print "x: 6  y: 12    - "+str(newfunc(6,12))
-        print "x: 4  y: 11 - "+str(newfunc(4,11))        
-        
-        zz=newfunc(xx,yy)
-
-        print "La interpolacion"
-        ## En el arreglo queda primero la Y y luego la X
-        print str(zz[15][7])
-        print str(zz[10][2])
-        print str(zz[12][6])
-        print str(zz[11][4])
-        
-        print zz
-
-##        for indx in xx:
-####            for indy in yy:
-##                print "x :"+str(indx)+ " y :"+str(indy)+ " z:"+str(zz[indy][indx])
-
-        X, Y = numpy.meshgrid(xx, yy)
-
-
-        fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
-        self.axu = fig.add_subplot(2, 2, 1)
-        self.axd = fig.add_subplot(2, 2, 2)
-        self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
-        self.axc = fig.add_subplot(2, 2, 4)
-        fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
-        self.fig = fig
-        
-        ax = self.axt
-        surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
-        
-
-    ## Este meotod tiene que llamar alvoro al momento de graficar y le devuelve la matriz
-    def calcular(self):
-        # Se indentifica donde esta el pozo de bombeo
-        global ContEnsayo
-        ContEnsayo                
-        # Por ahora tomar el primero de bombeo que se detecte. Luego cambia cuando hayan mas pozos
-        
-        ###Esto se podria obtener desde el dominio        
-        pozoBombeo=ContEnsayo.obtenerPozoBombeo()
-        x0=pozoBombeo.x
-        y0=pozoBombeo.y
-        #comentar cuando el pozo de bombeo esta bien posicioando
-        x0=5
-        y0=5
-
-
-        print 'x0: ' + str(x0)
-        print 'y0: ' + str(y0)
-
-        ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
-        bombeos=pozoBombeo.ensayos[0].devolverB()    
-        
-        # Recorrer todo el dominio
-        d=ContEnsayo.obtenerDominio()
-        #### Recuperar los valores de T y el S guardados en el dominio, ver como obtenerlo siguiendo el modelo de dominio
-        T=500
-        S=0.000000001
-        #Q=500
-        #r=1
-
-        #####ver como llamar la matriz de los tiempos
-        ## por ahora consideramos que va a ser lineal que arranca en el tiempo 0 al 10
-
-        ##el tiempo va desde 0 a 4, el 0 no se usa      
-        self.matrizDescenso=numpy.zeros((len(bombeos)+1,d.ancho,d.alto), float)   
-
-        #print self.matrizDescenso[1]
-
-        ##dominio en x        
-        xx = numpy.arange(0, d.ancho, 1)
-        ### dominio en y
-        yy = numpy.arange(0, d.alto, 1)
-
-        for x in xx:
-            for y in yy:
-                #calculo de la distancia radial            
-                #sqrt(|X0-X1|^2 + |y0-y1|^2)
-                r=numpy.sqrt(numpy.square(x0-x) + numpy.square(y0-y))
-
-                #Obtener el Ho llamando a la clase dominio
-                H0=d.calcularH0(x,y)
-
-                print 'x: '+ str(x)+ 'y: '+str(y)+' r: '+str(r)
-
-                for bom in bombeos:
-##                  El tiempo t nunca puede ser 0, sino t da error                    
-                    t=bom.tiempo
-                    Q=bom.caudal
-
-#Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
-## Esto son los parametros q se mandan
-                    
-####                    print 'r '+str(r)
-##                    print 't '+str(t)
-##                    print 'Q '+str(Q)
-##                    print 'T '+str(T)
-##                    print 'S '+str(S)
-                    
-                    s,dsdT,dsdS=self.calcularpozo(r, t, Q, T, S)
-                    
-                
-                    #el nivel "h" se calcula como "h=Ho-s"
-                    h=H0-s
-
-                    print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)
-                    
-                    
-                    #Operar y generar la matriz
-                    ##La matriz es tiempo t y despues x,y
-                    self.matrizDescenso[t,x,y]=h
-
-        
-
-        
-        X, Y = numpy.meshgrid(xx, yy)
-##      se soluciona desd el tiempo 1 porque el t=0 da error al dividir        
-        zz = self.matrizDescenso[1]
-
-        print zz
-
-        fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
-        self.axu = fig.add_subplot(2, 2, 1)
-        self.axd = fig.add_subplot(2, 2, 2)
-        self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
-        self.axc = fig.add_subplot(2, 2, 4)
-        fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
-        self.fig = fig
-        
-        ax = self.axt
-        surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
-        
-
-        return self.matrizDescenso
-
-
-
-    def calcularpozo(self,r,t,Q,T,S):
+        #print "T: "+str(T)
+        #print "S: "+str(S)
         
         # [s, dsdT, dsdS]=Theis(r,t,Q,T,S)
         # nro de valores que devuelve la funcion, esto lo vemos dps xq varia
-        nargout=3
-        
+        nargout=3        
         if r<=0.15 :
-            r=.15;
+            r=0.15
  
         #u=r^2*S/T/t/4;
-        u=numpy.power(r,2)*S/T/t/4;
-##        print 'S: '+str(S)+'T: '+str(T)+'t: '+str(t) + 'U: ' + str(round(u,2))
+        u=numpy.power(r,2)*S/T/t/4.000
+        #print 'r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
         
         if (nargout == 1):
-            w=self.WTheis(u) ; 
-            s=Q/4/pi/T*w;
+            w=self.WTheis(u) 
+            s=Q/4.000/numpy.pi/T*w
         else:
             lista=[]
             ## se captura en dos parametros la lista q devuelve            
-            w,dWdu=self.WTheis(u) ;
+            w,dWdu=self.WTheis(u)
 
-##            print "u.. " + str(u)            
-##          w=lista[0]           
-##          dWdu=lista[1]
-##            print "dw.. " + str(dWdu)
+            #print "u.. " + str(u)
+            #print "w.. " + str(w)
+            ## w=lista[0]           
+            ## dWdu=lista[1]
+            #print "dw.. " + str(dWdu)
+
+            #print "Q "+ str(Q)
+            #print "T "+ str(T)
+
+            #print "pi "+ str(numpy.pi)
             
-            s=Q/4/numpy.pi/T*w;
+            s=Q/4.000/numpy.pi/T*w
+
+
+            #print "s "+ str(s)
             #print str(s)
             #dsdT=s*(-1/T + dWdu*(-u/T)/w);
 
             aux1=dWdu*(-u/T)/w
-
-##            print "T " + str(T)
+            # print "T " + str(T)
             
-            aux2=-1.0/T
+            aux2=-1.000/T
 
-##            print "aux1 " + str(aux1)
-##            print "aux2 " + str(aux2)
+            #print "aux1 " + str(aux1)
+            #print "aux2 " + str(aux2)
             
-            dsdT=s*(aux2 + aux1);
+            dsdT=s*(aux2 + aux1)
 
-##            print "dsdT " + str(dsdT)
+            ## print "dsdT " + str(dsdT)
             
-            dsdS=s/w*dWdu*u/S ;
+            dsdS=s/w*dWdu*u/S
+            
+            #print "s "+ str(s)
 
-
-##        print str(s)+" "+str(dsdT)+" "+str(dsdS)
+            #+" "+str(dsdT)+" "+str(dsdS)
 
         return [s, dsdT, dsdS]
+
+                            
 
 
     def WTheis(self,u,du=0):
@@ -283,46 +113,46 @@ class Theis(metodoSolucion.metodoSolucion):
         
         if u>20 :
             if (nargout == 1):
-                W=0;
+                W=0
             else:    
                 W=0;
-                dW=0;
+                dW=0
             return
         else:
             if u>=1:
                 err=1e-10;mgrid[-5:6,-5:6]
             else:
-                err=1e-6;
+                err=1e-6
 
-        n=1. ;
-        f=-u ;
-        acumulador=f ;
-        g=f ;
+        n=1.0
+        f=-u
+        acumulador=f
+        g=f
 
         if (nargout != 1) :
-            acumulador2= -1. ;
-            dg= -1.; 
+            acumulador2= -1.0
+            dg= -1.0
         
         if (nargout == 1):
             while abs(g) >= err:
-                n=n+1 ;
-                f=-f*u/n ;
-                g=f/n ;
-                acumulador=acumulador+g ;
-            W=-0.577215664901532860 -numpy.log(u) -acumulador ;
+                n=n+1
+                f=-f*u/n
+                g=f/n
+                acumulador=acumulador+g
+            W=-0.577215664901532860 -numpy.log(u) -acumulador
         else:
             while   abs(g) >= err and abs(dg) >= err :
-                n=n+1 ;
-                f=-f*u/n ;
-                g=f/n ;
-                dg=f/u ;
-                acumulador=acumulador+g ;
-                acumulador2=acumulador2+dg ;
-            W=-0.577215664901532860 -numpy.log(u) -acumulador ;
-            dW=-1./u-acumulador2 ;    
+                n=n+1
+                f=-f*u/n
+                g=f/n
+                dg=f/u
+                acumulador=acumulador+g
+                acumulador2=acumulador2+dg
+            W=-0.577215664901532860 -numpy.log(u) -acumulador
+            dW=-1./u-acumulador2
 
         if (nargin != 1) :
-            dW=dW*du ;
+            dW=dW*du
 
         return [W, dW]
 

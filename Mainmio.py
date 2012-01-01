@@ -11,7 +11,6 @@ from PyQt4 import QtCore, QtGui
 import sys
 sys.path.append("views")
 sys.path.append("models")
-import importarCaudal
 import controlador
 import NuevoProyecto
 import ingresarCaudal
@@ -19,7 +18,7 @@ import importarObservaciones
 import ingresarObservaciones
 import verObservaciones
 import metodoSolucion
-from theis import Theis
+import theis
 from vistaDominio import  *
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
@@ -165,16 +164,15 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.menuObservaciones, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despligueObservacion)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        #Adherimos la vista del dominio
+        self.ui = Ui_Form()
+        self.ui.setupUi(MainWindow, ContEnsayo)
+
         ##Leer parametros
         ContEnsayo.leerParametros()
 
         ####Prueba de instanciar un metodo de solucion
-        ####Se le pasa el dominio, los parametros cargados en el sistema, y el pozo de bombeo
-        
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)        
-        
-        m.setearValores([500,0.001])
-
+        m=metodoSolucion.metodoSolucion(1)
 
     def retranslateUi(self, MainWindow):
         pass
@@ -188,19 +186,8 @@ class Ui_MainWindow(QtGui.QDialog):
     def ventanaNuevoProyecto(self):
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
-        
-	#Adherimos la vista del dominio
-        self.ui = Ui_Form()
-
         ui.setupUi(frmNuevoProyecto,ContEnsayo)
-        
-        QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL('clicked()'), self.abrirDominio)
-
         frmNuevoProyecto.exec_()
-
-    def abrirDominio(self):
-        self.ui.setupUi(MainWindow, ContEnsayo)
-         
 
     def ventanaImportarProyecto(self):
         global ContEnsayo
@@ -267,7 +254,7 @@ class Ui_MainWindow(QtGui.QDialog):
             print u'Ya hay una instancia corriendo'
 
         else:
-            ##Codigo de alvaro para generar una matriz
+
             ran = random.randint(10, 30)
             print 'ran: ' + str(ran)
             zcol = []
@@ -277,10 +264,7 @@ class Ui_MainWindow(QtGui.QDialog):
                 z = z**2
                 zcol.append(z)
 
-            #matrix = [np.arange(0, ran), zcol]
-
-            ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
-            matrix=ContEnsayo.dominio.metodo.calcular()            
+            matrix = [np.arange(0, ran), zcol]
             print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
             self.dibujante = dibujante(self, matrix)#Hay que pasarle la ventana principal
             self.dibujante.show()
@@ -306,7 +290,7 @@ class Ui_MainWindow(QtGui.QDialog):
 if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
-
+    app.setStartDragDistance(10)
     app.setStyleSheet("QGroupBox{color: green} \n"
                       "QLineEdit{color: blue} \n"
                       "QLabel{color: red} \n"

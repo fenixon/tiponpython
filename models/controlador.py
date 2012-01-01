@@ -7,6 +7,7 @@ import observacionesensayo
 import bombeo
 import ensayobombeo
 import dominio
+from parametros import parametros
 
 class Proyecto(object):
     
@@ -18,7 +19,7 @@ class Proyecto(object):
         self.dominio = dominio.dominio()
 
         #Lista que guardan pozo y recta
-        self.listaPozo = []
+##        self.listaPozo = []
         self.listaRecta = []
 
         #Ultima recta y pozo agregados
@@ -27,7 +28,20 @@ class Proyecto(object):
 
         #Recta candidata a ser agregada
         self.rectaCandidata = ""
+        self.parametros=[]
 
+        ##Inicial la lista de parametros
+        self.cargarParametros()
+
+    def cargarParametros(self):
+        ###Si se quiere un parametro nuevo se tiene q agregar        
+        self.parametros.append(parametros('S','m^2/d'))    #parametro 0
+        self.parametros.append(parametros('T',''))    #parametro 1
+        
+    def leerParametros(self):
+        for p in self.parametros:
+            print p.nombre
+        
         
     def agregarEnsayo(self, bombeos):
         self.ultimoIdEns=self.ultimoIdEns + 1
@@ -61,35 +75,26 @@ class Proyecto(object):
         p = pozo(x, y)
         self.idP = self.idP + 1
         p.id = self.idP
-        self.listaPozo.append(p)
+        self.dominio.listaPozo.append(p)
         return p.id
                 
 
     def moverPozo(self, idElemento, x, y):
         
-        for pozo in self.listaPozo:
+        for pozo in self.dominio.listaPozo:
             if pozo.id == idElemento:
                 pozo.actualizarCoordenadas(x, y)
                 return
 
-    def buscarPozo(self, idElemento): 
-            
-        for p in self.listaPozo:
+    def buscarPozo(self, idElemento):             
+        for p in self.dominio.listaPozo:
             if p.id == idElemento:
                 return p
-
-    def obtenerPozoBombeo(self):
-        for p in self.listaPozo:
-            ## si tiene ensayos entonces es de bombeo se recupera el primero           
-            if len(p.ensayos)>0:
-                return p
          
-    def removerPozo(self, idElemento):
- 
-            
-        for x in self.listaPozo:
+    def removerPozo(self, idElemento):            
+        for x in self.dominio.listaPozo:
             if x.id == idElemento:
-                self.listaPozo.remove(x)
+                self.dominio.listaPozo.remove(x)
 
 
 
@@ -99,7 +104,7 @@ class Proyecto(object):
         listaRetorno["x"] = 0
         listaRetorno["y"] = 0
 
-        for pozo in self.listaPozo:
+        for pozo in self.dominio.listaPozo:
             if pozo.id == idElemento:
                 listaRetorno["x"] = pozo.x
                 listaRetorno["y"] = pozo.y

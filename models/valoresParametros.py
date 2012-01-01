@@ -1,6 +1,5 @@
 class valoresParametros():
 
-	def __init__(self, nombre, valor):
-
-		self.nombre = nombre
+	def __init__(self, valor, parametro):
 		self.valor = valor
+		self.parametro=parametro

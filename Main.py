@@ -281,8 +281,8 @@ class Ui_MainWindow(QtGui.QDialog):
 
             ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
             matrix=ContEnsayo.dominio.metodo.calcular()            
-            print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
-            self.dibujante = dibujante(self, matrix)#Hay que pasarle la ventana principal
+            #print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
+            self.dibujante = dibujante(self, matrix, ContEnsayo.dominio)#Hay que pasarle la ventana principal
             self.dibujante.show()
             QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
             print 'Dibujante invocado'

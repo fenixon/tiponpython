@@ -19,11 +19,11 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, matrix = None):#Hay que pasarle la ventana que lo invoca
+    def __init__(self, parent = None, matrix = None, dominio=None):#Hay que pasarle la ventana que lo invoca
 
         QMainWindow.__init__(self, parent)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.fm = fm(matrix)
+        self.fm = fm(matrix, dominio)
         ran = random.randint(1, 10)
         self.fm.plotU(ran)
         self.fm.plotD(ran, 0)
@@ -61,14 +61,20 @@ class dibujante(QMainWindow):
         estadob = QSlider(Qt.Horizontal)
         estadob.setMinimumSize(440, 32)
         estadob.setToolTip(u'Próximamente: mostrará el avance de la animación.')
-        tmp = self.fm.matrix[0]
-        estadob.setMaximum(tmp[-1])
+
+        ##cambie el tmp
+        
+        tmp = self.fm.matrix[1]
+        #Habia un tmp -1
+        #estadob.setMaximum(tmp[-1])
+        estadob.setMaximum(20)
         self.estadob = estadob
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderReleased()')), self.actualizarSlider)
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderMoved()')), self.actualizarSlider)
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('valueChanged(int)')), self.actualizarSlider)
 
         timlab = QLabel(QString('0/' + str(self.estadob.maximum())))
+        #timlab=QLabel(QString('pepe'))
         self.timlab = timlab
 
         vbox = QVBoxLayout()

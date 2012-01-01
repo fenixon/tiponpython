@@ -103,19 +103,20 @@ class metodoSolucion(object):
         X, Y = numpy.meshgrid(xx, yy)
 ##      se soluciona desd el tiempo 1 porque el t=0 da error al dividir        
         zz = self.matrizDescenso[1]
+        print "zz "        
         print zz
 
         ##descomentar para generar la grafica atraves de esta clase
-        #fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
-        #self.axu = fig.add_subplot(2, 2, 1)
-        #self.axd = fig.add_subplot(2, 2, 2)
-        #self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
-        #self.axc = fig.add_subplot(2, 2, 4)
-        #fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
-        #self.fig = fig
+        fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
+        self.axu = fig.add_subplot(2, 2, 1)
+        self.axd = fig.add_subplot(2, 2, 2)
+        self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
+        self.axc = fig.add_subplot(2, 2, 4)
+        fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
+        self.fig = fig
         
-        #ax = self.axt
-        #surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
+        ax = self.axt
+        surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
         
         return self.matrizDescenso
 

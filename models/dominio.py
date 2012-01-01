@@ -1,8 +1,8 @@
 class dominio(object):
 
     def __init__(self):
-        self.alto = 10
-        self.ancho = 10
+        self.alto = 50
+        self.ancho = 50
         self.listaBarreras = []
         self.listaPozo=[]
         self.listaCondicionesExternas = []

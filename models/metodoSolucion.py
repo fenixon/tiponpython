@@ -1,17 +1,22 @@
 import numpy
 from valoresParametros import valoresParametros
-from matplotlib.figure import Figure
-from mpl_toolkits.mplot3d.axes3d import Axes3D
-import matplotlib.mlab as mlab
-from matplotlib import cm
+##from matplotlib.figure import Figure
+####from mpl_toolkits.mplot3d.axes3d import Axes3D
+##import matplotlib.mlab as mlab
+##from matplotlib import cm
 
 
 class metodoSolucion(object):
 
-    def __init__(self, dominio):
-        self.dominio = dominio
-        self.listaParametros = []        
-        print 'self.matrizDescenso = numpy.zeros(1,3)'
+    def __init__(self, dominio, parametros): 
+##        self.paramcard=cardinales
+        self.dominio=dominio
+        ## Asociar el metodo al dominio
+        self.dominio.metodo=self                      
+        self.listaParametros=[]
+        for i in self.paramcard:
+            self.listaParametros.append(parametros[i])
+            
         print "Se ha creado el Metodo de Solucion"
         
     def __del__(self):
@@ -107,16 +112,16 @@ class metodoSolucion(object):
         print zz
 
         ##descomentar para generar la grafica atraves de esta clase
-        fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
-        self.axu = fig.add_subplot(2, 2, 1)
-        self.axd = fig.add_subplot(2, 2, 2)
-        self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
-        self.axc = fig.add_subplot(2, 2, 4)
-        fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
-        self.fig = fig
+####        fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
+##        self.axu = fig.add_subplot(2, 2, 1)
+##        self.axd = fig.add_subplot(2, 2, 2)
+##        self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
+##        self.axc = fig.add_subplot(2, 2, 4)
+##        fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
+##        self.fig = fig
         
-        ax = self.axt
-        surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
+##        ax = self.axt
+##        surf = ax.plot_surface(X, Y, zz, rstride=1, cstride=1, cmap=cm.jet, linewidth=0, antialiased=True)
         
         return self.matrizDescenso
 

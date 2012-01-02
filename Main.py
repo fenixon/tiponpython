@@ -20,7 +20,6 @@ import importarObservaciones
 import ingresarObservaciones
 import verObservaciones
 import metodoSolucion
-from theis import Theis
 from vistaDominio import  *
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
@@ -170,11 +169,9 @@ class Ui_MainWindow(QtGui.QDialog):
         ContEnsayo.leerParametros()
 
         ####Prueba de instanciar un metodo de solucion
-        ####Se le pasa el dominio, los parametros cargados en el sistema, y el pozo de bombeo
-        
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)        
-        
-        m.setearValores([500,0.001])
+        ####Se le pasa el dominio, los parametros cargados en el sistema        
+##        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+##        m.setearValores([500,0.001])
 
 
     def retranslateUi(self, MainWindow):

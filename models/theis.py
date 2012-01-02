@@ -16,23 +16,12 @@ from scipy.special import j0
 class Theis(metodoSolucion.metodoAnalitico):
 
     def __init__(self, dominio, parametros):
-        self.dominio=dominio
-
-        ## Asociar el metodo al dominio
-        self.dominio.metodo=self                      
-        self.listaParametros=[]
-
         ##Lista de cardinales de los parametros que utiliza el metodo
         ##Parametros 0: S, parametro 1:T
         self.paramcard=[0,1]
-        for i in self.paramcard:
-            self.listaParametros.append(parametros[i])
-
         #### Llamar al constructor del metodo de solucion
-        ## probar llamar al metodo padre
-        #metodoSolucion.metodoSolucion.__init__(self, 2)    
-
-    
+        ## probar llamar al metodo padre        
+        metodoSolucion.metodoAnalitico.__init__(self,dominio,parametros)          
 
     def calcularpozo(self,r,t,Q):
 

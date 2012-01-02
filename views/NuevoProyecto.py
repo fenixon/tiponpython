@@ -12,6 +12,7 @@ import sys
 import condicionExterna
 import metodoSolucion
 import parametros
+from theis import Theis
 import CondicionesExternas
 import numpy as np
 
@@ -127,11 +128,15 @@ class Ui_frmNuevoProyecto(object):
 
         controlador.dominio.alto = np.int32(self.txtAlto.text())
         controlador.dominio.ancho = np.int32(self.txtAncho.text())
-        controlador.metodoSolucion = metodoSolucion.metodoNumerico(controlador.dominio)
+        #controlador.metodoSolucion = metodoSolucion.metodoNumerico(controlador.dominio)
+        ## Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
+        metodo=Theis(controlador.dominio, controlador.parametros)                
+        metodo.setearValores([float(self.TransitividlineEdit_2txtad.text()),float(self.txtCoefAlmacenamiento.text())])
+        
         param1 = parametros.parametros('primerParametro',self.txtParametro1.text(),'pihas')
         param2 = parametros.parametros('segundoParametro',self.txtParametro2.text(),'pihas')
-        controlador.metodoSolucion.listaParametros.insert(1,param1)
-        controlador.metodoSolucion.listaParametros.insert(2,param2)
+        ##  controlador.metodoSolucion.listaParametros.insert(1,param1)
+        ## controlador.metodoSolucion.listaParametros.insert(2,param2)
         ventana.close()
 	
 

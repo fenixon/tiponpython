@@ -108,7 +108,7 @@ class Ui_frmNuevoProyecto(object):
         self.cmbTipo = QtGui.QComboBox(self.gbMetodo)
         self.cmbTipo.setGeometry(QtCore.QRect(200, 40, 111, 28))
         self.cmbTipo.setObjectName(_fromUtf8("cmbTipo"))
-        tipos = ['Numerico','Analitico']
+        tipos = ['Analitico']
         self.cmbTipo.addItems(tipos)
         self.cambioTipo(self.cmbTipo.currentText())
 
@@ -128,26 +128,24 @@ class Ui_frmNuevoProyecto(object):
 
         controlador.dominio.alto = np.int32(self.txtAlto.text())
         controlador.dominio.ancho = np.int32(self.txtAncho.text())
-        #controlador.metodoSolucion = metodoSolucion.metodoNumerico(controlador.dominio)
-        ## Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-        metodo=Theis(controlador.dominio, controlador.parametros)                
+        ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
+        estring = 'metodo= %s(controlador.dominio, controlador.parametros)' % (self.cmbMetodo.currentText())
+        exec(estring)
         metodo.setearValores([float(self.TransitividlineEdit_2txtad.text()),float(self.txtCoefAlmacenamiento.text())])
-        
-        param1 = parametros.parametros('primerParametro',self.txtParametro1.text(),'pihas')
-        param2 = parametros.parametros('segundoParametro',self.txtParametro2.text(),'pihas')
+        controlador.metodo=metodo
+        #param1 = parametros.parametros('primerParametro',self.txtParametro1.text(),'pihas')
+        #param2 = parametros.parametros('segundoParametro',self.txtParametro2.text(),'pihas')
         ##  controlador.metodoSolucion.listaParametros.insert(1,param1)
         ## controlador.metodoSolucion.listaParametros.insert(2,param2)
         ventana.close()
-	
 
     def cambioTipo(self, tipo):
         self.cmbMetodo.clear()
-
         if tipo == 'Numerico':
-            metodos = ['Hay uno']
+            metodos = ['Ninguno']
             self.btnCondicionesExternas.setEnabled(True)
         else:
-            metodos = ['Ninguno']
+            metodos = ['Theis']
             self.btnCondicionesExternas.setEnabled(False)
 
         self.cmbMetodo.addItems(metodos)

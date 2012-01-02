@@ -358,7 +358,7 @@ class box(QtGui.QGroupBox):
         self.presionandoRecta = False
 
         self.idRecta = 1000
-        
+
         self.botones = []
 
         self.bGiratorios = []
@@ -1226,18 +1226,23 @@ class Ui_Form(object):
         self.frame.setFrameShadow(QtGui.QFrame.Raised)
         self.frame.setObjectName(_fromUtf8("frame"))
         self.frame.setEnabled(True)
-	self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
+        self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
 					"border: 2px solid green; \n"
 					"border-radius: 25px}")
+
+        
 
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
         self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27,  elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
         self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
-        self.groupBoxDominio.setStyleSheet("background-color: white; \n"
-					" border: 2px solid green; \n"
-					"border-radius: 25px")
+        self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
+					" border: 2px solid green;}")
+
+        self.scrollDominioH = QtGui.QScrollBar(QtCore.Qt.Horizontal, self.groupBoxDominio)
+        self.scrollDominioV = QtGui.QScrollBar(QtCore.Qt.Vertical, self.groupBoxDominio)
+
 
         #Caja de elementos especifica del dominio
         elementoDominio.Dominio = box(self.groupBoxDominio)

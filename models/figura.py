@@ -114,11 +114,11 @@ class figura():
         Z = self.matrix[1]      
 
         print 'Z: \n' + str(Z)
-        #ax.set_zlim3d(-20, 20)
+        ax.set_zlim3d(-20, 20)
         surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=True)
-        #ax.set_zlim3d(9.5, 10)# viewrange for z-axis should be [-4,4]
-        #ax.set_ylim3d(0, 20)# viewrange for y-axis should be [-2,2]
-        #ax.set_xlim3d(0, 20)
+        ax.set_zlim3d(9.5, 10)# viewrange for z-axis should be [-4,4]
+        ax.set_ylim3d(0, 20)# viewrange for y-axis should be [-2,2]
+        ax.set_xlim3d(0, 20)
         ax.set_title(u'Representación 3d')
         print 'Third plot loaded...'
 #            fig.colorbar(surf, shrink=0.5, aspect=10)

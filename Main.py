@@ -13,6 +13,7 @@ sys.path.append("views")
 sys.path.append("models")
 import importarCaudal
 import controlador
+import verensayos
 import NuevoProyecto
 import ingresarCaudal
 import importarObservaciones

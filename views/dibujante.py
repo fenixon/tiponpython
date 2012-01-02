@@ -63,7 +63,7 @@ class dibujante(QMainWindow):
         estadob.setToolTip(u'Próximamente: mostrará el avance de la animación.')
 
         ##cambie el tmp
-        
+        ####se grafica el tiempo 1 
         tmp = self.fm.matrix[1]
         #Habia un tmp -1
         #estadob.setMaximum(tmp[-1])

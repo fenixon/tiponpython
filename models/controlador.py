@@ -95,8 +95,28 @@ class Proyecto(object):
         for x in self.dominio.listaPozo:
             if x.id == idElemento:
                 self.dominio.listaPozo.remove(x)
+    def optimizacioneslistar(self):
+        self.optimizaciones = QtCore.QStringList()
+        
+        self.optimizaciones << "CALIS" << "THEIS"
+         
+        return self.optimizaciones
+    def optimizacioneslistarmenos(self,nolistar):
+        self.opt = QtCore.QStringList()
+        for x in self.optimizaciones:
+            if x != nolistar:
+                #print "muestro " + x
+                self.opt << x
+        
+        return self.opt
+    def asociarPozoOptimiazion(self,idElemento,metodo):
+        for pozo in self.dominio.listaPozo:
+            if pozo.id == idElemento:
+                self.dominio.listaPozoOptimiza[idElemento]=metodo
+        print "se agrego a la lista de optimizaciones"
 
-
+    def listarPozosParaOptimizar(self):
+        return self.dominio.listaPozoOptimiza
 
 
     def retornarCoordenadas(self, idElemento):

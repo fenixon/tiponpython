@@ -11,7 +11,7 @@ from PyQt4 import QtCore, QtGui
 import sys
 import numpy as np
 import asociarEnsayos
-import vistaoptimizacion
+import optimizacion
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -1279,6 +1279,7 @@ class Ui_Form(object):
 
         #Caja de elementos especifica del dominio
         elementoDominio.Dominio = box(self.groupBoxDominio)
+        self.caja=elementoDominio.Dominio 
 
         #Definimos la instancia global del menu y le asociamo
         #un padre.

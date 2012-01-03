@@ -105,7 +105,7 @@ class Ui_Dialog(QtGui.QDialog):
                 datos=linea.split("\t")
 ##              Se esa lina tiene dos columnas se procesa si no no
                 if (len(datos)>=2):
-                    t=int(datos[0])
+                    t=float(datos[0])
                     n=float(datos[1])
                     print "tiempo: "+str(t)
                     print "nivel: "+str(n)
@@ -123,7 +123,7 @@ class Ui_Dialog(QtGui.QDialog):
                 for ch in p.childNodes:
                     if ch.nodeType == ch.TEXT_NODE:
                         if i==0 :
-                            t=int(ch.data)
+                            t=float(ch.data)
                             print "tiempo: "+str(t)
                             i=1
                         else:

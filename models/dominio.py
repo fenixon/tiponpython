@@ -33,3 +33,10 @@ class dominio(object):
             if len(p.ensayos)>0:
                 print p
                 return p
+                
+    def obtenerPozoObservacion(self):
+        for p in self.listaPozo:
+            ## si tiene ensayos entonces es de bombeo se recupera el primero           
+            if len(p.observaciones)>0:
+                print p
+                return p                

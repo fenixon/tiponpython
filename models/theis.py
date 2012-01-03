@@ -21,7 +21,8 @@ class Theis(metodoSolucion.metodoAnalitico):
         self.paramcard=[0,1]
         #### Llamar al constructor del metodo de solucion
         ## probar llamar al metodo padre        
-        metodoSolucion.metodoAnalitico.__init__(self,dominio,parametros)          
+        metodoSolucion.metodoAnalitico.__init__(self,dominio,parametros)
+        print 'Se creo el loco theis'
 
     def calcularpozo(self,r,t,Q):
 

@@ -19,16 +19,16 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, matrix = None, dominio=None):#Hay que pasarle la ventana que lo invoca
+    def __init__(self, parent = None, matrix = None, dominio=None, observaciones=None):#Hay que pasarle la ventana que lo invoca
 
         QMainWindow.__init__(self, parent)
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.fm = fm(matrix, dominio)
+        self.fm = fm(matrix, dominio, observaciones)
         ran = random.randint(1, 10)
         self.fm.plotU(ran)
-        self.fm.plotD(ran, 0)
-        self.fm.plotT(ran, 0)
-        self.fm.plotC(ran, 0)
+        self.fm.plotD(ran, 1)
+        self.fm.plotT(ran, 1)
+        self.fm.plotC(ran, 1)
         self.main_frame = QWidget()
         self.setWindowTitle(u'Gráficas')
         self.setMaximumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
@@ -38,6 +38,9 @@ class dibujante(QMainWindow):
         self.canvas = FigureCanvas(self.fm.fig)
         self.canvas.setParent(self.main_frame)
         #self.mpl_toolbar = NavigationToolbar(self.canvas, self.main_frame)
+        self.canvas.draw()
+
+        self.observaciones = observaciones
 
         separador = QFrame()
         separador.setFrameShadow(QFrame.Sunken)
@@ -67,13 +70,14 @@ class dibujante(QMainWindow):
         tmp = self.fm.matrix[1]
         #Habia un tmp -1
         #estadob.setMaximum(tmp[-1])
-        estadob.setMaximum(20)
+        #estadob.setMaximum(20)
+        estadob.setMaximum(self.observaciones[-1].tiempo)
         self.estadob = estadob
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderReleased()')), self.actualizarSlider)
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderMoved()')), self.actualizarSlider)
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('valueChanged(int)')), self.actualizarSlider)
 
-        timlab = QLabel(QString('0/' + str(self.estadob.maximum())))
+        timlab = QLabel(QString('1/' + str(self.estadob.maximum())))
         #timlab=QLabel(QString('pepe'))
         self.timlab = timlab
 
@@ -100,9 +104,14 @@ class dibujante(QMainWindow):
 
     def actualizarSlider(self):
 
-        self.estadob.setToolTip(str(self.estadob.value()) + '/' + str(self.estadob.maximum()))
+        ran = random.randint(1, 10)
+        self.fm.plotD(ran, self.estadob.value() + 1)
+        self.fm.plotT(ran, self.estadob.value() + 1)
+        self.fm.plotC(ran, self.estadob.value() + 1)
+        self.draw()
+        self.estadob.setToolTip(str(self.estadob.value() + 1) + '/' + str(self.estadob.maximum()))
         self.timlab.setText(self.estadob.toolTip())
-        print u'Posición: segundo ' + str(self.estadob.value())
+        print u'Posición: segundo ' + str(self.estadob.value() + 1)
 
     def reproducir(self):
 
@@ -128,11 +137,6 @@ class dibujante(QMainWindow):
 
         else:
 
-            ran = random.randint(1, 10)
-            self.fm.plotD(ran, self.estadob.value()+1)
-            self.fm.plotT(ran, self.estadob.value()+1)
-            self.fm.plotC(ran, self.estadob.value()+1)
-            self.draw()
             self.estadob.setValue(self.estadob.value() + 1)
 
     def pausar(self):

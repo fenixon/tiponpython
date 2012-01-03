@@ -13,7 +13,7 @@ class modelotabla(QtCore.QAbstractTableModel):
             if orientation == QtCore.Qt.Horizontal:
                 return self.__campos[section];
             else:
-                return QtCore.QString("Dato %1").arg(section)
+                return QtCore.QString("%1").arg(section)
     
     def rowCount(self, parent):
         return len(self.__datos)

@@ -7,7 +7,8 @@ class dominio(object):
         self.listaPozo=[]
         self.listaCondicionesExternas = []
         print "Se ha creado el Dominio"
-        
+        #Lista que guarda los pozos y el metodo de optimizacion asociado al mismo
+        self.listaPozoOptimiza ={}        
         #Agregar el a, b, c de la ecuacion del plano. Valores que
         ##  deben ser seteados desde la creacion del proyecto
         self.a=1
@@ -32,3 +33,10 @@ class dominio(object):
             if len(p.ensayos)>0:
                 print p
                 return p
+                
+    def obtenerPozoObservacion(self):
+        for p in self.listaPozo:
+            ## si tiene ensayos entonces es de bombeo se recupera el primero           
+            if len(p.observaciones)>0:
+                print p
+                return p                

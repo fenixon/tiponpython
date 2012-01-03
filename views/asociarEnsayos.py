@@ -105,6 +105,12 @@ class Ui_Dialog(QtGui.QDialog):
         print 'selecciono un dato'
         print self.oe
 
+    def refrescar(self):
+        self.model_po=modelotabla.modelotabla(self.p.observaciones,["Observaciones"])        
+        self.listWidget.setModel(self.model_po)
+        self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Ensayos"])  
+        self.listWidget_2.setModel(self.model_pe)        
+    
     def cancelar(self):
         self.guardar.close()
 
@@ -112,7 +118,7 @@ class Ui_Dialog(QtGui.QDialog):
         global ContEnsayo
         ####  mensajito si realmente quiere hacer la asociacion
         reply = QtGui.QMessageBox.question(self,"Informacion",
-                "¿ Realmente desea asociar este item al pozo seleccionado?. ",
+                "¿Realmente desea asociar este item al pozo seleccionado?. ",
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
         if reply == QtGui.QMessageBox.Yes:
         
@@ -129,10 +135,12 @@ class Ui_Dialog(QtGui.QDialog):
                     "Informacion",
                     "La asociación ha sido efectuada satisfactoriamente")
             if reply == QtGui.QMessageBox.Ok:
-                print "asociado"            
+                print "asociado"
+                self.refrescar()
+                
             else:
-                print "Escape"
-            self.guardar.close()
+                print "Escape"            
+##            self.guardar.close()
         
             
 

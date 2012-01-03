@@ -11,7 +11,7 @@ from PyQt4 import QtCore, QtGui
 import sys
 import numpy as np
 import asociarEnsayos
-
+import vistaoptimizacion
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -19,7 +19,7 @@ except AttributeError:
 
 
 """
-La clase elemento dominio contiene código auxiliar. Es una clase
+La clase elemento dominio contiene cï¿½digo auxiliar. Es una clase
 de caracter global.
 
 Sus atributos, a modo de banderas, van a ser aprovechados por las
@@ -116,7 +116,7 @@ transicion = False
 
 Descripcion de ConEnsayo
 
-Básicamente se guarda la instancia del controlador global creado en
+Bï¿½sicamente se guarda la instancia del controlador global creado en
 el archivo principal. Este hace las veces de controlador, por ende las
 operaciones con los modelos se hacen delegandole dichas tareas a este.
 
@@ -569,7 +569,7 @@ class menu(QtGui.QListView):
     def init(self):
         #Valores iniciales del menu, incluido el modelo
         self.items = QtCore.QStringList()
-        self.items << "MENU" << "Asociar" << "Eliminar" << "Salir"    
+        self.items << "MENU" << "Optimizar" << "Asociar" << "Eliminar" << "Salir"    
         modelo = QtGui.QStringListModel(self.items)
         self.setModel(modelo)        
         self.setGeometry(QtCore.QRect(60, 60, 131, 131))
@@ -627,12 +627,36 @@ class menu(QtGui.QListView):
                 ui= asociarEnsayos.Ui_Dialog()
                 ui.setupUi(frmasociar, elementoDominio.selectedMenuMouse["id"], elementoDominio.ContEnsayo)
                 frmasociar.exec_()
-                
                 elementoDominio.widget = frmasociar
-                #elementoDominio.widget.setGeometry(QtCore.QRect(260, 20, 151, 81))
-                #elementoDominio.widget.show()
                 self.hide()
-                
+            if valor.toString() == "Optimizar":
+                i = QtCore.QStringList()
+                i << elementoDominio.ContEnsayo.optimizacioneslistar() << "Salir"    
+                m = QtGui.QStringListModel(i)              
+                #Listo los metodos de optimizacion
+                menusito=menu(elementoDominio.Dominio)
+                menusito.setModel(m)
+                menusito.move(self.pos().x()+30,self.pos().y())           
+                menusito.show()                
+                #Cierro el menu contextual
+                self.reset()
+                self.hide()
+                return
+            #Si no es ninguna opcion predeterminada, las opcoines son para elegir metodos de optimizacion
+            if valor.toString() != "Optimizar" and valor.toString() != "Salir" and valor.toString() != "Eliminar" and valor.toString() != "Asociar" :
+                print "valor es optimizar"
+                #Agrego ala coleccion de pozos para optimizar
+                print "Agrego para optimizar el pozo " 
+                print elementoDominio.selectedMenuMouse["id"]
+                elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())                
+                frmopt=QtGui.QDialog()
+                ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+                #ui.setupUi(frmopt,elementoDominio.ContEnsayo)
+                #frmopt.show()
+                elementoDominio.widget = ui                
+                getattr(self,'reset')()
+                getattr(self,'hide')()
+                return  
 
 """
 Clase que maneja la interfaz de coordenadas
@@ -1255,6 +1279,7 @@ class Ui_Form(object):
 
         #Caja de elementos especifica del dominio
         elementoDominio.Dominio = box(self.groupBoxDominio)
+        self.caja=elementoDominio.Dominio 
 
         #Definimos la instancia global del menu y le asociamo
         #un padre.

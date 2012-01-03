@@ -1264,8 +1264,17 @@ class Ui_Form(object):
         self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
 					" border: 2px solid green;}")
 
-        self.scrollDominioH = QtGui.QScrollBar(QtCore.Qt.Horizontal, self.groupBoxDominio)
-        self.scrollDominioV = QtGui.QScrollBar(QtCore.Qt.Vertical, self.groupBoxDominio)
+	if elementoDominio.ContEnsayo.dominio.ancho > 200 or elementoDominio.ContEnsayo.dominio.alto > 200:
+	 	self.scrollArea = QtGui.QScrollArea(self.frame)
+
+		self.scrollArea.setGeometry(QtCore.QRect(20, 20, 200, 200))
+
+		self.scrollArea.setWidget(self.groupBoxDominio)
+
+		self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
+
+		self.scrollArea.setHorizontalScrollBarPolicy(2)
+		self.scrollArea.setVerticalScrollBarPolicy(2)
 
 
         #Caja de elementos especifica del dominio

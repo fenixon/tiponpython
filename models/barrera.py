@@ -41,3 +41,4 @@ class barrera():
                                 
                                 self.y4 = (self.m * self.x4) + self.n
 
+

@@ -650,10 +650,10 @@ class menu(QtGui.QListView):
                 print elementoDominio.selectedMenuMouse["id"]
                 elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())                
                 frmopt=QtGui.QDialog()
-                ui= vistaoptimizacion.optimizacion()
-                ui.setupUi(frmopt,elementoDominio.ContEnsayo)
-                frmopt.show()
-                elementoDominio.widget = frmopt                
+                ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+                #ui.setupUi(frmopt,elementoDominio.ContEnsayo)
+                #frmopt.show()
+                elementoDominio.widget = ui                
                 getattr(self,'reset')()
                 getattr(self,'hide')()
                 return  

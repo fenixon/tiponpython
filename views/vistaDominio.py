@@ -1220,6 +1220,7 @@ class Ui_Form(object):
         
         #Seteo del formulario que contendra todos los widgets del dominio
         self.frame = QtGui.QFrame(Form)
+ 
         self.frame.setGeometry(QtCore.QRect(170, 80, 471, 351))
         self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -1229,8 +1230,6 @@ class Ui_Form(object):
         self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
 					"border: 2px solid green; \n"
 					"border-radius: 25px}")
-
-        
 
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
         self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27,  elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
@@ -1243,7 +1242,7 @@ class Ui_Form(object):
 	if elementoDominio.ContEnsayo.dominio.ancho > 200 or elementoDominio.ContEnsayo.dominio.alto > 200:
 	 	self.scrollArea = QtGui.QScrollArea(self.frame)
 
-		self.scrollArea.setGeometry(QtCore.QRect(20, 20, 200, 200))
+		self.scrollArea.setGeometry(QtCore.QRect(20, 27, 235, 300))
 
 		self.scrollArea.setWidget(self.groupBoxDominio)
 
@@ -1251,6 +1250,7 @@ class Ui_Form(object):
 
 		self.scrollArea.setHorizontalScrollBarPolicy(2)
 		self.scrollArea.setVerticalScrollBarPolicy(2)
+		
 
 
         #Caja de elementos especifica del dominio

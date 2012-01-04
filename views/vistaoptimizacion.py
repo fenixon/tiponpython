@@ -18,12 +18,14 @@ class optimizacion(QtGui.QWidget):
     def __init__(self,cont,Form):
         super(optimizacion, self).__init__()
         global ContEnsayo
+        global pozosparaoptimizar
+        global pozosconfirmados
+        self.pozosconfirmados=[]
         ContEnsayo=cont
+        self.pozosparaoptimizar=ContEnsayo.listarPozosParaOptimizar() 
         self.setupUi()
             
     def setupUi(self):
-        #global ContEnsayo
-        #ContEnsayo=cont
         self.label = QtGui.QLabel(self)
         self.label.setGeometry(QtCore.QRect(30, 20, 131, 41))
         font = QtGui.QFont()
@@ -39,10 +41,6 @@ class optimizacion(QtGui.QWidget):
         self.label_2.setGeometry(QtCore.QRect(30, 60, 158, 36))
         self.label_2.setText(QtGui.QApplication.translate("Form", "Pozos Seleccionados", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setObjectName(_fromUtf8("label_2"))
-        #self.listWidget = QtGui.QListWidget(self)
-        #self.listWidget.setGeometry(QtCore.QRect(40, 100, 51, 151))
-        #self.listWidget.setObjectName(_fromUtf8("listWidget"))                
-        #self.listWidget.show()
         self.cargardatos(self)
         self.line = QtGui.QFrame(self)
         self.line.setGeometry(QtCore.QRect(143, 70, 20, 211))
@@ -60,13 +58,14 @@ class optimizacion(QtGui.QWidget):
         self.show()
     def cargardatos(self,formulario):
         #Listo los pozos que se le asociaron metodos de optimizacion
-        pozos=ContEnsayo.listarPozosParaOptimizar() 
+        
+         
         posiciony=100
         #self.listWidget.setGeometry(QtCore.QRect(40, 100, 51, 151))
-        for pozo in pozos:
+        for pozo in self.pozosparaoptimizar:
             #Creo la lista de pozos a optimizar
             #Creo el checkbox
-            self.checkBox=QtGui.QCheckBox("Pozo "+str(pozo),self)        
+            self.checkBox=QtGui.QCheckBox(str(pozo),self)        
             self.checkBox.stateChanged.connect(self.mensajecheckbox)
             self.checkBox.setGeometry(QtCore.QRect(40, posiciony, 69, 30))
             self.checkBox.toggle()            
@@ -76,8 +75,8 @@ class optimizacion(QtGui.QWidget):
             self.comboBox.setObjectName(_fromUtf8("comboBox"))
             posiciony=posiciony+20
             #agrego todas las optimizaciones a combo
-            self.comboBox.addItem(pozos[pozo], pozo)
-            self.comboBox.addItems(ContEnsayo.optimizacioneslistarmenos(pozos[pozo]))
+            self.comboBox.addItem(self.pozosparaoptimizar[pozo], pozo)
+            self.comboBox.addItems(ContEnsayo.optimizacioneslistarmenos(self.pozosparaoptimizar[pozo]))
             self.comboBox.setCurrentIndex(0)
         #Boton para confirmar la/s optimizaciones
         accion=QtGui.QPushButton('Procesar ',self)
@@ -89,12 +88,14 @@ class optimizacion(QtGui.QWidget):
         item = self.listWidget.item(0)
         self.listWidget.setSortingEnabled(__sortingEnabled)
     def mensajecheckbox(self,state):
-        print "actuo sobre el objeto:" +  str(self.sender())
         if state == QtCore.Qt.Checked:
-            #Si esta activado lo desactivo en la coleccion
-            print "Activado"
+            #Si esta desactivado lo activo en la coleccion
+            self.pozosconfirmados.append(str(self.sender().text()))
         else:
-            #Si esta desactivado lo activo en la collecion
-            print "Desactiado"
+            #Si esta activado lo desactivo en la coleccion
+            self.pozosconfirmados.remove(str(self.sender().text()))
     def procesar(self):
         print "Proceso la matriz"
+        for p in self.pozosconfirmados:
+            print "Pozo:" + str(p)
+            print "Se le asigno el Metodo optimizacion:" + self.pozosparaoptimizar[int(p)]

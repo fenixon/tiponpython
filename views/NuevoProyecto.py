@@ -25,6 +25,7 @@ class cajaTexto(QtGui.QLineEdit):
         def __init__(self, padre):
             super(cajaTexto, self).__init__(padre)
             self.setFocusPolicy(QtCore.Qt.StrongFocus)
+            self.setText('0')
 
         def focusOutEvent(self, evento):
             if str(self.text()) == '':

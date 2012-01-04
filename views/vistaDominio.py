@@ -574,7 +574,10 @@ class menu(QtGui.QListView):
         self.setModel(modelo)        
         self.setGeometry(QtCore.QRect(60, 60, 131, 131))
         self.hide()
-
+    def leaveEvent(self,coso):
+        print "Cierro el menu"
+        self.reset()
+        self.hide()        
     def selectionChanged(self, selected,  deselected):
         #indices es un iterador de la lista de QItemSelection que se retorna
         #al momento de una seleccion en la vista.

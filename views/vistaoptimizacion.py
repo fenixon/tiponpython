@@ -17,12 +17,12 @@ except AttributeError:
 class optimizacion(QtGui.QWidget):
     def __init__(self,cont,Form):
         super(optimizacion, self).__init__()
-        global ContEnsayo
+        global controlador
         global pozosparaoptimizar
         global pozosconfirmados
         self.pozosconfirmados=[]
-        ContEnsayo=cont
-        self.pozosparaoptimizar=ContEnsayo.listarPozosParaOptimizar() 
+        controlador=cont
+        self.pozosparaoptimizar=controlador.listarPozosParaOptimizar() 
         self.setupUi()
             
     def setupUi(self):
@@ -58,10 +58,7 @@ class optimizacion(QtGui.QWidget):
         self.show()
     def cargardatos(self,formulario):
         #Listo los pozos que se le asociaron metodos de optimizacion
-        
-         
         posiciony=100
-        #self.listWidget.setGeometry(QtCore.QRect(40, 100, 51, 151))
         for pozo in self.pozosparaoptimizar:
             #Creo la lista de pozos a optimizar
             #Creo el checkbox
@@ -70,14 +67,15 @@ class optimizacion(QtGui.QWidget):
             self.checkBox.setGeometry(QtCore.QRect(40, posiciony, 69, 30))
             self.checkBox.toggle()            
             #Creo el combobox con las optimizaciones
-            self.comboBox = QtGui.QComboBox(formulario)
-            self.comboBox.setGeometry(QtCore.QRect(200, posiciony, 69, 22))
-            self.comboBox.setObjectName(_fromUtf8("comboBox"))
+            globals()["comboBox"+ str(pozo)]=QtGui.QComboBox(self)
+            globals()["comboBox"+ str(pozo)].setGeometry(QtCore.QRect(200, posiciony, 69, 22))
             posiciony=posiciony+20
             #agrego todas las optimizaciones a combo
-            self.comboBox.addItem(self.pozosparaoptimizar[pozo], pozo)
-            self.comboBox.addItems(ContEnsayo.optimizacioneslistarmenos(self.pozosparaoptimizar[pozo]))
-            self.comboBox.setCurrentIndex(0)
+            globals()["comboBox"+ str(pozo)].addItem(self.pozosparaoptimizar[pozo], pozo)
+            globals()["comboBox"+ str(pozo)].setItemData(0,QtCore.QVariant(pozo))
+            globals()["comboBox"+ str(pozo)].addItems(controlador.optimizacioneslistarmenos(self.pozosparaoptimizar[pozo]))
+            globals()["comboBox"+ str(pozo)].setCurrentIndex(0)
+            self.connect(globals()["comboBox"+ str(pozo)], QtCore.SIGNAL('currentIndexChanged(int)'),self.cambiarmetodooptimizacion)
         #Boton para confirmar la/s optimizaciones
         accion=QtGui.QPushButton('Procesar ',self)
         accion.setGeometry(200,posiciony + 200,60,35)
@@ -88,12 +86,21 @@ class optimizacion(QtGui.QWidget):
         item = self.listWidget.item(0)
         self.listWidget.setSortingEnabled(__sortingEnabled)
     def mensajecheckbox(self,state):
+        print  self.checkBox
         if state == QtCore.Qt.Checked:
             #Si esta desactivado lo activo en la coleccion
             self.pozosconfirmados.append(str(self.sender().text()))
         else:
             #Si esta activado lo desactivo en la coleccion
             self.pozosconfirmados.remove(str(self.sender().text()))
+    def ejemplo(coso):
+        print "ejemplo"
+    def cambiarmetodooptimizacion(self,indice):
+        #Obtengo el pozo seleccionado y le cambio el metodo de solucion al elegido
+        #print "Pozo:" + str(self.sender().itemData(0).toInt()[0])
+        #print "Cambiar a:" +self.sender().currentText()
+        #Le asocio el nuevo metodo
+        controlador.asociarPozoOptimiazion(self.sender().itemData(0).toInt()[0],self.sender().currentText())              
     def procesar(self):
         print "Proceso la matriz"
         for p in self.pozosconfirmados:

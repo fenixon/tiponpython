@@ -25,7 +25,7 @@ de caracter global.
 Sus atributos, a modo de banderas, van a ser aprovechados por las
 instancias de la clases boton y box.
 
-Los valores por defecto de estos atributos son
+Los valores por defecto de estos atributos sonfocusOutEvent
 
 elementoDominio = 0
 existe = False

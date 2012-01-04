@@ -312,7 +312,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui = Ui_Form()
         self.ui.setupUi(MainWindow, ContEnsayo)
 
-        b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self, "pozo")
+        b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.ui.caja, "pozo")
         b.id = ContEnsayo.agregarPozo(20, 20)   
         b.setStyleSheet("border: none")	
         b.setGeometry(QtCore.QRect(20,20, 24, 24))                 

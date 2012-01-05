@@ -34,6 +34,8 @@ class cajaTexto(QtGui.QLineEdit):
             self.setStyleSheet("background-color: white")
 
         def focusInEvent(self, evento):
+            if self.text()=='0' :
+                self.setText('')
             self.setStyleSheet("background-color:  rgb(40, 255, 40)")
             evento.gotFocus()
             self.setCursor(QtCore.Qt.IBeamCursor)
@@ -52,6 +54,8 @@ class Ui_frmNuevoProyecto(object):
         global controlador
         controlador = controlo
 
+        global ventana
+        ventana = frmNuevoProyecto
         frmNuevoProyecto.setObjectName(_fromUtf8("frmNuevoProyecto"))
         frmNuevoProyecto.resize(405, 608)
         frmNuevoProyecto.setWindowTitle(QtGui.QApplication.translate("frmNuevoProyecto", "Crear un nuevo proyecto", None, QtGui.QApplication.UnicodeUTF8))
@@ -142,7 +146,7 @@ class Ui_frmNuevoProyecto(object):
         tipos = ['Analitico']
         self.cmbTipo.addItems(tipos)
         self.cambioTipo(self.cmbTipo.currentText())
-        self.validador = QtGui.QIntValidator(-100, 900, self.gbDimensionesDominio)
+        self.validador = QtGui.QDoubleValidator(-100, 900, 5, self.gbDimensionesDominio)
         self.txtAlto.setValidator(self.validador)
         self.txtAncho.setValidator(self.validador)
         self.txtA.setValidator(self.validador)
@@ -174,8 +178,9 @@ class Ui_frmNuevoProyecto(object):
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
         estring = 'metodo= %s(controlador.dominio, controlador.parametros)' % (self.cmbMetodo.currentText())
         exec(estring)
-        metodo.setearValores([float(self.TransitividlineEdit_2txtad.text()),float(self.txtCoefAlmacenamiento.text())])
+        metodo.setearValores([float(self.txtTransitividad.text()),float(self.txtCoefAlmacenamiento.text())])
         controlador.metodo=metodo
+        print str(self.txtCoefAlmacenamiento.text())
         #param1 = parametros.parametros('primerParametro',self.txtParametro1.text(),'pihas')
         #param2 = parametros.parametros('segundoParametro',self.txtParametro2.text(),'pihas')
         ##  controlador.metodoSolucion.listaParametros.insert(1,param1)

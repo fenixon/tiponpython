@@ -19,11 +19,11 @@ except AttributeError:
 
 
 """
-La clase elemento dominio contiene c�digo auxiliar. Es una clase
+La clase elemento dominio contiene codigo auxiliar. Es una clase
 de caracter global.
 
 Sus atributos, a modo de banderas, van a ser aprovechados por las
-instancias de la clases boton y box.
+instancias de la clases boton y box, gbCoordenadas y menu.
 
 Los valores por defecto de estos atributos sonfocusOutEvent
 

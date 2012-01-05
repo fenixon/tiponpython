@@ -19,16 +19,31 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, matrix = None, dominio=None, observaciones=None):#Hay que pasarle la ventana que lo invoca
+    def __init__(self, parent = None, dominio=None):#Hay que pasarle la ventana que lo invoca
 
         QMainWindow.__init__(self, parent)
+
+        ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
+        matrix=dominio.metodo.calcular()
+
+        ##se obtiene un pozo de observacion el primero por defecto
+        pozoObservacion=dominio.obtenerPozoObservacion()            
+        ##Obtener una observacion de ensayo ...que pasa cuando hay mas de una asociada?????        
+        observaciones=pozoObservacion.observaciones[0].devolverO()
+
+        ###Esto se podria obtener desde el dominio        
+        pozoBombeo=dominio.obtenerPozoBombeo()
+        ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
+        bombeos=pozoBombeo.ensayos[0].devolverB()           
+        self.bombeos=bombeos
+        
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.fm = fm(matrix, dominio, observaciones)
+        self.fm = fm(matrix, dominio, observaciones, bombeos)
         ran = random.randint(1, 10)
         self.fm.plotU(ran)
-        self.fm.plotD(ran, 1)
-        self.fm.plotT(ran, 1)
-        self.fm.plotC(ran, 1)
+        self.fm.plotD(ran, 0)
+        self.fm.plotT(ran, 0)
+        self.fm.plotC(ran, 0)
         self.main_frame = QWidget()
         self.setWindowTitle(u'Gráficas')
         self.setMaximumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
@@ -66,18 +81,19 @@ class dibujante(QMainWindow):
         estadob.setToolTip(u'Próximamente: mostrará el avance de la animación.')
 
         ##cambie el tmp
-        ####se grafica el tiempo 1 
-        tmp = self.fm.matrix[1]
+        ####se grafica lo que hay en el primer tiempo
+        #tmp = self.fm.matrix[0]
         #Habia un tmp -1
         #estadob.setMaximum(tmp[-1])
         #estadob.setMaximum(20)
-        estadob.setMaximum(self.observaciones[-1].tiempo)
+        ##El maximo tiempo va a ser lo que hay en el ultimo tiempo de bombeo
+        estadob.setMaximum(self.bombeos[-1].tiempo*10)
         self.estadob = estadob
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderReleased()')), self.actualizarSlider)
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderMoved()')), self.actualizarSlider)
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('valueChanged(int)')), self.actualizarSlider)
 
-        timlab = QLabel(QString('1/' + str(self.estadob.maximum())))
+        timlab = QLabel(QString('0/' + str(self.bombeos[-1].tiempo)))
         #timlab=QLabel(QString('pepe'))
         self.timlab = timlab
 
@@ -105,13 +121,23 @@ class dibujante(QMainWindow):
     def actualizarSlider(self):
 
         ran = random.randint(1, 10)
-        self.fm.plotD(ran, self.estadob.value() + 1)
-        self.fm.plotT(ran, self.estadob.value() + 1)
-        self.fm.plotC(ran, self.estadob.value() + 1)
-        self.draw()
-        self.estadob.setToolTip(str(self.estadob.value() + 1) + '/' + str(self.estadob.maximum()))
+        #try:
+        t=float(self.estadob.value()/10.0)
+        print 'tiempo: '+ str(t)
+        auxt=[i for i,x in enumerate(self.bombeos) if x.tiempo == t]
+        print 'indices: '+str(auxt)
+        if len(auxt)>0 :
+            cardt=auxt[0]              
+            self.fm.plotD(ran, cardt)
+            self.fm.plotT(ran, cardt)
+            self.fm.plotC(ran, cardt)
+            self.draw()
+        else:
+            print 'no hay valores para t: '+str(t)
+            
+        self.estadob.setToolTip(str(t) + '/' + str(self.estadob.maximum()/10.0))
         self.timlab.setText(self.estadob.toolTip())
-        print u'Posición: segundo ' + str(self.estadob.value() + 1)
+        print u'Posición: segundo ' + str(t)
 
     def reproducir(self):
 

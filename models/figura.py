@@ -12,7 +12,7 @@ import random
 
 class figura():
 
-    def __init__(self, matrix, dominio, observaciones, selected = None, parent = None):
+    def __init__(self, matrix, dominio, observaciones, bombeos, selected = None, parent = None):
 
         fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
         self.axu = fig.add_subplot(2, 2, 1)
@@ -24,16 +24,17 @@ class figura():
         self.matrix = matrix
         self.dominio=dominio
         self.observaciones=observaciones
+        self.bombeos=bombeos
 
     def plotU(self, ran):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para x e y
 
         ax = self.axu
         ax.cla()
-        x = np.arange(0, ran, .05)
-        print 'Aleatorio: ' + str(ran)
+        #x = np.arange(0, ran, .05)
+        #print 'Aleatorio: ' + str(ran)
         #x = np.arange(0, 10, .05)#Descensos (h), son números que representan el nivel piezométrico
         #y = np.arange(0, 10, .05)#Tiempos (t), se supone están en días
-        y = np.sin(x) + ran*2
+        #y = np.sin(x) + ran*2
         x=[]
         y=[]
     
@@ -59,10 +60,12 @@ class figura():
         x = np.arange(0, self.dominio.ancho)
         y = np.arange(0, self.dominio.alto)
         X, Y = np.meshgrid(x, y)
-        Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)
-        Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
+        #Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)
+        #Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
         #difference of Gaussians
         #Z = 10.0 * (Z2 - Z1)
+
+               
         Z = self.matrix[t]
 
         # Create a simple contour plot with labels using default colors.  The
@@ -152,7 +155,7 @@ class figura():
         v = 5*Y
         q = ax.quiver(X, Y, u, v, angles='xy', scale=1000, color=['r'])
         p = ax.quiverkey(q,1,16.5,50,"50 m/s",coordinates='data',color='r')
-        ax.set_title('Velocidad')
+        ax.set_title('Velocidad (no disponible)')
         print 'Fourth plot loaded...'
         #xl = ax.xlabel("x (km)")
         #yl = ax.ylabel("y (km)")

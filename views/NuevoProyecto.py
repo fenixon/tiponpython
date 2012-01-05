@@ -25,17 +25,27 @@ class cajaTexto(QtGui.QLineEdit):
         def __init__(self, padre):
             super(cajaTexto, self).__init__(padre)
             self.setFocusPolicy(QtCore.Qt.StrongFocus)
+	    self.setText('0')
 
         def focusOutEvent(self, evento):
             if str(self.text()) == '':
                 self.setText('0')
-                evento.lostFocus()
+            evento.lostFocus()
             self.setStyleSheet("background-color: white")
 
         def focusInEvent(self, evento):
             self.setStyleSheet("background-color:  rgb(40, 255, 40)")
             evento.gotFocus()
             self.setCursor(QtCore.Qt.IBeamCursor)
+
+	def leaveEvent(self, evento):
+		self.setCursor(QtCore.Qt.IBeamCursor)
+
+	def mouseDoubleClickEvent(self, evento):
+		evento.ignore()
+
+	def mouseMoveEvent(self, evento):
+		evento.ignore()
 
 class Ui_frmNuevoProyecto(object):
     def setupUi(self, frmNuevoProyecto,controlo):

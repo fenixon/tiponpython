@@ -268,6 +268,7 @@ class Ui_MainWindow(QtGui.QDialog):
         if self.dibujante != None:
 
             print u'Ya hay una instancia corriendo'
+            self.dibujante.raise_()#Aca mostramos la ventana si ya existe
 
         else:
             ##Codigo de alvaro para generar una matriz
@@ -280,22 +281,43 @@ class Ui_MainWindow(QtGui.QDialog):
                 z = z**2
                 zcol.append(z)
 
-            #matrix = [np.arange(0, ran), zcol]
-
-            ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
-            matrix=ContEnsayo.dominio.metodo.calcular()
-
-            ##se obtiene un pozo de observacion el primero por defecto
-            pozoObservacion=ContEnsayo.dominio.obtenerPozoObservacion()
-            
-            ##Obtener una observacion de ensayo ...que pasa cuando hay mas de una asociada?????        
-            observaciones=pozoObservacion.observaciones[0].devolverO()  
+            #matrix = [np.arange(0, ran), zcol]          
             
             #print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
-            self.dibujante = dibujante(self, matrix, ContEnsayo.dominio, observaciones)#Hay que pasarle la ventana principal
-            self.dibujante.show()
-            QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
-            print 'Dibujante invocado'
+
+            global ContEnsayo
+
+            pozo = ContEnsayo.dominio.obtenerPozoBombeo()
+
+            if len(ContEnsayo.dominio.listaPozo) < 1:
+
+                print 'No hay ningun pozo'
+                self.dialogos('No hay ningun pozo')
+
+            else:
+
+                if pozo != None:
+                    
+                    if len(pozo.ensayos) > 0:
+
+                        if len(pozo.observaciones) > 0:
+                
+                            self.dibujante = dibujante(self, ContEnsayo.dominio)#Hay que pasarle la ventana principal
+                            self.dibujante.show()
+                            QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
+                            print 'Dibujante invocado'
+
+                        else:
+
+                            print 'No hay observaciones asociadas al pozo'
+
+                    else:
+
+                        print 'No hay ensayos asociados al pozo'
+
+                else:
+
+                    print 'No hay pozo de bombeo'
 
 
     def generar_graficas2(self):
@@ -322,13 +344,13 @@ class Ui_MainWindow(QtGui.QDialog):
         noexec=1
         
         self.ventanaImpoObs(noexec)
-        self.vimp.archivo="F:/mandoGamazo/ensayo_tchicos.ods"
+        self.vimp.archivo="ficheros/ensayo_tchicos.ods"
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
         
         self.ventanaImportarProyecto(noexec)
-        self.importar.archivo="F:/mandoGamazo/ensayo_tchicos.ods"
+        self.importar.archivo="ficheros/ensayo_tchicos.ods"
         self.importar.ext="ods"
         self.importar.accionaceptar()
         self.importar.close()

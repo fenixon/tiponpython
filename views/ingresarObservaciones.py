@@ -60,7 +60,7 @@ class Ui_Dialog(QtGui.QDialog):
 
     def agregar(self):
         global ContEnsayo
-        t=int(self.txttiempo.toPlainText())
+        t=float(self.txttiempo.toPlainText())
         n=float(self.txtcaudal.toPlainText())
         print "tiempo: "+str(t)
         print "caudal: "+str(n)

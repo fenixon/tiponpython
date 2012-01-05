@@ -25,42 +25,27 @@ class cajaTexto(QtGui.QLineEdit):
         def __init__(self, padre):
             super(cajaTexto, self).__init__(padre)
             self.setFocusPolicy(QtCore.Qt.StrongFocus)
-            #self.setText('0')
+            self.setText('0')
 
         def focusOutEvent(self, evento):
             if str(self.text()) == '':
                 self.setText('0')
-<<<<<<< HEAD
-                #evento.lostFocus()
-=======
-            evento.lostFocus()
->>>>>>> 6b2cb82e141bc0c18ec5deebc61193431095fc8e
+                evento.lostFocus()
             self.setStyleSheet("background-color: white")
-            self.setCursor(QtCore.Qt.IBeamCursor)
 
         def focusInEvent(self, evento):
-            if self.text()=='0' :
-                self.setText('')
             self.setStyleSheet("background-color:  rgb(40, 255, 40)")
-            #evento.gotFocus()
+            evento.gotFocus()
             self.setCursor(QtCore.Qt.IBeamCursor)
-
-	def leaveEvent(self, evento):
-		self.setCursor(QtCore.Qt.IBeamCursor)
-
-	def mouseDoubleClickEvent(self, evento):
-		evento.ignore()
-
-	def mouseMoveEvent(self, evento):
-		evento.ignore()
 
 class Ui_frmNuevoProyecto(object):
     def setupUi(self, frmNuevoProyecto,controlo):
         global controlador
         controlador = controlo
-
+        
         global ventana
         ventana = frmNuevoProyecto
+
         frmNuevoProyecto.setObjectName(_fromUtf8("frmNuevoProyecto"))
         frmNuevoProyecto.resize(405, 608)
         frmNuevoProyecto.setWindowTitle(QtGui.QApplication.translate("frmNuevoProyecto", "Crear un nuevo proyecto", None, QtGui.QApplication.UnicodeUTF8))
@@ -151,7 +136,7 @@ class Ui_frmNuevoProyecto(object):
         tipos = ['Analitico']
         self.cmbTipo.addItems(tipos)
         self.cambioTipo(self.cmbTipo.currentText())
-        self.validador = QtGui.QDoubleValidator(-100, 900, 5, self.gbDimensionesDominio)
+        self.validador = QtGui.QIntValidator(-100, 900, self.gbDimensionesDominio)
         self.txtAlto.setValidator(self.validador)
         self.txtAncho.setValidator(self.validador)
         self.txtA.setValidator(self.validador)
@@ -185,7 +170,6 @@ class Ui_frmNuevoProyecto(object):
         exec(estring)
         metodo.setearValores([float(self.txtTransitividad.text()),float(self.txtCoefAlmacenamiento.text())])
         controlador.metodo=metodo
-        print str(self.txtCoefAlmacenamiento.text())
         #param1 = parametros.parametros('primerParametro',self.txtParametro1.text(),'pihas')
         #param2 = parametros.parametros('segundoParametro',self.txtParametro2.text(),'pihas')
         ##  controlador.metodoSolucion.listaParametros.insert(1,param1)

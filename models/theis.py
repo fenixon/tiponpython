@@ -11,7 +11,7 @@ import numpy as np
 import controlador
 
 
-from scipy.special import j0
+#from scipy.special import j0
 
 class Theis(metodoSolucion.metodoAnalitico):
 

@@ -80,7 +80,7 @@ class metodoSolucion(object):
                 H0=d.calcularH0(x,y)
 
                 #print 'x: '+ str(x)+ 'y: '+str(y)+' r: '+str(r)
-
+                cardt=0
                 for bom in bombeos:
 ##                  El tiempo t nunca puede ser 0, sino t da error                    
                     t=bom.tiempo
@@ -97,17 +97,20 @@ class metodoSolucion(object):
                     s,dsdT,dsdS=self.calcularpozo(r, t, Q)                    
                 
                     #el nivel "h" se calcula como "h=Ho-s"
-                    h=H0-s
+                    h=H0-s                   
 
                     #print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)                    
                     
                     #Operar y generar la matriz
                     ##La matriz es tiempo t y despues x,y
-                    self.matrizDescenso[t,x,y]=h      
+                    self.matrizDescenso[cardt,x,y]=h
+                    #se incrementa el cardinal del tiempo
+                    cardt=cardt+1
+                    
         
         X, Y = numpy.meshgrid(xx, yy)
-##      se soluciona desd el tiempo 1 porque el t=0 da error al dividir        
-        zz = self.matrizDescenso[1]
+        ##ahora se soluciono lo del 0       
+        zz = self.matrizDescenso[0]
         print "zz "        
         print zz
 

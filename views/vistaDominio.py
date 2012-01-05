@@ -11,7 +11,7 @@ from PyQt4 import QtCore, QtGui
 import sys
 import numpy as np
 import asociarEnsayos
-import optimizacion
+import vistaoptimizacion
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -25,7 +25,7 @@ de caracter global.
 Sus atributos, a modo de banderas, van a ser aprovechados por las
 instancias de la clases boton y box.
 
-Los valores por defecto de estos atributos son
+Los valores por defecto de estos atributos sonfocusOutEvent
 
 elementoDominio = 0
 existe = False
@@ -574,7 +574,10 @@ class menu(QtGui.QListView):
         self.setModel(modelo)        
         self.setGeometry(QtCore.QRect(60, 60, 131, 131))
         self.hide()
-
+    def leaveEvent(self,coso):
+        print "Cierro el menu"
+        self.reset()
+        self.hide()        
     def selectionChanged(self, selected,  deselected):
         #indices es un iterador de la lista de QItemSelection que se retorna
         #al momento de una seleccion en la vista.
@@ -650,10 +653,10 @@ class menu(QtGui.QListView):
                 print elementoDominio.selectedMenuMouse["id"]
                 elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())                
                 frmopt=QtGui.QDialog()
-                ui= vistaoptimizacion.optimizacion()
-                ui.setupUi(frmopt,elementoDominio.ContEnsayo)
-                frmopt.show()
-                elementoDominio.widget = frmopt                
+                ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+                #ui.setupUi(frmopt,elementoDominio.ContEnsayo)
+                #frmopt.show()
+                elementoDominio.widget = ui                
                 getattr(self,'reset')()
                 getattr(self,'hide')()
                 return  
@@ -1244,6 +1247,7 @@ class Ui_Form(object):
         
         #Seteo del formulario que contendra todos los widgets del dominio
         self.frame = QtGui.QFrame(Form)
+ 
         self.frame.setGeometry(QtCore.QRect(170, 80, 471, 351))
         self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -1253,8 +1257,6 @@ class Ui_Form(object):
         self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
 					"border: 2px solid green; \n"
 					"border-radius: 25px}")
-
-        
 
         self.groupBoxDominio = QtGui.QGroupBox(self.frame)
         self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27,  elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
@@ -1267,7 +1269,7 @@ class Ui_Form(object):
 	if elementoDominio.ContEnsayo.dominio.ancho > 200 or elementoDominio.ContEnsayo.dominio.alto > 200:
 	 	self.scrollArea = QtGui.QScrollArea(self.frame)
 
-		self.scrollArea.setGeometry(QtCore.QRect(20, 20, 200, 200))
+		self.scrollArea.setGeometry(QtCore.QRect(20, 27, 235, 300))
 
 		self.scrollArea.setWidget(self.groupBoxDominio)
 
@@ -1275,6 +1277,7 @@ class Ui_Form(object):
 
 		self.scrollArea.setHorizontalScrollBarPolicy(2)
 		self.scrollArea.setVerticalScrollBarPolicy(2)
+		
 
 
         #Caja de elementos especifica del dominio

@@ -7,7 +7,7 @@ class dominio(object):
         self.listaPozo=[]
         self.listaCondicionesExternas = []
         print "Se ha creado el Dominio"
-        #Lista que guarda los pozos y el metodo de optimizacion asociado al mismo
+        #Diccionario que guarda los pozos y el metodo de optimizacion asociado al mismo
         self.listaPozoOptimiza ={}        
         #Agregar el a, b, c de la ecuacion del plano. Valores que
         ##  deben ser seteados desde la creacion del proyecto

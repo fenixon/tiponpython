@@ -21,7 +21,7 @@ class barrera():
                                 self.tipo = tipo
                                 self.calcularRecta()
 
-                def calcularRecta ( self ):
+                def calcularRecta( self ):
       
                                 self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
                                 self. n = 0

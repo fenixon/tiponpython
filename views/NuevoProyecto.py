@@ -30,11 +30,7 @@ class cajaTexto(QtGui.QLineEdit):
         def focusOutEvent(self, evento):
             if str(self.text()) == '':
                 self.setText('0')
-<<<<<<< HEAD
-                #evento.lostFocus()
-=======
             evento.lostFocus()
->>>>>>> 6b2cb82e141bc0c18ec5deebc61193431095fc8e
             self.setStyleSheet("background-color: white")
             self.setCursor(QtCore.Qt.IBeamCursor)
 

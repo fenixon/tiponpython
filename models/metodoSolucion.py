@@ -17,15 +17,16 @@ class metodoSolucion(object):
         for i in self.paramcard:
             self.listaParametros.append(parametros[i])
             
-        print "Se ha creado el Metodo de Solucion"
+        #print "Se ha creado el Metodo de Solucion"
         
     def __del__(self):
-        print "Se ha eliminado el Metodo de Solucion"
+        #print "Se ha eliminado el Metodo de Solucion"
+		return
 
     def setearValores(self, valores):
         i=0
         for i in range(len(valores)):
-            print "indice "+str(i)
+            #print "indice "+str(i)
             ##Se crea una nueva instancia de valoresparametros que va a tener un link bidireccional con parametros            
             v=valoresParametros(valores[i], self.listaParametros[i])
             ##al parametro se le asocia el valor

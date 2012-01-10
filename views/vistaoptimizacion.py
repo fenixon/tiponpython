@@ -8,7 +8,8 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-
+from pozo  import pozo
+import sys
 try:
     _fromUtf8 = QtCore.QString.fromUtf8
 except AttributeError:
@@ -104,5 +105,10 @@ class optimizacion(QtGui.QWidget):
     def procesar(self):
         print "Proceso la matriz"
         for p in self.pozosconfirmados:
-            print "Pozo:" + str(p)
-            print "Se le asigno el Metodo optimizacion:" + self.pozosparaoptimizar[int(p)]
+            #print "Pozo:" + str(p)
+            #print "Se le asigno el Metodo optimizacion:" + self.pozosparaoptimizar[int(p)]
+            #obtengo el pozo a optimizar
+            pozo=controlador.buscarPozo(p)
+            print "pozito:" + str(pozo.id)
+        
+        metodoopt=metodooptimizacion()

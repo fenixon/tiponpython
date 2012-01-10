@@ -21,6 +21,7 @@ import ingresarObservaciones
 import verObservaciones
 import metodoSolucion
 import asociarEnsayos
+import metodooptimizacion
 from theis import *
 from vistaDominio import  *
 from views.dibujante import dibujante

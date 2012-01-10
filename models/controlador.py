@@ -86,9 +86,9 @@ class Proyecto(object):
                 pozo.actualizarCoordenadas(x, y)
                 return
 
-    def buscarPozo(self, idElemento):             
+    def buscarPozo(self, idElemento):
         for p in self.dominio.listaPozo:
-            if p.id == idElemento:
+            if p.id == int(idElemento):
                 return p
          
     def removerPozo(self, idElemento):            

@@ -77,8 +77,13 @@ class Ui_Dialog(QtGui.QDialog):
 
     def finalizar(self):
         global ContEnsayo
+
+        ####Pedir un nombre para el ensayo
+        nombre, ok=QtGui.QInputDialog.getText(self,"Finalzar registro ",
+                                   "Nombre: ", QtGui.QLineEdit.Normal)  
+        
 ##      Se manda al controlador las observaciones y se retorna el id de las observaciones                           
-        obse=ContEnsayo.agregarObservacion(self.observaciones)        
+        obse=ContEnsayo.agregarObservacion(self.observaciones, nombre)        
        
         reply = QtGui.QMessageBox.information(self,
                 "Informacion",

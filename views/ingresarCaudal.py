@@ -77,8 +77,13 @@ class Ui_Dialog(QtGui.QDialog):
 
     def finalizar(self):
         global ContEnsayo
+
+        ####Pedir un nombre para el ensayo
+        nombre, ok=QtGui.QInputDialog.getText(self,"Finalzar registro ",
+                                   "Nombre: ", QtGui.QLineEdit.Normal)      
+                
 ##      Se manda al controlador los bombeos y te retorna el ultimo ensayo creado
-        e=ContEnsayo.agregarEnsayo(self.bombeos)        
+        e=ContEnsayo.agregarEnsayo(self.bombeos, nombre)        
         
         reply = QtGui.QMessageBox.information(self,
                 "Informacion",

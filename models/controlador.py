@@ -43,18 +43,18 @@ class Proyecto(object):
             print p.nombre
         
         
-    def agregarEnsayo(self, bombeos):
+    def agregarEnsayo(self, bombeos, nombre):
         self.ultimoIdEns=self.ultimoIdEns + 1
-        e=ensayobombeo.ensayobombeo(bombeos, self.ultimoIdEns)
+        e=ensayobombeo.ensayobombeo(bombeos, self.ultimoIdEns, nombre)
         self.ensayos.append(e)
         return e
 
     def eliminarEnsayo(self, e):
         self.ensayos.remove(e)
 
-    def agregarObservacion(self, observaciones):
+    def agregarObservacion(self, observaciones, nombre):
         self.ultimoIdObs=self.ultimoIdObs + 1
-        obse=observacionesensayo.observacionesensayo(observaciones, self.ultimoIdObs)
+        obse=observacionesensayo.observacionesensayo(observaciones, self.ultimoIdObs, nombre)
         self.observaciones.append(obse)
         return obse
 

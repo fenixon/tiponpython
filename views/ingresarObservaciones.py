@@ -60,19 +60,30 @@ class Ui_Dialog(QtGui.QDialog):
 
     def agregar(self):
         global ContEnsayo
+        control=True
+        
         t=float(self.txttiempo.toPlainText())
-        n=float(self.txtcaudal.toPlainText())
         print "tiempo: "+str(t)
-        print "caudal: "+str(n)
-        o=observacion.observacion(t,n)
-        self.observaciones.append(o)
+##      Se verifica que vengas los datos con sus tiempos ordenados de manera creciente sino salta         
+        control=ContEnsayo.verificarFormato(self.observaciones, t)
 
-        reply = QtGui.QMessageBox.information(self,
-                "Informacion",
-                "Se agrego la nueva observacion del ensayo. Presione finalizar para guardar las observaciones")
+        if (control==False):
+            reply = QtGui.QMessageBox.information(self,
+                "Error",
+                "Los datos de bombeo no fueron agregaos. Debe ingresar un valor para el tiempo mayor a los ingresados anteriormente.")
+            
+        else:  
+            n=float(self.txtcaudal.toPlainText())        
+            print "caudal: "+str(n)
+            o=observacion.observacion(t,n)
+            self.observaciones.append(o)
 
-        self.txttiempo.setText('')
-        self.txtcaudal.setText('')        
+            reply = QtGui.QMessageBox.information(self,
+                    "Informacion",
+                    "Se agrego la nueva observacion del ensayo. Presione finalizar para guardar las observaciones")
+
+            self.txttiempo.setText('')
+            self.txtcaudal.setText('')        
         
 
     def finalizar(self):

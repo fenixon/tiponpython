@@ -101,6 +101,7 @@ class Ui_Dialog(QtGui.QDialog):
         
 ##      se inicializa el array de bombeos        
         bombeos=[]
+        control=True
         global ContEnsayo
 
         if self.ext=="txt":
@@ -120,11 +121,16 @@ class Ui_Dialog(QtGui.QDialog):
 ##              Se esa lina tiene dos columnas se procesa si no no
                 if (len(datos)>=2):
                     t=float(datos[0])
-                    c=float(datos[1])
                     print "tiempo: "+str(t)
-                    print "caudal: "+str(c)
-                    b=bombeo.bombeo(t,c)
-                    bombeos.append(b)
+##                  Se verifica que vengas los datos con sus tiempos ordenados de manera creciente sino salta                    
+                    control=ContEnsayo.verificarFormato(bombeos, t)
+                    if (control==True):
+                        c=float(datos[1])                    
+                        print "caudal: "+str(c)
+                        b=bombeo.bombeo(t,c)
+                        bombeos.append(b)
+                    else:
+                        break
         else:
             
             f= zipfile.ZipFile((str(self.archivo))) 
@@ -140,25 +146,35 @@ class Ui_Dialog(QtGui.QDialog):
                             t=float(ch.data)
                             print "tiempo: "+str(t)
                             i=1
+                            control=ContEnsayo.verificarFormato(bombeos, t)
                         else:
                             c=float(ch.data)
                             print "caudal: "+str(c)
                             b=bombeo.bombeo(t,c)
                             bombeos.append(b)                            
-                            i=0                   
+                            i=0
+                    if (control==False):
+                        break
+                if (control==False):
+                    print "salga"
+                    break
 
-##      Se manda al controlador los bombeos y te retorna el ultimo ensayo creado
-        e=ContEnsayo.agregarEnsayo(bombeos, n)
-          
-        reply = QtGui.QMessageBox.information(self,
+        if (control==False):
+            reply = QtGui.QMessageBox.information(self,
+                "Error",
+                "El archivo ingresado tiene un formato incorrecto. Verifique que los tiempos esten ordenados correctamente.")           
+        else:
+            ##      Se manda al controlador los bombeos y te retorna el ultimo ensayo creado
+            e=ContEnsayo.agregarEnsayo(bombeos, n)          
+            reply = QtGui.QMessageBox.information(self,
                 "Informacion",
                 "Se ha creado un nuevo ensayo de bombeo en el sistema. El id es: " + str(e.id))
         
-        if reply == QtGui.QMessageBox.Ok:
-            print "OK"
-            self.guardar.close()            
-        else:
-            print "Escape"
+            if reply == QtGui.QMessageBox.Ok:
+                print "OK"
+                self.guardar.close()            
+            else:
+                print "Escape"
 
 ####        for b in e.devolverB():
 ##            print "bombeo "+ str(e.id)

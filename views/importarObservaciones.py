@@ -101,6 +101,7 @@ class Ui_Dialog(QtGui.QDialog):
         
 ##      se inicializa el array de bombeos        
         observaciones=[]
+        control=True
         global ContEnsayo
 
         if self.ext=="txt":
@@ -120,11 +121,16 @@ class Ui_Dialog(QtGui.QDialog):
 ##              Se esa lina tiene dos columnas se procesa si no no
                 if (len(datos)>=2):
                     t=float(datos[0])
-                    n=float(datos[1])
                     print "tiempo: "+str(t)
-                    print "nivel: "+str(n)
-                    o=observacion.observacion(t,n)
-                    observaciones.append(o)
+##                  Se verifica que vengas los datos con sus tiempos ordenados de manera creciente sino salta                    
+                    control=ContEnsayo.verificarFormato(observaciones, t)
+                    if (control==True):
+                        n=float(datos[1])                    
+                        print "nivel: "+str(n)
+                        o=observacion.observacion(t,n)
+                        observaciones.append(o)
+                    else:
+                        break                        
         else:
             
             f= zipfile.ZipFile((str(self.archivo))) 
@@ -140,24 +146,35 @@ class Ui_Dialog(QtGui.QDialog):
                             t=float(ch.data)
                             print "tiempo: "+str(t)
                             i=1
+                            control=ContEnsayo.verificarFormato(observaciones, t)
                         else:
                             n=float(ch.data)
                             print "nivel: "+str(n)
                             o=observacion.observacion(t,n)
                             observaciones.append(o)                           
                             i=0
+                    if (control==False):
+                        break
+                if (control==False):
+                    print "salga"
+                    break
 
-##      Se manda al controlador las observaciones y se retorna el id de las observaciones                           
-        obse=ContEnsayo.agregarObservacion(observaciones, nombre)                
-          
-        reply = QtGui.QMessageBox.information(self,
-                "Informacion",
-                "Se ha creado un nuevo conjunto de observaciones en el sistema. El id es:" + str(obse.id))
-        if reply == QtGui.QMessageBox.Ok:
-            print "OK"
-            self.guardar.close()            
+        if (control==False):
+            reply = QtGui.QMessageBox.information(self,
+                "Error",
+                "El archivo ingresado tiene un formato incorrecto. Verifique que los tiempos esten ordenados correctamente.")           
         else:
-            print "Escape"
+            ##      Se manda al controlador las observaciones y se retorna el id de las observaciones                           
+            obse=ContEnsayo.agregarObservacion(observaciones, nombre)                
+              
+            reply = QtGui.QMessageBox.information(self,
+                    "Informacion",
+                    "Se ha creado un nuevo conjunto de observaciones en el sistema. El id es:" + str(obse.id))
+            if reply == QtGui.QMessageBox.Ok:
+                print "OK"
+                self.guardar.close()            
+            else:
+                print "Escape"
 
 ##        for b in e.devolverB():
 ##            print "bombeo "+ str(e.id)

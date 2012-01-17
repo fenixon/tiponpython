@@ -476,6 +476,9 @@ class box(QtGui.QGroupBox):
         self.update()
 
     def mouseMoveEvent(self, e):
+
+	elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(e.pos().x(), 10) + " y -> " + QtCore.QString.number(e.pos().y(), 10) )
+
         #Buscamos si las coordenadas actuales estan cerca de algun punto de alguna recta
         lista = elementoDominio.ContEnsayo.buscarPuntoEnRecta(np.float32(e.pos().x()), np.float32(e.pos().y()))
         
@@ -1324,8 +1327,15 @@ class Ui_Form(object):
 
 			self.scrollArea.setVerticalScrollBarPolicy(2)
 
+		self.coordenadas = QtGui.QLabel(self.frame)
+		self.coordenadas.setGeometry(QtCore.QRect(100, 325, 120, 20))
+		elementoDominio.coordenadas = self.coordenadas
+ 
+
+
 		self.frame.show()
 		
 	def retranslateUi(self, Form):
 		pass
+ 
 

@@ -19,7 +19,7 @@ class Proyecto(object):
         self.dominio = dominio.dominio()
 
         #Lista que guardan pozo y recta
-##        self.listaPozo = []
+##      self.listaPozo = []
         self.listaRecta = []
 
         #Ultima recta y pozo agregados
@@ -41,30 +41,34 @@ class Proyecto(object):
     def leerParametros(self):
         for p in self.parametros:
             print p.nombre
-        
-        
-    def agregarEnsayo(self, bombeos):
+                
+    def agregarEnsayo(self, bombeos, nombre):
         self.ultimoIdEns=self.ultimoIdEns + 1
-        e=ensayobombeo.ensayobombeo(bombeos, self.ultimoIdEns)
+        e=ensayobombeo.ensayobombeo(bombeos, self.ultimoIdEns, nombre)
         self.ensayos.append(e)
         return e
 
     def eliminarEnsayo(self, e):
         self.ensayos.remove(e)
 
-    def agregarObservacion(self, observaciones):
+    def agregarObservacion(self, observaciones, nombre):
         self.ultimoIdObs=self.ultimoIdObs + 1
-        obse=observacionesensayo.observacionesensayo(observaciones, self.ultimoIdObs)
+        obse=observacionesensayo.observacionesensayo(observaciones, self.ultimoIdObs, nombre)
         self.observaciones.append(obse)
         return obse
 
     def eliminarObservaciones(self, obse):
-        self.observaciones.remove(obse)
-        
-####        for ob in self.observaciones:
-##            if ob.id == observacion.id:
-                
+        self.observaciones.remove(obse)             
 
+    def verificarFormato(self,lista, t):
+        control=True
+        i=0
+        print "control "
+        while( i<len(lista) and control  ):
+            control=t>lista[i].tiempo
+            print "tiempo "+str(t)+" tiempo vector "+str(lista[i].tiempo) + " control "+str(control)
+            i=i+1
+        return control
 
     def obtenerDominio(self):
         return self.dominio

@@ -184,7 +184,18 @@ class elementoDominio(object):
         super(elementoDominio, self).__init__()
         
 
-        
+
+
+class scrollArea(QtGui.QScrollArea):
+	def __init__(self, parent):
+		super(scrollArea, self).__init__(parent)
+		self.setAcceptDrops(True)
+		 
+	#Sobreescribimos dragEnterEvent para pemitir
+	#la accion de este evento.
+	def dragEnterEvent(self, e):
+		e.accept()
+
 """
 Clase boton, hereda de QPushButton elemento del modulo QtGui
 basicamente es un boton para presionar y generar acciones.
@@ -277,7 +288,6 @@ class boton(QtGui.QPushButton):
            elementoDominio.menuMouse.show()
            
     def mouseMoveEvent(self, e):
-        
         #Evaluacion que se entiende como, 'El usuario puede comenzar a arrastrar el boton'
         if elementoDominio.reloj == True and elementoDominio.transicion == False:
             self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
@@ -329,7 +339,6 @@ class boton(QtGui.QPushButton):
         elementoDominio.reloj = False
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
-         
 """    
 Definimos clase que agrupa elementos, junto con la sobreescritura
 de los eventos dragEnterEvent y dropEvent para manejar arrastre y tirada
@@ -350,7 +359,7 @@ class box(QtGui.QGroupBox):
         
         self.setAcceptDrops(True)
         self.setMouseTracking(True) 
-        self.setGeometry(QtCore.QRect(20, 27, 231, 271))
+        self.setGeometry(QtCore.QRect(20, 27, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
         self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
         self.setObjectName(_fromUtf8("Dominio"))
 
@@ -467,6 +476,9 @@ class box(QtGui.QGroupBox):
         self.update()
 
     def mouseMoveEvent(self, e):
+
+	elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(e.pos().x(), 10) + " y -> " + QtCore.QString.number(e.pos().y(), 10) )
+
         #Buscamos si las coordenadas actuales estan cerca de algun punto de alguna recta
         lista = elementoDominio.ContEnsayo.buscarPuntoEnRecta(np.float32(e.pos().x()), np.float32(e.pos().y()))
         
@@ -1231,6 +1243,8 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.c
             elementoDominio.pozoCandidato.hide()
             elementoDominio.pozoCandidato = None
             elementoDominio.hayPozoCandidato = False
+ 
+
 
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
@@ -1240,91 +1254,88 @@ crear dominio
 
 class Ui_Form(object):
 
-    def setupUi(self, Form, ContEnsayo):
+	def setupUi(self, Form, ContEnsayo):
 
 
-        elementoDominio.ContEnsayo = ContEnsayo
-        
-        #Seteo del formulario que contendra todos los widgets del dominio
-        self.frame = QtGui.QFrame(Form)
- 
-        self.frame.setGeometry(QtCore.QRect(170, 80, 471, 351))
-        self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-        self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
-        self.frame.setFrameShadow(QtGui.QFrame.Raised)
-        self.frame.setObjectName(_fromUtf8("frame"))
-        self.frame.setEnabled(True)
-        self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
-					"border: 2px solid green; \n"
-					"border-radius: 25px}")
+		elementoDominio.ContEnsayo = ContEnsayo
 
-        self.groupBoxDominio = QtGui.QGroupBox(self.frame)
-        self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27,  elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
-        self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
+		#Seteo del formulario que contendra todos los widgets del dominio
+		self.frame = QtGui.QFrame(Form)
+	 
+		self.frame.setGeometry(QtCore.QRect(170, 80, 471, 351))
+		self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
+		self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
+		self.frame.setFrameShadow(QtGui.QFrame.Raised)
+		self.frame.setObjectName(_fromUtf8("frame"))
+		self.frame.setEnabled(True)
+		self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
+						"border: 2px solid green; \n"
+						"border-radius: 25px}")
 
-        self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
-					" border: 2px solid green;}")
+		self.groupBoxDominio = QtGui.QGroupBox(self.frame)
+		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27,  elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
+		self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
-	if elementoDominio.ContEnsayo.dominio.ancho > 200 or elementoDominio.ContEnsayo.dominio.alto > 200:
-	 	self.scrollArea = QtGui.QScrollArea(self.frame)
+		self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
+						" border: 2px solid green;}")
 
-		self.scrollArea.setGeometry(QtCore.QRect(20, 27, 235, 300))
 
-		self.scrollArea.setWidget(self.groupBoxDominio)
+		#Caja de elementos especifica del dominio
+		elementoDominio.Dominio = box(self.groupBoxDominio)
+		self.caja=elementoDominio.Dominio 
 
-		self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
+		#Definimos la instancia global del menu y le asociamo
+		#un padre.
+		elementoDominio.menuMouse = menu(self.frame)       
+		
+		self.groupBox = QtGui.QGroupBox(self.frame)
+		self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
+		self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+		self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
 
-		self.scrollArea.setHorizontalScrollBarPolicy(2)
-		self.scrollArea.setVerticalScrollBarPolicy(2)
+		self.groupBox.setStyleSheet("QGroupBox{border: 2px solid green} \n"
+					"QPushButton{border: 2px solid red;}")
+
+		self.groupBox.setObjectName(_fromUtf8("groupBox"))
+
+		    
+		#Creacion de botones de la barra de herramientas
+		self.pozo = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.groupBox, "pozo")
+		self.barrera = boton(QtGui.QIcon("content/images/blackBarrera.png"), "", self.groupBox, "barrera")
+
+		self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
+		self.barrera.id = 1001
 		
 
-
-        #Caja de elementos especifica del dominio
-        elementoDominio.Dominio = box(self.groupBoxDominio)
-        self.caja=elementoDominio.Dominio 
-
-        #Definimos la instancia global del menu y le asociamo
-        #un padre.
-        elementoDominio.menuMouse = menu(self.frame)       
-        
-        self.groupBox = QtGui.QGroupBox(self.frame)
-        self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
-        self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
-
-	self.groupBox.setStyleSheet("QGroupBox{border: 2px solid green} \n"
-				"QPushButton{border: 2px solid red;}")
-
-        self.groupBox.setObjectName(_fromUtf8("groupBox"))
-
-            
-        #Creacion de botones de la barra de herramientas
-        self.pozo = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.groupBox, "pozo")        
-        self.barrera = boton(QtGui.QIcon("content/images/blackBarrera.png"), "", self.groupBox, "barrera")
-
-        self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
-        self.barrera.id = 1001
-        
-
-        elementoDominio.gbCoord = gbCoordenadas(self.frame)
-	elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green} \n"
-						"QLabel, QPushButton{border: 2px solid red;}")
+		elementoDominio.gbCoord = gbCoordenadas(self.frame)
+		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green} \n"
+							"QLabel, QPushButton{border: 2px solid red;}")
 
 
 
-        self.frame.show()
-        
-    def retranslateUi(self, Form):
-        pass
+		if elementoDominio.ContEnsayo.dominio.ancho > 200 or elementoDominio.ContEnsayo.dominio.alto > 200:
+		 	self.scrollArea = scrollArea(self.frame)
+
+			self.scrollArea.setGeometry(QtCore.QRect(20, 27, 235, 300))
+
+			self.scrollArea.setWidget(self.groupBoxDominio)
+
+			self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
+
+			self.scrollArea.setHorizontalScrollBarPolicy(2)
+
+			self.scrollArea.setVerticalScrollBarPolicy(2)
+
+		self.coordenadas = QtGui.QLabel(self.frame)
+		self.coordenadas.setGeometry(QtCore.QRect(100, 325, 120, 20))
+		elementoDominio.coordenadas = self.coordenadas
+ 
 
 
-    
-if __name__ == "__main__":
-    import sys
-    app = QtGui.QApplication(sys.argv)
-    MainWindow = QtGui.QMainWindow()
-    ui = Ui_Form()
-    ui.setupUi(MainWindow)
-    MainWindow.show()
-    sys.exit(app.exec_())
+		self.frame.show()
+		
+	def retranslateUi(self, Form):
+		pass
+ 
+

@@ -182,25 +182,55 @@ class elementoDominio(object):
     
     def __init__(self):
         super(elementoDominio, self).__init__()
-        
 
-#Vista de las graficas
-class vistaGrafica(QGraphicsView):
-	def __init__(self):
-		super(vistaGrafica, self).__init__()
+
+#Vista de las graficas 
+class vistaGrafica(QtGui.QGraphicsView):
+
+	global elementoDominio
+	id = 0
+
+	def __init__(self, escena, parent):
+		super(vistaGrafica, self).__init__(escena, parent)
+		self.init()
+
+	def init(self):
+		self.setGeometry(10, 10, 430, 385)
+		self.setSceneRect(20, 20, 430, 385)
+		self.setAcceptDrops(True)
+		self.setObjectName(_fromUtf8("Dominio"))
+
+		#Variables a considerar
+		self.presionandoRecta = False
+
+		self.idRecta = 1000
+
+		self.botones = []
+
+		self.bGiratorios = []
+
+		self.rectaSeleccionada = {}
+
+		self.rectaSeleccionada['id'] = 0
+
 
 #Escena contenedora de los items graficos
-class escenaGrafica(QGraphicsScene):
-	def __init__(self)
+class escenaGrafica(QtGui.QGraphicsScene):
+	def __init__(self):
 		super(escenaGrafica, self).__init__()
 
+	def __init__(self, parent):
+		super(escenaGrafica, self).__init__(parent)
+
+
+
 #Clase para los items pozo
-class vistaPozo(QGraphicsPixmapItem):
+class vistaPozo(QtGui.QGraphicsPixmapItem):
 	def __init__(self):
 		super(vistaPozo, self).__init__()
 
 #Clase para los items barrera
-class vistaBarrera(QGraphicsLineItem):
+class vistaBarrera(QtGui.QGraphicsLineItem):
 	def __init__(self):
 		super(vistaBarrera, self).__init__()
 
@@ -1098,6 +1128,14 @@ class UiForm(object):
 		self.coordenadas.setGeometry(QtCore.QRect(510, 325, 140, 20))
 		elementoDominio.coordenadas = self.coordenadas
  
+
+		#Creacion de Graficas
+
+		escena = escenaGrafica(None)
+
+		vista = vistaGrafica(escena, self.groupBoxDominio)
+		elementoDominio.Dominio = vista
+		vista.show()
 
 
 		self.frame.show()

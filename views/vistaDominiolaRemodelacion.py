@@ -1280,8 +1280,8 @@ class UiForm(object):
 
 
 		#Caja de elementos especifica del dominio
-		elementoDominio.Dominio = box(self.groupBoxDominio)
-		self.caja=elementoDominio.Dominio 
+		#elementoDominio.Dominio = box(self.groupBoxDominio)
+		#self.caja=elementoDominio.Dominio 
 
 		#Definimos la instancia global del menu y le asociamos
 		#un padre.

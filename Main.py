@@ -192,8 +192,8 @@ class Ui_MainWindow(QtGui.QDialog):
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
         
 	#Adherimos la vista del dominio
-	#self.ui = Ui_Form()
-	self.ui = UiForm()
+	self.ui = Ui_Form()
+	#self.ui = UiForm()
 
         ui.setupUi(frmNuevoProyecto,ContEnsayo)
         

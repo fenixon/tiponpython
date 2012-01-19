@@ -185,17 +185,6 @@ class elementoDominio(object):
         
 
 
-
-class scrollArea(QtGui.QScrollArea):
-	def __init__(self, parent):
-		super(scrollArea, self).__init__(parent)
-		self.setAcceptDrops(True)
-		 
-	#Sobreescribimos dragEnterEvent para pemitir
-	#la accion de este evento.
-	def dragEnterEvent(self, e):
-		e.accept()
-
 """
 Clase boton, hereda de QPushButton elemento del modulo QtGui
 basicamente es un boton para presionar y generar acciones.
@@ -339,232 +328,6 @@ class boton(QtGui.QPushButton):
         elementoDominio.reloj = False
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
-"""    
-Definimos clase que agrupa elementos, junto con la sobreescritura
-de los eventos dragEnterEvent y dropEvent para manejar arrastre y tirada
-sobre el elemento
-"""        
-class box(QtGui.QGroupBox):
-
-    global elementoDominio
-
-    id = 0
-   
-    def __init__(self, padre):
-        super(box, self).__init__(padre)
-        self.init()
-
-    #Propiedades y atributos iniciales del QGroupBox
-    def init(self):
-        self.setAcceptDrops(True)
-        self.setMouseTracking(True) 
-        self.setGeometry(QtCore.QRect(20, 27, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
-        self.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
-        self.setObjectName(_fromUtf8("Dominio"))
-
-
-        self.presionandoRecta = False
-
-        self.idRecta = 1000
-
-        self.botones = []
-
-        self.bGiratorios = []
-
-        self.rectaSeleccionada = {}
-        self.rectaSeleccionada['id'] = 0
-
-        
-    #Sobreescribimos dragEnterEvent para pemitir
-    #la accion de este evento.
-    def dragEnterEvent(self, e):
-        e.accept()
-                
-    #Evento que es llamado cuando se suelta un elemento
-    #dentro del groupbox
-    def dropEvent(self, e):
-        elementoDominio.reloj = False
-        #Obtenemos la posicion relativa del lugar en que el
-        #elemento es soltado
-        position = e.pos()       
-
-        #Si el elemento no existe creamos uno nuevo, en caso contrario
-        #arrastramos el elemento ya existente a una nueva posicion en el
-        #dominio.
-        if elementoDominio.existe == False:
-            if elementoDominio.elementoDominio == 0:        
-
-                b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self, "pozo")
-                b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())   
-		b.setStyleSheet("border: none")             
-                b.setGeometry(QtCore.QRect(position.x(), position.y(), 24, 24))
-                 
-                self.botones.append(b)
-                b.show()           
-
-            else:
-
-                r = QtCore.QLineF(position.x(), position.y(), (position.x() + 30), (position.y() + 30))
-		elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))                
-
-        else:
-            for x in self.botones:
-                if x.id == elementoDominio.idElemento:
-                    x.move(position)
-                    if x.tooltip == "pozo":
-                        elementoDominio.ContEnsayo.moverPozo(x.id, position.x(), position.y())
-		        elementoDominio.gbCoord.actualizarCoordenadasPozo(x.id)
-
-
-        elementoDominio.transicion = False
-        elementoDominio.reloj = False
-
-        e.setDropAction(QtCore.Qt.MoveAction)
-        e.accept()
-        
-    #Definicion de la funcion para comenzar a dibujar
-    def paintEvent(self, e):
-        painter = QtGui.QPainter()
-        painter.begin(self)
-        painter.setBrush(QtGui.QColor(0, 255, 127))        
-        painter.setBackground(painter.brush())
-        painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
-        self.dibujarRectas(painter)
-        painter.end()
-        
-    #Funcion de dibujado de lineas    
-    def dibujarRectas(self, painter):
-        self.rectas = elementoDominio.ContEnsayo.dibujarRecta()
-        for x in self.rectas:  
-            if len(self.rectaSeleccionada) > 0:
-                if self.rectaSeleccionada['id'] == x.id:
-                    painter.setPen(QtCore.Qt.red)
-                    painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2 ))
-                    if x.x1 < x.x2 :                        
-                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
-                        painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
-                    else:
-                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
-                        painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
-                else:
-                    painter.setPen(QtCore.Qt.blue)
-                    painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
-                    if x.x1 < x.x2 :
-                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
-                        painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
-                    else:
-                        painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
-                        painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
-            else:                
-                painter.setPen(QtCore.Qt.blue)
-                painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
-                if x.x1 < x.x2 :
-                      painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
-                      painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
-                else:
-                      painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
-                      painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
-                
-            
-
-        if elementoDominio.ContEnsayo.hayRectaCandidata():
-
-            painter.drawLine(elementoDominio.ContEnsayo.rectaCandidata.x1, elementoDominio.ContEnsayo.rectaCandidata.y1,
-                             elementoDominio.ContEnsayo.rectaCandidata.x2, elementoDominio.ContEnsayo.rectaCandidata.y2)
-
-        self.update()
-
-    def mouseMoveEvent(self, e):
-	print self.width(), self.height()
-	elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(e.pos().x(), 10) + " y -> " + QtCore.QString.number(e.pos().y(), 10) )
-
-        #Buscamos si las coordenadas actuales estan cerca de algun punto de alguna recta
-        lista = elementoDominio.ContEnsayo.buscarPuntoEnRecta(np.float32(e.pos().x()), np.float32(e.pos().y()))
-        
-        botonGiratorio = boton(QtGui.QIcon("content/images/redDotIcon.png"), "",  elementoDominio.Dominio, "pozo")
-	#QtGui.QPushButton(self)
-        #Si hay puntos entonces cambiamos icono del mouse, y mostramos boton. De lo contrario
-        #eliminamos el boton mostrado.
-        if  len(lista) > 0:
-            if lista['eje'] == "x":
-                self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
-            else:
-                self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
-
-            
-            #Enviamos identificador a funcion que expresa las coordenadas de manera grafica
-            elementoDominio.gbCoord.setRectaExistente(lista['id'], self.rectaSeleccionada['id'])
-
-            botonGiratorio.setGeometry (lista['punto'].x(), lista['punto'].y(), 10, 10)
-            self.bGiratorios.append(botonGiratorio)
-            botonGiratorio.show()
-            self.idRecta = lista['id']
-        else:
-            if not self.presionandoRecta:
-                self.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
-            botonGiratorio.hide()
-            self.aEliminar = []
-            for x in self.bGiratorios:                
-                x.hide()
-                self.aEliminar.append(x)
-
-            for x in self.aEliminar:
-                try:
-                    self.bGiratorios.remove(x)
-                    break
-                except ValueError:
-                    print "Sobrepaso de rangos, advertencia simple"
-
-    def mousePressEvent(self, e):
-
-        if e.button() == QtCore.Qt.RightButton:
-
-            elementoDominio.selectedMenuMouse["tipo"] = "recta"
-            elementoDominio.selectedMenuMouse["id"] = 0
-
-
-            if np.int(self.cursor().shape()) == 8:
-                elementoDominio.selectedMenuMouse["id"] = elementoDominio.ContEnsayo.buscarPuntoPorQ(e.pos().x(), e.pos().y())
-                 
-
-            if np.int(self.cursor().shape()) == 7:
-                elementoDominio.selectedMenuMouse["id"] = elementoDominio.ContEnsayo.buscarPuntoPorR(e.pos().x(), e.pos().y())
-            
-            if elementoDominio.selectedMenuMouse["id"]  != 0:     
-                elementoDominio.menuMouse.move(e.pos())                
-                elementoDominio.menuMouse.show()
-
-        else:
-
-            #Si el dominio esta comenzado a ser presionado por un cursor que sea
-            #utilizado cuando se trabaja con barreras, entonces se setea el atributo
-            #self.presionandoRecta a verdadero.
-            if np.int(self.cursor().shape()) == 8 or np.int(self.cursor().shape()) == 7:
-                self.presionandoRecta = True
-                
-                recta = elementoDominio.ContEnsayo.buscarPuntoEnRecta(e.pos().x(), e.pos().y())
-                
-                if len(recta) > 0:
-                    self.rectaSeleccionada['id'] = recta['id']
-
-                    for pozo in elementoDominio.Dominio.botones:
-                	    if pozo.id == elementoDominio.pozoSeleccionado:                 
-				    pozo.setIcon(QtGui.QIcon("content/images/blackDotIcon.png"))
-				    elementoDominio.pozoSeleccionado = 0
-                    
-
-    def mouseReleaseEvent(self, e):
-        #Dependiendo del tipo de cursos con el que se este modificando la recta
-        #se sabra cual es el punto en la misma que hay que modificar
-        if e.button() == QtCore.Qt.LeftButton:
-            if np.int(self.cursor().shape()) == 8:
-                self.presionandoRecta = False
-                elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "Q")
-                self.update()
-            if np.int(self.cursor().shape()) == 7:
-                self.presionandoRecta = False
-                elementoDominio.ContEnsayo.actualizarRecta(self.idRecta, e.pos().x(), e.pos().y(), "R")
-                self.update()
 
 
 """
@@ -1271,7 +1034,7 @@ class UiForm(object):
 						"border-radius: 25px}")
 
 		self.groupBoxDominio = QtGui.QGroupBox(self.frame)
-		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 500, 500))
+		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 450, 400))
 		self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -1280,7 +1043,6 @@ class UiForm(object):
 
 
 		#Caja de elementos especifica del dominio
-		#elementoDominio.Dominio = box(self.groupBoxDominio)
 		#self.caja=elementoDominio.Dominio 
 
 		#Definimos la instancia global del menu y le asociamos
@@ -1311,20 +1073,6 @@ class UiForm(object):
 		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green} \n"
 							"QLabel, QPushButton{border: 2px solid red;}")
 
-
-
-		if elementoDominio.ContEnsayo.dominio.ancho > 400 or elementoDominio.ContEnsayo.dominio.alto > 400:
-		 	self.scrollArea = scrollArea(self.frame)
-
-			self.scrollArea.setGeometry(QtCore.QRect(20, 27, 450, 400))
-
-			self.scrollArea.setWidget(self.groupBoxDominio)
-
-			self.scrollArea.setBackgroundRole(QtGui.QPalette.Dark)
-
-			self.scrollArea.setHorizontalScrollBarPolicy(2)
-
-			self.scrollArea.setVerticalScrollBarPolicy(2)
 
 		self.coordenadas = QtGui.QLabel(self.frame)
 		self.coordenadas.setGeometry(QtCore.QRect(510, 325, 140, 20))

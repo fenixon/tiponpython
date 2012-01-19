@@ -182,6 +182,7 @@ class elementoDominio(object):
     
     def __init__(self):
         super(elementoDominio, self).__init__()
+        
 
 
 

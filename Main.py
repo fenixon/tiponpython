@@ -24,6 +24,7 @@ import asociarEnsayos
 import metodooptimizacion
 from theis import *
 from vistaDominio import  *
+from vistaDominiolaRemodelacion import  *
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
 
@@ -191,7 +192,8 @@ class Ui_MainWindow(QtGui.QDialog):
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
         
 	#Adherimos la vista del dominio
-        self.ui = Ui_Form()
+	#self.ui = Ui_Form()
+	self.ui = UiForm()
 
         ui.setupUi(frmNuevoProyecto,ContEnsayo)
         
@@ -200,8 +202,8 @@ class Ui_MainWindow(QtGui.QDialog):
         frmNuevoProyecto.exec_()
 
     def abrirDominio(self):
-        self.ui.setupUi(MainWindow, ContEnsayo)
-         
+	self.ui.setupUi(MainWindow, ContEnsayo)
+
 
     def ventanaImportarProyecto(self, noexec=None):
         global ContEnsayo

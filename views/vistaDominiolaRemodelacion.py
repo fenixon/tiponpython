@@ -681,7 +681,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.init()
 
     def init(self):
-        self.setGeometry(QtCore.QRect(260, 110, 151, 181))
+        self.setGeometry(QtCore.QRect(500, 110, 151, 181))
         self.setTitle("Coordenadas")
 
         #Etiqueta de Tipo 
@@ -1251,7 +1251,7 @@ su funcion es agregar los elementos correspondientes a la vista de
 crear dominio
 """
 
-class Ui_Form(object):
+class UiForm(object):
 
 	def setupUi(self, Form, ContEnsayo):
 
@@ -1259,9 +1259,8 @@ class Ui_Form(object):
 		elementoDominio.ContEnsayo = ContEnsayo
 
 		#Seteo del formulario que contendra todos los widgets del dominio
-		self.frame = QtGui.QFrame(Form)
-	 
-		self.frame.setGeometry(QtCore.QRect(170, 80, 471, 351))
+		self.frame = QtGui.QFrame(Form) 
+		self.frame.setGeometry(QtCore.QRect(170, 80, 700, 500))
 		self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 		self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
 		self.frame.setFrameShadow(QtGui.QFrame.Raised)
@@ -1272,7 +1271,7 @@ class Ui_Form(object):
 						"border-radius: 25px}")
 
 		self.groupBoxDominio = QtGui.QGroupBox(self.frame)
-		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27,  elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto))
+		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 500, 500))
 		self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -1284,12 +1283,13 @@ class Ui_Form(object):
 		elementoDominio.Dominio = box(self.groupBoxDominio)
 		self.caja=elementoDominio.Dominio 
 
-		#Definimos la instancia global del menu y le asociamo
+		#Definimos la instancia global del menu y le asociamos
 		#un padre.
 		elementoDominio.menuMouse = menu(self.frame)       
-		
+
+		#Barra de Herramientas
 		self.groupBox = QtGui.QGroupBox(self.frame)
-		self.groupBox.setGeometry(QtCore.QRect(260, 20, 151, 81))
+		self.groupBox.setGeometry(QtCore.QRect(500, 20, 151, 81))
 		self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -1306,17 +1306,17 @@ class Ui_Form(object):
 		self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
 		self.barrera.id = 1001
 		
-
+		#Barra de Coordenadas
 		elementoDominio.gbCoord = gbCoordenadas(self.frame)
 		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green} \n"
 							"QLabel, QPushButton{border: 2px solid red;}")
 
 
 
-		if elementoDominio.ContEnsayo.dominio.ancho > 200 or elementoDominio.ContEnsayo.dominio.alto > 200:
+		if elementoDominio.ContEnsayo.dominio.ancho > 400 or elementoDominio.ContEnsayo.dominio.alto > 400:
 		 	self.scrollArea = scrollArea(self.frame)
 
-			self.scrollArea.setGeometry(QtCore.QRect(20, 27, 235, 300))
+			self.scrollArea.setGeometry(QtCore.QRect(20, 27, 450, 400))
 
 			self.scrollArea.setWidget(self.groupBoxDominio)
 
@@ -1327,7 +1327,7 @@ class Ui_Form(object):
 			self.scrollArea.setVerticalScrollBarPolicy(2)
 
 		self.coordenadas = QtGui.QLabel(self.frame)
-		self.coordenadas.setGeometry(QtCore.QRect(100, 325, 140, 20))
+		self.coordenadas.setGeometry(QtCore.QRect(510, 325, 140, 20))
 		elementoDominio.coordenadas = self.coordenadas
  
 

@@ -184,6 +184,26 @@ class elementoDominio(object):
         super(elementoDominio, self).__init__()
         
 
+#Vista de las graficas
+class vistaGrafica(QGraphicsView):
+	def __init__(self):
+		super(vistaGrafica, self).__init__()
+
+#Escena contenedora de los items graficos
+class escenaGrafica(QGraphicsScene):
+	def __init__(self)
+		super(escenaGrafica, self).__init__()
+
+#Clase para los items pozo
+class vistaPozo(QGraphicsPixmapItem):
+	def __init__(self):
+		super(vistaPozo, self).__init__()
+
+#Clase para los items barrera
+class vistaBarrera(QGraphicsLineItem):
+	def __init__(self):
+		super(vistaBarrera, self).__init__()
+
 
 """
 Clase boton, hereda de QPushButton elemento del modulo QtGui

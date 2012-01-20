@@ -29,13 +29,16 @@ class Ui_Dialog(QtGui.QDialog):
         Dialog.resize(638, 252)
 
         self.guardar=Dialog
-        self.model_po=modelotabla.modelotabla(self.p.observaciones,["Observaciones"])        
+
+        
+        
+        self.model_po=modelotabla.modelotabla(self.p.observaciones,["Observaciones", "Nombre"])        
         self.listWidget = QtGui.QTableView(Dialog)
         self.listWidget.setGeometry(QtCore.QRect(30, 20, 181, 211))
         self.listWidget.setObjectName(_fromUtf8("listWidget"))
         self.listWidget.setModel(self.model_po)
 
-        self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Ensayos"])  
+        self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Ensayos", "Nombre"])  
         self.listWidget_2 = QtGui.QTableView(Dialog)
         self.listWidget_2.setGeometry(QtCore.QRect(230, 20, 181, 211))
         self.listWidget_2.setObjectName(_fromUtf8("listWidget_2"))
@@ -85,7 +88,7 @@ class Ui_Dialog(QtGui.QDialog):
         global ContEnsayo
         print 'observaciones'
         obss=ContEnsayo.observaciones
-        self.model=modelotabla.modelotabla(obss, ["Lista de observaciones"])
+        self.model=modelotabla.modelotabla(obss, ["Lista de observaciones", "Nombre"])
         self.listado.setModel(self.model)
         self.tipo="o"
 
@@ -94,7 +97,7 @@ class Ui_Dialog(QtGui.QDialog):
         global ContEnsayo
         print 'ensayos'
         enss=ContEnsayo.ensayos
-        self.model=modelotabla.modelotabla(enss, ["Lista de ensayos"])
+        self.model=modelotabla.modelotabla(enss, ["Lista de ensayos", "Nombre"])
         self.listado.setModel(self.model)
         self.tipo="e"
 

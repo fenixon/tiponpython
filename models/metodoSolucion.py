@@ -1,4 +1,4 @@
-import numpy
+import numpy as np
 from valoresParametros import valoresParametros
 ##from matplotlib.figure import Figure
 ####from mpl_toolkits.mplot3d.axes3d import Axes3D
@@ -21,7 +21,7 @@ class metodoSolucion(object):
         
     def __del__(self):
         #print "Se ha eliminado el Metodo de Solucion"
-		return
+	return
 
     def setearValores(self, valores):
         i=0
@@ -35,7 +35,7 @@ class metodoSolucion(object):
             self.dominio.valores.append(v)
 
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
-    def calcular(self):
+    def calcular(self,tiempos,xx,yy):
         # Se indentifica donde esta el pozo de bombeo           
         # Por ahora tomar el primero de bombeo que se detecte. Luego cambia cuando hayan mas pozos
         
@@ -46,7 +46,6 @@ class metodoSolucion(object):
         #comentar cuando el pozo de bombeo esta bien posicioando
         #x0=5
         #y0=5
-
         print 'x0: ' + str(x0)
         print 'y0: ' + str(y0)
 
@@ -62,54 +61,81 @@ class metodoSolucion(object):
         #####ver como llamar la matriz de los tiempos
         ## por ahora consideramos que va a ser lineal que arranca en el tiempo 0 al 10
 
-        ##el tiempo va desde 0 a 4, el 0 no se usa      
-        self.matrizDescenso=numpy.zeros((len(bombeos)+1,d.ancho,d.alto), float)  
+        ##el tiempo va desde 0 a 4, el 0 no se usa
+        ##se toman los tamanios de la discretizacion espacial y temporal
+        ##la matriz se tiene que generar primero en y y dps en x para darle bien los datos a las graficas
+        self.matrizDescenso=np.zeros((len(tiempos),len(yy),len(xx)), float)  
         #print self.matrizDescenso[1]
+        ##Matrices para guardar los gradientes en x e y
+        self.gyh=np.zeros((len(tiempos),len(yy),len(xx)), float)
+        self.gxh=np.zeros((len(tiempos),len(yy),len(xx)), float)            
 
         ##dominio en x        
-        xx = numpy.arange(0, d.ancho, 1)
+        ##xx = numpy.arange(0, d.ancho, 1)
         ### dominio en y
-        yy = numpy.arange(0, d.alto, 1)
+        ##yy = numpy.arange(0, d.alto, 1)        
 
+        ##Matrices para el calculo de loS H0 niveles inciales
+        H0=np.zeros((len(yy),len(xx)), float)
+        cardx=0
         for x in xx:
+            cardy=0
             for y in yy:
-                #calculo de la distancia radial            
-                #sqrt(|X0-X1|^2 + |y0-y1|^2)
-                r=numpy.sqrt(numpy.square(x0-x) + numpy.square(y0-y))
-
+                #hay que cargar la matriz primero en el indice y luego en el x
                 #Obtener el Ho llamando a la clase dominio
-                H0=d.calcularH0(x,y)
+                H0[cardy,cardx]=d.calcularH0(x,y)
+                cardy=cardy+1            
+            cardx=cardx+1                            
 
-                #print 'x: '+ str(x)+ 'y: '+str(y)+' r: '+str(r)
-                cardt=0
-                for bom in bombeos:
-##                  El tiempo t nunca puede ser 0, sino t da error                    
-                    t=bom.tiempo
-                    Q=bom.caudal
-
-#Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
-## Esto son los parametros q se mandan                    
-##                    print 'r '+str(r)
-##                    print 't '+str(t)
-##                    print 'Q '+str(Q)
-##                    print 'T '+str(T)
-##                    print 'S '+str(S)
-                    
-                    s,dsdT,dsdS=self.calcularpozo(r, t, Q)                    
+        cardt=0
+        for t in tiempos:
+            cardx=0
+            self.matrizDescenso[cardt,:,:]=H0[:,:]            
+            for x in xx:
+                cardy=0
+                for y in yy:
+                    #calculo de la distancia radial            
+                    #sqrt(|X0-X1|^2 + |y0-y1|^2)
+                    r=np.sqrt(np.square(x0-x) + np.square(y0-y))                                       
+                    #print 'x: '+ str(x)+ 'y: '+str(y)+' r: '+str(r)
                 
-                    #el nivel "h" se calcula como "h=Ho-s"
-                    h=H0-s                   
+                    for bom in bombeos:
+    ##                  El tiempo t nunca puede ser 0, sino t da error                    
+                        tpozo=bom.tiempo
+                        Q=bom.caudal                    
+                        ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
+                        tmandado=round(float(float(t)-float(tpozo)),14)
 
-                    #print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)                    
-                    
-                    #Operar y generar la matriz
-                    ##La matriz es tiempo t y despues x,y
-                    self.matrizDescenso[cardt,x,y]=h
-                    #se incrementa el cardinal del tiempo
-                    cardt=cardt+1
+                        if tmandado>0:
+                            #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
+                            #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
+                            told=tmandado
+                            try:
+                                s,dsdT,dsdS=self.calcularpozo(r, tmandado, Q)
+                            except:
+                                print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
+                                print 'T mandado: '+str(told) + 'T pozo: '+str(tpozo)
+                        else:
+                            s=0                    
+
+                        #el nivel "h" se calcula como "h=Ho-s"
+                        #print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)
+                        #Operar y generar la matriz
+                        ##La matriz es tiempo t y despues x,y
+                        self.matrizDescenso[cardt,cardy,cardx]=self.matrizDescenso[cardt,cardy,cardx]-s
+                        #se incrementa el cardinal del tiempo
+                        
+                    cardy=cardy+1            
+                cardx=cardx+1
+            
+            #[gxh(:,:,k),gyh(:,:,k)] = gradient(-h(:,:,k),xx(2),yy(niy-1));
+            #Matplotlib t invierte el orden de las matrices a diferenciade matlab
+            #[py,px] = np.gradient(z,1,1)
+            [self.gyh[cardt,:,:],self.gxh[cardt,:,:]] = np.gradient(-self.matrizDescenso[cardt,:,:],xx[1],yy[len(yy)-2])            
+            cardt=cardt+1
                     
         
-        X, Y = numpy.meshgrid(xx, yy)
+        
         ##ahora se soluciono lo del 0       
         zz = self.matrizDescenso[0]
         print "zz "        

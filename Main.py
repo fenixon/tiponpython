@@ -162,7 +162,7 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
-        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas2)
+        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demo)
         QtCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
 
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
@@ -295,7 +295,10 @@ class Ui_MainWindow(QtGui.QDialog):
             if len(ContEnsayo.dominio.listaPozo) < 1:
 
                 print 'No hay ningun pozo'
-                self.dialogos('No hay ningun pozo')
+                #self.dialogos('No hay ningun pozo')
+                QtGui.QMessageBox.information(self,
+                    "Error",
+                    "No hay ningun pozo")                
 
             else:
 
@@ -312,15 +315,24 @@ class Ui_MainWindow(QtGui.QDialog):
 
                         else:
 
-                            print 'No hay observaciones asociadas al pozo'
+                            #print 'No hay observaciones asociadas al pozo'
+                            QtGui.QMessageBox.information(self,
+                                "Error",
+                                "No hay observaciones asociadas al pozo")                             
 
                     else:
 
-                        print 'No hay ensayos asociados al pozo'
+                        #print 'No hay ensayos asociados al pozo'
+                        QtGui.QMessageBox.information(self,
+                            "Error",
+                            "No hay ensayos asociados al pozo")                           
 
                 else:
 
-                    print 'No hay pozo de bombeo'
+                    #print 'No hay pozo de bombeo'
+                    QtGui.QMessageBox.information(self,
+                            "Error",
+                            "No hay pozo de bombeo")                       
 
 
     def generar_graficas2(self):
@@ -348,12 +360,14 @@ class Ui_MainWindow(QtGui.QDialog):
         
         self.ventanaImpoObs(noexec)
         self.vimp.archivo="ficheros/ensayo_tchicos.ods"
+        self.vimp.nombre.setText('obs1')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
         
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/ensayo_tchicos.ods"
+        self.importar.nombre.setText('ens1')
         self.importar.ext="ods"
         self.importar.accionaceptar()
         self.importar.close()
@@ -373,6 +387,62 @@ class Ui_MainWindow(QtGui.QDialog):
         
                 
         print 'se carga el demo'
+
+
+    def cargar_demo(self):
+        global ContEnsayo
+
+        ContEnsayo.dominio.alto = 10
+        ContEnsayo.dominio.ancho = 10
+        ContEnsayo.dominio.a=0
+        ContEnsayo.dominio.b=0
+        ContEnsayo.dominio.c=10
+        ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+        m.setearValores([1000,0.0001])
+        #Adherimos la vista del dominio
+        self.ui = Ui_Form()
+        self.ui.setupUi(MainWindow, ContEnsayo)
+
+        b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.ui.caja, "pozo")
+        b.id = ContEnsayo.agregarPozo(5, 2)
+
+        b.setStyleSheet("border: none")	
+        b.setGeometry(QtCore.QRect(5, 2, 24, 24))                 
+        self.ui.caja.botones.append(b)
+        b.show()
+
+        noexec=1
+        
+        self.ventanaImpoObs(noexec)
+        self.vimp.archivo="ficheros/ensayo_tchicos.ods"
+        self.vimp.nombre.setText('obs1')
+        self.vimp.ext="ods"
+        self.vimp.accionaceptar()
+        self.vimp.close()
+        
+        self.ventanaImportarProyecto(noexec)
+        self.importar.archivo="ficheros/demo.ods"
+        self.importar.nombre.setText('ens1')
+        self.importar.ext="ods"
+        self.importar.accionaceptar()
+        self.importar.close()
+        
+        frmasociar=QtGui.QDialog()
+        asoe=asociarEnsayos.Ui_Dialog()
+        asoe.setupUi(frmasociar, b.id, ContEnsayo)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar()
+
+        asoe.setupUi(frmasociar, b.id, ContEnsayo)        
+        asoe.oe=ContEnsayo.ensayos[0]
+        asoe.tipo="e"
+        asoe.asociar()
+        
+                
+        print 'se carga el demo'
+        
             
     def limpiarDibujante(self):
 

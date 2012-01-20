@@ -425,7 +425,7 @@ class box(QtGui.QGroupBox):
     def paintEvent(self, e):
         painter = QtGui.QPainter()
         painter.begin(self)
-        painter.setBrush(QtGui.QColor(0, 255, 127))        
+        painter.setBrush(QtGui.QColor(0, 255, 127)) 
         painter.setBackground(painter.brush())
         painter.setBackgroundMode(QtCore.Qt.OpaqueMode)
         self.dibujarRectas(painter)
@@ -1119,7 +1119,7 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.c
             
     def setRectaExistente(self, idElemento, irRE):
 
-        if elementoDominio.pozoSeleccionado == 0:            
+        if elementoDominio.pozoSeleccionado == 0:
             self.tipoElemento = "barrera"
             self.idElemento = idElemento
 

@@ -116,7 +116,7 @@ transicion = False
 
 Descripcion de ConEnsayo
 
-B�sicamente se guarda la instancia del controlador global creado en
+Basicamente se guarda la instancia del controlador global creado en
 el archivo principal. Este hace las veces de controlador, por ende las
 operaciones con los modelos se hacen delegandole dichas tareas a este.
 
@@ -203,11 +203,15 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		self.botones = []
 
+		self.rectas = []
+
 		self.bGiratorios = []
 
 		self.rectaSeleccionada = {}
 
 		self.rectaSeleccionada['id'] = 0
+
+		self.rectaCandidata = ""
 
 	#Sobreescribimos dragEnterEvent para pemitir
 	#la accion de este evento.
@@ -238,12 +242,16 @@ class vistaGrafica(QtGui.QGraphicsView):
 			elementoDominio.gbCoord.setPozoExistente(b.id)
 
 		else:
-			r = QtCore.QLineF(position.x(), position.y(), (position.x() + 30), (position.y() + 30))
+			r = QtCore.QLineF(position.x(), position.y(), (position.x() + 350), (position.y() + 350))
 
 
-			vistaBarrera(position.x(), position.y(), (position.x() + 30), (position.y() + 30))
+			barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350))
 
-			elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))
+			barrera.id = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))
+
+			elementoDominio.gbCoord.setRectaExistente(barrera.id, 0)
+
+			self.rectas.append(barrera)
 
 		e.setDropAction(QtCore.Qt.MoveAction)
 		e.accept()
@@ -317,10 +325,13 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 			elementoDominio.pozoSeleccionado = self.id
 			elementoDominio.gbCoord.actualizarCoordenadasPozo(self.id)
 			elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
-		
+
 			for pozo in elementoDominio.Dominio.botones:
 				if pozo.id != self.id:
 					pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+			for r in elementoDominio.Dominio.rectas:
+				r.setPen(QtCore.Qt.black)
 
 			self.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 
@@ -332,6 +343,7 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 			elementoDominio.menuMouse.show()
 
 	def mouseMoveEvent(self, e):
+
 		#Evaluacion que se entiende como, 'El usuario puede comenzar a arrastrar el boton'
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
@@ -365,8 +377,53 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 
 #Clase para los items barrera
 class vistaBarrera(QtGui.QGraphicsLineItem):
+
+	rotacion = False
+
 	def __init__(self, x1, y1, x2, y2):
 		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, elementoDominio.Dominio.scene())
+
+	def mouseMoveEvent(self, e):
+
+
+
+		posicion = e.scenePos()
+
+		if self.rotacion:
+
+		#	print "Rotamos con el metodo ya conocido"
+			self.setLine(posicion.x(), posicion.y(), self.line().x2(), self.line().y2())
+			elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.id, posicion.x(), posicion.y(), self.line().x2(), self.line().y2())
+			elementoDominio.gbCoord.setRectaExistente(self.id, 0)
+			return
+
+		self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+
+
+		self.setLine(posicion.x(), posicion.y(), posicion.x() + 350, posicion.y() + 350)
+
+		elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.id, posicion.x(), posicion.y(), posicion.x() + 350, posicion.y() + 350)
+		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
+
+
+	def mousePressEvent(self, e):
+		e.accept()
+		self.setPen(QtCore.Qt.red)
+		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
+		for x in elementoDominio.Dominio.botones:
+			x.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+		for r in elementoDominio.Dominio.rectas:
+			if r.id != self.id:
+				r.setPen(QtCore.Qt.black)
+
+	def mouseReleaseEvent(self, e):
+		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
+
+
+	def mouseDoubleClickEvent(self, e):
+		self.rotacion = True
+		self.setPen(QtCore.Qt.white)
 
 
 """
@@ -421,10 +478,15 @@ class boton(QtGui.QPushButton):
 		#Volvemos al color normal del pozo seleccionado
 		for boton in elementoDominio.Dominio.botones:
 			boton.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
-			
+
+
             elif self.id == 1001:
                 elementoDominio.gbCoord.setRecta()
-            
+
+            for recta in elementoDominio.Dominio.rectas:
+                recta.setPen(QtCore.Qt.black)
+
+
             if elementoDominio.reloj == False:
                 reloj = QtCore.QTimer()
                 reloj.singleShot(600, self.apagar)
@@ -707,6 +769,10 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.lineEdit_4.setValidator(self.validador)
         
     def setPozo(self):
+
+	elementoDominio.transicion = False
+	elementoDominio.reloj = False
+
         #Etiqueta de Tipo 
         self.label.setText(QtGui.QApplication.translate("Form", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setVisible(True)
@@ -755,6 +821,10 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.btnActualizar.setVisible(False)
 
     def setRecta(self):
+
+	elementoDominio.transicion = False
+	elementoDominio.reloj = False
+
         #Etiqueta de Tipo 
         self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setVisible(True)
@@ -940,6 +1010,7 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
         if elementoDominio.ContEnsayo.hayRectaCandidata:
             elementoDominio.ContEnsayo.eliminarRectaCandidata()
+            elementoDominio.Dominio.rectaCandidata.hide()
         if elementoDominio.hayPozoCandidato:
             elementoDominio.hayPozoCandidato = False
             elementoDominio.pozoCandidato.hide()
@@ -962,10 +1033,11 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
         else:                                   
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
-		
-                elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), 
-np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
-                                                                 np.int32(self.lineEdit_4.text()))
+
+		elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), 
+np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
+
+		elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text())), None, elementoDominio.Dominio.scene())
 
     def setPozoExistente(self, idPozo):
 
@@ -1039,7 +1111,7 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.c
             
     def setRectaExistente(self, idElemento, irRE):
 
-        if elementoDominio.pozoSeleccionado == 0:            
+        if elementoDominio.pozoSeleccionado == 0:
             self.tipoElemento = "barrera"
             self.idElemento = idElemento
 
@@ -1244,9 +1316,12 @@ class UiForm(object):
 		vista.show()
 
 
+		QtCore.QObject.connect(self.groupBox, QtCore.SIGNAL('mouseReleaseEvent()'), self.released)
+
 		self.frame.show()
 		
 	def retranslateUi(self, Form):
 		pass
  
-
+	def released(self):
+		print "salio"

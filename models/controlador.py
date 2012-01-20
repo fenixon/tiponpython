@@ -139,14 +139,18 @@ class Proyecto(object):
        
 
     #CRUD de barreras
-    def agregarRecta(self, tipo, x1, y1, x2, y2):        
+    def agregarRecta(self, tipo, x1, y1, x2, y2):
+	print tipo, x1, y1, x2, y2
         r = barrera(x1, x2, y1, y2, tipo)
         self.idR = self.idR + 1
         r.id = self.idR
+	self.listaRecta.append(r)
+	return r.id
 
         self.listaRecta.append(r)
 
     def buscarRecta(self, idElemento):
+
         for recta in self.listaRecta:
             if recta.id == idElemento:
                 return recta
@@ -213,6 +217,13 @@ class Proyecto(object):
                 recta.actualizarBarrera(x1, x2, y1, y2, tipo)
                 return
 
+    def actualizarRectaCoordenada(self, idElemento, x1, y1, x2, y2):
+        for recta in self.listaRecta:
+            if recta.id == idElemento:
+                recta.actualizarBarrera(x1, x2, y1, y2)
+                return
+
+
     def buscarPuntoPorQ(self, x, y):
         for Q in self.listaRecta:
             
@@ -252,7 +263,7 @@ class Proyecto(object):
 
     def agregarRectaCandidata(self, tipo, x1, y1, x2, y2):
         self.rectaCandidata = barrera(x1, x2, y1, y2, tipo)
-           
+
     def hayRectaCandidata(self):
 
         if self.rectaCandidata:

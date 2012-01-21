@@ -251,7 +251,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 			r = QtCore.QLineF(position.x(), position.y(), (position.x() + 350), (position.y() + 350))
 
 
-			barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera")
+			barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
 
 			barrera.id = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))
 
@@ -521,8 +521,8 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 	fuePrimeraRotacion = False
 	eje = ""
 
-	def __init__(self, x1, y1, x2, y2, tooltip):
-		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, elementoDominio.Dominio.scene())
+	def __init__(self, x1, y1, x2, y2, tooltip, escena):
+		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, escena)
 		self.init(tooltip)
 
 	def init(self, tooltip):
@@ -632,13 +632,13 @@ class boton(QtGui.QPushButton):
             if self.id == 1000:
                 elementoDominio.gbCoord.setPozo()
 
-		#Volvemos al color normal del pozo seleccionado
-		for boton in elementoDominio.Dominio.botones:
-			boton.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
-
-
             elif self.id == 1001:
                 elementoDominio.gbCoord.setRecta()
+
+            #Volvemos al color normal del pozo seleccionado
+            for boton in elementoDominio.Dominio.botones:
+                boton.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
 
             for recta in elementoDominio.Dominio.rectas:
                 recta.setPen(QtCore.Qt.black)
@@ -1082,12 +1082,12 @@ class gbCoordenadas(QtGui.QGroupBox):
                     elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
 np.int32(self.lineEdit_4.text()))
-                    elementoDominio.Dominio.rectas.append(vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera"))
+                    elementoDominio.Dominio.rectas.append(vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera", elementoDominio.Dominio.scene()))
                     elementoDominio.Dominio.rectaCandidata.hide()
                     elementoDominio.Dominio.rectaCandidata = None
 
                 else:
-                    barrera = vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera")
+                    barrera = vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera", elementoDominio.Dominio.scene())
                     barrera.id = elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
                     elementoDominio.Dominio.rectas.append(barrera)
                     elementoDominio.Dominio.rectaCandidata.hide()

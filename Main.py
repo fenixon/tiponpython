@@ -412,7 +412,8 @@ class Ui_MainWindow(QtGui.QDialog):
         b.setX(80)
         b.setY(80)
 
-	print b.id, b.x()
+
+
 
         self.ui.caja.botones.append(b)
  

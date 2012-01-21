@@ -193,8 +193,8 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.init()
 
 	def init(self):
-		self.setGeometry(10, 10, 430, 385)
-		self.setSceneRect(20, 20, 430, 385)
+		self.setGeometry(10, 30, 400, 350)
+		self.setSceneRect(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto)
 		self.setAcceptDrops(True)
 		self.setObjectName(_fromUtf8("Dominio"))
 		self.setMouseTracking(True)
@@ -265,7 +265,9 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 	def mouseMoveEvent(self, e):
 		e.accept()
-		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(e.pos().x(), 10) + " y -> " + QtCore.QString.number(e.pos().y(), 10) )
+		punto = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
+
+		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(punto.x(), 10) + " y -> " + QtCore.QString.number(punto.y(), 10) )
 
 		if self.moviendo:
 
@@ -510,6 +512,7 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 	def init(self, tooltip):
 		self.tooltip = tooltip
 
+	"""
 	def mouseMoveEvent(self, e):
 
 		posicion = e.scenePos()
@@ -557,7 +560,7 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 		elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.id, self.line().x1(), self.line().y1(), self.line().x2(), self.line().y2())
 
 		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
-
+		"""
 
 	def mouseReleaseEvent(self, e):
 		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
@@ -806,25 +809,25 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #X1
         self.lineEdit = QtGui.QLineEdit(self)
-        self.lineEdit.setGeometry(QtCore.QRect(40, 50, 35, 25))
+        self.lineEdit.setGeometry(QtCore.QRect(40, 50, 40, 25))
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.lineEdit.setVisible(False)
 
         #Y1
         self.lineEdit_2 = QtGui.QLineEdit(self)
-        self.lineEdit_2.setGeometry(QtCore.QRect(100, 50, 35, 25))
+        self.lineEdit_2.setGeometry(QtCore.QRect(100, 50, 40, 25))
         self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
         self.lineEdit_2.setVisible(False)
 
         #X2
         self.lineEdit_3 = QtGui.QLineEdit(self)
-        self.lineEdit_3.setGeometry(QtCore.QRect(40, 100, 35, 25))
+        self.lineEdit_3.setGeometry(QtCore.QRect(40, 100, 40, 25))
         self.lineEdit_3.setObjectName(_fromUtf8("lineEdit_3"))
         self.lineEdit_3.setVisible(False)
 
         #Y2
         self.lineEdit_4 = QtGui.QLineEdit(self)
-        self.lineEdit_4.setGeometry(QtCore.QRect(100, 100, 35, 25))
+        self.lineEdit_4.setGeometry(QtCore.QRect(100, 100, 40, 25))
         self.lineEdit_4.setObjectName(_fromUtf8("lineEdit_4"))
         self.lineEdit_4.setVisible(False)
 
@@ -1398,6 +1401,17 @@ class gbox(QtGui.QGroupBox):
 		elementoDominio.reloj = False
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
+
+class scrollArea(QtGui.QScrollArea):
+	def __init__(self, parent):
+		super(scrollArea, self).__init__(parent)
+		self.setAcceptDrops(True)
+		 
+	#Sobreescribimos dragEnterEvent para pemitir
+	#la accion de este evento.
+	def dragEnterEvent(self, e):
+		e.accept()
+
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
 su funcion es agregar los elementos correspondientes a la vista de
@@ -1473,15 +1487,14 @@ class UiForm(object):
 		vista = vistaGrafica(escena, self.groupBoxDominio)
 		elementoDominio.Dominio = vista
 
-
 		#Caja de elementos especifica del dominio
 		self.caja=elementoDominio.Dominio 
 
 
+
+
+
 		vista.show()
-
-
-
 
 		QtCore.QObject.connect(self.groupBox, QtCore.SIGNAL('released()'), self.released)
 

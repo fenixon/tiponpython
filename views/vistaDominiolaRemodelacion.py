@@ -153,6 +153,8 @@ de efectuar las acciones del menu desplegado.
 
 class elementoDominio(object):
 
+    acepto = True
+
     elementoDominio = 0
  
     reloj = False
@@ -195,7 +197,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.setSceneRect(20, 20, 430, 385)
 		self.setAcceptDrops(True)
 		self.setObjectName(_fromUtf8("Dominio"))
-
+		self.setMouseTracking(True)
 		#Variables a considerar
 		self.presionandoRecta = False
 
@@ -212,6 +214,10 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.rectaSeleccionada['id'] = 0
 
 		self.rectaCandidata = ""
+
+		self.moviendo = False
+
+		self.movido = ""
 
 	#Sobreescribimos dragEnterEvent para pemitir
 	#la accion de este evento.
@@ -245,7 +251,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 			r = QtCore.QLineF(position.x(), position.y(), (position.x() + 350), (position.y() + 350))
 
 
-			barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350))
+			barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera")
 
 			barrera.id = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))
 
@@ -255,6 +261,120 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		e.setDropAction(QtCore.Qt.MoveAction)
 		e.accept()
+
+
+	def mouseMoveEvent(self, e):
+		e.accept()
+		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(e.pos().x(), 10) + " y -> " + QtCore.QString.number(e.pos().y(), 10) )
+
+		if self.moviendo:
+
+			if self.movido.tooltip == "pozo":
+				posicion = e.pos()
+
+				self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+
+				self.movido.setX(posicion.x())
+
+				self.movido.setY(posicion.y())
+
+				for x in elementoDominio.Dominio.botones:
+					if x.id == self.movido.id:
+						x = self.movido
+
+				elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
+
+
+
+
+			elif self.movido.tooltip == "barrera":
+
+				posicion = e.pos()
+
+				recta = self.movido.line()
+
+				puntoP = QtCore.QPointF(posicion.x(), posicion.y())
+				puntoQ = QtCore.QPointF(recta.x1(), recta.y1())
+
+				rectay = QtCore.QLineF(puntoP, puntoQ)           
+
+				puntoR = QtCore.QPointF(recta.x2(), recta.y2())
+
+				rectaw = QtCore.QLineF(puntoP, puntoR)           
+
+				valor1 = np.absolute(recta.dx() /2)
+				valor2 = np.absolute(recta.dy() /2)
+
+
+				#Recta proxima a las x
+				if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
+					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
+					self.movido.setLine(posicion.x(), posicion.y(), self.movido.line().x2(), self.movido.line().y2())
+					self.movido.eje = "x"
+
+				#Recta proxima a las y
+				elif np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
+					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), posicion.x(), posicion.y())
+					self.movido.eje = "y"
+					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
+
+				elif  self.movido.eje == "x":
+					self.movido.setLine(posicion.x(), posicion.y(), self.movido.line().x2(), self.movido.line().y2())
+					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
+				elif self.movido.eje == "y":
+					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), posicion.x(), posicion.y())
+					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
+
+
+				elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.movido.id, self.movido.line().x1(), self.movido.line().y1(), self.movido.line().x2(), self.movido.line().y2())
+
+				elementoDominio.gbCoord.setRectaExistente(self.movido.id, 0)
+
+
+	def mousePressEvent(self, e):
+
+		item = self.itemAt(e.pos().x(), e.pos().y())
+
+		if item != None:
+
+			posicion = e.pos()
+
+			if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
+				self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+
+				#Se muestran sus coordenadas
+				elementoDominio.gbCoord.setPozoExistente(item.id)
+
+				elementoDominio.pozoSeleccionado = item.id
+				elementoDominio.gbCoord.actualizarCoordenadasPozo(item.id)
+				elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
+
+				for pozo in elementoDominio.Dominio.botones:
+					if pozo.id != item.id:
+						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+				for r in elementoDominio.Dominio.rectas:
+					r.setPen(QtCore.Qt.black)
+
+				self.moviendo = True
+
+				self.movido = item
+
+			elif item.tooltip == "pozo" and e.button() == QtCore.Qt.RightButton:
+				elementoDominio.selectedMenuMouse["tipo"] = "punto"
+				elementoDominio.selectedMenuMouse["id"] = self.id
+				elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+				elementoDominio.menuMouse.show()
+			elif item.tooltip == "barrera":
+				self.moviendo = True
+				self.movido = item
+
+
+
+	def mouseReleaseEvent(self, e):
+		self.moviendo = False
+		self.movido = None
+		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
 
 
@@ -305,9 +425,12 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 		self.setToolTip(QtGui.QApplication.translate("Form", tooltip, None, QtGui.QApplication.UnicodeUTF8))
 
+	"""
 	def mousePressEvent(self, e):
 
 		if e.button() == QtCore.Qt.LeftButton:
+
+			elementoDominio.acepto = False
 
 			#Cambiamos el cursor, y luego procedemos a evaluar estado del reloj
 			#Si no existe creamos un temporizador, cuando alcanze el tiempo dado
@@ -348,9 +471,11 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 
 		self.setY(posicion.y())
 
-
  
 		elementoDominio.gbCoord.setPozoExistente(self.id)
+
+	"""
+
 
 	#Cuando se suelta el mouse luego de un arrastre
 	#incondicionalmente se setean las banderas globales con los siguientes
@@ -376,16 +501,18 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 	rotacion = False
 	contador = 0
 	fuePrimeraRotacion = False
-	puntoMv = ""
 	eje = ""
 
-	def __init__(self, x1, y1, x2, y2):
+	def __init__(self, x1, y1, x2, y2, tooltip):
 		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, elementoDominio.Dominio.scene())
+		self.init(tooltip)
+
+	def init(self, tooltip):
+		self.tooltip = tooltip
 
 	def mouseMoveEvent(self, e):
 
 		posicion = e.scenePos()
-
 
 		recta = self.line()
 
@@ -427,40 +554,14 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 			self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
 
-
-
 		elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.id, self.line().x1(), self.line().y1(), self.line().x2(), self.line().y2())
 
 		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
 
-	def mousePressEvent(self, e):
 
-		self.puntoMv = QtCore.QPointF(e.pos().x(), e.pos().y())
-
-		e.accept()
-		"""
-		self.setPen(QtCore.Qt.red)
-		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
-		for x in elementoDominio.Dominio.botones:
-			x.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
-
-		for r in elementoDominio.Dominio.rectas:
-			if r.id != self.id:
-				r.setPen(QtCore.Qt.black)
-		"""
 	def mouseReleaseEvent(self, e):
-		if self.rotacion:
-			self.contador = self.contador + 1
-		if self.contador == 2:
-			self.contador =0
-			self.rotacion = False
-
 		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
 
-
-	def mouseDoubleClickEvent(self, e):
-		self.rotacion = True
-		self.setPen(QtCore.Qt.white)
 
 
 """
@@ -949,12 +1050,12 @@ class gbCoordenadas(QtGui.QGroupBox):
                     elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
 np.int32(self.lineEdit_4.text()))
-                    elementoDominio.Dominio.rectas.append(vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2()))
+                    elementoDominio.Dominio.rectas.append(vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera"))
                     elementoDominio.Dominio.rectaCandidata.hide()
                     elementoDominio.Dominio.rectaCandidata = None
 
                 else:
-                    barrera = vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2())
+                    barrera = vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera")
                     barrera.id = elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
                     elementoDominio.Dominio.rectas.append(barrera)
                     elementoDominio.Dominio.rectaCandidata.hide()
@@ -1159,10 +1260,6 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.c
                     recta.setLine(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()),
 np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
 
-
-            
-
-            elementoDominio.Dominio.rectas.append(barrera)
 
 
     def setRectaExistente(self, idElemento, irRE):

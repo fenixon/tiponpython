@@ -342,6 +342,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 			posicion = e.pos()
 
 			if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
+				item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 				self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
 				#Se muestran sus coordenadas
@@ -363,13 +364,28 @@ class vistaGrafica(QtGui.QGraphicsView):
 				self.movido = item
 
 			elif item.tooltip == "pozo" and e.button() == QtCore.Qt.RightButton:
+				item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+
+				for pozo in elementoDominio.Dominio.botones:
+					if pozo.id != item.id:
+						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+
 				elementoDominio.selectedMenuMouse["tipo"] = "punto"
-				elementoDominio.selectedMenuMouse["id"] = self.id
+				elementoDominio.selectedMenuMouse["id"] = item.id
 				elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
 				elementoDominio.menuMouse.show()
-			elif item.tooltip == "barrera":
+			elif item.tooltip == "barrera" and e.button() == QtCore.Qt.LeftButton:
+				item.setPen(QtCore.Qt.red)
 				self.moviendo = True
 				self.movido = item
+			elif item.tooltip == "barrera" and e.button() == QtCore.Qt.RightButton:
+				item.setPen(QtCore.Qt.red)
+				elementoDominio.selectedMenuMouse["tipo"] = "recta"
+				elementoDominio.selectedMenuMouse["id"] = item.id
+				elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+				elementoDominio.menuMouse.show()
+
 
 
 
@@ -721,14 +737,14 @@ class menu(QtGui.QListView):
                 return
             if valor.toString() == "Eliminar":
                 
-                elementoDominio.gbCoord.ocultarFormulario()                
+                elementoDominio.gbCoord.ocultarFormulario()
                 
                 if elementoDominio.selectedMenuMouse["tipo"] == "punto":
                     
                     elementoDominio.ContEnsayo.removerPozo(elementoDominio.selectedMenuMouse["id"])
 
                     self.aEliminar = []
-                    
+
                     for x in elementoDominio.Dominio.botones:
                         if x.id == elementoDominio.selectedMenuMouse["id"]:
                             x.hide()
@@ -743,7 +759,20 @@ class menu(QtGui.QListView):
 
                 if elementoDominio.selectedMenuMouse["tipo"] == "recta":
                     elementoDominio.ContEnsayo.eliminarRecta(elementoDominio.selectedMenuMouse["id"])
-                    self.update()
+
+                    self.aEliminar = []
+
+                    for x in elementoDominio.Dominio.rectas:
+                        if x.id == elementoDominio.selectedMenuMouse["id"]:
+                            x.hide()
+                            self.aEliminar.append(x)
+
+                    for x in self.aEliminar:
+                        try:
+                            elementoDominio.Dominio.rectas.remove(x)
+                            break
+                        except ValueError:
+                            print "Recta a eliminar no encontrado, advertencia simple"
 
 
                 elementoDominio.selectedMenuMouse["tipo"] == ""

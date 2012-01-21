@@ -490,7 +490,6 @@ class box(QtGui.QGroupBox):
             else:
                 self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
-            
             #Enviamos identificador a funcion que expresa las coordenadas de manera grafica
             elementoDominio.gbCoord.setRectaExistente(lista['id'], self.rectaSeleccionada['id'])
 

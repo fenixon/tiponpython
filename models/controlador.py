@@ -262,7 +262,7 @@ class Proyecto(object):
     def actualizarRectaCoordenada(self, idElemento, x1, y1, x2, y2):
         for recta in self.listaRecta:
             if recta.id == idElemento:
-                recta.actualizarBarrera(x1, x2, y1, y2)
+                recta.actualizarBarrera2(x1, x2, y1, y2)
                 return
 
 

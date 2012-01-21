@@ -401,19 +401,24 @@ class Ui_MainWindow(QtGui.QDialog):
         m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
         m.setearValores([1000,0.0001])
         #Adherimos la vista del dominio
-        self.ui = Ui_Form()
+        self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo)
 
-        b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.ui.caja, "pozo")
-        b.id = ContEnsayo.agregarPozo(5, 2)
+        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
-        b.setStyleSheet("border: none")	
-        b.setGeometry(QtCore.QRect(5, 2, 24, 24))                 
+        b.id = ContEnsayo.agregarPozo(80, 80)
+ 
+
+        b.setX(80)
+        b.setY(80)
+
+	print b.id, b.x()
+
         self.ui.caja.botones.append(b)
-        b.show()
+ 
 
         noexec=1
-        
+
         self.ventanaImpoObs(noexec)
         self.vimp.archivo="ficheros/ensayo_tchicos.ods"
         self.vimp.nombre.setText('obs1')

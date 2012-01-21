@@ -232,7 +232,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 		position = e.pos()
  
 		if elementoDominio.elementoDominio == 0:
-			b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo")
+			b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
 			b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())
 			b.setX(e.pos().x())
 			b.setY(e.pos().y())
@@ -256,11 +256,6 @@ class vistaGrafica(QtGui.QGraphicsView):
 		e.setDropAction(QtCore.Qt.MoveAction)
 		e.accept()
 
-
-	"""
-	def mouseMoveEvent(self, e):
-		elementoDominio.coordenadas.setText("X -> " + QtCore.QString.number(e.pos().x(), 10) + " Y -> " + QtCore.QString.number(e.pos().y(), 10))
-	"""
 
 
 #Escena contenedora de los items graficos
@@ -300,8 +295,8 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 	accionCoord = {}
 
 
-	def __init__(self, icono, tooltip):
-		super(vistaPozo, self).__init__(icono, None, elementoDominio.Dominio.scene())
+	def __init__(self, icono, tooltip, escena):
+		super(vistaPozo, self).__init__(icono, None, escena)
 		self.init(tooltip)
 
 	def init(self, tooltip):
@@ -414,7 +409,7 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 
 		#Recta proxima a las x
 		if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
-
+			self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
 			self.setLine(posicion.x(), posicion.y(), self.line().x2(), self.line().y2())
 			self.eje = "x"
 
@@ -422,12 +417,14 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 		elif np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
 			self.setLine(self.line().x1(), self.line().y1(), posicion.x(), posicion.y())
 			self.eje = "y"
+			self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
+
 		elif  self.eje == "x":
 			self.setLine(posicion.x(), posicion.y(), self.line().x2(), self.line().y2())
-
+			self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
 		elif self.eje == "y":
 			self.setLine(self.line().x1(), self.line().y1(), posicion.x(), posicion.y())
-
+			self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
 
 
@@ -708,25 +705,25 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #X1
         self.lineEdit = QtGui.QLineEdit(self)
-        self.lineEdit.setGeometry(QtCore.QRect(40, 50, 25, 20))
+        self.lineEdit.setGeometry(QtCore.QRect(40, 50, 35, 25))
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.lineEdit.setVisible(False)
 
         #Y1
         self.lineEdit_2 = QtGui.QLineEdit(self)
-        self.lineEdit_2.setGeometry(QtCore.QRect(100, 50, 25, 20))
+        self.lineEdit_2.setGeometry(QtCore.QRect(100, 50, 35, 25))
         self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
         self.lineEdit_2.setVisible(False)
 
         #X2
         self.lineEdit_3 = QtGui.QLineEdit(self)
-        self.lineEdit_3.setGeometry(QtCore.QRect(40, 100, 25, 20))
+        self.lineEdit_3.setGeometry(QtCore.QRect(40, 100, 35, 25))
         self.lineEdit_3.setObjectName(_fromUtf8("lineEdit_3"))
         self.lineEdit_3.setVisible(False)
 
         #Y2
         self.lineEdit_4 = QtGui.QLineEdit(self)
-        self.lineEdit_4.setGeometry(QtCore.QRect(100, 100, 25, 20))
+        self.lineEdit_4.setGeometry(QtCore.QRect(100, 100, 35, 25))
         self.lineEdit_4.setObjectName(_fromUtf8("lineEdit_4"))
         self.lineEdit_4.setVisible(False)
 
@@ -934,7 +931,7 @@ class gbCoordenadas(QtGui.QGroupBox):
                     elementoDominio.pozoCandidato.show()
 
             
-                b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo")
+                b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
 
                 b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
 
@@ -1152,12 +1149,22 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
                     pozo.setY(np.int32(self.lineEdit_2.text()))
 
         if self.tipoElemento == "barrera":
-             
-            elementoDominio.ContEnsayo.actualizarRectaCoord(self.idElemento, np.int32(self.lineEdit.text()),
-                                                       np.int32(self.lineEdit_2.text()),  
+
+
+            elementoDominio.ContEnsayo.actualizarRectaCoord(self.idElemento, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()),
 np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.currentText())
-            self.update()
+
+            for recta in elementoDominio.Dominio.rectas:
+                if recta.id == self.idElemento:
+                    recta.setLine(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()),
+np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
+
+
             
+
+            elementoDominio.Dominio.rectas.append(barrera)
+
+
     def setRectaExistente(self, idElemento, irRE):
 
         if elementoDominio.pozoSeleccionado == 0:
@@ -1285,6 +1292,15 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.c
  
 
 
+class gbox(QtGui.QGroupBox):
+	def __init__(self, parent):
+		super(gbox, self).__init__(parent)
+
+	def mouseReleaseEvent(self, e):
+		elementoDominio.transicion = False
+		elementoDominio.reloj = False
+		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
+
 """
 La clase Ui_Form es invocada en el archivo principal de la aplicacion.
 su funcion es agregar los elementos correspondientes a la vista de
@@ -1319,15 +1335,12 @@ class UiForm(object):
 						" border: 2px solid green;}")
 
 
-		#Caja de elementos especifica del dominio
-		#self.caja=elementoDominio.Dominio 
-
 		#Definimos la instancia global del menu y le asociamos
 		#un padre.
 		elementoDominio.menuMouse = menu(self.frame)       
 
 		#Barra de Herramientas
-		self.groupBox = QtGui.QGroupBox(self.frame)
+		self.groupBox = gbox(self.frame)
 		self.groupBox.setGeometry(QtCore.QRect(500, 20, 151, 81))
 		self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
@@ -1362,10 +1375,18 @@ class UiForm(object):
 
 		vista = vistaGrafica(escena, self.groupBoxDominio)
 		elementoDominio.Dominio = vista
+
+
+		#Caja de elementos especifica del dominio
+		self.caja=elementoDominio.Dominio 
+
+
 		vista.show()
 
 
-		QtCore.QObject.connect(self.groupBox, QtCore.SIGNAL('mouseReleaseEvent()'), self.released)
+
+
+		QtCore.QObject.connect(self.groupBox, QtCore.SIGNAL('released()'), self.released)
 
 		self.frame.show()
 		

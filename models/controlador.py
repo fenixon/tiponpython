@@ -157,7 +157,7 @@ class Proyecto(object):
 
     def dibujarRecta(self):
         return self.listaRecta
-            
+
     def buscarPuntoEnRecta(self, x, y):
         
         for barrera in self.listaRecta:
@@ -195,6 +195,48 @@ class Proyecto(object):
                 return lista
         lista = {}
         return lista
+
+
+    def buscarPuntoRecta(self, x, y, identificador):
+        
+        for barrera in self.listaRecta:
+
+            if barrera.id == identificador:
+                recta = QtCore.QLine(barrera.x1, barrera.y1, barrera.x2, barrera.y2)
+
+                puntoP = QtCore.QPoint(x, y)
+                puntoQ = QtCore.QPoint(recta.x1(), recta.y1())
+
+                rectay = QtCore.QLine(puntoP, puntoQ)           
+
+                puntoR = QtCore.QPoint(recta.x2(), recta.y2())
+
+                rectaw = QtCore.QLine(puntoP, puntoR)           
+
+                valor1 = np.absolute(recta.dx() /2)
+                valor2 = np.absolute(recta.dy() /2)
+
+                #Recta proxima a las x
+                if  np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
+                    lista = {}
+                    lista['punto'] = puntoQ
+
+                    lista['eje'] = "x"
+                    lista['id'] = barrera.id
+                    return lista
+
+                #Recta proxima a las y
+                if np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
+                    lista = {}
+                    lista['punto'] = puntoR
+
+                    lista['eje'] = "y"
+                    lista['id'] = barrera.id
+                    return lista
+        lista = {}
+	lista['eje'] = "z"
+        return lista
+
 
     def actualizarRecta(self, idRecta, x, y, tipoPunto):
         for barrera in self.listaRecta:
@@ -280,3 +322,4 @@ class Proyecto(object):
 	self.rectaCandidata.tipo = signo
         self.listaRecta.append(self.rectaCandidata)
         self.rectaCandidata = None
+	return self.idR

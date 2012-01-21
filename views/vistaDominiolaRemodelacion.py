@@ -379,35 +379,69 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 class vistaBarrera(QtGui.QGraphicsLineItem):
 
 	rotacion = False
+	contador = 0
+	fuePrimeraRotacion = False
+	puntoMv = ""
+	eje = ""
 
 	def __init__(self, x1, y1, x2, y2):
 		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, elementoDominio.Dominio.scene())
 
 	def mouseMoveEvent(self, e):
 
-
-
 		posicion = e.scenePos()
 
-		if self.rotacion:
 
-		#	print "Rotamos con el metodo ya conocido"
+		recta = self.line()
+
+		puntoP = QtCore.QPointF(posicion.x(), posicion.y())
+		puntoQ = QtCore.QPointF(recta.x1(), recta.y1())
+
+		rectay = QtCore.QLineF(puntoP, puntoQ)           
+
+		puntoR = QtCore.QPointF(recta.x2(), recta.y2())
+
+		rectaw = QtCore.QLineF(puntoP, puntoR)           
+
+		valor1 = np.absolute(recta.dx() /2)
+		valor2 = np.absolute(recta.dy() /2)
+
+		print "Recta y dx", np.absolute(rectay.dx())
+		print "Recta   dx", np.absolute(recta.dx())
+		print "Recta y dy", np.absolute(rectay.dy())
+		print "Recta   dy", np.absolute(recta.dy())
+
+
+		#Recta proxima a las x
+		if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
+
 			self.setLine(posicion.x(), posicion.y(), self.line().x2(), self.line().y2())
-			elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.id, posicion.x(), posicion.y(), self.line().x2(), self.line().y2())
-			elementoDominio.gbCoord.setRectaExistente(self.id, 0)
-			return
+			self.eje = "x"
 
-		self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+		#Recta proxima a las y
+		elif np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
+			self.setLine(self.line().x1(), self.line().y1(), posicion.x(), posicion.y())
+			self.eje = "y"
+		elif  self.eje == "x":
+			self.setLine(posicion.x(), posicion.y(), self.line().x2(), self.line().y2())
+
+		elif self.eje == "y":
+			self.setLine(self.line().x1(), self.line().y1(), posicion.x(), posicion.y())
 
 
-		self.setLine(posicion.x(), posicion.y(), posicion.x() + 350, posicion.y() + 350)
 
-		elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.id, posicion.x(), posicion.y(), posicion.x() + 350, posicion.y() + 350)
+
+
+		elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.id, self.line().x1(), self.line().y1(), self.line().x2(), self.line().y2())
+
 		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
 
-
 	def mousePressEvent(self, e):
+
+		self.puntoMv = QtCore.QPointF(e.pos().x(), e.pos().y())
+
 		e.accept()
+		"""
 		self.setPen(QtCore.Qt.red)
 		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
 		for x in elementoDominio.Dominio.botones:
@@ -416,8 +450,14 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 		for r in elementoDominio.Dominio.rectas:
 			if r.id != self.id:
 				r.setPen(QtCore.Qt.black)
-
+		"""
 	def mouseReleaseEvent(self, e):
+		if self.rotacion:
+			self.contador = self.contador + 1
+		if self.contador == 2:
+			self.contador =0
+			self.rotacion = False
+
 		elementoDominio.gbCoord.setRectaExistente(self.id, 0)
 
 
@@ -880,6 +920,8 @@ class gbCoordenadas(QtGui.QGroupBox):
 	elementoDominio.transicion = False
 	elementoDominio.reloj = False
 
+	print  elementoDominio.ContEnsayo.hayRectaCandidata()
+	print self.label.text()
         if self.label.text() == "Pozo":
 
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
@@ -903,14 +945,24 @@ class gbCoordenadas(QtGui.QGroupBox):
                 elementoDominio.pozoCandidato = None
                 elementoDominio.hayPozoCandidato = False
 
-        else:                                   
+        else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
+                print "a las puertas"
                 if not elementoDominio.ContEnsayo.hayRectaCandidata():
                     elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
-                                                                     np.int32(self.lineEdit_4.text()))
+np.int32(self.lineEdit_4.text()))
+                    elementoDominio.Dominio.rectas.append(vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2()))
+                    elementoDominio.Dominio.rectaCandidata.hide()
+                    elementoDominio.Dominio.rectaCandidata = None
+
                 else:
-                    elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
+                    barrera = vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2())
+                    barrera.id = elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
+                    elementoDominio.Dominio.rectas.append(barrera)
+                    elementoDominio.Dominio.rectaCandidata.hide()
+                    elementoDominio.Dominio.rectaCandidata = None
+
 
                 self.update()
                 
@@ -1028,10 +1080,7 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
                     elementoDominio.hayPozoCandidato = True
                 elementoDominio.pozoCandidato.setX(np.int32(self.lineEdit.text()))
 		elementoDominio.pozoCandidato.setY(np.int32(self.lineEdit_2.text()))
-
-
-
-        else:                                   
+        else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 
 		elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), 

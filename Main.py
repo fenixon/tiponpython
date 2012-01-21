@@ -340,8 +340,12 @@ class Ui_MainWindow(QtGui.QDialog):
 ##        self.dibujante2 = dibujante2(self, ContEnsayo)#Hay que pasarle la ventana principal
 ##        self.dibujante2.show()
 
-        ContEnsayo.dominio.alto = 100
-        ContEnsayo.dominio.ancho = 100
+
+        ContEnsayo.dominio.alto = 500
+
+        ContEnsayo.dominio.ancho = 500
+
+
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
         m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
         m.setearValores([500,0.001])
@@ -350,9 +354,9 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui.setupUi(MainWindow, ContEnsayo)
 
         b = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.ui.caja, "pozo")
-        b.id = ContEnsayo.agregarPozo(20, 20)   
-        b.setStyleSheet("border: none")	
-        b.setGeometry(QtCore.QRect(20,20, 24, 24))                 
+        b.id = ContEnsayo.agregarPozo(20, 20)
+        b.setStyleSheet("border: none")
+        b.setGeometry(QtCore.QRect(20,20, 24, 24))
         self.ui.caja.botones.append(b)
         b.show()
 
@@ -391,9 +395,8 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def cargar_demo(self):
         global ContEnsayo
-
-        ContEnsayo.dominio.alto = 10
-        ContEnsayo.dominio.ancho = 10
+        ContEnsayo.dominio.alto = 500
+        ContEnsayo.dominio.ancho = 500
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
@@ -406,14 +409,10 @@ class Ui_MainWindow(QtGui.QDialog):
 
         b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
-        b.id = ContEnsayo.agregarPozo(80, 80)
- 
+        b.setX(30)
+        b.setY(30)
 
-        b.setX(80)
-        b.setY(80)
-
-
-
+        b.id = elementoDominio.ContEnsayo.agregarPozo(30, 30) 
 
         self.ui.caja.botones.append(b)
  

@@ -1188,25 +1188,31 @@ class gbCoordenadas(QtGui.QGroupBox):
 	elementoDominio.transicion = False
 	elementoDominio.reloj = False
 
-	print  elementoDominio.ContEnsayo.hayRectaCandidata()
-	print self.label.text()
         if self.label.text() == "Pozo":
 
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
 
                 if not elementoDominio.hayPozoCandidato:
                     elementoDominio.pozoCandidato = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(), None, elementoDominio.Dominio.scene())
+
+                    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
                     elementoDominio.hayPozoCandidato = True
-                    elementoDominio.pozoCandidato.setX(np.int32(self.lineEdit.text()))
-                    elementoDominio.pozoCandidato.setY(np.int32(self.lineEdit_2.text()))
+                    elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1)
+                    elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.a2)
                     elementoDominio.pozoCandidato.show()
 
-            
                 b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
 
                 b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
 
+                b.setX(elementoDominio.Dominio.a1)
+
+                b.setY(elementoDominio.Dominio.a2)
+
+
                 elementoDominio.Dominio.botones.append(b)
+
 
  
                 elementoDominio.pozoCandidato.hide()
@@ -1217,6 +1223,7 @@ class gbCoordenadas(QtGui.QGroupBox):
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 
                 if not elementoDominio.ContEnsayo.hayRectaCandidata():
+
                     elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
 np.int32(self.lineEdit_4.text()))
@@ -1360,10 +1367,8 @@ np.int32(self.lineEdit_4.text()))
                     elementoDominio.pozoCandidato = QtGui.QGraphicsPixmapItem(QtGui.QPixmap("content/images/redDotIcon.png"), None, elementoDominio.Dominio.scene())
                     elementoDominio.hayPozoCandidato = True
 
+                elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
 
-		if np.int32(self.lineEdit.text()) > 0 and np.int32(self.lineEdit_2.text()) > 0:
-
-			elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
 
 
 		elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1)
@@ -1433,10 +1438,12 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
                     for pozo in elementoDominio.Dominio.botones:
                         if pozo.id == elementoDominio.pozoSeleccionado:
 
-                            elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
+                            elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
 
-                            pozo.setX(np.int32(self.lineEdit.text()))
-                            pozo.setY(np.int32(self.lineEdit_2.text()))
+                            elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2)
+
+                            pozo.setX(elementoDominio.Dominio.a1)
+                            pozo.setY(elementoDominio.Dominio.a2)
 
                     
                     elementoDominio.pozoSeleccionado = 0

@@ -219,6 +219,24 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		self.movido = ""
 
+		self.eje = QtGui.QGraphicsPixmapItem(QtGui.QPixmap("content/images/blackDotIcon.png"), None, self.scene())
+		self.eje.setX(5)
+		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto - 25)
+
+		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho - 10, self.eje.y()), None, self.scene())
+
+		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 5), None, self.scene())
+
+		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
+
+		self.a1 = 0
+
+		self.a2 = 0
+
+		self.b1 = 0
+
+		self.b2 = 0
+
 	#Sobreescribimos dragEnterEvent para pemitir
 	#la accion de este evento.
 	def dragEnterEvent(self, e):
@@ -235,21 +253,26 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		#Obtenemos la posicion relativa del lugar en que el
 		#elemento es soltado
-		position = e.pos()
+
+		position = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
+
  
 		if elementoDominio.elementoDominio == 0:
 			b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
 			b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())
-			b.setX(e.pos().x())
-			b.setY(e.pos().y())
+			b.setX(position.x())
+			b.setY(position.y())
 			self.botones.append(b)
 
+			self.transformarCoordenada(position)
 
 			elementoDominio.gbCoord.setPozoExistente(b.id)
 
 		else:
 			r = QtCore.QLineF(position.x(), position.y(), (position.x() + 350), (position.y() + 350))
 
+			self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
+			self.transformarCoordenadaY(QtCore.QPoint((position.x() + 350), (position.y() + 350)))
 
 			barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
 
@@ -265,20 +288,24 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 	def mouseMoveEvent(self, e):
 		e.accept()
+
 		punto = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
-		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(punto.x(), 10) + " y -> " + QtCore.QString.number(punto.y(), 10) )
+		print punto.x(), "==", self.ejeEscena.x(), "and",  punto.y(), "==", self.ejeEscena.y()
+
+		self.transformarCoordenada(punto)
+
+		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(self.a1, 10) + " y -> " + QtCore.QString.number(self.a2, 10) )
 
 		if self.moviendo:
 
 			if self.movido.tooltip == "pozo":
-				posicion = e.pos()
 
 				self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 
-				self.movido.setX(posicion.x())
+				self.movido.setX(punto.x())
 
-				self.movido.setY(posicion.y())
+				self.movido.setY(punto.y())
 
 				for x in elementoDominio.Dominio.botones:
 					if x.id == self.movido.id:
@@ -286,16 +313,14 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 				elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 
-
+				elementoDominio.ContEnsayo.moverPozo(self.movido.id, punto.x(), punto.y())
 
 
 			elif self.movido.tooltip == "barrera":
 
-				posicion = e.pos()
-
 				recta = self.movido.line()
 
-				puntoP = QtCore.QPointF(posicion.x(), posicion.y())
+				puntoP = QtCore.QPointF(punto.x(), punto.y())
 				puntoQ = QtCore.QPointF(recta.x1(), recta.y1())
 
 				rectay = QtCore.QLineF(puntoP, puntoQ)           
@@ -311,22 +336,25 @@ class vistaGrafica(QtGui.QGraphicsView):
 				#Recta proxima a las x
 				if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
-					self.movido.setLine(posicion.x(), posicion.y(), self.movido.line().x2(), self.movido.line().y2())
+					self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
 					self.movido.eje = "x"
 
 				#Recta proxima a las y
 				elif np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
-					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), posicion.x(), posicion.y())
+					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
 					self.movido.eje = "y"
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
 				elif  self.movido.eje == "x":
-					self.movido.setLine(posicion.x(), posicion.y(), self.movido.line().x2(), self.movido.line().y2())
+					self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
 				elif self.movido.eje == "y":
-					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), posicion.x(), posicion.y())
+					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
+				self.transformarCoordenada(QtCore.QPoint(self.movido.line().x1(), self.movido.line().y1()))
+
+				self.transformarCoordenadaY(QtCore.QPoint(self.movido.line().x2(), self.movido.line().y2()))
 
 				elementoDominio.ContEnsayo.actualizarRectaCoordenada(self.movido.id, self.movido.line().x1(), self.movido.line().y1(), self.movido.line().x2(), self.movido.line().y2())
 
@@ -339,53 +367,58 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		if item != None:
 
-			posicion = e.pos()
+			try:
+				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
-			if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
-				item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
-				self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
+					item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+					self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
-				#Se muestran sus coordenadas
-				elementoDominio.gbCoord.setPozoExistente(item.id)
+					self.transformarCoordenada(posicion)
 
-				elementoDominio.pozoSeleccionado = item.id
-				elementoDominio.gbCoord.actualizarCoordenadasPozo(item.id)
-				elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
-
-				for pozo in elementoDominio.Dominio.botones:
-					if pozo.id != item.id:
-						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
-
-				for r in elementoDominio.Dominio.rectas:
-					r.setPen(QtCore.Qt.black)
-
-				self.moviendo = True
-
-				self.movido = item
-
-			elif item.tooltip == "pozo" and e.button() == QtCore.Qt.RightButton:
-				item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
-
-				for pozo in elementoDominio.Dominio.botones:
-					if pozo.id != item.id:
-						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+					#Se muestran sus coordenadas
+					#elementoDominio.gbCoord.setPozoExistente(item.id)
+					elementoDominio.pozoSeleccionado = item.id
 
 
-				elementoDominio.selectedMenuMouse["tipo"] = "punto"
-				elementoDominio.selectedMenuMouse["id"] = item.id
-				elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
-				elementoDominio.menuMouse.show()
-			elif item.tooltip == "barrera" and e.button() == QtCore.Qt.LeftButton:
-				item.setPen(QtCore.Qt.red)
-				self.moviendo = True
-				self.movido = item
-			elif item.tooltip == "barrera" and e.button() == QtCore.Qt.RightButton:
-				item.setPen(QtCore.Qt.red)
-				elementoDominio.selectedMenuMouse["tipo"] = "recta"
-				elementoDominio.selectedMenuMouse["id"] = item.id
-				elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
-				elementoDominio.menuMouse.show()
+					elementoDominio.gbCoord.actualizarCoordenadasPozo(item.id)
+					elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
 
+					for pozo in elementoDominio.Dominio.botones:
+						if pozo.id != item.id:
+							pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+					for r in elementoDominio.Dominio.rectas:
+						r.setPen(QtCore.Qt.black)
+
+					self.moviendo = True
+
+					self.movido = item
+
+				elif item.tooltip == "pozo" and e.button() == QtCore.Qt.RightButton:
+					item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+
+					for pozo in elementoDominio.Dominio.botones:
+						if pozo.id != item.id:
+							pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+
+					elementoDominio.selectedMenuMouse["tipo"] = "punto"
+					elementoDominio.selectedMenuMouse["id"] = item.id
+					elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+					elementoDominio.menuMouse.show()
+				elif item.tooltip == "barrera" and e.button() == QtCore.Qt.LeftButton:
+					item.setPen(QtCore.Qt.red)
+					self.moviendo = True
+					self.movido = item
+				elif item.tooltip == "barrera" and e.button() == QtCore.Qt.RightButton:
+					item.setPen(QtCore.Qt.red)
+					elementoDominio.selectedMenuMouse["tipo"] = "recta"
+					elementoDominio.selectedMenuMouse["id"] = item.id
+					elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+					elementoDominio.menuMouse.show()
+			except:
+				print "No es pozo ni barrera."
 
 
 
@@ -394,6 +427,80 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.movido = None
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
 
+	def transformarCoordenada(self, punto):
+		if punto.x() == self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.a1 = 0
+			self.a2 = 0
+
+		elif punto.x() == self.ejeEscena.x() and  punto.y() > self.ejeEscena.y():
+			self.a1 = 0
+			self.a2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() == self.ejeEscena.x() and  punto.y() < self.ejeEscena.y():
+			self.a1 = 0
+			self.a2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() > self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.a1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = 0
+
+		elif punto.x() < self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.a1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = 0
+
+		elif punto.x() > self.ejeEscena.x() and punto.y() < self.ejeEscena.y():
+			self.a1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() > self.ejeEscena.x() and punto.y() > self.ejeEscena.y():
+			self.a1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() < self.ejeEscena.x() and punto.y() < self.ejeEscena.y():
+			self.a1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() < self.ejeEscena.x() and punto.y() > self.ejeEscena.y():
+			self.a1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+
+	def transformarCoordenadaY(self, punto):
+		if punto.x() == self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.b1 = 0
+			self.b2 = 0
+
+		elif punto.x() == self.ejeEscena.x() and  punto.y() > self.ejeEscena.y():
+			self.b1 = 0
+			self.b2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() == self.ejeEscena.x() and  punto.y() < self.ejeEscena.y():
+			self.b1 = 0
+			self.b2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() > self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.b1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.b2 = 0
+
+		elif punto.x() < self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.b1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.b2 = 0
+
+		elif punto.x() > self.ejeEscena.x() and punto.y() < self.ejeEscena.y():
+			self.b1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.b2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() > self.ejeEscena.x() and punto.y() > self.ejeEscena.y():
+			self.b1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.b2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() < self.ejeEscena.x() and punto.y() < self.ejeEscena.y():
+			self.b1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.b2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() < self.ejeEscena.x() and punto.y() > self.ejeEscena.y():
+			self.b1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.b2 = - np.absolute(punto.y() - self.ejeEscena.y())
 
 
 #Escena contenedora de los items graficos
@@ -654,7 +761,38 @@ class boton(QtGui.QPushButton):
             elementoDominio.Dominio.rectaSeleccionada['id'] = 0
             self.update()
             elementoDominio.gbCoord.eliminarPlacebos()
+            """
+            if self.id == 1000:
+                elementoDominio.Dominio.setSceneRect(QtCore.QRectF(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto + 100))
+            else:
 
+		#Registramos el aumento
+		aumento = np.absolute(elementoDominio.ContEnsayo.dominio.ancho -elementoDominio.ContEnsayo.dominio.ancho + 100)
+
+		print "ancho ", elementoDominio.ContEnsayo.dominio.ancho,  " aumento ", aumento
+
+		#Movemos los ejes
+		elementoDominio.Dominio.ejeEscena.setX(elementoDominio.Dominio.ejeEscena.x() + aumento)
+		self.update()
+
+		elementoDominio.Dominio.ejeY.setLine(elementoDominio.Dominio.ejeY.line().x1() + aumento, elementoDominio.Dominio.ejeY.line().y1(), elementoDominio.Dominio.ejeY.line().x2() + aumento, elementoDominio.Dominio.ejeY.line().y2())
+
+		elementoDominio.Dominio.ejeX.setLine(elementoDominio.Dominio.ejeX.line().x1() + aumento, elementoDominio.Dominio.ejeX.line().y1(), elementoDominio.Dominio.ejeX.line().x2(),elementoDominio.Dominio.ejeX.line().y2())
+
+		elementoDominio.Dominio.setSceneRect(QtCore.QRectF(0, 0, elementoDominio.ContEnsayo.dominio.ancho + aumento, elementoDominio.ContEnsayo.dominio.alto))
+
+
+		#Movemos los puntos
+
+		for pozo in elementoDominio.Dominio.botones:
+			pozo.setX(pozo.x() + aumento)
+			elementoDominio.ContEnsayo.moverPozo(pozo.id, pozo.x(), pozo.y())
+
+		for recta in elementoDominio.Dominio.rectas:
+			recta.setLine(recta.line().x1() + aumento, recta.line().y1(), recta.line().x2() + aumento, recta.line().y2())
+
+			elementoDominio.ContEnsayo.actualizarRectaCoordenada(recta.id, recta.line().x1(), recta.line().y1(), recta.line().x2(), recta.line().y2())
+            """
 
        else:
            elementoDominio.selectedMenuMouse["tipo"] = "punto"
@@ -1050,25 +1188,31 @@ class gbCoordenadas(QtGui.QGroupBox):
 	elementoDominio.transicion = False
 	elementoDominio.reloj = False
 
-	print  elementoDominio.ContEnsayo.hayRectaCandidata()
-	print self.label.text()
         if self.label.text() == "Pozo":
 
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
 
                 if not elementoDominio.hayPozoCandidato:
                     elementoDominio.pozoCandidato = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(), None, elementoDominio.Dominio.scene())
+
+                    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
                     elementoDominio.hayPozoCandidato = True
-                    elementoDominio.pozoCandidato.setX(np.int32(self.lineEdit.text()))
-                    elementoDominio.pozoCandidato.setY(np.int32(self.lineEdit_2.text()))
+                    elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1)
+                    elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.a2)
                     elementoDominio.pozoCandidato.show()
 
-            
                 b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
 
                 b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.pozoCandidato.x(), elementoDominio.pozoCandidato.y())                
 
+                b.setX(elementoDominio.Dominio.a1)
+
+                b.setY(elementoDominio.Dominio.a2)
+
+
                 elementoDominio.Dominio.botones.append(b)
+
 
  
                 elementoDominio.pozoCandidato.hide()
@@ -1077,14 +1221,30 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
-                print "a las puertas"
+
                 if not elementoDominio.ContEnsayo.hayRectaCandidata():
+
                     elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
 np.int32(self.lineEdit_4.text()))
-                    elementoDominio.Dominio.rectas.append(vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera", elementoDominio.Dominio.scene()))
-                    elementoDominio.Dominio.rectaCandidata.hide()
+
+                    if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
+
+                        elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
+			elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit_3.text()) ), np.int32(self.lineEdit_4.text())))
+
+
+                    barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, "barrera", elementoDominio.Dominio.scene())
+
+                    barrera.id = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
+
                     elementoDominio.Dominio.rectaCandidata = None
+
+                    elementoDominio.Dominio.rectas.append(barrera)
+
+                    elementoDominio.Dominio.rectaCandidata = None
+
 
                 else:
                     barrera = vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera", elementoDominio.Dominio.scene())
@@ -1094,8 +1254,6 @@ np.int32(self.lineEdit_4.text()))
                     elementoDominio.Dominio.rectaCandidata = None
 
 
-                self.update()
-                
         #Reseteo de recta seleccionada
         elementoDominio.Dominio.rectaSeleccionada['id'] = 0
         self.update()
@@ -1208,24 +1366,41 @@ np.int32(self.lineEdit_4.text()))
                 if not elementoDominio.hayPozoCandidato:
                     elementoDominio.pozoCandidato = QtGui.QGraphicsPixmapItem(QtGui.QPixmap("content/images/redDotIcon.png"), None, elementoDominio.Dominio.scene())
                     elementoDominio.hayPozoCandidato = True
-                elementoDominio.pozoCandidato.setX(np.int32(self.lineEdit.text()))
-		elementoDominio.pozoCandidato.setY(np.int32(self.lineEdit_2.text()))
+
+                elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
+
+
+		elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1)
+
+		elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.a2)
+
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 
 		elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
 
-		elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text())), None, elementoDominio.Dominio.scene())
+		elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
+		elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit_3.text()) ), np.int32(self.lineEdit_4.text())))
+
+		elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, elementoDominio.Dominio.scene())
+
+
 
     def setPozoExistente(self, idPozo):
 
         if elementoDominio.Dominio.rectaSeleccionada['id'] == 0:
 
-            coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(idPozo)
+            #coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(idPozo)
+            coordenadas = {}
+            coordenadas['x'] = elementoDominio.Dominio.a1
+            coordenadas['y'] = elementoDominio.Dominio.a2
+
             if elementoDominio.pozoSeleccionado == 0:
                 self.lineEdit.setText(QtCore.QString.number(coordenadas['x'], 10))
-                self.lineEdit_2.setText(QtCore.QString.number(coordenadas['y'], 10))                
+                self.lineEdit_2.setText(QtCore.QString.number(coordenadas['y'], 10))
 
             self.idElemento = idPozo
             self.tipoElemento = "pozo"
@@ -1261,10 +1436,12 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
                     for pozo in elementoDominio.Dominio.botones:
                         if pozo.id == elementoDominio.pozoSeleccionado:
 
-                            elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
+                            elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
 
-                            pozo.setX(np.int32(self.lineEdit.text()))
-                            pozo.setY(np.int32(self.lineEdit_2.text()))
+                            elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2)
+
+                            pozo.setX(elementoDominio.Dominio.a1)
+                            pozo.setY(elementoDominio.Dominio.a2)
 
                     
                     elementoDominio.pozoSeleccionado = 0
@@ -1303,10 +1480,10 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
             recta = elementoDominio.ContEnsayo.buscarRecta(self.idElemento)
 
             if irRE == 0:
-                self.lineEdit.setText(QtCore.QString.number(recta.x1, 10))
-                self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
-                self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
-                self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+                self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.a1, 10))
+                self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
+                self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.b1, 10))
+                self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
 		 
 		if recta.tipo == "Positivo":
 		    self.cbTipo.setCurrentIndex(1)
@@ -1314,12 +1491,13 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
 		    self.cbTipo.setCurrentIndex(0)
 
             else:
+
                 recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
-                
-                self.lineEdit.setText(QtCore.QString.number(recta.x1, 10))
-                self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
-                self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
-                self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+
+                self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.a1, 10))
+                self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
+                self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.b1, 10))
+                self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
 
 		if recta.tipo == "Positivo":
 		    self.cbTipo.setCurrentIndex(1)
@@ -1354,8 +1532,8 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
     def actualizarCoordenadasPozo(self, idPozo):        
         for pozo in elementoDominio.Dominio.botones:
             if pozo.id == idPozo:
-	        self.lineEdit.setText(QtCore.QString.number(pozo.x(), 10))
-                self.lineEdit_2.setText(QtCore.QString.number(pozo.y(), 10))
+	        self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.a1, 10))
+                self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
                 elementoDominio.Dominio.rectaSeleccionada['id'] = 0
                 self.setPozoExistente(idPozo)
 
@@ -1518,10 +1696,6 @@ class UiForm(object):
 
 		#Caja de elementos especifica del dominio
 		self.caja=elementoDominio.Dominio 
-
-
-
-
 
 		vista.show()
 

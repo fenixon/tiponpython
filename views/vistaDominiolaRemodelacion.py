@@ -219,6 +219,11 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		self.movido = ""
 
+		self.eje = QtGui.QGraphicsPixmapItem(QtGui.QPixmap("content/images/blackDotIcon.png"), None, self.scene())
+		self.eje.setX(5)
+		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto - 25)
+
+
 	#Sobreescribimos dragEnterEvent para pemitir
 	#la accion de este evento.
 	def dragEnterEvent(self, e):
@@ -235,7 +240,9 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		#Obtenemos la posicion relativa del lugar en que el
 		#elemento es soltado
-		position = e.pos()
+
+		position = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
+
  
 		if elementoDominio.elementoDominio == 0:
 			b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
@@ -272,7 +279,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 		if self.moviendo:
 
 			if self.movido.tooltip == "pozo":
-				posicion = e.pos()
+				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
 				self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 
@@ -286,7 +293,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 				elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 
-
+				elementoDominio.ContEnsayo.moverPozo(self.movido.id, posicion.x(), posicion.y())
 
 
 			elif self.movido.tooltip == "barrera":
@@ -339,7 +346,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		if item != None:
 
-			posicion = e.pos()
+			posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
 			if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
 				item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))

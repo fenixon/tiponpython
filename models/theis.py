@@ -70,8 +70,10 @@ class Theis(metodoSolucion.metodoAnalitico):
                 #print "s "+ str(s)
                 #print str(s)
                 #dsdT=s*(-1/T + dWdu*(-u/T)/w);
-
-                aux1=dWdu*(-u/T)/w
+                if w==0:
+                    aux1=0
+                else:
+                    aux1=dWdu*(-u/T)/w
                 # print "T " + str(T)
                 
                 aux2=-1.000/T
@@ -82,8 +84,10 @@ class Theis(metodoSolucion.metodoAnalitico):
                 dsdT=s*(aux2 + aux1)
 
                 ## print "dsdT " + str(dsdT)
-                
-                dsdS=s/w*dWdu*u/S
+                if w==0:
+                    dsdS=0
+                else:                
+                    dsdS=s/w*dWdu*u/S
                 
                 #print "s "+ str(s)
 
@@ -93,6 +97,76 @@ class Theis(metodoSolucion.metodoAnalitico):
 
         return [s, dsdT, dsdS]
 
+
+
+    def calcularprueba(self,r,t,Q, T, S):
+
+        #print "T: "+str(T)
+        #print "S: "+str(S)
+        
+        # [s, dsdT, dsdS]=Theis(r,t,Q,T,S)
+        # nro de valores que devuelve la funcion, esto lo vemos dps xq varia
+        nargout=3        
+        if r<=0.15 :
+            r=0.15
+ 
+        #u=r^2*S/T/t/4;
+        u=numpy.power(r,2)*S/T/t/4.000
+        
+        s=0
+        
+        if (nargout == 1):
+            w=self.WTheis(u) 
+            s=Q/4.000/numpy.pi/T*w
+        else:
+            lista=[]
+            #try:
+            ## se captura en dos parametros la lista q devuelve            
+            w,dWdu=self.WTheis(u)
+
+            #print "u.. " + str(u)
+            print "w.. " + str(w)
+            ## w=lista[0]           
+            ## dWdu=lista[1]
+            print "dw.. " + str(dWdu)
+
+            #print "Q "+ str(Q)
+            #print "T "+ str(T)
+
+            #print "pi "+ str(numpy.pi)
+            
+            s=Q/4.000/numpy.pi/T*w
+
+
+            #print "s "+ str(s)
+            #print str(s)
+            #dsdT=s*(-1/T + dWdu*(-u/T)/w);
+            if w==0:
+                aux1=0
+            else:
+                aux1=dWdu*(-u/T)/w
+            # print "T " + str(T)
+            
+            aux2=-1.000/T
+
+            #print "aux1 " + str(aux1)
+            #print "aux2 " + str(aux2)
+            
+            dsdT=s*(aux2 + aux1)
+
+            ## print "dsdT " + str(dsdT)
+            if w==0:
+                dsdS=0
+            else:                
+                dsdS=s/w*dWdu*u/S
+            
+            #print "s "+ str(s)
+
+            #+" "+str(dsdT)+" "+str(dsdS)
+            #except:
+            #    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
+
+        return [s, dsdT, dsdS]
                             
 
 
@@ -105,12 +179,12 @@ class Theis(metodoSolucion.metodoAnalitico):
         nargin=1
         
         if u>20 :
-            if (nargout == 1):
-                W=0
-            else:    
-                W=0;
-                dW=0
-            return
+            #if (nargout == 1):
+            #    W=0
+            #else:    
+            W=0
+            dW=0
+            return [W, dW]
         else:
             if u>=1:
                 err=1e-10;mgrid[-5:6,-5:6]
@@ -152,9 +226,10 @@ class Theis(metodoSolucion.metodoAnalitico):
 
 if __name__ == "__main__":
     cont=1
-    ui = Theis(cont)
+    ui = Theis(cont,1)
 ##    Calcula bien el metodo de tezis para un pozo solo
-    ui.calcularpozo(1,1,500,1000,0.0001)
+    #ui.calcularprueba(1,1,500,1000,0.0001)
+    ui.calcularprueba(1269.39978869,0.002,630.0,1000,0.0001)
                                  
 ##    ui.calcular()
     

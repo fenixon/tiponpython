@@ -9,6 +9,7 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar #Clase para dibujar la barra de herramientas de navegación
 import threading
 import random
+from videoDialog import videoDialog
 
 from models.figura import figura as fm
 import numpy as np
@@ -29,13 +30,14 @@ class dibujante(QMainWindow):
         ##      
         ##justito para que quede 0.1 el dt        
 ##        nit=int(tf/0.1)
-        nit=10
+##        nit=100
+        nit=100
 
         ##el mismo ancho y alto para que quede cada 1 unidad
 ####        nix=dominio.ancho
-        nix=4
+        nix=40
 ##        niy=dominio.alto
-        niy=4
+        niy=40
 
         ##discretizacion temporal
         dt=(tf-ti)/nit
@@ -69,10 +71,18 @@ class dibujante(QMainWindow):
         self.niy=niy
         self.cardt=0
 
+
+        ##Llamado a procesar la barrera.. para generar los pozos virtuales porque se duplican por precensia de la barrera
+        dominio.procesarBarrera()
+
         ##LLAMADO AL METODO DE SOLUCION
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
         ### se envian ademas todas las discretizaciones
         matrix=dominio.metodo.calcular(tiempos,xx,yy)
+
+        matx = dominio.metodo.gradienteX()
+
+        maty = dominio.metodo.gradienteY()
 
         ##se obtiene un pozo de observacion el primero por defecto
         pozoObservacion=dominio.obtenerPozoObservacion()            
@@ -86,7 +96,7 @@ class dibujante(QMainWindow):
         self.bombeos=bombeos
         
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.fm = fm(matrix, dominio, observaciones, bombeos,X,Y)
+        self.fm = fm(matrix, matx, maty, dominio, observaciones, bombeos,X,Y, xx, yy, tiempos)
         ran = random.randint(1, 10)
         self.fm.plotU(ran)
         ##1ero plotT dps plotD        
@@ -103,7 +113,9 @@ class dibujante(QMainWindow):
         self.canvas.setParent(self.main_frame)
         #self.mpl_toolbar = NavigationToolbar(self.canvas, self.main_frame)
         self.canvas.draw()
-        
+        self.vel = [1, 2, 3, 4, 5, 6]
+        self.velActual = 0
+        self.inter = 1
 
         separador = QFrame()
         separador.setFrameShadow(QFrame.Sunken)
@@ -117,6 +129,20 @@ class dibujante(QMainWindow):
         self.reproducirb = reproducirb
         QtCore.QObject.connect(self.reproducirb, QtCore.SIGNAL(_fromUtf8('released()')), self.reproducir)
 
+        reversab = QPushButton()
+        reversab.setMinimumSize(32, 32)
+        reversab.setMaximumSize(32, 32)
+        reversab.setIcon(QIcon('content/images/reproducir.png'))
+        self.reversab = reversab
+        QtCore.QObject.connect(self.reversab, QtCore.SIGNAL(_fromUtf8('released()')), self.reversa)
+
+        velocidadb = QPushButton()
+        velocidadb.setMinimumSize(32, 32)
+        velocidadb.setMaximumSize(32, 32)
+        velocidadb.setText(QString(str(self.velActual + 1) + 'x'))
+        self.velocidadb = velocidadb
+        QtCore.QObject.connect(self.velocidadb, QtCore.SIGNAL(_fromUtf8('released()')), self.velocidad)
+
         guardarb = QPushButton()
         guardarb.setMinimumSize(32, 32)
         guardarb.setMaximumSize(32, 32)
@@ -125,7 +151,7 @@ class dibujante(QMainWindow):
         QtCore.QObject.connect(self.guardarb, QtCore.SIGNAL(_fromUtf8('released()')), self.guardar)
 
         estadob = QSlider(Qt.Horizontal)
-        estadob.setMinimumSize(440, 32)
+        estadob.setMinimumSize(324, 32)
         estadob.setToolTip(u'Próximamente: mostrará el avance de la animación.')
 
         ##cambie el tmp
@@ -138,6 +164,7 @@ class dibujante(QMainWindow):
         ##estadob.setMaximum(self.bombeos[-1].tiempo*10)
         #Cambio por la discretizacion espacial
         estadob.setMaximum(int(tf/dt))
+        estadob.setMinimum(0)
         
         self.estadob = estadob
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderReleased()')), self.actualizarSlider)
@@ -155,6 +182,8 @@ class dibujante(QMainWindow):
         vbox.addWidget(separador)
         hbox = QHBoxLayout()
         hbox.addWidget(reproducirb)
+        hbox.addWidget(reversab)
+        hbox.addWidget(velocidadb)
         hbox.addWidget(guardarb)
         hbox.addWidget(estadob)
         hbox.addWidget(timlab)
@@ -164,7 +193,7 @@ class dibujante(QMainWindow):
 
         self.timer = QTimer(self)
         ##Cada un segundo, dps aca cambiar la velocidad de reproduccion
-        self.timer.setInterval(1000)
+        self.timer.setInterval(1000 * self.vel[self.velActual])
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reproducirBucle)
 
     def draw(self):
@@ -212,7 +241,13 @@ class dibujante(QMainWindow):
 
     def reproducirBucle(self):
 
-        if self.estadob.value() == self.estadob.maximum():
+        if self.estadob.value() + self.inter > self.estadob.maximum():
+
+            self.reproducir()
+            self.estadob.setValue(0)
+            self.cardt=0
+            
+        elif self.estadob.value() + self.inter < self.estadob.minimum():
 
             self.reproducir()
             self.estadob.setValue(0)
@@ -220,17 +255,40 @@ class dibujante(QMainWindow):
 
         else:
 
-            self.estadob.setValue(self.estadob.value() + 1)
-            self.cardt=self.cardt+1
+            self.estadob.setValue(self.estadob.value() + self.inter)
+            self.cardt = self.cardt + self.inter
+
+    def reversa(self):
+
+        self.inter = self.inter * -1
 
     def pausar(self):
 
         t.stop()
         print u'Próximamente: pausa de la animación de las gráficas.'
 
+    def velocidad(self):
+
+        if self.velActual+1 < len(self.vel):
+            self.velActual = self.velActual + 1
+        else:
+            self.velActual = 0
+
+        self.timer.setInterval(1000 / self.vel[self.velActual])
+        self.velocidadb.setText(QString(str(self.velActual + 1) + 'x'))
+
     def guardar(self):
 
         print u'Próximamente: guardará la animación de las gráficas en un video.'
+        if self.timer.isActive() == True:
+            self.reproducir()
+        self.estadob.setValue(0)
+        self.cardt=0
+
+        dia = None
+
+        dia = videoDialog(self.fm)
+        dia.show()
 
     def center(self):
 

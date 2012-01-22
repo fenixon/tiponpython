@@ -10,10 +10,12 @@ from matplotlib import cm#Para los colores de la gráfica 3d
 import numpy as np
 import pylab as p
 import random
+import subprocess
+import os
 
 class figura():
 
-    def __init__(self, matrix, dominio, observaciones, bombeos, X, Y, selected = None, parent = None):
+    def __init__(self, matrix, matx, maty, dominio, observaciones, bombeos, X, Y, xx, yy, tiempos, selected = None, parent = None):
 
         fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
         self.axu = fig.add_subplot(2, 2, 1)
@@ -28,6 +30,11 @@ class figura():
         self.bombeos=bombeos
         self.X=X
         self.Y=Y
+        self.matx = matx
+        self.maty = maty
+        self.xx = xx
+        self.yy = yy
+        self.tiempos = tiempos
 
     def plotU(self, ran):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para x e y
 
@@ -38,9 +45,18 @@ class figura():
         #x = np.arange(0, 10, .05)#Descensos (h), son números que representan el nivel piezométrico
         #y = np.arange(0, 10, .05)#Tiempos (t), se supone están en días
         #y = np.sin(x) + ran*2
+
+        pozoObs = self.dominio.obtenerPozoObservacion()
+
+        auxtx = [i for i,x in enumerate(self.xx) if x == pozoObs.x]
+        auxty = [i for i,x in enumerate(self.yy) if x == pozoObs.y]
+
+        h = self.matrix[:, auxty[0], auxtx[0]]
+
+        t = self.tiempos
+    
         x=[]
         y=[]
-    
         for ob in self.observaciones:
             x.append(ob.tiempo)
             y.append(ob.nivelpiezometrico)
@@ -48,7 +64,8 @@ class figura():
         ax.set_title('Descensos h en tiempo t')
         ax.set_xlabel('t')
         ax.set_ylabel('h')
-        ax.plot(x,y)
+        ax.plot(t, h, 'b')
+        ax.plot(x,y, 'r.')
         #print 'First plot loaded...'
 
     def plotD(self, ran, t):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes
@@ -169,14 +186,70 @@ class figura():
         ax.cla()
         #x = np.linspace(0,10,11)
         #y = np.linspace(0,15,16)
-        x = np.arange(0, 10, 0.5)
-        y = np.arange(-2, 2, 0.5)
-        (X,Y) = np.meshgrid(x,y)
-        u = 5*X
-        v = 5*Y
-        q = ax.quiver(X, Y, u, v, angles='xy', scale=1000, color=['r'])
-        p = ax.quiverkey(q,1,16.5,50,"50 m/s",coordinates='data',color='r')
-        ax.set_title('Velocidad (no disponible)')
+        #x = np.arange(0, 10, 0.5)
+        #y = np.arange(-2, 2, 0.5)
+        #(X,Y) = np.meshgrid(x,y)
+        #u = 5*X
+        #v = 5*Y
+        X = self.X
+        Y = self.Y
+        u = self.matx[t]
+        v = self.maty[t]*-1
+        q = ax.quiver(X, Y, u, v, color=['r'])
+        #p2 = ax.quiverkey(q,1,16.5,50,"50 m/s",coordinates='data',color='r')
+        ax.set_title('Velocidad')
 ##        print 'Fourth plot loaded...'
         #xl = ax.xlabel("x (km)")
         #yl = ax.ylabel("y (km)")
+
+    def salvar(self, filename = None, width = None, height = None, velocidad = None):#Esto se lo pasa el dialogo
+        
+        aux = len(self.matrix)
+        for i in range(0, aux):
+        
+            print u'Imágen ' + str(i + 1)
+            
+            self.plotD(0, i)
+            self.plotT(0, i)
+            self.plotC(0, i)
+            
+            tmpfilename = 'temp/_tmp_' + str(i) + '.png'
+
+            ppp = atoi(width) + atoi(height) / self.fig.getfigwidth() + self.fig.getfigheight()
+            
+            self.fig.savefig(tmpfilename, dpi=ppp)
+            
+            print 'Creada.'
+            
+        print u'Imágenes preparadas y listas'
+        
+        #filename = 'graficas'#Hay que pedirlo en el dialogo despues
+        
+        command = ('mplayer/mencoder.exe',#Para la version de linux hay que cambiar esto y sacar el .exe
+            'mf://temp/_tmp_%d.png',
+            '-mf',
+            'type=png:w=' + width + ':h=' + height + ':fps=' + velocidad,#Estas opciones las debe poder elegir el usuario en el dialogo
+            '-ovc',
+            'lavc',
+            '-lavcopts',
+            'vcodec=mpeg4',
+            '-oac',
+            'copy',
+            '-o',
+            'videos/' + filename + '.avi')
+        
+        print u"\n\nSe ejecutará:\n%s\n\n" % ' '.join(command)
+        subprocess.check_call(command)
+
+        print u'Comienza borrado de imagenes temporales.'
+
+        for i in range(0, aux):
+        
+            print u'Imágen ' + str(i + 1)
+            
+            tmpfilename = 'temp/_tmp_' + str(i) + '.png'
+            os.remove(tmpfilename)
+            
+            print 'Borrada.'
+        
+        print 'Pronto.'

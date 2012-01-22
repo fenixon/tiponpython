@@ -1519,10 +1519,6 @@ class UiForm(object):
 		#Caja de elementos especifica del dominio
 		self.caja=elementoDominio.Dominio 
 
-
-
-
-
 		vista.show()
 
 		QtCore.QObject.connect(self.groupBox, QtCore.SIGNAL('released()'), self.released)

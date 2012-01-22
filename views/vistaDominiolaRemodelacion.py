@@ -223,6 +223,16 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.eje.setX(5)
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto - 25)
 
+		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho - 10, self.eje.y()), None, self.scene())
+
+		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 5), None, self.scene())
+
+		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
+
+		self.a1 = 0
+
+		self.a2 = 0
+
 
 	#Sobreescribimos dragEnterEvent para pemitir
 	#la accion de este evento.
@@ -272,13 +282,55 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 	def mouseMoveEvent(self, e):
 		e.accept()
+
 		punto = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
-		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(punto.x(), 10) + " y -> " + QtCore.QString.number(punto.y(), 10) )
+		print punto.x(), "==", self.ejeEscena.x(), "and",  punto.y(), "==", self.ejeEscena.y()
+
+		if punto.x() == self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.a1 = 0
+			self.a2 = 0
+
+		elif punto.x() == self.ejeEscena.x() and  punto.y() > self.ejeEscena.y():
+			self.a1 = 0
+			self.a2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() == self.ejeEscena.x() and  punto.y() < self.ejeEscena.y():
+			self.a1 = 0
+			self.a2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() > self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.a1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = 0
+
+		elif punto.x() < self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
+			self.a1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = 0
+
+		elif punto.x() > self.ejeEscena.x() and punto.y() < self.ejeEscena.y():
+			self.a1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() > self.ejeEscena.x() and punto.y() > self.ejeEscena.y():
+			self.a1 = np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() < self.ejeEscena.x() and punto.y() < self.ejeEscena.y():
+			self.a1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = np.absolute(punto.y() - self.ejeEscena.y())
+
+		elif punto.x() < self.ejeEscena.x() and punto.y() > self.ejeEscena.y():
+			self.a1 = - np.absolute(punto.x() - self.ejeEscena.x())
+			self.a2 = - np.absolute(punto.y() - self.ejeEscena.y())
+
+		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(self.a1, 10) + " y -> " + QtCore.QString.number(self.a2, 10) )
+
+
 
 		if self.moviendo:
 
 			if self.movido.tooltip == "pozo":
+
 				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
 				self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
@@ -298,7 +350,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 			elif self.movido.tooltip == "barrera":
 
-				posicion = e.pos()
+				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
 				recta = self.movido.line()
 
@@ -346,53 +398,55 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		if item != None:
 
-			posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
+			try:
+				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
-			if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
-				item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
-				self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
+				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
+					item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+					self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
-				#Se muestran sus coordenadas
-				elementoDominio.gbCoord.setPozoExistente(item.id)
+					#Se muestran sus coordenadas
+					elementoDominio.gbCoord.setPozoExistente(item.id)
 
-				elementoDominio.pozoSeleccionado = item.id
-				elementoDominio.gbCoord.actualizarCoordenadasPozo(item.id)
-				elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
+					elementoDominio.pozoSeleccionado = item.id
+					elementoDominio.gbCoord.actualizarCoordenadasPozo(item.id)
+					elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
 
-				for pozo in elementoDominio.Dominio.botones:
-					if pozo.id != item.id:
-						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+					for pozo in elementoDominio.Dominio.botones:
+						if pozo.id != item.id:
+							pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
 
-				for r in elementoDominio.Dominio.rectas:
-					r.setPen(QtCore.Qt.black)
+					for r in elementoDominio.Dominio.rectas:
+						r.setPen(QtCore.Qt.black)
 
-				self.moviendo = True
+					self.moviendo = True
 
-				self.movido = item
+					self.movido = item
 
-			elif item.tooltip == "pozo" and e.button() == QtCore.Qt.RightButton:
-				item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+				elif item.tooltip == "pozo" and e.button() == QtCore.Qt.RightButton:
+					item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 
-				for pozo in elementoDominio.Dominio.botones:
-					if pozo.id != item.id:
-						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+					for pozo in elementoDominio.Dominio.botones:
+						if pozo.id != item.id:
+							pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
 
 
-				elementoDominio.selectedMenuMouse["tipo"] = "punto"
-				elementoDominio.selectedMenuMouse["id"] = item.id
-				elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
-				elementoDominio.menuMouse.show()
-			elif item.tooltip == "barrera" and e.button() == QtCore.Qt.LeftButton:
-				item.setPen(QtCore.Qt.red)
-				self.moviendo = True
-				self.movido = item
-			elif item.tooltip == "barrera" and e.button() == QtCore.Qt.RightButton:
-				item.setPen(QtCore.Qt.red)
-				elementoDominio.selectedMenuMouse["tipo"] = "recta"
-				elementoDominio.selectedMenuMouse["id"] = item.id
-				elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
-				elementoDominio.menuMouse.show()
-
+					elementoDominio.selectedMenuMouse["tipo"] = "punto"
+					elementoDominio.selectedMenuMouse["id"] = item.id
+					elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+					elementoDominio.menuMouse.show()
+				elif item.tooltip == "barrera" and e.button() == QtCore.Qt.LeftButton:
+					item.setPen(QtCore.Qt.red)
+					self.moviendo = True
+					self.movido = item
+				elif item.tooltip == "barrera" and e.button() == QtCore.Qt.RightButton:
+					item.setPen(QtCore.Qt.red)
+					elementoDominio.selectedMenuMouse["tipo"] = "recta"
+					elementoDominio.selectedMenuMouse["id"] = item.id
+					elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+					elementoDominio.menuMouse.show()
+			except:
+				print "No es pozo ni barrera."
 
 
 
@@ -661,6 +715,21 @@ class boton(QtGui.QPushButton):
             elementoDominio.Dominio.rectaSeleccionada['id'] = 0
             self.update()
             elementoDominio.gbCoord.eliminarPlacebos()
+
+            if self.id == 1000:
+                elementoDominio.Dominio.setSceneRect(QtCore.QRectF(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto + 100))
+            else:
+		aumento = np.absolute(elementoDominio.ContEnsayo.dominio.ancho - elementoDominio.ContEnsayo.dominio.ancho + 100)
+		print aumento
+		elementoDominio.Dominio.ejeEscena.setX(elementoDominio.Dominio.ejeEscena.x() + aumento)
+
+		elementoDominio.Dominio.ejeY.setLine(elementoDominio.Dominio.ejeY.line().x1() + aumento, elementoDominio.Dominio.ejeY.line().y1(), elementoDominio.Dominio.ejeY.line().x2() + aumento, elementoDominio.Dominio.ejeY.line().y2())
+
+		elementoDominio.Dominio.ejeX.setLine(elementoDominio.Dominio.ejeX.line().x1() + aumento, elementoDominio.Dominio.ejeX.line().y1(), elementoDominio.Dominio.ejeX.line().x2(),elementoDominio.Dominio.ejeX.line().y2())
+
+		elementoDominio.Dominio.setSceneRect(QtCore.QRectF(0, 0, elementoDominio.ContEnsayo.dominio.ancho + 100, elementoDominio.ContEnsayo.dominio.alto))
+
+
 
 
        else:

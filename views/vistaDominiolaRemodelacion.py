@@ -761,7 +761,7 @@ class boton(QtGui.QPushButton):
             elementoDominio.Dominio.rectaSeleccionada['id'] = 0
             self.update()
             elementoDominio.gbCoord.eliminarPlacebos()
-
+            """
             if self.id == 1000:
                 elementoDominio.Dominio.setSceneRect(QtCore.QRectF(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto + 100))
             else:
@@ -792,7 +792,7 @@ class boton(QtGui.QPushButton):
 			recta.setLine(recta.line().x1() + aumento, recta.line().y1(), recta.line().x2() + aumento, recta.line().y2())
 
 			elementoDominio.ContEnsayo.actualizarRectaCoordenada(recta.id, recta.line().x1(), recta.line().y1(), recta.line().x2(), recta.line().y2())
-
+            """
 
        else:
            elementoDominio.selectedMenuMouse["tipo"] = "punto"
@@ -1215,14 +1215,29 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
-                print "a las puertas"
+
                 if not elementoDominio.ContEnsayo.hayRectaCandidata():
                     elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
 np.int32(self.lineEdit_4.text()))
-                    elementoDominio.Dominio.rectas.append(vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera", elementoDominio.Dominio.scene()))
-                    elementoDominio.Dominio.rectaCandidata.hide()
+
+                    if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
+
+                        elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
+			elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit_3.text()) ), np.int32(self.lineEdit_4.text())))
+
+
+                    barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, "barrera", elementoDominio.Dominio.scene())
+
+                    barrera.id = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
+
                     elementoDominio.Dominio.rectaCandidata = None
+
+                    elementoDominio.Dominio.rectas.append(barrera)
+
+                    elementoDominio.Dominio.rectaCandidata = None
+
 
                 else:
                     barrera = vistaBarrera(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), "barrera", elementoDominio.Dominio.scene())
@@ -1232,8 +1247,6 @@ np.int32(self.lineEdit_4.text()))
                     elementoDominio.Dominio.rectaCandidata = None
 
 
-                self.update()
-                
         #Reseteo de recta seleccionada
         elementoDominio.Dominio.rectaSeleccionada['id'] = 0
         self.update()
@@ -1346,15 +1359,32 @@ np.int32(self.lineEdit_4.text()))
                 if not elementoDominio.hayPozoCandidato:
                     elementoDominio.pozoCandidato = QtGui.QGraphicsPixmapItem(QtGui.QPixmap("content/images/redDotIcon.png"), None, elementoDominio.Dominio.scene())
                     elementoDominio.hayPozoCandidato = True
-                elementoDominio.pozoCandidato.setX(np.int32(self.lineEdit.text()))
-		elementoDominio.pozoCandidato.setY(np.int32(self.lineEdit_2.text()))
+
+
+		if np.int32(self.lineEdit.text()) > 0 and np.int32(self.lineEdit_2.text()) > 0:
+
+			elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
+
+		elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1)
+
+		elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.a2)
+
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 
 		elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), 
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()))
 
-		elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text())), None, elementoDominio.Dominio.scene())
+		if np.int32(self.lineEdit.text()) > 0 and np.int32(self.lineEdit_2.text()) > 0 and np.int32(self.lineEdit_3.text()) > 0 and np.int32(self.lineEdit_4.text()) > 0:
+
+			elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+
+			elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit_3.text()) ), np.int32(self.lineEdit_4.text())))
+
+		elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, elementoDominio.Dominio.scene())
+
+
 
     def setPozoExistente(self, idPozo):
 

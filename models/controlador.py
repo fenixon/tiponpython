@@ -20,7 +20,7 @@ class Proyecto(object):
 
         #Lista que guardan pozo y recta
 ##      self.listaPozo = []
-        self.listaRecta = []
+        #self.listaRecta = []
 
         #Ultima recta y pozo agregados
         self.idP = 0
@@ -144,23 +144,23 @@ class Proyecto(object):
         r = barrera(x1, x2, y1, y2, tipo)
         self.idR = self.idR + 1
         r.id = self.idR
-	self.listaRecta.append(r)
+	self.dominio.listaRecta.append(r)
 	return r.id
 
-        self.listaRecta.append(r)
+        self.dominio.listaRecta.append(r)
 
     def buscarRecta(self, idElemento):
 
-        for recta in self.listaRecta:
+        for recta in self.dominio.listaRecta:
             if recta.id == idElemento:
                 return recta
 
     def dibujarRecta(self):
-        return self.listaRecta
+        return self.dominio.listaRecta
 
     def buscarPuntoEnRecta(self, x, y):
         
-        for barrera in self.listaRecta:
+        for barrera in self.dominio.listaRecta:
 
             recta = QtCore.QLine(barrera.x1, barrera.y1, barrera.x2, barrera.y2)
 
@@ -199,7 +199,7 @@ class Proyecto(object):
 
     def buscarPuntoRecta(self, x, y, identificador):
         
-        for barrera in self.listaRecta:
+        for barrera in self.dominio.listaRecta:
 
             if barrera.id == identificador:
                 recta = QtCore.QLine(barrera.x1, barrera.y1, barrera.x2, barrera.y2)
@@ -239,7 +239,7 @@ class Proyecto(object):
 
 
     def actualizarRecta(self, idRecta, x, y, tipoPunto):
-        for barrera in self.listaRecta:
+        for barrera in self.dominio.listaRecta:
             if barrera.id == idRecta:
                 
                 if tipoPunto == "R":                    
@@ -254,20 +254,20 @@ class Proyecto(object):
                        barrera.actualizarBarrera(x, barrera.x2,  y, barrera.y2, barrera.tipo)
 
     def actualizarRectaCoord(self, idElemento, x1, y1, x2, y2, tipo):
-        for recta in self.listaRecta:
+        for recta in self.dominio.listaRecta:
             if recta.id == idElemento:
                 recta.actualizarBarrera(x1, x2, y1, y2, tipo)
                 return
 
     def actualizarRectaCoordenada(self, idElemento, x1, y1, x2, y2):
-        for recta in self.listaRecta:
+        for recta in self.dominio.listaRecta:
             if recta.id == idElemento:
                 recta.actualizarBarrera2(x1, x2, y1, y2)
                 return
 
 
     def buscarPuntoPorQ(self, x, y):
-        for Q in self.listaRecta:
+        for Q in self.dominio.listaRecta:
             
             recta = QtCore.QLine(Q.x1, Q.y1, Q.x2, Q.y2)
 
@@ -283,7 +283,7 @@ class Proyecto(object):
                 return Q.id
 
     def buscarPuntoPorR(self, x, y):
-        for R in self.listaRecta:
+        for R in self.dominio.listaRecta:
             
             recta = QtCore.QLine(R.x1, R.y1, R.x2, R.y2)
 
@@ -299,9 +299,9 @@ class Proyecto(object):
                 return R.id
 
     def eliminarRecta(self, idElemento):
-        for recta in self.listaRecta:
+        for recta in self.dominio.listaRecta:
             if recta.id == idElemento:
-                self.listaRecta.remove(recta)
+                self.dominio.listaRecta.remove(recta)
 
     def agregarRectaCandidata(self, tipo, x1, y1, x2, y2):
         self.rectaCandidata = barrera(x1, x2, y1, y2, tipo)
@@ -320,6 +320,6 @@ class Proyecto(object):
         self.idR = self.idR + 1
         self.rectaCandidata.id = self.idR
 	self.rectaCandidata.tipo = signo
-        self.listaRecta.append(self.rectaCandidata)
+        self.dominio.listaRecta.append(self.rectaCandidata)
         self.rectaCandidata = None
 	return self.idR

@@ -1,10 +1,16 @@
+from pozo import pozo
+import numpy as np
+from bombeo import bombeo
+
 class dominio(object):
 
     def __init__(self):
         self.alto = 50
         self.ancho = 50
-        self.listaBarreras = []
+        #self.listaBarreras = []
         self.listaPozo=[]
+        self.listaRecta = []
+        self.pozosVirtuales=[]
         self.listaCondicionesExternas = []
         print "Se ha creado el Dominio"
         #Diccionario que guarda los pozos y el metodo de optimizacion asociado al mismo
@@ -34,7 +40,24 @@ class dominio(object):
                 print p
                 return p
         return None
-                
+
+
+    ##esto se podria hacer cada vez que se asocia para no tar llamando cada vez
+    def obtenerPozosdeBombeo(self):
+        lista=[]
+        for p in self.listaPozo:
+            ## si tiene ensayos entonces es de bombeo
+            if len(p.ensayos)>0:
+                lista.append(p)
+        return lista
+
+
+    def obtenerPBombeoYVirtuales(self):        
+        return np.concatenate((self.obtenerPozosVirtuales(), self.obtenerPozosdeBombeo()),1)
+        
+    def obtenerPozosVirtuales(self):
+        return self.pozosVirtuales
+    
     def obtenerPozoObservacion(self):
         for p in self.listaPozo:
             ## si tiene ensayos entonces es de bombeo se recupera el primero           
@@ -42,3 +65,73 @@ class dominio(object):
                 print p
                 return p
         return None
+
+    def procesarBarrera(self):
+        self.pozosVirtuales=[]
+
+        print 'hizo el calculo de la recta'
+        #Hay una barrera definida en el sistema
+        ## cuando aparece la barrera se duplica todo se duplican los mismos ensayos        
+        if len(self.listaRecta)>0:
+            ##se obtiene la primera recta q pasa si son mas ???
+            recta=self.listaRecta[0]
+            alfa,beta,gamma=recta.devolverCoef()
+
+            print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
+
+            #Recorrer todos los pozos para irlos replicando
+            ##solo para los pozos de bombeo
+            for p in self.obtenerPozosdeBombeo():             
+                x=0
+                y=0
+                
+                if alfa == 0:
+                   #Pim.x=P.x;
+                   x=p.x
+                   #    Pim.y=-P.y-2*barrera.gamma/barrera.beta;
+                   y=-p.y-(2*amma/beta)
+                else:
+                    if beta==0:
+                        #Pim.y=P.y;
+                        y=p.y
+                        #Pim.x=-P.x-2*barrera.gamma/barrera.alfa;
+                        x=-p.x-(2*gamma/alfa)
+                    else:
+
+                        #a= barrera.alfa/-barrera.beta;
+                        a=alfa/-beta                       
+                        #b= barrera.gamma/-barrera.beta;
+                        b=gamma/-beta
+                        #angulo=atan(a);
+                        angulo=np.arctan(a)
+
+                        #x1p=P.x +b/a;
+                        x1p=p.x + b/a
+                        #x2p=x1p*cos(angulo)+P.y*sin(angulo);
+                        x2p=x1p*np.cos(angulo)+p.y*np.sin(angulo)                        
+                        #y2p=-x1p*sin(angulo)+P.y*cos(angulo);
+                        y2p=-x1p*np.sin(angulo)+p.y*np.cos(angulo)
+                           
+                        #Pim.x= x2p*cos(angulo) +y2p*sin(angulo) -b/a ;
+                        x=x2p*np.cos(angulo) +y2p*np.sin(angulo) -b/a
+                        #Pim.y= x2p*sin(angulo) -y2p*cos(angulo) ;
+                        y= x2p*np.sin(angulo) -y2p*np.cos(angulo)
+
+                
+                #se instancia un nuevo pozo cn una nueva lista de bombeos
+                pvirtual=pozo(x,y)
+                pvirtual.copiarAPozoVirtual(p,recta.tipo)
+
+                self.pozosVirtuales.append(pvirtual)
+
+                
+        else:
+            print 'no hay barreras'
+            
+
+
+
+        
+
+
+        

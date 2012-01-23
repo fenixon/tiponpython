@@ -38,20 +38,7 @@ class metodoSolucion(object):
     def calcular(self,tiempos,xx,yy):
         # Se indentifica donde esta el pozo de bombeo           
         # Por ahora tomar el primero de bombeo que se detecte. Luego cambia cuando hayan mas pozos
-        
-        ###Esto se podria obtener desde el dominio        
-        pozoBombeo=self.dominio.obtenerPozoBombeo()
-        x0=pozoBombeo.x
-        y0=pozoBombeo.y
-        #comentar cuando el pozo de bombeo esta bien posicioando
-        #x0=5
-        #y0=5
-        print 'x0: ' + str(x0)
-        print 'y0: ' + str(y0)
-
-        ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
-        bombeos=pozoBombeo.ensayos[0].devolverB()    
-        
+                
         # Recorrer todo el dominio
         d=self.dominio
 
@@ -85,61 +72,97 @@ class metodoSolucion(object):
                 #Obtener el Ho llamando a la clase dominio
                 H0[cardy,cardx]=d.calcularH0(x,y)
                 cardy=cardy+1            
-            cardx=cardx+1                            
+            cardx=cardx+1
 
+        ## Para todos los tiempos se empieza desde los niveles iniciales
         cardt=0
         for t in tiempos:
-            cardx=0
-            self.matrizDescenso[cardt,:,:]=H0[:,:]            
-            for x in xx:
-                cardy=0
-                for y in yy:
-                    #calculo de la distancia radial            
-                    #sqrt(|X0-X1|^2 + |y0-y1|^2)
-                    r=np.sqrt(np.square(x0-x) + np.square(y0-y))                                       
-                    #print 'x: '+ str(x)+ 'y: '+str(y)+' r: '+str(r)
-                
-                    for bom in bombeos:
-    ##                  El tiempo t nunca puede ser 0, sino t da error                    
-                        tpozo=bom.tiempo
-                        Q=bom.caudal                    
-                        ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
-                        tmandado=round(float(float(t)-float(tpozo)),14)
-
-                        if tmandado>0:
-                            #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
-                            #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
-                            told=tmandado
-                            try:
-                                s,dsdT,dsdS=self.calcularpozo(r, tmandado, Q)
-                            except:
-                                print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
-                                print 'T mandado: '+str(told) + 'T pozo: '+str(tpozo)
-                        else:
-                            s=0                    
-
-                        #el nivel "h" se calcula como "h=Ho-s"
-                        #print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)
-                        #Operar y generar la matriz
-                        ##La matriz es tiempo t y despues x,y
-                        self.matrizDescenso[cardt,cardy,cardx]=self.matrizDescenso[cardt,cardy,cardx]-s
-                        #se incrementa el cardinal del tiempo
-                        
-                    cardy=cardy+1            
-                cardx=cardx+1
-            
-            #[gxh(:,:,k),gyh(:,:,k)] = gradient(-h(:,:,k),xx(2),yy(niy-1));
-            #Matplotlib t invierte el orden de las matrices a diferenciade matlab
-            #[py,px] = np.gradient(z,1,1)
-            [self.gyh[cardt,:,:],self.gxh[cardt,:,:]] = np.gradient(-self.matrizDescenso[cardt,:,:],xx[1],yy[len(yy)-2])            
+            self.matrizDescenso[cardt,:,:]=H0[:,:]
             cardt=cardt+1
+        
+        ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
+        Todoslospbombeo=d.obtenerPBombeoYVirtuales()
+        
+        for pozoBombeo in Todoslospbombeo:
+            ###Esto se podria obtener desde el dominio        
+            #pozoBombeo=self.dominio.obtenerPozoBombeo()
+            x0=pozoBombeo.x
+            y0=pozoBombeo.y
+            #comentar cuando el pozo de bombeo esta bien posicioando
+            #x0=5
+            #y0=5
+            print 'x0: ' + str(x0)
+            print 'y0: ' + str(y0)
+
+            ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
+            bombeos=pozoBombeo.ensayos[0].devolverBProc()
+
+            for bom in bombeos:
+                print 'tiempos: '+str(bom.tiempo)
+                print 'caudal: '+str(bom.caudal)
+                
+            cardt=0
+            for t in tiempos:
+                cardx=0
+##                self.matrizDescenso[cardt,:,:]=H0[:,:]            
+                for x in xx:
+                    cardy=0
+                    for y in yy:
+                        #calculo de la distancia radial            
+                        #sqrt(|X0-X1|^2 + |y0-y1|^2)
+                        r=np.sqrt(np.square(x0-x) + np.square(y0-y))                                       
+                        #print 'x: '+ str(x)+ 'y: '+str(y)+' r: '+str(r)
+                    
+                        for bom in bombeos:
+        ##                  El tiempo t nunca puede ser 0, sino t da error                    
+                            tpozo=bom.tiempo
+                            Q=bom.caudal                    
+                            ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
+                            tmandado=round(float(float(t)-float(tpozo)),14)
+
+                            if tmandado>0:
+                                #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
+                                #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
+                                told=tmandado
+                                try:
+                                    s,dsdT,dsdS=self.calcularpozo(r, tmandado, Q)
+                                except:
+                                    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
+                                    print 'T mandado: '+str(told) + 'T pozo: '+str(tpozo)
+                            else:
+                                s=0
+
+
+##                            if t==0.03:
+##                                print 'Punto ('+str(x)+', '+str(y)+') pozo ('+str(x0)+', '+str(y0)+') caudal pozo: '+str(Q)+' tiempo pozo: '+str(tpozo)+' tiempo: '+str(t)
+##                                print 'Que habia? '+ str(self.matrizDescenso[cardt,cardy,cardx])
+##                                print 'Cual es el descenso: '+str(s)
+
+                            #el nivel "h" se calcula como "h=Ho-s"
+                            #print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)
+                            ##La matriz es tiempo t y despues y,x
+                            self.matrizDescenso[cardt,cardy,cardx]=self.matrizDescenso[cardt,cardy,cardx]-s
+                            #se incrementa el cardinal del tiempo
+
+##                            if t==0.03:                                
+##                                print 'h: '+str(self.matrizDescenso[cardt,cardy,cardx])
+                            
+                            
+                        cardy=cardy+1            
+                    cardx=cardx+1
+                
+                #[gxh(:,:,k),gyh(:,:,k)] = gradient(-h(:,:,k),xx(2),yy(niy-1));
+                #Matplotlib t invierte el orden de las matrices a diferenciade matlab
+                #[py,px] = np.gradient(z,1,1)
+                [self.gyh[cardt,:,:],self.gxh[cardt,:,:]] = np.gradient(-self.matrizDescenso[cardt,:,:],xx[1],yy[len(yy)-2])            
+                cardt=cardt+1
                     
         
         
         ##ahora se soluciono lo del 0       
-        zz = self.matrizDescenso[0]
-        print "zz "        
-        print zz
+        #zz = self.matrizDescenso[0]
+        #print "zz "        
+        #print zz
 
         ##descomentar para generar la grafica atraves de esta clase
 ####        fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
@@ -155,7 +178,11 @@ class metodoSolucion(object):
         
         return self.matrizDescenso
 
+    def gradienteX(self):
+        return self.gxh
 
+    def gradienteY(self):
+        return self.gyh
     
 
 class metodoAnalitico(metodoSolucion):

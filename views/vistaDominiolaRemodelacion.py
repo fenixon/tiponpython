@@ -1130,7 +1130,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         QtCore.QObject.connect(self.btnActualizar, QtCore.SIGNAL('clicked()'), self.setActualizar)
 
         #Validacion
-        self.validador = QtGui.QIntValidator(-100, 900, self)
+        self.validador = QtGui.QIntValidator(0, 10000, self)
 
         self.lineEdit.setValidator(self.validador)
         self.lineEdit_2.setValidator(self.validador)
@@ -1510,14 +1510,14 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
                     for pozo in elementoDominio.Dominio.botones:
                         if pozo.id == elementoDominio.pozoSeleccionado:
 
-                            elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+				elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
-                            elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2)
+				pozo.setX(elementoDominio.Dominio.a1)
 
-                            pozo.setX(elementoDominio.Dominio.a1)
-                            pozo.setY(elementoDominio.Dominio.a2)
+				pozo.setY(elementoDominio.Dominio.a2)
 
-                    
+				elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2)
+
                     elementoDominio.pozoSeleccionado = 0
                     return
 
@@ -1529,8 +1529,16 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
             for pozo in elementoDominio.Dominio.botones:
                 if pozo.id == self.idElemento:
-                    pozo.setX(np.int32(self.lineEdit.text()))
-                    pozo.setY(np.int32(self.lineEdit_2.text()))
+
+			elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
+
+			pozo.setX(elementoDominio.Dominio.a1)
+
+			pozo.setY(elementoDominio.Dominio.a2)
+
+
+
+
 
         if self.tipoElemento == "barrera":
 

@@ -1367,9 +1367,45 @@ np.int32(self.lineEdit_4.text()))
                     elementoDominio.pozoCandidato = QtGui.QGraphicsPixmapItem(QtGui.QPixmap("content/images/redDotIcon.png"), None, elementoDominio.Dominio.scene())
                     elementoDominio.hayPozoCandidato = True
 
+
                 elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
 
 
+		print "Altura de la escena: ", elementoDominio.Dominio.scene().height(), " versus ", elementoDominio.Dominio.ejeEscena.y(), " + ", np.int32(self.lineEdit_2.text()), " es decir", elementoDominio.Dominio.a2
+
+
+		if elementoDominio.Dominio.a2 > elementoDominio.Dominio.scene().height():
+			aumento = elementoDominio.Dominio.scene().height() + np.absolute( elementoDominio.Dominio.a2 - elementoDominio.Dominio.scene().height()) + 10
+
+			elementoDominio.Dominio.setSceneRect(QtCore.QRectF(0, 0, elementoDominio.Dominio.scene().width(), aumento))
+
+
+		if elementoDominio.Dominio.a2 < elementoDominio.Dominio.scene().height():
+			aumento = elementoDominio.Dominio.scene().height() + np.absolute( elementoDominio.Dominio.a2 ) + 20
+			print aumento
+
+			elementoDominio.Dominio.ejeEscena.setY(elementoDominio.Dominio.ejeEscena.y() +  np.absolute( elementoDominio.Dominio.a2 ) )
+
+
+			elementoDominio.Dominio.ejeX.setLine(elementoDominio.Dominio.ejeX.line().x1(), elementoDominio.Dominio.ejeEscena.y(), elementoDominio.Dominio.ejeX.line().x2(), elementoDominio.Dominio.ejeEscena.y())
+
+			elementoDominio.Dominio.ejeY.setLine(elementoDominio.Dominio.ejeY.line().x1(), elementoDominio.Dominio.ejeEscena.y(), elementoDominio.Dominio.ejeY.line().x2(),elementoDominio.Dominio.ejeY.line().y2())
+
+			elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
+
+			#Movemos los puntos
+			"""
+			for pozo in elementoDominio.Dominio.botones:
+				pozo.setX(pozo.y() + aumento)
+				elementoDominio.ContEnsayo.moverPozo(pozo.id, pozo.x(), pozo.y())
+			""" 
+
+			print "Se mueve la escena al nuevo tamanio", elementoDominio.Dominio.scene().width(), aumento
+			elementoDominio.Dominio.setSceneRect(QtCore.QRectF(0, 0, elementoDominio.Dominio.scene().width(), aumento))
+
+
+
+		print "Ejes del pozo candidato", elementoDominio.Dominio.a1, elementoDominio.Dominio.a2
 
 		elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1)
 

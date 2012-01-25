@@ -223,17 +223,13 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.eje.setX(5)
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto - 25)
 
+
 		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho - 10, self.eje.y()), None, self.scene())
 
 		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 5), None, 
 self.scene())
 
-		print self.scene().height() - (self.scene().height() - self.ejeY.y()) 
-
-
-
 		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
-
 		self.setSceneRect(self.ejeEscena.x(), 0, elementoDominio.ContEnsayo.dominio.ancho, self.scene().height() - (self.scene().height() - self.ejeEscena.y()) )
 
 
@@ -249,9 +245,7 @@ self.scene())
 
 		self.ancho = elementoDominio.ContEnsayo.dominio.ancho
 
-		self.noSeModifica = False
 
-		self.ultimoAumento = 0
 
 	#Sobreescribimos dragEnterEvent para pemitir
 	#la accion de este evento.
@@ -272,15 +266,17 @@ self.scene())
 
 		position = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
- 
+		self.transformarCoordenada(position)
+
+		if self.a1 < 0 or self.a2 < 0:
+			return
+
 		if elementoDominio.elementoDominio == 0:
 			b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
 			b.id = elementoDominio.ContEnsayo.agregarPozo(position.x(), position.y())
 			b.setX(position.x())
 			b.setY(position.y())
 			self.botones.append(b)
-
-			self.transformarCoordenada(position)
 
 			elementoDominio.gbCoord.setPozoExistente(b.id)
 
@@ -316,9 +312,8 @@ self.scene())
 		if self.moviendo:
 
 			if self.movido.tooltip == "pozo":
-
-				print punto.x(), "<", self.ancho, " and ", punto.x(), "> 0 and", punto.y(), "<",  self.ejeEscena.y(), "and", punto.y(), ">", 0
-				if punto.x() < self.ancho and punto.x() > 0 and punto.y() < self.ejeEscena.y() - 10  and punto.y() > 0:
+				  
+				if self.a1 > 0 and punto.y() > 0 and punto.y() < self.ejeEscena.y() - 10 and self.a1 < self.ancho - 5:
 
 
 					self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
@@ -387,7 +382,7 @@ self.scene())
 
 		if item != None:
 
-			#try:
+			try:
 				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
 				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
@@ -480,8 +475,8 @@ self.scene())
 					elementoDominio.menuMouse.move(np.int(e.pos().x()), np.int(e.pos().y()))
 
 					elementoDominio.menuMouse.show()
-			#except:
-			#print "No es pozo ni barrera."
+			except:
+				print "No es pozo ni barrera."
 
 
 
@@ -493,6 +488,9 @@ self.scene())
 
 
 	def transformarCoordenada(self, punto):
+
+		print "equis: ",punto.x(), " yes", punto.y()
+
 		if punto.x() == self.ejeEscena.x() and  punto.y() == self.ejeEscena.y():
 			self.a1 = 0
 			self.a2 = 0
@@ -1562,7 +1560,7 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
 				elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
-				pozo.setX(elementoDominio.Dominio.a1)
+ 				pozo.setX(elementoDominio.Dominio.a1)
 
 				pozo.setY(elementoDominio.Dominio.a2)
 
@@ -1842,6 +1840,8 @@ class UiForm(object):
 
 		#Caja de elementos especifica del dominio
 		self.caja=elementoDominio.Dominio 
+
+
 
 		vista.show()
 

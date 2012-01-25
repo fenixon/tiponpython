@@ -387,7 +387,7 @@ self.scene())
 
 		if item != None:
 
-			try:
+			#try:
 				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 
 				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
@@ -425,8 +425,31 @@ self.scene())
 
 					elementoDominio.selectedMenuMouse["tipo"] = "punto"
 					elementoDominio.selectedMenuMouse["id"] = item.id
-					elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+
+					elementoDominio.menuMouse.modelo.removeRows(0, elementoDominio.menuMouse.modelo.rowCount())
+
+
+					elementoDominio.menuMouse.modelo.insertRows(0, 5)
+
+					modelo3 = elementoDominio.menuMouse.modelo.createIndex(0, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo3, "MENU")
+
+					modelo = elementoDominio.menuMouse.modelo.createIndex(1, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo, "Optimizar")
+
+					modelo = elementoDominio.menuMouse.modelo.createIndex(2, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo, "Asociar")
+
+					modelo = elementoDominio.menuMouse.modelo.createIndex(3, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo, "Eliminar")
+
+					modelo = elementoDominio.menuMouse.modelo.createIndex(4, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo, "Salir")
+
+
+					elementoDominio.menuMouse.move(np.int(e.pos().x()), np.int(e.pos().y()))
 					elementoDominio.menuMouse.show()
+
 				elif item.tooltip == "barrera" and e.button() == QtCore.Qt.LeftButton:
 					item.setPen(QtCore.Qt.red)
 					self.moviendo = True
@@ -435,10 +458,30 @@ self.scene())
 					item.setPen(QtCore.Qt.red)
 					elementoDominio.selectedMenuMouse["tipo"] = "recta"
 					elementoDominio.selectedMenuMouse["id"] = item.id
-					elementoDominio.menuMouse.move(np.int(self.pos().x()), np.int(self.pos().y()))
+
+
+					elementoDominio.menuMouse.modelo.removeRows(0, elementoDominio.menuMouse.modelo.rowCount())
+
+
+					elementoDominio.menuMouse.modelo.insertRows(0, 3)
+
+
+					modelo3 = elementoDominio.menuMouse.modelo.createIndex(0, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo3, "MENU")
+
+
+					modelo = elementoDominio.menuMouse.modelo.createIndex(1, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo, "Eliminar")
+
+					modelo2 = elementoDominio.menuMouse.modelo.createIndex(2, 0)
+					elementoDominio.menuMouse.modelo.setData(modelo2, "Salir")
+
+
+					elementoDominio.menuMouse.move(np.int(e.pos().x()), np.int(e.pos().y()))
+
 					elementoDominio.menuMouse.show()
-			except:
-				print "No es pozo ni barrera."
+			#except:
+			#print "No es pozo ni barrera."
 
 
 
@@ -780,7 +823,7 @@ class boton(QtGui.QPushButton):
         #Seteo inicial del boton
         self.setAcceptDrops(True)
         self.tooltip = tooltip
-        self.setGeometry(QtCore.QRect(50, 20, 41, 23))
+        self.setGeometry(QtCore.QRect(15, 20, 41, 23))
         self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
         self.setMouseTracking(True)
         self.setToolTip(QtGui.QApplication.translate("Form", tooltip, None, QtGui.QApplication.UnicodeUTF8))
@@ -898,8 +941,14 @@ class boton(QtGui.QPushButton):
 
 
 
+class lista(QtGui.QStringListModel):
+	def __init__(self, cadenaCar):
+		super(lista, self).__init__(cadenaCar)
+
+	#def removeRows (fila, cantidad)
+
 """
-Menun utilizado en definir dominio
+Menu utilizado en definir dominio
 Brinda opciones de operacion sobre los elementos
 cuando se le aplica a los mismos un click derecho
 """
@@ -908,12 +957,13 @@ class menu(QtGui.QListView):
         super(menu, self).__init__(padre)
         self.init()
 
+
     def init(self):
         #Valores iniciales del menu, incluido el modelo
         self.items = QtCore.QStringList()
-        self.items << "MENU" << "Optimizar" << "Asociar" << "Eliminar" << "Salir"    
-        modelo = QtGui.QStringListModel(self.items)
-        self.setModel(modelo)        
+        self.items << "MENU" << "Optimizar" << "Asociar" << "Eliminar" << "Salir"
+        self.modelo = lista(self.items)
+        self.setModel(self.modelo)
         self.setGeometry(QtCore.QRect(60, 60, 131, 131))
         self.hide()
     def leaveEvent(self,coso):
@@ -1743,7 +1793,7 @@ class UiForm(object):
 
 		#Definimos la instancia global del menu y le asociamos
 		#un padre.
-		elementoDominio.menuMouse = menu(self.frame)       
+		elementoDominio.menuMouse = menu(self.frame)
 
 		#Barra de Herramientas
 		self.groupBox = gbox(self.frame)
@@ -1761,7 +1811,15 @@ class UiForm(object):
 		self.pozo = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.groupBox, "pozo")
 		self.barrera = boton(QtGui.QIcon("content/images/blackBarrera.png"), "", self.groupBox, "barrera")
 
-		self.barrera.setGeometry(QtCore.QRect(50, 50, 41, 20))
+		self.zoomIn = QtGui.QPushButton(QtGui.QIcon("content/images/zoomIn.png"), "", self.groupBox)
+
+		self.zoomOut = QtGui.QPushButton(QtGui.QIcon("content/images/zoomOut.png"), "", self.groupBox)
+
+		self.zoomIn.setGeometry(QtCore.QRect(80, 20, 41, 23))
+
+		self.zoomOut.setGeometry(QtCore.QRect(80, 50, 41, 23))
+
+		self.barrera.setGeometry(QtCore.QRect(15, 50, 41, 23))
 		self.barrera.id = 1001
 		
 		#Barra de Coordenadas
@@ -1787,12 +1845,17 @@ class UiForm(object):
 
 		vista.show()
 
-		QtCore.QObject.connect(self.groupBox, QtCore.SIGNAL('released()'), self.released)
+		QtCore.QObject.connect(self.zoomIn, QtCore.SIGNAL('clicked()'), self.clickZoomIn)
+		QtCore.QObject.connect(self.zoomOut, QtCore.SIGNAL('clicked()'), self.clickZoomOut)
+
 
 		self.frame.show()
 		
 	def retranslateUi(self, Form):
 		pass
  
-	def released(self):
-		print "salio"
+	def clickZoomIn(self):
+		elementoDominio.Dominio.scale(2, 2)
+
+	def clickZoomOut(self):
+		elementoDominio.Dominio.scale(0.5, 0.5)

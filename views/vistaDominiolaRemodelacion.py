@@ -193,8 +193,14 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.init()
 
 	def init(self):
-		self.setGeometry(10, 30, 400, 350)
-		self.setSceneRect(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto)
+		self.setGeometry(10, 30, 630, 510)
+
+		#parche
+		if elementoDominio.ContEnsayo.dominio.ancho < 630 or elementoDominio.ContEnsayo.dominio.alto < 510:
+			self.setSceneRect(0, 0, 630, 510)
+		else:
+			self.setSceneRect(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto)
+
 		self.setAcceptDrops(True)
 		self.setObjectName(_fromUtf8("Dominio"))
 		self.setMouseTracking(True)
@@ -218,7 +224,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.moviendo = False
 
 		self.movido = ""
-
+		#content/images/redDotIcon.png
 		self.eje = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(""), None, self.scene())
 		self.eje.setX(5)
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto - 25)
@@ -1073,7 +1079,7 @@ class gbCoordenadas(QtGui.QGroupBox):
         self.init()
 
     def init(self):
-        self.setGeometry(QtCore.QRect(500, 110, 151, 181))
+        self.setGeometry(QtCore.QRect(700, 140, 151, 181))
         self.setTitle("Coordenadas")
 
         #Etiqueta de Tipo 
@@ -1771,7 +1777,7 @@ class UiForm(object):
 
 		#Seteo del formulario que contendra todos los widgets del dominio
 		self.frame = QtGui.QFrame(Form) 
-		self.frame.setGeometry(QtCore.QRect(170, 80, 700, 500))
+		self.frame.setGeometry(QtCore.QRect(170, 80, 900, 600))
 		self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 		self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
 		self.frame.setFrameShadow(QtGui.QFrame.Raised)
@@ -1781,7 +1787,7 @@ class UiForm(object):
 						"border: 2px solid green; }")
 
 		self.groupBoxDominio = QtGui.QGroupBox(self.frame)
-		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 450, 400))
+		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 650, 550))
 		self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -1795,7 +1801,7 @@ class UiForm(object):
 
 		#Barra de Herramientas
 		self.groupBox = gbox(self.frame)
-		self.groupBox.setGeometry(QtCore.QRect(500, 20, 151, 81))
+		self.groupBox.setGeometry(QtCore.QRect(700, 30, 165, 81))
 		self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -1827,7 +1833,7 @@ class UiForm(object):
 
 
 		self.coordenadas = QtGui.QLabel(self.frame)
-		self.coordenadas.setGeometry(QtCore.QRect(510, 325, 140, 20))
+		self.coordenadas.setGeometry(QtCore.QRect(700, 375, 140, 20))
 		elementoDominio.coordenadas = self.coordenadas
  
 

@@ -1,6 +1,8 @@
 from PyQt4 import QtCore, QtGui
 from pozo  import pozo
 from barrera import barrera
+from calitheis2 import *
+from calibracion2 import *
 import numpy as np
 import observacion
 import observacionesensayo
@@ -102,7 +104,7 @@ class Proyecto(object):
     def optimizacioneslistar(self):
         self.optimizaciones = QtCore.QStringList()
         
-        self.optimizaciones << "CALIS" << "THEIS"
+        self.optimizaciones << "CaliTheis2" << "calibracion2"
          
         return self.optimizaciones
     def optimizacioneslistarmenos(self,nolistar):
@@ -116,7 +118,16 @@ class Proyecto(object):
     def asociarPozoOptimiazion(self,idElemento,metodo):
         for pozo in self.dominio.listaPozo:
             if pozo.id == idElemento:
-                self.dominio.listaPozoOptimiza[idElemento]=metodo
+                #en self.dominio.listaPozoOptimiza[idElemento] ahi 
+                #que guardar una instancia de un objeto, cuyo tipo tiene que ser
+                #determinado por el valor de metodo
+                print "instancio:" + metodo
+                ui = eval(str(metodo) + "()")
+                #con el metodo getparametros obtengo la lista de parametros del metodo
+                #print str(ui.getparametros())
+                #for p in ui.getparametros():
+                #    print p
+                self.dominio.listaPozoOptimiza[idElemento]= ui
         print "se agrego a la lista de optimizaciones"
 
     def listarPozosParaOptimizar(self):

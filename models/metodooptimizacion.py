@@ -16,6 +16,13 @@ class metodooptimizacion(object):
     def __del__(self):
         print "Objeto eliminado"
 
+    def setpozo(self,pozo):
+        self.pozo=pozo
+        print "pozo a optimizar:" + str(pozo.id)
+
+    def setcontrolador(self,controlador):
+        self.controlador=controlador
+
     def setearValores(self, valores):
         i=0
         for i in range(len(valores)):

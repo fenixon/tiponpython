@@ -18,74 +18,72 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		return  "CaliTheis2"		
 	def __init__(self):
 		metodooptimizacion.metodooptimizacion.__init__(self)
+		self.t_obs=[]
+		self.r_obs=[]
+		
 		self.listaParametros.append(parametros('Tmin','')) #parametro 0
 		self.listaParametros.append(parametros('Tmax','')) #parametro 1
 		self.listaParametros.append(parametros('Smin','')) #parametro 2
 		self.listaParametros.append(parametros('Smax','')) #parametro 3
+		#self.listaParametros.append(parametros('t_obs','')) #parametro 4
+		
 		self.setearValores(['500','1500','1e-4','1e-2'])
 		print "se creo CaliTheis2"
 
-	def test(self):
-		T=800;
-		S=1e-3;
-		Q=10;
-		N_obs=10;
-		r_obs=[10,10,10,10,10,10,100,100,100,100]
-		t_obs=[0.100,0.200,0.400,0.600,0.900,1.200,0.900,1.200,1.800,2.500]
-		self.parametrosTheis=[]
-		self.parametrosTheis.append(parametros('S','m^2/d'))    #parametro 0
-		self.parametrosTheis.append(parametros('T','')) 
-		obs=numpy.zeros((N_obs),float)
-		self.d=dominio()
-		
-		for i in range(N_obs):
-			m=Theis(self.d, self.parametrosTheis)
-			m.setearValores([T,S])
-			obs[i]=m.calcularpozo(r_obs[i],t_obs[i],Q)[0]
-		Tmin=500
-		Tmax=1500
-		Smin=1e-4
-		Smax=1e-2
-		return self.calcular(Q,obs,r_obs,t_obs,Tmin,Tmax,Smin,Smax)
-		
-	def prueba(self):
-		T=800;
-		S=1e-3;
-		Q=10;
-		N_obs=10;
-		r_obs=[10,10,10,10,10,10,100,100,100,100]
-		t_obs=[0.100,0.200,0.400,0.600,0.900,1.200,0.900,1.200,1.800,2.500]
-		self.parametrosTheis=[]
-		self.parametrosTheis.append(parametros('S','m^2/d'))    #parametro 0
-		self.parametrosTheis.append(parametros('T','')) 
-		obs=numpy.zeros((N_obs),float)
-		self.d=dominio()
-		
-		for i in range(N_obs):
-			m=Theis(self.d, self.parametrosTheis)
-			m.setearValores([T,S])
-			obs[i]=m.calcularpozo(r_obs[i],t_obs[i],Q)[0]
-			print obs[i]
-		return self.calcular(Q,obs,r_obs,t_obs,int(self.listaParametros[0].valoresParametro.valor),int(self.listaParametros[1].valoresParametro.valor),float(self.listaParametros[2].valoresParametro.valor),float(self.listaParametros[3].valoresParametro.valor))
+	def setpozo(self,pozo):
+		self.pozo=pozo
+		print "pozo a optimizar:" + str(pozo.id)
+		#self.setobservaciones()
 
-	def testing(self,t_obs,r_obs):
+	def setcontrolador(self,controlador):
+		self.controlador=controlador
+		self.setobservaciones()
+
+	def setobservaciones(self):
+		#obtengo las observaciones importadas
+		observaciones= self.pozo.observaciones[0].devolverO()
+		#coordenadas del pozo de observacion
+		x0=self.pozo.x
+		y0=self.pozo.y		
+		#obtengo el pozo de bombeo
+		pozoBombeo=self.controlador.obtenerDominio().obtenerPozoBombeo()
+		xb=pozoBombeo.x
+		yb=pozoBombeo.y
+		#coordenadas de guias
+		print "x0:" + str(x0)
+		print "y0:" + str(y0)
+		print "xb:" + str(xb)
+		print "yb:" + str(yb)
+		for o in observaciones:
+			self.t_obs.append(o.tiempo)
+			self.r_obs.append(np.sqrt(np.square(x0-xb) + np.square(y0-yb)))
+		#calculo theis por cada self.t_obs y self.r_obs
+	
+	def cargar(self):
 		T=800;
 		S=1e-3;
 		Q=10;
-		N_obs=6;
+		N_obs=len(self.t_obs)
 		self.parametrosTheis=[]
 		self.parametrosTheis.append(parametros('S','m^2/d'))    #parametro 0
 		self.parametrosTheis.append(parametros('T','')) 
-		obs=numpy.zeros((N_obs),float)
+		self.obs=numpy.zeros((N_obs),float)
 		self.d=dominio()
-		
 		for i in range(N_obs):
 			m=Theis(self.d, self.parametrosTheis)
 			m.setearValores([T,S])
-			obs[i]=m.calcularpozo(r_obs[i],t_obs[i],Q)[0]
-		return self.calcular(Q,obs,r_obs,t_obs,int(self.listaParametros[0].valoresParametro.valor),int(self.listaParametros[1].valoresParametro.valor),float(self.listaParametros[2].valoresParametro.valor),float(self.listaParametros[3].valoresParametro.valor))
+			self.obs[i]=m.calcularpozo(self.r_obs[i],self.t_obs[i],Q)[0]
+		return self.calcular(Q)
 
-	def calcular(self,Q,obs,r_obs,t_obs,Tmin,Tmax,Smin,Smax):
+	def calcular(self,Q):
+		obs=self.obs
+		t_obs=self.t_obs
+		r_obs=self.r_obs
+		Tmin=int(self.listaParametros[0].valoresParametro.valor)
+		Tmax=int(self.listaParametros[1].valoresParametro.valor)
+		Smin=float(self.listaParametros[2].valoresParametro.valor)
+		Smax=float(self.listaParametros[3].valoresParametro.valor)
+		
 		N_int_T=10
 		N_int_S=10
 		N_ref_max=20
@@ -157,11 +155,4 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 
 if __name__ == "__main__":
     cont=1
-    ui = CaliTheis2()
-    T, S, f_min,obs_sim=ui.test()
-    print "Valor optimo de T: " + str(T)
-    print "Valor optimo de S: " +str(S)
-    print "Valor optimo de f_min: " +str(f_min)
-    print "Valor optimo de obs_sim: " +str(obs_sim)
-                                 
 ##    ui.calcular()

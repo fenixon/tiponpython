@@ -123,6 +123,7 @@ class Proyecto(object):
                 #determinado por el valor de metodo
                 print "instancio:" + metodo
                 ui = eval(str(metodo) + "()")
+                ui.setpozo(pozo)
                 #con el metodo getparametros obtengo la lista de parametros del metodo
                 #print str(ui.getparametros())
                 #for p in ui.getparametros():

@@ -167,27 +167,29 @@ class optimizacion(QtGui.QWidget):
         print "Proceso la matriz"
         for p in self.pozosconfirmados:
             #obtengo el pozo a optimizar
-            pozo=controlador.buscarPozo(p)
-            observaciones= pozo.observaciones[0].devolverO()
+            #'''pozo=controlador.buscarPozo(p)
+            #'''observaciones= pozo.observaciones[0].devolverO()
             #tiempos de las observaciones
-            t_obs=[]
-            r_obs=[]
-            x0=pozo.x
-            y0=pozo.y
+            #'''t_obs=[]
+            #'''r_obs=[]
+            #'''x0=pozo.x
+            #'''y0=pozo.y
             #obtengo el pozo de bombeo
-            pozoBombeo=controlador.obtenerDominio().obtenerPozoBombeo()
-            xb=pozoBombeo.x
-            yb=pozoBombeo.y
-            print "x0:" + str(x0)
-            print "y0:" + str(y0)
-            print "xb:" + str(xb)
-            print "yb:" + str(yb)            
-            for o in observaciones:
+            #'''pozoBombeo=controlador.obtenerDominio().obtenerPozoBombeo()
+            #'''xb=pozoBombeo.x
+            #'''yb=pozoBombeo.y
+            #'''print "x0:" + str(x0)
+            #'''print "y0:" + str(y0)
+            #'''print "xb:" + str(xb)
+            #'''print "yb:" + str(yb)            
+            """ for o in observaciones:
                 t_obs.append(o.tiempo)
-                r_obs.append(np.sqrt(np.square(x0-xb) + np.square(y0-yb)))
+                r_obs.append(np.sqrt(np.square(x0-xb) + np.square(y0-yb)))"""
             #print "Se le asigno el Metodo optimizacion:" + str(self.pozosparaoptimizar[int(p)])
             #proceso la optimizacion
-            T, S, f_min,obs_sim=self.pozosparaoptimizar[int(p)].testing(t_obs,r_obs)
+            self.pozosparaoptimizar[int(p)].setcontrolador(controlador)
+
+            T, S, f_min,obs_sim=self.pozosparaoptimizar[int(p)].cargar()
             print "Valor optimo de T: " + str(T)
             print "Valor optimo de S: " +str(S)
             print "Valor optimo de f_min: " +str(f_min)

@@ -200,28 +200,24 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.moviendo = False
 
 		self.movido = ""
-		#content/images/redDotIcon.png
+
 		self.eje = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(""), None, self.scene())
 		self.eje.setX(5)
-		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto - 25)
+		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto)
 
 
-		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho - 10, self.eje.y()), None, self.scene())
+		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho, self.eje.y()), None, self.scene())
 
-		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 5), None, 
+		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 0), None, 
 self.scene())
 
-		self.ejeXopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), 0, elementoDominio.ContEnsayo.dominio.ancho - 10, 0), None, self.scene())
+		self.ejeXopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), 0, elementoDominio.ContEnsayo.dominio.ancho, 0), None, self.scene())
 
 
-		self.ejeYopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.ContEnsayo.dominio.ancho, self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho, 5), None, 
+		self.ejeYopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.ContEnsayo.dominio.ancho + 5, self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho + 5, 0), None, 
 self.scene())
-
-
 
 		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
-		self.setSceneRect(self.ejeEscena.x(), 0, elementoDominio.ContEnsayo.dominio.ancho, self.scene().height() - (self.scene().height() - self.ejeEscena.y()) )
-
 
 		self.a1 = 0
 
@@ -231,7 +227,7 @@ self.scene())
 
 		self.b2 = 0
 
-		self.alto = self.scene().height() - (self.scene().height() - self.ejeEscena.y())
+		self.alto = elementoDominio.ContEnsayo.dominio.alto
 
 		self.ancho = elementoDominio.ContEnsayo.dominio.ancho
 
@@ -269,7 +265,7 @@ self.scene())
 
 
 			b.setX(elementoDominio.Dominio.a1)
-			b.setY(elementoDominio.Dominio.a2)
+			b.setY(elementoDominio.Dominio.a2 -10)
 			self.botones.append(b)
 
 			elementoDominio.gbCoord.setPozoExistente(b.id)
@@ -311,7 +307,7 @@ self.scene())
 
 					self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 					self.movido.setX(punto.x())
-					self.movido.setY(punto.y())
+					self.movido.setY(punto.y() - 10)
 
 					for x in elementoDominio.Dominio.botones:
 						if x.id == self.movido.id:
@@ -324,14 +320,14 @@ self.scene())
 					if self.a2 > 0 and self.a2 < self.alto:
 						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 						self.movido.setX(0)
-						self.movido.setY(punto.y())
+						self.movido.setY(punto.y() - 10)
 
 						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 						elementoDominio.ContEnsayo.moverPozo(self.movido.id, 0, self.a2)
-					elif self.a2 == 0:
+					elif self.a2 <= 0:
 						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 						self.movido.setX(0)
-						self.movido.setY(self.alto)
+						self.movido.setY(self.alto - 10)
 
 						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 						elementoDominio.ContEnsayo.moverPozo(self.movido.id, 0,0)
@@ -342,14 +338,14 @@ self.scene())
 						if self.a2 > 0 and self.a2 < self.alto:
 							self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 							self.movido.setX(self.ancho)
-							self.movido.setY(punto.y())
+							self.movido.setY(punto.y() - 10)
 
 							elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 							elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.ancho, self.a2)
 						elif self.a2 == 0:
 							self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 							self.movido.setX(self.ancho)
-							self.movido.setY(self.alto)
+							self.movido.setY(self.alto - 10)
 
 							elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 							elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.ancho, 0)
@@ -358,7 +354,7 @@ self.scene())
 				elif self.a2 <= 0:
 					self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 					self.movido.setX(punto.x())
-					self.movido.setY(self.alto)
+					self.movido.setY(self.alto  - 10)
 
 					elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 					elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, 0)
@@ -367,7 +363,7 @@ self.scene())
 					if self.a1 > 0:
 						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 						self.movido.setX(punto.x())
-						self.movido.setY(0)
+						self.movido.setY(0 - 10)
 
 						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 						elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, self.alto)
@@ -1223,7 +1219,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
                     elementoDominio.pozoCandidato.setX( elementoDominio.Dominio.a1 ) 
 
-                    elementoDominio.pozoCandidato.setY( elementoDominio.Dominio.a2 )
+                    elementoDominio.pozoCandidato.setY( elementoDominio.Dominio.a2 - 10)
 
                     elementoDominio.pozoCandidato.show()
 
@@ -1239,7 +1235,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
                 b.setX(elementoDominio.Dominio.a1)
 
-                b.setY(elementoDominio.Dominio.a2)
+                b.setY(elementoDominio.Dominio.a2 - 10)
 
                 elementoDominio.Dominio.botones.append(b)
 
@@ -1404,7 +1400,7 @@ np.int32(self.lineEdit_4.text()))
 
 		elementoDominio.pozoCandidato.setX( elementoDominio.Dominio.a1 ) 
 
-		elementoDominio.pozoCandidato.setY( elementoDominio.Dominio.a2 )
+		elementoDominio.pozoCandidato.setY( elementoDominio.Dominio.a2 - 10)
 
 
         else:
@@ -1468,7 +1464,7 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
     def setActualizar(self):
         
-        elementoDominio.Dominio.rectaSeleccionada['id'] = 0       
+        elementoDominio.Dominio.rectaSeleccionada['id'] = 0
         
         if elementoDominio.pozoSeleccionado != 0:
             for pozo in elementoDominio.Dominio.botones:
@@ -1482,7 +1478,7 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
  				pozo.setX(elementoDominio.Dominio.a1)
 
-				pozo.setY(elementoDominio.Dominio.a2)
+				pozo.setY(elementoDominio.Dominio.a2 - 10)
 
 				elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2)
 
@@ -1502,7 +1498,7 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
 			pozo.setX(elementoDominio.Dominio.a1)
 
-			pozo.setY(elementoDominio.Dominio.a2)
+			pozo.setY(elementoDominio.Dominio.a2 - 10)
 
 
 

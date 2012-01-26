@@ -211,6 +211,14 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 5), None, 
 self.scene())
 
+		self.ejeXopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), 0, elementoDominio.ContEnsayo.dominio.ancho - 10, 0), None, self.scene())
+
+
+		self.ejeYopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.ContEnsayo.dominio.ancho, self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho, 5), None, 
+self.scene())
+
+
+
 		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
 		self.setSceneRect(self.ejeEscena.x(), 0, elementoDominio.ContEnsayo.dominio.ancho, self.scene().height() - (self.scene().height() - self.ejeEscena.y()) )
 
@@ -249,7 +257,7 @@ self.scene())
 		self.transformarCoordenada(position)
 
 
-		if self.a1 < 0 or self.a2 < 0:
+		if self.a1 < 0 or self.a2 < 0 or self.a1 > self.ancho or self.a2 > self.alto:
 			return
 
 		if elementoDominio.elementoDominio == 0:
@@ -313,14 +321,14 @@ self.scene())
 					elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, self.a2)
 
 				elif self.a1 <= 0:
-					if self.a2 > 0:
+					if self.a2 > 0 and self.a2 < self.alto:
 						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 						self.movido.setX(0)
 						self.movido.setY(punto.y())
 
 						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 						elementoDominio.ContEnsayo.moverPozo(self.movido.id, 0, self.a2)
-					else:
+					elif self.a2 == 0:
 						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 						self.movido.setX(0)
 						self.movido.setY(self.alto)
@@ -328,14 +336,41 @@ self.scene())
 						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 						elementoDominio.ContEnsayo.moverPozo(self.movido.id, 0,0)
 
-				elif self.a2 <= 0:
 
+
+				elif self.a1 >= self.ancho:
+						if self.a2 > 0 and self.a2 < self.alto:
+							self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+							self.movido.setX(self.ancho)
+							self.movido.setY(punto.y())
+
+							elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
+							elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.ancho, self.a2)
+						elif self.a2 == 0:
+							self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+							self.movido.setX(self.ancho)
+							self.movido.setY(self.alto)
+
+							elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
+							elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.ancho, 0)
+
+
+				elif self.a2 <= 0:
 					self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 					self.movido.setX(punto.x())
 					self.movido.setY(self.alto)
 
 					elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 					elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, 0)
+
+				elif self.a2 >= self.alto:
+					if self.a1 > 0:
+						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+						self.movido.setX(punto.x())
+						self.movido.setY(0)
+
+						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
+						elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, self.alto)
 
 
 
@@ -1052,14 +1087,16 @@ class gbCoordenadas(QtGui.QGroupBox):
         QtCore.QObject.connect(self.btnPrevia, QtCore.SIGNAL('clicked()'), self.setPrevia)
         QtCore.QObject.connect(self.btnActualizar, QtCore.SIGNAL('clicked()'), self.setActualizar)
 
-        #Validacion
-        self.validador = QtGui.QIntValidator(0, 10000, self)
+	#Validacion
+	self.validadorAncho = QtGui.QIntValidator(0, elementoDominio.Dominio.ancho, self)
+	self.validadorAlto = QtGui.QIntValidator(0, elementoDominio.Dominio.alto, self)
 
-        self.lineEdit.setValidator(self.validador)
-        self.lineEdit_2.setValidator(self.validador)
-        self.lineEdit_3.setValidator(self.validador)
-        self.lineEdit_4.setValidator(self.validador)
-        
+
+	self.lineEdit.setValidator(self.validadorAncho)
+	self.lineEdit_2.setValidator(self.validadorAlto)
+	self.lineEdit_3.setValidator(self.validadorAncho)
+	self.lineEdit_4.setValidator(self.validadorAlto)
+
     def setPozo(self):
 
 	elementoDominio.transicion = False
@@ -1702,12 +1739,6 @@ class UiForm(object):
 
 		self.barrera.setGeometry(QtCore.QRect(15, 50, 41, 23))
 		self.barrera.id = 1001
-		
-		#Barra de Coordenadas
-		elementoDominio.gbCoord = gbCoordenadas(self.frame)
-		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green; border-radius: 25px;} \n"
-							"QLabel, QPushButton{border: 2px solid red;}")
-
 
 		self.coordenadas = QtGui.QLabel(self.frame)
 		self.coordenadas.setGeometry(QtCore.QRect(700, 375, 140, 20))
@@ -1724,6 +1755,10 @@ class UiForm(object):
 		#Caja de elementos especifica del dominio
 		self.caja=elementoDominio.Dominio 
 
+		#Barra de Coordenadas
+		elementoDominio.gbCoord = gbCoordenadas(self.frame)
+		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green; border-radius: 25px;} \n"
+							"QLabel, QPushButton{border: 2px solid red;}")
 
 
 		vista.show()

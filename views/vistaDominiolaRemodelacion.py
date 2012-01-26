@@ -331,6 +331,13 @@ self.scene())
 
 						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 						elementoDominio.ContEnsayo.moverPozo(self.movido.id, 0,0)
+					elif self.a2 >= self.alto:
+						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+						self.movido.setX(0)
+						self.movido.setY(0 - 10)
+
+						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
+						elementoDominio.ContEnsayo.moverPozo(self.movido.id, 0, self.alto)
 
 
 
@@ -342,13 +349,20 @@ self.scene())
 
 							elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 							elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.ancho, self.a2)
-						elif self.a2 == 0:
+						elif self.a2 <= 0:
 							self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 							self.movido.setX(self.ancho)
 							self.movido.setY(self.alto - 10)
 
 							elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 							elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.ancho, 0)
+						elif self.a2 >= self.alto:
+							self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+							self.movido.setX(self.ancho)
+							self.movido.setY(0 - 10)
+
+							elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
+							elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.ancho, self.alto)
 
 
 				elif self.a2 <= 0:
@@ -360,14 +374,13 @@ self.scene())
 					elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, 0)
 
 				elif self.a2 >= self.alto:
-					if self.a1 > 0:
+					if self.a1 > 0 and self.a1 < self.ancho:
 						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 						self.movido.setX(punto.x())
 						self.movido.setY(0 - 10)
 
 						elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 						elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, self.alto)
-
 
 
 			elif self.movido.tooltip == "barrera":

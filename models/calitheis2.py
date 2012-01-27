@@ -79,6 +79,8 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		obs=self.obs
 		t_obs=self.t_obs
 		r_obs=self.r_obs
+		T=0.0
+		S=0.0
 		Tmin=int(self.listaParametros[0].valoresParametro.valor)
 		Tmax=int(self.listaParametros[1].valoresParametro.valor)
 		Smin=float(self.listaParametros[2].valoresParametro.valor)
@@ -92,7 +94,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		N_obs=len(obs)
 		obs_sim=numpy.zeros((N_obs),float)
 
-		T_vec=numpy.zeros((N_int_T),int)		
+		T_vec=numpy.zeros((N_int_T),float)		
 		S_vec=numpy.zeros((N_int_S),float)		
 
 		Tinf=Tmin

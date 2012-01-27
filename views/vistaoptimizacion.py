@@ -141,7 +141,7 @@ class optimizacion(QtGui.QWidget):
             self.pozosconfirmados.append(str(self.sender().text()))
         else:
             #Si esta activado lo desactivo en la coleccion
-            self.pozosconfirmados.remove(str(self.sender().name()))
+            self.pozosconfirmados.remove(str(self.sender().text()))
     def ejemplo(coso):
         print "ejemplo"
     def setparametros(self):

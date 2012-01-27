@@ -78,7 +78,7 @@ class Ui_Dialog(QtGui.QDialog):
             o=observacion.observacion(t,n)
             self.observaciones.append(o)
 
-            reply = QtGui.QMessageBox.information(self,
+            reply = QtGui.QMessageBox.information(None,
                     "Informacion",
                     "Se agrego la nueva observacion del ensayo. Presione finalizar para guardar las observaciones")
 

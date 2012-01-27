@@ -1057,15 +1057,21 @@ class menu(QtGui.QListView):
             #Si no es ninguna opcion predeterminada, las opcoines son para elegir metodos de optimizacion
             if valor.toString() != "Optimizar" and valor.toString() != "Salir" and valor.toString() != "Eliminar" and valor.toString() != "Asociar" :
                 print "valor es optimizar"
-                #Agrego ala coleccion de pozos para optimizar
-                print "Agrego para optimizar el pozo " 
-                print elementoDominio.selectedMenuMouse["id"]
-                elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())                
-                frmopt=QtGui.QDialog()
-                ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
-                #ui.setupUi(frmopt,elementoDominio.ContEnsayo)
-                #frmopt.show()
-                elementoDominio.widget = ui                
+                #Obtengo el pozo seleccionado
+                p=elementoDominio.ContEnsayo.buscarPozo(elementoDominio.selectedMenuMouse["id"])
+                #Busco si el pozo seleccionado tiene observaciones
+                try:                	
+                	obs=p.observaciones[0].devolverO()
+					#Agrego ala coleccion de pozos para optimizar
+                	elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())
+                	frmopt=QtGui.QDialog()
+                	ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+                	elementoDominio.widget = ui
+                except IndexError, e:
+                	#Si no tiene observaciones muestra mensaje
+                	mensaje = QtGui.QMessageBox.information(self,"Faltan Observaciones","No se ingresaron observaciones para este pozo.")
+                	mensaje.show()
+
                 getattr(self,'reset')()
                 getattr(self,'hide')()
                 return  

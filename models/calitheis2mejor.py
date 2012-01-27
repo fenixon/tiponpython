@@ -25,13 +25,9 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		self.listaParametros.append(parametros('Tmax','')) #parametro 1
 		self.listaParametros.append(parametros('Smin','')) #parametro 2
 		self.listaParametros.append(parametros('Smax','')) #parametro 3
-		self.listaParametros.append(parametros('N_int_T','')) #parametro 4
-		self.listaParametros.append(parametros('N_int_S','')) #parametro 5
-		self.listaParametros.append(parametros('N_ref_max','')) #parametro 6
-		self.listaParametros.append(parametros('esc_ref','')) #parametro 7
 		#self.listaParametros.append(parametros('t_obs','')) #parametro 4
 		
-		self.setearValores(['500','1500','1e-4','1e-2','10','10','20','.5'])
+		self.setearValores(['500','1500','1e-4','1e-2'])
 		print "se creo CaliTheis2"
 
 	def setpozo(self,pozo):
@@ -50,9 +46,9 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		x0=self.pozo.x
 		y0=self.pozo.y		
 		#obtengo el pozo de bombeo
-		self.pozoBombeo=self.controlador.obtenerDominio().obtenerPozoBombeo()
-		xb=self.pozoBombeo.x
-		yb=self.pozoBombeo.y
+		pozoBombeo=self.controlador.obtenerDominio().obtenerPozoBombeo()
+		xb=pozoBombeo.x
+		yb=pozoBombeo.y
 		#coordenadas de guias
 		print "x0:" + str(x0)
 		print "y0:" + str(y0)
@@ -62,18 +58,25 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 			self.t_obs.append(o.tiempo)
 			self.r_obs.append(np.sqrt(np.square(x0-xb) + np.square(y0-yb)))
 		#calculo theis por cada self.t_obs y self.r_obs
-	
+		print 'mostrar los t '+str(self.t_obs)
+		print 'mostrar los t '+str(self.r_obs)
+		
+	def setobservaciones2(self):
+		self.r_obs=[179.63574254585305, 179.63574254585305, 179.63574254585305, 179.63574254585305, 179.63574254585305, 179.63574254585305]
+		self.t_obs=[0.1, 0.2, 0.4, 0.6, 0.9, 1.2]
+		
 	def cargar(self):
-		#T=800;
-		#S=1e-3;
-		T=self.controlador.obtenerDominio().metodo.listaParametros[0].valoresParametro.valor
-		S=self.controlador.obtenerDominio().metodo.listaParametros[1].valoresParametro.valor		
+		T=800;
+		S=1e-3;
 		Q=10;
 		N_obs=len(self.t_obs)
+		self.parametrosTheis=[]
+		self.parametrosTheis.append(parametros('S','m^2/d'))    #parametro 0
+		self.parametrosTheis.append(parametros('T','')) 
 		self.obs=numpy.zeros((N_obs),float)
 		self.d=dominio()
 		for i in range(N_obs):
-			m=Theis(self.d, self.controlador.parametros)
+			m=Theis(self.d, self.parametrosTheis)
 			m.setearValores([T,S])
 			self.obs[i]=m.calcularpozo(self.r_obs[i],self.t_obs[i],Q)[0]
 		return self.calcular(Q)
@@ -87,15 +90,15 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		Smin=float(self.listaParametros[2].valoresParametro.valor)
 		Smax=float(self.listaParametros[3].valoresParametro.valor)
 		
-		N_int_T=int(self.listaParametros[4].valoresParametro.valor)
-		N_int_S=int(self.listaParametros[5].valoresParametro.valor)
-		N_ref_max=int(self.listaParametros[6].valoresParametro.valor)
-		esc_ref=float(self.listaParametros[7].valoresParametro.valor)
+		N_int_T=10
+		N_int_S=10
+		N_ref_max=20
+		esc_ref=0.5
 
 		N_obs=len(obs)
 		obs_sim=numpy.zeros((N_obs),float)
 
-		T_vec=numpy.zeros((N_int_T),float)		
+		T_vec=numpy.zeros((N_int_T),int)		
 		S_vec=numpy.zeros((N_int_S),float)		
 
 		Tinf=Tmin
@@ -103,12 +106,10 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		Sinf=Smin
 		Ssup=Smax
 		ref=0
-		#n=Theis(self.d, self.parametrosTheis)
-		n=Theis(self.d, self.controlador.parametros)
-		T=self.controlador.obtenerDominio().metodo.listaParametros[0].valoresParametro.valor
-		S=self.controlador.obtenerDominio().metodo.listaParametros[1].valoresParametro.valor
-		#T=0.0
-		#S=0.0		
+		n=Theis(self.d, self.parametrosTheis)
+		T=0
+		S=0
+		
 		while (ref<N_ref_max): 
 
 			DT=Tsup-Tinf
@@ -136,6 +137,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 						f_min=f
 						T=T_vec[i]
 						S=S_vec[j]
+						print 'T: '+ str(T_vec[i]) + '-S: ' + str(S_vec[j]) + '-f: ' + str(f) +  '-fmin: ' + str(f_min) + '-Tmin: ' + str(T), '-Smin: ' + str(S)
 			DT=DT*esc_ref
 			if (T-DT/2 <Tmin):
 				Tinf=Tmin
@@ -162,4 +164,8 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 
 if __name__ == "__main__":
     cont=1
-##    ui.calcular()
+    Q=10
+    a=CaliTheis2()
+    a.setobservaciones2()
+    a.cargar()
+    a.calcular(Q)

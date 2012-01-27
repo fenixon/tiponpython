@@ -32,12 +32,12 @@ class dominio(object):
         return self.a*x + self.b*y + self.c
 
     def obtenerPozoBombeo(self):
-        print "lista de pozos"
-        print self.listaPozo
+##        print "lista de pozos"
+##        print self.listaPozo
         for p in self.listaPozo:
             ## si tiene ensayos entonces es de bombeo se recupera el primero           
             if len(p.ensayos)>0:
-                print p
+##                print p
                 return p
         return None
 
@@ -62,14 +62,25 @@ class dominio(object):
         for p in self.listaPozo:
             ## si tiene ensayos entonces es de bombeo se recupera el primero           
             if len(p.observaciones)>0:
-                print p
+##                print p
                 return p
         return None
+
+
+    def obtenerPozosdeObservacion(self):
+        lista=[]
+        for p in self.listaPozo:
+            ## si tiene ensayos entonces es de bombeo
+            if len(p.observaciones)>0:
+                lista.append(p)
+        return lista
+
+
 
     def procesarBarrera(self):
         self.pozosVirtuales=[]
 
-        print 'hizo el calculo de la recta'
+##        print 'hizo el calculo de la recta'
         #Hay una barrera definida en el sistema
         ## cuando aparece la barrera se duplica todo se duplican los mismos ensayos        
         if len(self.listaRecta)>0:
@@ -77,7 +88,7 @@ class dominio(object):
             recta=self.listaRecta[0]
             alfa,beta,gamma=recta.devolverCoef()
 
-            print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
+##            print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
 
             #Recorrer todos los pozos para irlos replicando
             ##solo para los pozos de bombeo

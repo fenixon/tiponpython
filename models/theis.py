@@ -125,10 +125,10 @@ class Theis(metodoSolucion.metodoAnalitico):
             w,dWdu=self.WTheis(u)
 
             #print "u.. " + str(u)
-            print "w.. " + str(w)
+##            print "w.. " + str(w)
             ## w=lista[0]           
             ## dWdu=lista[1]
-            print "dw.. " + str(dWdu)
+##            print "dw.. " + str(dWdu)
 
             #print "Q "+ str(Q)
             #print "T "+ str(T)

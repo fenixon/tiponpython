@@ -9,13 +9,14 @@ import matplotlib.mlab as mlab#Quitar luego, solo está para propósitos de gene
 from matplotlib import cm#Para los colores de la gráfica 3d
 import numpy as np
 import pylab as p
+import matplotlib.pyplot as plt
 import random
 import subprocess
 import os
 
 class figura():
 
-    def __init__(self, matrix, matx, maty, dominio, observaciones, bombeos, X, Y, xx, yy, tiempos, selected = None, parent = None):
+    def __init__(self, matrix, matx, maty, dominio, X, Y, xx, yy, tiempos, superficies, selected = None, parent = None):
 
         fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
         self.axu = fig.add_subplot(2, 2, 1)
@@ -23,11 +24,16 @@ class figura():
         self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
         self.axc = fig.add_subplot(2, 2, 4)
         fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
+
+        self.axt.set_ylim3d(0,1000)
+        self.axt.set_xlim3d(0,1000)
+        self.axt.set_zlim3d(9.3, 10)
+
         self.fig = fig
         self.matrix = matrix
         self.dominio=dominio
-        self.observaciones=observaciones
-        self.bombeos=bombeos
+        #self.observaciones=observaciones
+        #self.bombeos=bombeos
         self.X=X
         self.Y=Y
         self.matx = matx
@@ -35,57 +41,48 @@ class figura():
         self.xx = xx
         self.yy = yy
         self.tiempos = tiempos
+        self.superficies=superficies
 
-    def plotU(self, ran):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para x e y
+    def plotU(self):
 
         ax = self.axu
         ax.cla()
+        ax.set_title('Descensos h en tiempo t')
+        ax.set_xlabel('t')
+        ax.set_ylabel('h')        
         #x = np.arange(0, ran, .05)
         #print 'Aleatorio: ' + str(ran)
         #x = np.arange(0, 10, .05)#Descensos (h), son números que representan el nivel piezométrico
         #y = np.arange(0, 10, .05)#Tiempos (t), se supone están en días
         #y = np.sin(x) + ran*2
+        #auxtx = [i for i,x in enumerate(self.xx) if x == pozoObs.x]
+        #auxty = [i for i,x in enumerate(self.yy) if x == pozoObs.y]
 
-        pozoObs = self.dominio.obtenerPozoObservacion()
+        #h = self.matrix[:, auxty[0], auxtx[0]]
+        #t = self.tiempos    
+        d=self.dominio
+        ##Obtener todos los pozos de observacion
+        TodoslospozosObservacion=d.obtenerPozosdeObservacion()        
 
-        auxtx = [i for i,x in enumerate(self.xx) if x == pozoObs.x]
-        auxty = [i for i,x in enumerate(self.yy) if x == pozoObs.y]
+        ##recorrer todos los pozos de observacion
+        for pozoObservacion in TodoslospozosObservacion:
+            #h = self.matrix[:, auxty[0], auxtx[0]]
+            h = pozoObservacion.devolverSolucionadas()
+            t = self.tiempos                
+            ax.plot(t, h, 'b')
+            for conjob in pozoObservacion.observaciones:         
+                ##Obtener todas las observacion del conjunto de observaciones
+                self.observaciones=conjob.devolverO()       
 
-        h = self.matrix[:, auxty[0], auxtx[0]]
-
-        t = self.tiempos
-    
-        x=[]
-        y=[]
-        for ob in self.observaciones:
-            x.append(ob.tiempo)
-            y.append(ob.nivelpiezometrico)
-        
-        ax.set_title('Descensos h en tiempo t')
-        ax.set_xlabel('t')
-        ax.set_ylabel('h')
-        ax.plot(t, h, 'b')
-        ax.plot(x,y, 'r.')
+                x=[]
+                y=[]
+                for ob in self.observaciones:
+                    x.append(ob.tiempo)
+                    y.append(ob.nivelpiezometrico)              
+                ax.plot(x,y, 'r.')
         #print 'First plot loaded...'
 
-    def plotD(self, ran, t):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes
-
-        #print 'Loading second plot...'
-        matplotlib.rcParams['xtick.direction'] = 'out'
-        matplotlib.rcParams['ytick.direction'] = 'out'
-
-        
-
-        delta = 0.025
-        #x = np.arange(-3.00, 3.00, delta)
-        #y = np.arange(-2.00, 2.00, delta)
-        #x = np.arange(0, self.dominio.ancho+1)
-        #y = np.arange(0, self.dominio.alto+1)
-        #X, Y = np.meshgrid(x, y)
-        #Z1 = mlab.bivariate_normal(X, Y, 1.0, 1.0, 0.0, 0.0)
-        #Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
-        #difference of Gaussians
-        #Z = 10.0 * (Z2 - Z1)
+    def plotD(self, t):
 
 ##        print 'tiempo: '+str(t)
         Z = self.matrix[t]
@@ -105,19 +102,16 @@ class figura():
         #BUG DE MATPLOTLIB: se grafica solo si la matriz no es multiplo de ones, no hay una curva de nivel
         if not p.all(np.equal(Z,divi)):
 
-            # Create a simple contour plot with labels using default colors.  The
-            # inline argument to clabel will control whether the labels are draw
-            # over the line segments of the contour, removing the lines beneath
-            # the label
             ax = self.axd
             ax.cla()
             #CS = contour(X, Y, Z)
             ax.contour(self.X, self.Y, Z)
             #clabel(CS, inline=1, fontsize=10)
             ax.set_title(u'Propagación')
-    ##        print 'Second plot loaded...'
 
-    def plotT(self, ran, t):#Tengo que ver como voy a hacer para igualar el tamaño de los arreglos para los tres ejes
+        print u'Segunda gráfica cargada.'
+
+    def plotT(self, t):
 
         #add_subplot(filas, columnas, número de gráfica/posición, tipo de gráfica)
 ##        print 'Loading third plot...'
@@ -138,34 +132,34 @@ class figura():
         #Z2 = mlab.bivariate_normal(X, Y, 1.5, 0.5, 1, 1)
         #Z = 10.0 * (Z2 - Z1)
         #print 'Z: \n' + str(Z)
-        #Esto de abajo va a volar una vez definidas correctamente las matrices
-        #Z = [[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 9.9997, 9.9977, 9.9977, 9.9997, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 9.9977, 9.9668, 9.9668, 9.9977, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 9.9977, 9.9668, 9.9668, 9.9977, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 9.9997, 9.9977, 9.9977, 9.9997, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]
-        #    ,[10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000, 10.0000]]
 
-
-        ##Como dijo Alvarito esto va a volar cuando... Esta de la matriz que llega tomar el tiempo 1 y graficar eso     
         Z = self.matrix[t]      
 
-        print 'Matriz generada '
-        print 'Z: \n' + str(Z)
+##        print 'Matriz generada '
+##        print 'Z: \n' + str(Z)
+
+##        auxt = [i for i,x in enumerate(self.tiempos) if x == t]
+##        print t
+##        print self.superficies[t]
+
+        #ax.add_collection3d(self.superficies[t])
+
+
+##        fig2 = plt.figure(figsize = (1.8 * 4, 2.4 * 4))
+##        axu2 = fig2.add_subplot(2, 2, 1)
+##        axd2 = fig2.add_subplot(2, 2, 2)
+##        axt2 = fig2.add_subplot(2, 2, 3, projection = '3d')
+##        axc2 = fig2.add_subplot(2, 2, 4)
+##        fig2.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
+##        axt2.cla()
+        ##h0[1,1]=1
+        #ax.plot_surface(x,y,z)
+##        surf = axt2.add_collection3d(self.superficies[t])
+
+##        canvas = FigureCanvas(fig2)
+##        canvas.draw() 
+        
+##        p.show()
 
         surf = ax.plot_surface(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
 
@@ -176,10 +170,10 @@ class figura():
 ##        ax.set_ylim3d(0, 20)# viewrange for y-axis should be [-2,2]
 ##        ax.set_xlim3d(0, 20)
         ax.set_title(u'Representación 3d')
-##        print 'Third plot loaded...'
+        print u'Gráfica en tres dimensiones cargada.'
 #            fig.colorbar(surf, shrink=0.5, aspect=10)
 
-    def plotC(self, ran, t):
+    def plotC(self, t):
 
 ##        print 'Loading fourth plot...'
         ax = self.axc
@@ -198,37 +192,43 @@ class figura():
         q = ax.quiver(X, Y, u, v, color=['r'])
         #p2 = ax.quiverkey(q,1,16.5,50,"50 m/s",coordinates='data',color='r')
         ax.set_title('Velocidad')
-##        print 'Fourth plot loaded...'
+        print u'Cuarta gráfica cargada.'
         #xl = ax.xlabel("x (km)")
         #yl = ax.ylabel("y (km)")
 
-    def salvar(self, filename = None, width = None, height = None, velocidad = None):#Esto se lo pasa el dialogo
+    def salvar(self, filename = None, width = None, height = None, velocidad = None, directorio = None):#Esto se lo pasa el dialogo
+        
+        print 'Evaluando entradas...'
+        print 'Nombre del archivo: ' + filename
+        print 'Ancho: ' + str(width)
+        print 'Alto: ' + str(height)
+        print 'Velocidad: ' + velocidad
+        print 'Listo, entradas correctas.'
         
         aux = len(self.matrix)
         for i in range(0, aux):
         
             print u'Imágen ' + str(i + 1)
             
-            self.plotD(0, i)
-            self.plotT(0, i)
-            self.plotC(0, i)
+            self.plotD(i)
+            self.plotT(i)
+            self.plotC(i)
             
             tmpfilename = 'temp/_tmp_' + str(i) + '.png'
 
-            ppp = atoi(width) + atoi(height) / self.fig.getfigwidth() + self.fig.getfigheight()
-            
+            #Regla de tres para sacar el dpi que debería tener cada imagen del video según el tamalo ingresado.
+            ppp = ((float(width) + float(height)) * self.fig.get_dpi()) / ((self.fig.get_figwidth() + self.fig.get_figheight()) * self.fig.get_dpi())
+
             self.fig.savefig(tmpfilename, dpi=ppp)
             
             print 'Creada.'
             
         print u'Imágenes preparadas y listas'
-        
-        #filename = 'graficas'#Hay que pedirlo en el dialogo despues
-        
+
         command = ('mplayer/mencoder.exe',#Para la version de linux hay que cambiar esto y sacar el .exe
             'mf://temp/_tmp_%d.png',
             '-mf',
-            'type=png:w=' + width + ':h=' + height + ':fps=' + velocidad,#Estas opciones las debe poder elegir el usuario en el dialogo
+            'type=png:w=' + str(width) + ':h=' + str(height) + ':fps=' + velocidad,
             '-ovc',
             'lavc',
             '-lavcopts',
@@ -236,7 +236,7 @@ class figura():
             '-oac',
             'copy',
             '-o',
-            'videos/' + filename + '.avi')
+            directorio + '/' + filename + '.avi')
         
         print u"\n\nSe ejecutará:\n%s\n\n" % ' '.join(command)
         subprocess.check_call(command)

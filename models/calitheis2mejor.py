@@ -59,7 +59,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 			self.r_obs.append(np.sqrt(np.square(x0-xb) + np.square(y0-yb)))
 		#calculo theis por cada self.t_obs y self.r_obs
 		print 'mostrar los t '+str(self.t_obs)
-		print 'mostrar los r '+str(self.r_obs)
+		print 'mostrar los t '+str(self.r_obs)
 		
 	def setobservaciones2(self):
 		self.r_obs=[179.63574254585305, 179.63574254585305, 179.63574254585305, 179.63574254585305, 179.63574254585305, 179.63574254585305]
@@ -98,11 +98,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		N_obs=len(obs)
 		obs_sim=numpy.zeros((N_obs),float)
 
-		T=0.0
-		S=0.0	
-		T_vec=numpy.zeros((N_int_T),float)
-
-		
+		T_vec=numpy.zeros((N_int_T),int)		
 		S_vec=numpy.zeros((N_int_S),float)		
 
 		Tinf=Tmin
@@ -111,7 +107,8 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		Ssup=Smax
 		ref=0
 		n=Theis(self.d, self.parametrosTheis)
-
+		T=0
+		S=0
 		
 		while (ref<N_ref_max): 
 
@@ -140,7 +137,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 						f_min=f
 						T=T_vec[i]
 						S=S_vec[j]
-						#print 'T: '+ str(T_vec[i]) + '-S: ' + str(S_vec[j]) + '-f: ' + str(f) +  '-fmin: ' + str(f_min) + '-Tmin: ' + str(T), '-Smin: ' + str(S)
+						print 'T: '+ str(T_vec[i]) + '-S: ' + str(S_vec[j]) + '-f: ' + str(f) +  '-fmin: ' + str(f_min) + '-Tmin: ' + str(T), '-Smin: ' + str(S)
 			DT=DT*esc_ref
 			if (T-DT/2 <Tmin):
 				Tinf=Tmin
@@ -162,10 +159,6 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 				Ssup=S+DS/2
 				Smin=S-DS/2
 			ref=ref+1
-
-
-		#print 'T: '+ str(T) + '-S: ' + str(S) +  '-fmin: ' + str(f_min) + ' obs_sim: ' + str(obs_sim)
-		
 		return [T, S, f_min,obs_sim]
 
 
@@ -175,4 +168,4 @@ if __name__ == "__main__":
     a=CaliTheis2()
     a.setobservaciones2()
     a.cargar()
-    #a.calcular(Q)
+    a.calcular(Q)

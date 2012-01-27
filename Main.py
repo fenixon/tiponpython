@@ -162,7 +162,7 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
-        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000)        
+        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera)        
         QtCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
 
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
@@ -507,9 +507,8 @@ class Ui_MainWindow(QtGui.QDialog):
         y1=4
         r = QtCore.QLineF(x0, y0, x1, y1)
         barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
-        barrera.id = ContEnsayo.agregarRecta(1, x0, y0, x1, y1)
-        self.ui.caja.rectas.append(barrera)
-	
+        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1)
+        self.ui.caja.rectas.append(barrera)	
 
 
 
@@ -585,7 +584,7 @@ class Ui_MainWindow(QtGui.QDialog):
         m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
         m.setearValores([1000,0.0001])
         #Adherimos la vista del dominio
-        self.ui = Ui_Form()
+        self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo)
 
 
@@ -604,7 +603,7 @@ class Ui_MainWindow(QtGui.QDialog):
         x1=2
         y1=4
         r = QtCore.QLineF(x0, y0, x1, y1)
-        ContEnsayo.agregarRecta(1, x0, y0, x1, y1)
+        ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1)
 
         
         poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
@@ -617,25 +616,45 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui.caja.botones.append(poz2)
 
 
-        poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        poe = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
-        poz2.setX(7.5)
-        poz2.setY(2.5)
+        poe.setX(7.5)
+        poe.setY(2.5)
 
-        poz2.id = elementoDominio.ContEnsayo.agregarPozo(7.5, 2.5) 
+        poe.id = elementoDominio.ContEnsayo.agregarPozo(7.5, 2.5) 
 
-        self.ui.caja.botones.append(poz2)
+        self.ui.caja.botones.append(poe)
+
+
+
+        pobs2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+
+        pobs2.setX(7.5)
+        pobs2.setY(2.5)
+
+        pobs2.id = elementoDominio.ContEnsayo.agregarPozo(5, 5) 
+
+        self.ui.caja.botones.append(pobs2)
+
         
 
 
         noexec=1
         
         self.ventanaImpoObs(noexec)
-        self.vimp.archivo="ficheros/demoobs.ods"
+##        self.vimp.archivo="ficheros/demoobs.ods"
+        self.vimp.archivo="ficheros/observaciones.txt"        
         self.vimp.nombre.setText('obs1')
-        self.vimp.ext="ods"
+        self.vimp.ext="txt"
         self.vimp.accionaceptar()
         self.vimp.close()
+
+        self.ventanaImpoObs(noexec)
+        self.vimp.archivo="ficheros/demoobs.ods"        
+        self.vimp.nombre.setText('obs2')
+        self.vimp.ext="ods"
+        self.vimp.accionaceptar()
+        self.vimp.close()        
         
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/demo1pozo.ods"
@@ -659,6 +678,11 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
+
+        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar()        
 
         asoe.setupUi(frmasociar, b.id, ContEnsayo)        
         asoe.oe=ContEnsayo.ensayos[0]

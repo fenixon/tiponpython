@@ -113,7 +113,7 @@ class optimizacion(QtGui.QWidget):
             globals()["comboBox"+ str(pozo)]=QtGui.QComboBox(self)
             globals()["comboBox"+ str(pozo)].setGeometry(QtCore.QRect(200, posiciony, 69, 22))
             #Creo el boton para los parametros de la optimizacion
-            globals()["parametro"+ str(pozo)]=QtGui.QPushButton("Parametros"+ str(pozo),self)
+            globals()["parametro"+ str(pozo)]=QtGui.QPushButton("Adjustar Parametros",self)
             globals()["parametro"+ str(pozo)].setGeometry(300,posiciony,69,22)
             globals()["parametro"+ str(pozo)].setToolTip(str(pozo))
             self.connect(globals()["parametro"+ str(pozo)], QtCore.SIGNAL('clicked()'),self.setparametros)        
@@ -189,7 +189,7 @@ class optimizacion(QtGui.QWidget):
             #proceso la optimizacion
             self.pozosparaoptimizar[int(p)].setcontrolador(controlador)
 
-            T, S, f_min,obs_sim=self.pozosparaoptimizar[int(p)].cargar()
+            T, S, f_min,obs_sim=self.pozosparaoptimizar[int(p)].calcular()
             print "Valor optimo de T: " + str(T)
             print "Valor optimo de S: " +str(S)
             print "Valor optimo de f_min: " +str(f_min)

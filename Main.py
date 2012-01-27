@@ -117,6 +117,10 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Generar gráficas", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenerar_graficas.setObjectName(_fromUtf8("actionGenerar_graficas"))
 
+        self.actionOptimizacion = QtGui.QAction(MainWindow)
+        self.actionOptimizacion.setText(QtGui.QApplication.translate("MainWindow", u"Optimizacion", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionOptimizacion.setObjectName(_fromUtf8("actionOptimizacion"))
+            
         self.actionGenerar_graficas2 = QtGui.QAction(MainWindow)
         self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar demo", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))
@@ -145,6 +149,8 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuGraficar.addAction(self.actionGenerar_graficas)
         self.menuGraficar.addAction(self.actionGenerar_graficas2)
         self.menuGraficar.addAction(self.actionGenerar_video)
+        self.menuGraficar.addAction(self.actionOptimizacion)
+        
 
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
@@ -162,6 +168,8 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
+        QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
+
         QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000)        
         QtCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
 
@@ -265,6 +273,12 @@ class Ui_MainWindow(QtGui.QDialog):
         ui= ingresarObservaciones.Ui_Dialog()
         ui.setupUi(frmingobs, ContEnsayo)
         frmingobs.exec_()
+
+    def Optimizacion(self):
+        global ContEnsayo
+        frmopt=QtGui.QDialog()
+        ui= vistaoptimizacion.optimizacion(ContEnsayo,frmopt)
+        self.widget = ui
 
     def generar_graficas(self):
 

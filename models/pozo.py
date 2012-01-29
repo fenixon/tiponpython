@@ -12,6 +12,7 @@ class pozo(object):
                 self.observaciones=[]
                 #lista de Observaciones solucionadas para cada pozo de observacion
                 self.obssolucionadas=[]
+                self.nivelesOptimos=[]
                
         def agregarObservaciones(self, observaciones):
                 self.observaciones.append(observaciones)
@@ -27,9 +28,16 @@ class pozo(object):
                         #nuevao=observacion(t, num)
                         self.obssolucionadas.append(num)
 
+        def instanciarNivelesOptimos(self, num, tiempos):
+                self.nivelesOptimos=[]
+                for t in tiempos:
+                        self.nivelesOptimos.append(num)                
         
         def devolverSolucionadas(self):
                 return self.obssolucionadas
+
+        def devolverNivelesOptimos(self):
+                return self.nivelesOptimos
 
         def copiarAPozoVirtual(self,p,tipo):
 

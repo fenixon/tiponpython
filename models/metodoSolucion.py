@@ -41,6 +41,10 @@ class metodoSolucion(object):
                 
         # Recorrer todo el dominio
         d=self.dominio
+        #Se guardan los valores para usarlos en todos los metodos
+        self.tiempos=tiempos
+        self.xx=xx
+        self.yy=yy        
 
         #Q=500
         #r=1
@@ -230,6 +234,61 @@ class metodoSolucion(object):
 
     def gradienteY(self):
         return self.gyh
+
+    ##Metodo que se llama luego de la Optimizacion, para graficar los pozos de observacions con S y T optimos
+    def funcionObjetivo(self,Topt,Sopt):
+
+        ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
+        Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()
+        ##Obtener todos los pozos de observacion
+        TodoslospozosObservacion=self.dominio.obtenerPozosdeObservacion()        
+        ##usar la misma discretizacion para el calculo del metodo de solucion
+        tiempos=self.tiempos
+
+        ##Se instancias de una para todos los tiempos una lista de Niveles optimos para cada pozo de observacion
+        for pozoObservacion in TodoslospozosObservacion:
+            pozoObservacion.instanciarNivelesOptimos(self.dominio.calcularH0(pozoObservacion.x, pozoObservacion.y), tiempos)        
+        
+        for pozoBombeo in Todoslospbombeo:
+            x0=pozoBombeo.x
+            y0=pozoBombeo.y       
+            bombeos=pozoBombeo.ensayos[0].devolverBProc()
+                
+            cardt=0
+            for t in tiempos:        
+                #Calculo para todos los pozos de observacion
+                for pozoObservacion in TodoslospozosObservacion:
+                    x=pozoObservacion.x
+                    y=pozoObservacion.y
+                    #calculo de la distancia radial            
+                    #sqrt(|X0-X1|^2 + |y0-y1|^2)
+                    r=np.sqrt(np.square(x0-x) + np.square(y0-y))
+                    for bom in bombeos:
+                        ## El tiempo t nunca puede ser 0, sino t da error                    
+                        tpozo=bom.tiempo
+                        Q=bom.caudal                    
+                        ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
+                        tmandado=round(float(float(t)-float(tpozo)),14)
+
+                        if tmandado>0:
+                            #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
+                            #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
+                            told=tmandado
+                            try:
+                                s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
+                            except:
+                                print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
+                                print 't mandado: '+str(told) + 't pozo: '+str(tpozo)
+                                s=0
+                        else:
+                            s=0
+
+                        #Se actualizan los niveles Optimos                      
+                        pozoObservacion.nivelesOptimos[cardt]=pozoObservacion.nivelesOptimos[cardt]-s
+
+                #se incrementa el cardinal del tiempo
+                cardt=cardt+1
+                
     
 
 class metodoAnalitico(metodoSolucion):

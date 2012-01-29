@@ -189,7 +189,7 @@ class optimizacion(QtGui.QWidget):
             #proceso la optimizacion
             self.pozosparaoptimizar[int(p)].setcontrolador(controlador)
 
-            T, S, f_min,obs_sim=self.pozosparaoptimizar[int(p)].calcular()
+            T, S, f_min,obs_sim=self.pozosparaoptimizar[int(p)].cargar()
             print "Valor optimo de T: " + str(T)
             print "Valor optimo de S: " +str(S)
             print "Valor optimo de f_min: " +str(f_min)

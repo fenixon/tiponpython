@@ -138,6 +138,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuCaudal_de_bombeo.addAction(self.actionIngresar)
         self.menuCaudal_de_bombeo.addAction(self.actionImportar)
         self.menuCaudal_de_bombeo.addAction(self.actionVerBombeo)
+       
 
         self.menuObservaciones.addAction(self.actionIngObs)
         self.menuObservaciones.addAction(self.actionImpObs)
@@ -156,6 +157,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menubar.addAction(self.menuGraficar.menuAction())
         self.menubar.addAction(self.menuAyuda.menuAction())
 
+
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionSalir, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QObject.connect(self.actionNuevo_Proyecto, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaNuevoProyecto)
@@ -167,13 +169,14 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
-        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera)        
+        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000)
         QtCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
 
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
         QtCore.QObject.connect(self.menuObservaciones, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despligueObservacion)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
 
         ##Leer parametros
         ContEnsayo.leerParametros()
@@ -277,7 +280,7 @@ class Ui_MainWindow(QtGui.QDialog):
         frmopt=QtGui.QDialog()
         ui= vistaoptimizacion.optimizacion(ContEnsayo,frmopt)
         self.widget = ui
-        print "muestro la opt"
+        print "muestro la opt"        
 
     def generar_graficas(self):
 
@@ -534,6 +537,16 @@ class Ui_MainWindow(QtGui.QDialog):
         poz2.id = elementoDominio.ContEnsayo.agregarPozo(250, 100) 
 
         self.ui.caja.botones.append(poz2)
+
+
+        pobs2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+
+        pobs2.setX(500)
+        pobs2.setY(500)
+
+        pobs2.id = elementoDominio.ContEnsayo.agregarPozo(500, 500) 
+
+        self.ui.caja.botones.append(pobs2)        
         
 
 
@@ -541,11 +554,19 @@ class Ui_MainWindow(QtGui.QDialog):
         noexec=1
         
         self.ventanaImpoObs(noexec)
-        self.vimp.archivo="ficheros/demoobs.ods"
+        self.vimp.archivo="ficheros/observaciones.txt"        
         self.vimp.nombre.setText('obs1')
+        self.vimp.ext="txt"
+        self.vimp.accionaceptar()
+        self.vimp.close()
+
+        self.ventanaImpoObs(noexec)
+        self.vimp.archivo="ficheros/demoobs.ods"        
+        self.vimp.nombre.setText('obs2')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
+        
         
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/demo1pozo.ods"
@@ -569,6 +590,12 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
+
+        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar() 
+        
 
         asoe.setupUi(frmasociar, b.id, ContEnsayo)        
         asoe.oe=ContEnsayo.ensayos[0]
@@ -642,8 +669,8 @@ class Ui_MainWindow(QtGui.QDialog):
 
         pobs2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
-        pobs2.setX(7.5)
-        pobs2.setY(2.5)
+        pobs2.setX(5)
+        pobs2.setY(5)
 
         pobs2.id = elementoDominio.ContEnsayo.agregarPozo(5, 5) 
 
@@ -724,8 +751,12 @@ if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
 
-    app.setStyleSheet("QGroupBox{color: green} \n"
-                      "QLineEdit{color: blue} \n"
+#    app.setStyleSheet("QGroupBox{color: green} \n"
+##                      "QLineEdit{color: blue} \n"
+##                      "QLabel{color: red} \n"
+####                      "QPushButton{color: navy}")
+
+    app.setStyleSheet("QLineEdit{color: blue} \n"
                       "QLabel{color: red} \n"
                       "QPushButton{color: navy}")
     MainWindow = QtGui.QMainWindow()

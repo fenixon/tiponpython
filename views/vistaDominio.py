@@ -649,7 +649,7 @@ class menu(QtGui.QListView):
                 menusito=menu(elementoDominio.Dominio)
                 menusito.setModel(m)
                 menusito.move(self.pos().x()+30,self.pos().y())           
-                menusito.show()
+                menusito.show()                
                 #Cierro el menu contextual
                 self.reset()
                 self.hide()
@@ -658,20 +658,13 @@ class menu(QtGui.QListView):
             if valor.toString() != "Optimizar" and valor.toString() != "Salir" and valor.toString() != "Eliminar" and valor.toString() != "Asociar" :
                 print "valor es optimizar"
                 #Agrego ala coleccion de pozos para optimizar
-                print "Agrego para optimizar el pozo "
-                #Obtengo el pozo seleccionado
-                #p=elementoDominio.ContEnsayo.buscarPozo(elementoDominio.selectedMenuMouse["id"])
-                #Busco si el pozo seleccionado tiene observaciones
-                #observaciones=p.observaciones[0].devolverO()
-                print "observaciones:::"
-                #if (observaciones== "") print "tiene observaciones"
-                #else print "no tiene observaciones"
-                print "pozo seleccionadodddddddd" + str(p)
+                print "Agrego para optimizar el pozo " 
                 print elementoDominio.selectedMenuMouse["id"]
-
                 elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())                
                 frmopt=QtGui.QDialog()
                 ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+                #ui.setupUi(frmopt,elementoDominio.ContEnsayo)
+                #frmopt.show()
                 elementoDominio.widget = ui                
                 getattr(self,'reset')()
                 getattr(self,'hide')()
@@ -1281,8 +1274,8 @@ class Ui_Form(object):
 		self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
-		self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
-						" border: 2px solid green;}")
+##		self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
+##						" border: 2px solid green;}")
 
 
 		#Caja de elementos especifica del dominio

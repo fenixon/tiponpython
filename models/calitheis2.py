@@ -118,6 +118,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		t_obs=self.t_obs
 		r_obs=self.r_obs
 		Tmin=int(self.listaParametros[0].valoresParametro.valor)
+##		print 'Tmin: '+str(Tmin)
 		Tmax=int(self.listaParametros[1].valoresParametro.valor)
 		Smin=float(self.listaParametros[2].valoresParametro.valor)
 		Smax=float(self.listaParametros[3].valoresParametro.valor)

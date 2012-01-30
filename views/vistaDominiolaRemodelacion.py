@@ -486,26 +486,40 @@ self.scene())
 					elementoDominio.selectedMenuMouse["id"] = item.id
 
 					elementoDominio.menuMouse.modelo.removeRows(0, elementoDominio.menuMouse.modelo.rowCount())
-
-
+                                        
+                                        
 					elementoDominio.menuMouse.modelo.insertRows(0, 5)
 
 					modelo3 = elementoDominio.menuMouse.modelo.createIndex(0, 0)
 					elementoDominio.menuMouse.modelo.setData(modelo3, "MENU")
 
-					modelo = elementoDominio.menuMouse.modelo.createIndex(1, 0)
-					elementoDominio.menuMouse.modelo.setData(modelo, "Optimizar")
 
-					modelo = elementoDominio.menuMouse.modelo.createIndex(2, 0)
-					elementoDominio.menuMouse.modelo.setData(modelo, "Asociar")
+                                        ## Averiguar si un pozo tiene observaciones
+                                        if len(elementoDominio.ContEnsayo.buscarPozo(item.id).observaciones)>0:
 
-					modelo = elementoDominio.menuMouse.modelo.createIndex(3, 0)
-					elementoDominio.menuMouse.modelo.setData(modelo, "Eliminar")
+                                            modelo = elementoDominio.menuMouse.modelo.createIndex(1, 0)
+                                            elementoDominio.menuMouse.modelo.setData(modelo, "Asociar")
 
-					modelo = elementoDominio.menuMouse.modelo.createIndex(4, 0)
-					elementoDominio.menuMouse.modelo.setData(modelo, "Salir")
+                                            modelo = elementoDominio.menuMouse.modelo.createIndex(2, 0)
+                                            elementoDominio.menuMouse.modelo.setData(modelo, "Optimizar")                                        
 
+                                            modelo = elementoDominio.menuMouse.modelo.createIndex(3, 0)
+                                            elementoDominio.menuMouse.modelo.setData(modelo, "Eliminar")
 
+                                            modelo = elementoDominio.menuMouse.modelo.createIndex(4, 0)
+                                            elementoDominio.menuMouse.modelo.setData(modelo, "Salir")
+
+                                        else:                                     
+
+                                            modelo = elementoDominio.menuMouse.modelo.createIndex(1, 0)
+                                            elementoDominio.menuMouse.modelo.setData(modelo, "Asociar")
+
+                                            modelo = elementoDominio.menuMouse.modelo.createIndex(2, 0)
+                                            elementoDominio.menuMouse.modelo.setData(modelo, "Eliminar")
+
+                                            modelo = elementoDominio.menuMouse.modelo.createIndex(3, 0)
+                                            elementoDominio.menuMouse.modelo.setData(modelo, "Salir")                                            
+                                        
 					elementoDominio.menuMouse.move(np.int(e.pos().x()), np.int(e.pos().y()))
 					elementoDominio.menuMouse.show()
 

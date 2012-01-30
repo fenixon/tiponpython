@@ -91,6 +91,10 @@ class dibujante(QMainWindow):
         matx = dominio.metodo.gradienteX()
 
         maty = dominio.metodo.gradienteY()
+
+        ming = dominio.metodo.minimoMatriz()
+
+        maxg = dominio.metodo.maximoMatriz()
         print u'Termina'
 
         #pozoBombeo=dominio.obtenerPozoBombeo()
@@ -129,7 +133,7 @@ class dibujante(QMainWindow):
 
 #### fIN Codigo nuevo introducido para prueba
 
-        self.fm = fm(matrix, matx, maty, dominio, X,Y, xx, yy, tiempos, superficies)
+        self.fm = fm(matrix, matx, maty, dominio, X,Y, xx, yy, tiempos, superficies, ming, maxg)
 
         self.fm.plotU()
         ##1ero plotT dps plotD        

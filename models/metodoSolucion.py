@@ -94,6 +94,9 @@ class metodoSolucion(object):
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
         Todoslospbombeo=d.obtenerPBombeoYVirtuales()
         
+        ##Maximos y minimos de la grafica              
+        self.min=1000000
+        self.max=-1000000
         
         for pozoBombeo in Todoslospbombeo:
             ###Esto se podria obtener desde el dominio        
@@ -160,7 +163,11 @@ class metodoSolucion(object):
 ##                            if t==0.03:                                
 ##                                print 'h: '+str(self.matrizDescenso[cardt,cardy,cardx])
                             
-                            
+                        ##calculo de maximos y minimos
+                        if self.matrizDescenso[cardt,cardy,cardx]>self.max:
+                            self.max=self.matrizDescenso[cardt,cardy,cardx]
+                        if self.matrizDescenso[cardt,cardy,cardx]<self.min:
+                            self.min=self.matrizDescenso[cardt,cardy,cardx]
                         cardy=cardy+1            
                     cardx=cardx+1
                 
@@ -234,6 +241,12 @@ class metodoSolucion(object):
 
     def gradienteY(self):
         return self.gyh
+
+    def minimoMatriz(self):
+        return self.min
+
+    def maximoMatriz(self):
+        return self.max
 
     ##Metodo que se llama luego de la Optimizacion, para graficar los pozos de observacions con S y T optimos
     def funcionObjetivo(self,Topt,Sopt):

@@ -16,7 +16,7 @@ import os
 
 class figura():
 
-    def __init__(self, matrix, matx, maty, dominio, X, Y, xx, yy, tiempos, superficies, selected = None, parent = None):
+    def __init__(self, matrix, matx, maty, dominio, X, Y, xx, yy, tiempos, superficies, ming, maxg, selected = None, parent = None):
 
         fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
         self.axu = fig.add_subplot(2, 2, 1)
@@ -24,10 +24,6 @@ class figura():
         self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
         self.axc = fig.add_subplot(2, 2, 4)
         fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
-
-        self.axt.set_ylim3d(0,1000)
-        self.axt.set_xlim3d(0,1000)
-        self.axt.set_zlim3d(9.3, 10)
 
         self.fig = fig
         self.matrix = matrix
@@ -38,10 +34,16 @@ class figura():
         self.Y=Y
         self.matx = matx
         self.maty = maty
+        self.ming=ming
+        self.maxg=maxg
         self.xx = xx
         self.yy = yy
         self.tiempos = tiempos
         self.superficies=superficies
+
+        self.axt.set_ylim3d(0,1000)
+        self.axt.set_xlim3d(0,1000)
+        self.axt.set_zlim3d(self.ming, self.maxg)        
 
     def plotU(self):
 
@@ -165,7 +167,8 @@ class figura():
 
 ###     comente lo de los limites porque hay que setearlos segun como venga el dominio
 ##      Esto tiene que cambiar segun los valores maximos y minimos de Z                 
-        ax.set_zlim3d(9.3, 10)
+##        ax.set_zlim3d(9.3, 10)
+        ax.set_zlim3d(self.ming, self.maxg)
         #ax.set_zlim3d(-100, 100)# viewrange for z-axis should be [-4,4]
 ##        ax.set_ylim3d(0, 20)# viewrange for y-axis should be [-2,2]
 ##        ax.set_xlim3d(0, 20)

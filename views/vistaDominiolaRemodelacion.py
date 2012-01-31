@@ -164,18 +164,17 @@ class vistaGrafica(QtGui.QGraphicsView):
 	global elementoDominio
 	id = 0
 
-	def __init__(self, escena, parent):
+	def __init__(self, escena, parent, anchoView, altoView):
 		super(vistaGrafica, self).__init__(escena, parent)
+		self.anchoView=anchoView
+		self.altoView=altoView
 		self.init()
 
 	def init(self):
-		self.setGeometry(10, 30, 630, 510)
+		self.setGeometry(0, 30, self.anchoView+30, self.altoView+20)
 
-		#parche
-		if elementoDominio.ContEnsayo.dominio.ancho < 630 or elementoDominio.ContEnsayo.dominio.alto < 510:
-			self.setSceneRect(0, 0, 630, 510)
-		else:
-			self.setSceneRect(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto)
+		self.setSceneRect(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto)
+
 
 		self.setAcceptDrops(True)
 		self.setObjectName(_fromUtf8("Dominio"))
@@ -206,12 +205,12 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto)
 
 
-		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho, self.eje.y()), None, self.scene())
+		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho + 5, self.eje.y()), None, self.scene())
 
 		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 0), None, 
 self.scene())
 
-		self.ejeXopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), 0, elementoDominio.ContEnsayo.dominio.ancho, 0), None, self.scene())
+		self.ejeXopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), 0, elementoDominio.ContEnsayo.dominio.ancho + 5, 0), None, self.scene())
 
 
 		self.ejeYopuesto = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.ContEnsayo.dominio.ancho + 5, self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho + 5, 0), None, 
@@ -263,8 +262,7 @@ self.scene())
 
 			self.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.a1, elementoDominio.Dominio.a2))
 
-
-			b.setX(elementoDominio.Dominio.a1)
+			b.setX(elementoDominio.Dominio.a1 - 15)
 			b.setY(elementoDominio.Dominio.a2 -10)
 			self.botones.append(b)
 
@@ -439,6 +437,7 @@ self.scene())
 				self.transformarCoordenada(posicion)
 				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
 					item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
+					print "Idenfitificador ", item.id
 					self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
 					#Se muestran sus coordenadas
@@ -635,8 +634,6 @@ self.scene())
 
 			self.transformarCoordenada(QtCore.QPointF(np.int32(elementoDominio.gbCoord.lineEdit.text()), np.int32(elementoDominio.gbCoord.lineEdit_2.text())))
 
-			print aumento
-			print aumento - self.ejeEscena.y()
 
 			self.setSceneRect(QtCore.QRectF(0, 0, self.scene().width(), aumento) )
 			self.ancho = self.scene().width() 
@@ -648,7 +645,6 @@ self.scene())
  
 			aumento = self.scene().width() + np.absolute( self.a1 - self.scene().width()) + 20
 
-			print aumento
 
 			self.setSceneRect(QtCore.QRectF(0, 0, aumento, self.scene().height()))
 			self.ancho = aumento 
@@ -885,7 +881,7 @@ class menu(QtGui.QListView):
         self.setGeometry(QtCore.QRect(60, 60, 131, 131))
         self.hide()
     def leaveEvent(self,coso):
-        print "Cierro el menu"
+
         self.reset()
         self.hide()        
     def selectionChanged(self, selected,  deselected):
@@ -988,12 +984,16 @@ class menu(QtGui.QListView):
 Clase que maneja la interfaz de coordenadas
 """
 class gbCoordenadas(QtGui.QGroupBox):
-    def __init__(self, padre):
+    def __init__(self, padre, posicionBarraTareas, anchoBarraTareas, segundaColY):
         super(gbCoordenadas, self).__init__(padre)
+        self.posicionBarraTareas=posicionBarraTareas
+        self.anchoBarraTareas=anchoBarraTareas
+        self.segundaColY=segundaColY
+
         self.init()
 
     def init(self):
-        self.setGeometry(QtCore.QRect(700, 140, 151, 181))
+        self.setGeometry(QtCore.QRect(self.posicionBarraTareas, 140, self.anchoBarraTareas, 181))
         self.setTitle("Coordenadas")
 
         #Etiqueta de Tipo 
@@ -1011,7 +1011,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y1
         self.lineEdit_2 = QtGui.QLineEdit(self)
-        self.lineEdit_2.setGeometry(QtCore.QRect(100, 50, 40, 25))
+        self.lineEdit_2.setGeometry(QtCore.QRect(self.segundaColY+25, 50, 40, 25))
         self.lineEdit_2.setObjectName(_fromUtf8("lineEdit_2"))
         self.lineEdit_2.setVisible(False)
 
@@ -1023,7 +1023,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y2
         self.lineEdit_4 = QtGui.QLineEdit(self)
-        self.lineEdit_4.setGeometry(QtCore.QRect(100, 100, 40, 25))
+        self.lineEdit_4.setGeometry(QtCore.QRect(self.segundaColY+25, 100, 40, 25))
         self.lineEdit_4.setObjectName(_fromUtf8("lineEdit_4"))
         self.lineEdit_4.setVisible(False)
 
@@ -1037,7 +1037,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y1
         self.label_3 = QtGui.QLabel(self)
-        self.label_3.setGeometry(QtCore.QRect(75, 50, 25, 20))
+        self.label_3.setGeometry(QtCore.QRect(self.segundaColY, 50, 25, 20))
         self.label_3.setText("Y1")
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.label_3.setVisible(False)
@@ -1052,7 +1052,7 @@ class gbCoordenadas(QtGui.QGroupBox):
 
         #Y2
         self.label_5 = QtGui.QLabel(self)
-        self.label_5.setGeometry(QtCore.QRect(75, 100, 25, 20))
+        self.label_5.setGeometry(QtCore.QRect(self.segundaColY, 100, 25, 20))
         self.label_5.setText("Y2")
         self.label_5.setObjectName(_fromUtf8("label_5"))
         self.label_5.setVisible(False)
@@ -1231,13 +1231,16 @@ class gbCoordenadas(QtGui.QGroupBox):
 
                     elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
-                    elementoDominio.pozoCandidato.setX( elementoDominio.Dominio.a1 ) 
+		    if np.int32(self.lineEdit.text()) == 0:
+		        elementoDominio.pozoCandidato.setX(0 - 5)
+		    else:
+		        elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1 - 15)
+		    if np.int32(self.lineEdit_2.text()) == 0:
+		        elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.alto - 10)
+		    else:
+		        elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.a2 - 10)
 
-                    elementoDominio.pozoCandidato.setY( elementoDominio.Dominio.a2 - 10)
-
-                    elementoDominio.pozoCandidato.show()
-
-                    elementoDominio.Dominio.modificarTamDominio()
+                elementoDominio.pozoCandidato.show()
 
 
                 b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
@@ -1247,9 +1250,15 @@ class gbCoordenadas(QtGui.QGroupBox):
 		elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
 
-                b.setX(elementoDominio.Dominio.a1)
+		if np.int32(self.lineEdit.text()) == 0:
+		    b.setX(0 - 5)
+		else:
+		    b.setX(elementoDominio.Dominio.a1 - 15)
+		if np.int32(self.lineEdit_2.text()) == 0:
+		    b.setY(elementoDominio.Dominio.alto - 10)
+		else:
+		    b.setY(elementoDominio.Dominio.a2 - 10)
 
-                b.setY(elementoDominio.Dominio.a2 - 10)
 
                 elementoDominio.Dominio.botones.append(b)
 
@@ -1405,16 +1414,20 @@ np.int32(self.lineEdit_4.text()))
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "":
                 if not elementoDominio.hayPozoCandidato:
                     elementoDominio.pozoCandidato = QtGui.QGraphicsPixmapItem(QtGui.QPixmap("content/images/redDotIcon.png"), None, elementoDominio.Dominio.scene())
+
                     elementoDominio.hayPozoCandidato = True
 
 		elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
-		elementoDominio.Dominio.modificarTamDominio()
 
-
-		elementoDominio.pozoCandidato.setX( elementoDominio.Dominio.a1 ) 
-
-		elementoDominio.pozoCandidato.setY( elementoDominio.Dominio.a2 - 10)
+		if np.int32(self.lineEdit.text()) == 0:
+		    elementoDominio.pozoCandidato.setX(0 - 5)
+		else:
+		    elementoDominio.pozoCandidato.setX(elementoDominio.Dominio.a1 - 15)
+		if np.int32(self.lineEdit_2.text()) == 0:
+		    elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.alto - 10)
+		else:
+		    elementoDominio.pozoCandidato.setY(elementoDominio.Dominio.a2 - 10)
 
 
         else:
@@ -1437,14 +1450,9 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
         if elementoDominio.Dominio.rectaSeleccionada['id'] == 0:
 
             coordenadas = elementoDominio.ContEnsayo.retornarCoordenadas(idPozo)
-            #coordenadas = {}
-            #coordenadas['x'] = elementoDominio.Dominio.a1
-            #coordenadas['y'] = elementoDominio.Dominio.a2
-            print coordenadas['x'], " ", coordenadas['y']
-            print "NO PASA BOLO"
+
+
             if elementoDominio.pozoSeleccionado == 0:
-		print coordenadas['x'], " ", coordenadas['y']
-		print "HOLA BOLUDO"
                 self.lineEdit.setText(QtCore.QString.number(coordenadas['x'], 10))
                 self.lineEdit_2.setText(QtCore.QString.number(coordenadas['y'], 10))
 
@@ -1488,13 +1496,21 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
             for pozo in elementoDominio.Dominio.botones:
                 if pozo.id == elementoDominio.pozoSeleccionado:
                     pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
 		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
-		    pozo.setX(elementoDominio.Dominio.a1)
-		    pozo.setY(elementoDominio.Dominio.a2 - 10)
+
+		    if np.int32(self.lineEdit.text()) == 0:
+		        pozo.setX(0 - 5)
+		    else:
+		        pozo.setX(elementoDominio.Dominio.a1 - 15)
+		    if np.int32(self.lineEdit_2.text()) == 0:
+		        pozo.setY(elementoDominio.Dominio.alto - 10)
+		    else:
+		        pozo.setY(elementoDominio.Dominio.a2 - 10)
+
                     elementoDominio.pozoSeleccionado = 0
-                    print "ACTUALIZAMO SIN SELECCIONAR"
+                    print "ACTUALIZAMO SIN SELECCIONAR ", pozo.id
                     return
-        return
 
         if self.tipoElemento == "pozo":
             
@@ -1503,10 +1519,18 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
             for pozo in elementoDominio.Dominio.botones:
                 if pozo.id == self.idElemento:
 			elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
-			pozo.setX(elementoDominio.Dominio.a1)
-			pozo.setY(elementoDominio.Dominio.a2 - 10)
-			elementoDominio.pozoSeleccionado = 0
 
+			if np.int32(self.lineEdit.text()) == 0:
+				pozo.setX(0 - 5)
+			else:
+				pozo.setX(elementoDominio.Dominio.a1 - 15)
+			if np.int32(self.lineEdit_2.text()) == 0:
+				pozo.setY(elementoDominio.Dominio.alto - 10)
+			else:
+				pozo.setY(elementoDominio.Dominio.a2 - 10)
+
+			elementoDominio.pozoSeleccionado = 0
+			return
 
 
         if self.tipoElemento == "barrera":
@@ -1748,16 +1772,15 @@ class UiForm(object):
 		self.frame.setFrameShadow(QtGui.QFrame.Raised)
 		self.frame.setObjectName(_fromUtf8("frame"))
 		self.frame.setEnabled(True)
-		self.frame.setStyleSheet("QFrame{background-color: rgb(40, 255, 40); \n"
-						"border: 2px solid green; }")
+		self.frame.setStyleSheet("QFrame{border: 2px solid; }")
 
 		self.groupBoxDominio = QtGui.QGroupBox(self.frame)
-		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, 650, 550))
+		self.groupBoxDominio.setGeometry(QtCore.QRect(20, 27, contenedorDominioAncho, contenedorDominioAlto))
 		self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
 		self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
-						" border: 2px solid green;}")
+						" border: 2px solid;}")
 
 
 		#Definimos la instancia global del menu y le asociamos
@@ -1766,11 +1789,11 @@ class UiForm(object):
 
 		#Barra de Herramientas
 		self.groupBox = gbox(self.frame)
-		self.groupBox.setGeometry(QtCore.QRect(700, 30, 165, 81))
+		self.groupBox.setGeometry(QtCore.QRect(posicionBarraTareas, 30, anchoBarraTareas, 81))
 		self.groupBox.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBox.setTitle(QtGui.QApplication.translate("Form", "Barra Herramientas", None, QtGui.QApplication.UnicodeUTF8))
 
-		self.groupBox.setStyleSheet("QGroupBox{border: 2px solid green; border-radius: 25px;} \n"
+		self.groupBox.setStyleSheet("QGroupBox{border: 2px solid; border-radius: 25px;} \n"
 					"QPushButton{border: 2px solid red;}")
 
 		self.groupBox.setObjectName(_fromUtf8("groupBox"))
@@ -1792,23 +1815,21 @@ class UiForm(object):
 		self.barrera.id = 1001
 
 		self.coordenadas = QtGui.QLabel(self.frame)
-		self.coordenadas.setGeometry(QtCore.QRect(700, 375, 140, 20))
+		self.coordenadas.setGeometry(QtCore.QRect(posicionBarraTareas, 375, anchoBarraTareas, 20))
 		elementoDominio.coordenadas = self.coordenadas
- 
 
 		#Creacion de Graficas
-
 		escena = escenaGrafica(None)
 
-		vista = vistaGrafica(escena, self.groupBoxDominio)
+		vista = vistaGrafica(escena, self.groupBoxDominio, anchoView, altoView)
 		elementoDominio.Dominio = vista
 
 		#Caja de elementos especifica del dominio
 		self.caja=elementoDominio.Dominio 
 
 		#Barra de Coordenadas
-		elementoDominio.gbCoord = gbCoordenadas(self.frame)
-		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid green; border-radius: 25px;} \n"
+		elementoDominio.gbCoord = gbCoordenadas(self.frame, posicionBarraTareas, anchoBarraTareas, segundaColY)
+		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid; border-radius: 25px;} \n"
 							"QLabel, QPushButton{border: 2px solid red;}")
 
 

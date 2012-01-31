@@ -687,8 +687,7 @@ if __name__ == "__main__":
     import sys
     app = QtGui.QApplication(sys.argv)
 
-    app.setStyleSheet("QGroupBox{color: green} \n"
-                      "QLineEdit{color: blue} \n"
+    app.setStyleSheet("QLineEdit{color: blue} \n"
                       "QLabel{color: red} \n"
                       "QPushButton{color: navy}")
     MainWindow = QtGui.QMainWindow()

@@ -25,24 +25,24 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, dominio=None):#Hay que pasarle la ventana que lo invoca
+    def __init__(self, parent = None, dominio=None, nix=None, niy=None, ti=None, tf=None, nit=None, tfo=None):#Hay que pasarle la ventana que lo invoca
 
         print u'Iniciando dibujante...'
         QMainWindow.__init__(self, parent)
-        ti=0.0
+##        ti=0.0
 ##        tf=3.0
-        tf=0.3
-        ##      
+##        tf=0.3
+
         ##justito para que quede 0.1 el dt        
 ##        nit=int(tf/0.1)
 ##        nit=100
-        nit=10
+##        nit=10
 
         ##el mismo ancho y alto para que quede cada 1 unidad
 ####        nix=dominio.ancho
-        nix=4
+##        nix=4
 ##        niy=dominio.alto
-        niy=4
+##        niy=4
 
         ##discretizacion temporal
         dt=(tf-ti)/nit
@@ -74,10 +74,8 @@ class dibujante(QMainWindow):
         self.dt=dt
         self.nix=nix
         self.niy=niy
-        self.cardt=0
-
-           
-
+        self.tfo=tfo
+        self.cardt=0           
 
         ##Llamado a procesar la barrera.. para generar los pozos virtuales porque se duplican por precensia de la barrera
         dominio.procesarBarrera()
@@ -150,7 +148,9 @@ class dibujante(QMainWindow):
         self.canvas.setParent(self.main_frame)
         #self.mpl_toolbar = NavigationToolbar(self.canvas, self.main_frame)
         self.canvas.draw()
-        self.vel = [1, 2, 3, 4, 5, 6]
+##        self.vel = [1, 2, 3, 4, 5, 6]
+        ## menos velocidades        
+        self.vel = [1, 2, 3]
         self.velActual = 0
         self.inter = 1
 

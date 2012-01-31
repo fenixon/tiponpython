@@ -25,6 +25,7 @@ import metodooptimizacion
 from theis import *
 #from vistaDominio import  *
 from vistaDominiolaRemodelacion import  *
+import discretizaciones
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
 
@@ -66,7 +67,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuDatos.setObjectName(_fromUtf8("menuDatos"))
 
         self.menuGraficar = QtGui.QMenu(self.menubar)
-        self.menuGraficar.setTitle(QtGui.QApplication.translate("MainWindow", "Graficar", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuGraficar.setTitle(QtGui.QApplication.translate("MainWindow", "Simular", None, QtGui.QApplication.UnicodeUTF8))
         self.menuGraficar.setObjectName(_fromUtf8("menuGraficar"))
 
         self.menuCaudal_de_bombeo = QtGui.QMenu(self.menuDatos)
@@ -113,22 +114,30 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionVerObs.setText(QtGui.QApplication.translate("MainWindow", "Ver", None, QtGui.QApplication.UnicodeUTF8))
         self.actionVerObs.setObjectName(_fromUtf8("actionVerObs"))
 
+
+
+        self.actionGenerar_graficas2 = QtGui.QAction(MainWindow)
+        self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))        
+
         self.actionGenerar_graficas = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Generar gráficas", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Graficar niveles calculados", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenerar_graficas.setObjectName(_fromUtf8("actionGenerar_graficas"))
 
         self.actionOptimizacion = QtGui.QAction(MainWindow)
         self.actionOptimizacion.setText(QtGui.QApplication.translate("MainWindow", u"Optimizacion", None, QtGui.QApplication.UnicodeUTF8))
         self.actionOptimizacion.setObjectName(_fromUtf8("actionOptimizacion"))
 
-        self.actionGenerar_graficas2 = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar demo", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))
+
+        self.actionGrafOpt = QtGui.QAction(MainWindow)
+        self.actionGrafOpt.setText(QtGui.QApplication.translate("MainWindow", u"Graficar optimizaciones", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGrafOpt.setObjectName(_fromUtf8("actionGrafOpt"))
 
 
-        self.actionGenerar_video = QtGui.QAction(MainWindow)
-        self.actionGenerar_video.setText(QtGui.QApplication.translate("MainWindow", "Generar video...", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_video.setObjectName(_fromUtf8("actionGenerar_video"))
+
+##        self.actionGenerar_video = QtGui.QAction(MainWindow)
+##        self.actionGenerar_video.setText(QtGui.QApplication.translate("MainWindow", "Generar video...", None, QtGui.QApplication.UnicodeUTF8))
+##        self.actionGenerar_video.setObjectName(_fromUtf8("actionGenerar_video"))
 
         self.menuInicio.addAction(self.actionNuevo_Proyecto)
         self.menuInicio.addAction(self.actionCerrar)
@@ -148,9 +157,10 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuDatos.addAction(self.menuObservaciones.menuAction())
 
         self.menuGraficar.addAction(self.actionGenerar_graficas)
-        self.menuGraficar.addAction(self.actionGenerar_graficas2)
-        self.menuGraficar.addAction(self.actionGenerar_video)
+        self.menuDatos.addAction(self.actionGenerar_graficas2)
+##        self.menuGraficar.addAction(self.actionGenerar_video)
         self.menuGraficar.addAction(self.actionOptimizacion)
+        self.menuGraficar.addAction(self.actionGrafOpt)       
 
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
@@ -173,6 +183,8 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
 
+        QtCore.QObject.connect(self.actionGrafOpt, QtCore.SIGNAL(_fromUtf8("triggered()")), self.GraficasOptimizacion)                
+        
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
         QtCore.QObject.connect(self.menuObservaciones, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despligueObservacion)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -280,10 +292,15 @@ class Ui_MainWindow(QtGui.QDialog):
         frmopt=QtGui.QDialog()
         ui= vistaoptimizacion.optimizacion(ContEnsayo,frmopt)
         self.widget = ui
-        print "muestro la opt"        
+        print "muestro la opt"
+
+    def limpiarDibujante(self):
+
+        self.dibujante = None          
 
     def generar_graficas(self):
 
+        
         if self.dibujante != None:
 
             print u'Ya hay una instancia corriendo'
@@ -291,19 +308,16 @@ class Ui_MainWindow(QtGui.QDialog):
 
         else:
             ##Codigo de alvaro para generar una matriz
-            ran = random.randint(10, 30)
-            print 'ran: ' + str(ran)
-            zcol = []
+            #ran = random.randint(10, 30)
+            #print 'ran: ' + str(ran)
+            #zcol = []
+            #for i in range(0, ran):
+            #    z = np.random.multivariate_normal((1, 1), [[ran, 0], [0, ran]], ran).T
+            #    z = z**2
+            #    zcol.append(z)
 
-            for i in range(0, ran):
-                z = np.random.multivariate_normal((1, 1), [[ran, 0], [0, ran]], ran).T
-                z = z**2
-                zcol.append(z)
-
-            #matrix = [np.arange(0, ran), zcol]          
-            
+            #matrix = [np.arange(0, ran), zcol]                      
             #print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
-
             global ContEnsayo
 
             pozo = ContEnsayo.dominio.obtenerPozoBombeo()
@@ -326,10 +340,19 @@ class Ui_MainWindow(QtGui.QDialog):
 
                         if len(poz.observaciones) > 0:
 
-                            self.dibujante = dibujante(self, ContEnsayo.dominio)#Hay que pasarle la ventana principal
+                            ##formulario de discretizacion temporal
+                            frmDiscretizaciones=QtGui.QDialog()
+                            ui= discretizaciones.ventanaDiscretizaciones()
+                            ui.setupUi(frmDiscretizaciones, ContEnsayo)
+                            frmDiscretizaciones.exec_()
+##                            QtCore.QObject.connect(frmDiscretizaciones, QtCore.SIGNAL(_fromUtf8("closed()")), self.graficar)
+                            print 'Formulario de discretizaciones se cerro ' 
+                            nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
+                            self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
                             self.dibujante.show()
                             QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
-                            print 'Dibujante invocado'
+                            print 'Dibujante invocado'                            
+                                                      
 
                         else:
 
@@ -352,6 +375,62 @@ class Ui_MainWindow(QtGui.QDialog):
                             "Error",
                             "No hay pozo de bombeo")                      
 
+
+
+    def GraficasOptimizacion(self):
+        
+        if self.dibujanteOpt != None:
+            print u'Ya hay una instancia corriendo'
+            self.self.dibujanteOpt.raise_()#Aca mostramos la ventana si ya existe
+        else:
+            global ContEnsayo
+            pozo = ContEnsayo.dominio.obtenerPozoBombeo()
+            if len(ContEnsayo.dominio.listaPozo) < 1:
+                QtGui.QMessageBox.information(self,
+                    "Error",
+                    "No hay ningun pozo")                
+            else:
+                if pozo != None:                    
+                    if len(pozo.ensayos) > 0:
+                        poz = ContEnsayo.dominio.obtenerPozoObservacion()
+                        if len(poz.observaciones) > 0:
+                            ##formulario de discretizacion temporal
+
+                            ####aca cambiar todo para mandar al formulario del pozo                            
+                            
+                            frmDiscretizaciones=QtGui.QDialog()
+                            ui= discretizaciones.ventanaDiscretizaciones()
+                            ui.setupUi(frmDiscretizaciones, ContEnsayo)
+                            frmDiscretizaciones.exec_()
+
+                            print 'Formulario de discretizaciones se cerro ' 
+                            nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
+                            self.dibujanteOpt = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
+                            self.dibujanteOpt.show()
+                            QtCore.QObject.connect(self.dibujanteOpt, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujanteOpt)
+                            print 'Dibujante invocado'                            
+                                                      
+
+                        else:
+
+                            #print 'No hay observaciones asociadas al pozo'
+                            QtGui.QMessageBox.information(self,
+                                "Error",
+                                "No hay observaciones asociadas al pozo")                             
+
+                    else:
+
+                        #print 'No hay ensayos asociados al pozo'
+                        QtGui.QMessageBox.information(self,
+                            "Error",
+                            "No hay ensayos asociados al pozo")                           
+
+                else:
+
+                    #print 'No hay pozo de bombeo'
+                    QtGui.QMessageBox.information(self,
+                            "Error",
+                            "No hay pozo de bombeo")  
 
     def generar_graficas2(self):
         global ContEnsayo
@@ -736,12 +815,6 @@ class Ui_MainWindow(QtGui.QDialog):
         
         print 'se carga el demo'
 
-        
-
-            
-    def limpiarDibujante(self):
-
-        self.dibujante = None
 
     def generar_video(self):
 

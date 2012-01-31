@@ -207,6 +207,10 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 
 
 		#print 'T: '+ str(T) + '-S: ' + str(S) +  '-fmin: ' + str(f_min) + ' obs_sim: ' + str(obs_sim)
+
+                self.T=T
+                self.S=S
+                self.obs_sim=obs_sim
 		
 		return [T, S, f_min,obs_sim]
 

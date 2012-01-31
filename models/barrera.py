@@ -58,6 +58,6 @@ class barrera():
 
                 def devolverCoef(self):
                     ##poner el calculo q habia puesto
-                    print 'x1 '+str(self.x1)+'x2 '+str(self.x2)+'y1 '+str(self.y1)+'y2 '+str(self.y2)
+##                    print 'x1 '+str(self.x1)+'x2 '+str(self.x2)+'y1 '+str(self.y1)+'y2 '+str(self.y2)
                     return [self.alfa,self.beta,self.gamma]
 

@@ -99,7 +99,7 @@ class Theis(metodoSolucion.metodoAnalitico):
 
 
 
-    def calcularprueba(self,r,t,Q, T, S):
+    def calcularpozoGenerico(self,r,t,Q, T, S):
 
         #print "T: "+str(T)
         #print "S: "+str(S)
@@ -113,58 +113,57 @@ class Theis(metodoSolucion.metodoAnalitico):
         #u=r^2*S/T/t/4;
         u=numpy.power(r,2)*S/T/t/4.000
         
-        s=0
         
         if (nargout == 1):
             w=self.WTheis(u) 
             s=Q/4.000/numpy.pi/T*w
         else:
             lista=[]
-            #try:
-            ## se captura en dos parametros la lista q devuelve            
-            w,dWdu=self.WTheis(u)
+            try:
+                ## se captura en dos parametros la lista q devuelve            
+                w,dWdu=self.WTheis(u)
 
-            #print "u.. " + str(u)
-            print "w.. " + str(w)
-            ## w=lista[0]           
-            ## dWdu=lista[1]
-            print "dw.. " + str(dWdu)
+                #print "u.. " + str(u)
+                #print "w.. " + str(w)
+                ## w=lista[0]           
+                ## dWdu=lista[1]
+                #print "dw.. " + str(dWdu)
 
-            #print "Q "+ str(Q)
-            #print "T "+ str(T)
+                #print "Q "+ str(Q)
+                #print "T "+ str(T)
 
-            #print "pi "+ str(numpy.pi)
-            
-            s=Q/4.000/numpy.pi/T*w
+                #print "pi "+ str(numpy.pi)
+                
+                s=Q/4.000/numpy.pi/T*w
 
 
-            #print "s "+ str(s)
-            #print str(s)
-            #dsdT=s*(-1/T + dWdu*(-u/T)/w);
-            if w==0:
-                aux1=0
-            else:
-                aux1=dWdu*(-u/T)/w
-            # print "T " + str(T)
-            
-            aux2=-1.000/T
+                #print "s "+ str(s)
+                #print str(s)
+                #dsdT=s*(-1/T + dWdu*(-u/T)/w);
+                if w==0:
+                    aux1=0
+                else:
+                    aux1=dWdu*(-u/T)/w
+                # print "T " + str(T)
+                
+                aux2=-1.000/T
 
-            #print "aux1 " + str(aux1)
-            #print "aux2 " + str(aux2)
-            
-            dsdT=s*(aux2 + aux1)
+                #print "aux1 " + str(aux1)
+                #print "aux2 " + str(aux2)
+                
+                dsdT=s*(aux2 + aux1)
 
-            ## print "dsdT " + str(dsdT)
-            if w==0:
-                dsdS=0
-            else:                
-                dsdS=s/w*dWdu*u/S
-            
-            #print "s "+ str(s)
+                ## print "dsdT " + str(dsdT)
+                if w==0:
+                    dsdS=0
+                else:                
+                    dsdS=s/w*dWdu*u/S
+                
+                #print "s "+ str(s)
 
-            #+" "+str(dsdT)+" "+str(dsdS)
-            #except:
-            #    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
+                #+" "+str(dsdT)+" "+str(dsdS)
+            except:
+                print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
 
         return [s, dsdT, dsdS]
                             

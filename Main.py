@@ -25,6 +25,7 @@ import metodooptimizacion
 from theis import *
 #from vistaDominio import  *
 from vistaDominiolaRemodelacion import  *
+import discretizaciones
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
 
@@ -66,7 +67,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuDatos.setObjectName(_fromUtf8("menuDatos"))
 
         self.menuGraficar = QtGui.QMenu(self.menubar)
-        self.menuGraficar.setTitle(QtGui.QApplication.translate("MainWindow", "Graficar", None, QtGui.QApplication.UnicodeUTF8))
+        self.menuGraficar.setTitle(QtGui.QApplication.translate("MainWindow", "Simular", None, QtGui.QApplication.UnicodeUTF8))
         self.menuGraficar.setObjectName(_fromUtf8("menuGraficar"))
 
         self.menuCaudal_de_bombeo = QtGui.QMenu(self.menuDatos)
@@ -113,18 +114,30 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionVerObs.setText(QtGui.QApplication.translate("MainWindow", "Ver", None, QtGui.QApplication.UnicodeUTF8))
         self.actionVerObs.setObjectName(_fromUtf8("actionVerObs"))
 
-        self.actionGenerar_graficas = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Generar gráficas", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas.setObjectName(_fromUtf8("actionGenerar_graficas"))
+
 
         self.actionGenerar_graficas2 = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar demo", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))
+        self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))        
+
+        self.actionGenerar_graficas = QtGui.QAction(MainWindow)
+        self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Graficar niveles calculados", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenerar_graficas.setObjectName(_fromUtf8("actionGenerar_graficas"))
+
+        self.actionOptimizacion = QtGui.QAction(MainWindow)
+        self.actionOptimizacion.setText(QtGui.QApplication.translate("MainWindow", u"Optimizacion", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionOptimizacion.setObjectName(_fromUtf8("actionOptimizacion"))
 
 
-        self.actionGenerar_video = QtGui.QAction(MainWindow)
-        self.actionGenerar_video.setText(QtGui.QApplication.translate("MainWindow", "Generar video...", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_video.setObjectName(_fromUtf8("actionGenerar_video"))
+        self.actionGrafOpt = QtGui.QAction(MainWindow)
+        self.actionGrafOpt.setText(QtGui.QApplication.translate("MainWindow", u"Graficar optimizaciones", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGrafOpt.setObjectName(_fromUtf8("actionGrafOpt"))
+
+
+
+##        self.actionGenerar_video = QtGui.QAction(MainWindow)
+##        self.actionGenerar_video.setText(QtGui.QApplication.translate("MainWindow", "Generar video...", None, QtGui.QApplication.UnicodeUTF8))
+##        self.actionGenerar_video.setObjectName(_fromUtf8("actionGenerar_video"))
 
         self.menuInicio.addAction(self.actionNuevo_Proyecto)
         self.menuInicio.addAction(self.actionCerrar)
@@ -134,6 +147,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuCaudal_de_bombeo.addAction(self.actionIngresar)
         self.menuCaudal_de_bombeo.addAction(self.actionImportar)
         self.menuCaudal_de_bombeo.addAction(self.actionVerBombeo)
+       
 
         self.menuObservaciones.addAction(self.actionIngObs)
         self.menuObservaciones.addAction(self.actionImpObs)
@@ -143,13 +157,16 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuDatos.addAction(self.menuObservaciones.menuAction())
 
         self.menuGraficar.addAction(self.actionGenerar_graficas)
-        self.menuGraficar.addAction(self.actionGenerar_graficas2)
-        self.menuGraficar.addAction(self.actionGenerar_video)
+        self.menuDatos.addAction(self.actionGenerar_graficas2)
+##        self.menuGraficar.addAction(self.actionGenerar_video)
+        self.menuGraficar.addAction(self.actionOptimizacion)
+        self.menuGraficar.addAction(self.actionGrafOpt)       
 
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
         self.menubar.addAction(self.menuGraficar.menuAction())
         self.menubar.addAction(self.menuAyuda.menuAction())
+
 
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionSalir, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
@@ -162,12 +179,16 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
-        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000)        
-        QtCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
+        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000)
+        #tCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
+        QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
 
+        QtCore.QObject.connect(self.actionGrafOpt, QtCore.SIGNAL(_fromUtf8("triggered()")), self.GraficasOptimizacion)                
+        
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
         QtCore.QObject.connect(self.menuObservaciones, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despligueObservacion)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        
 
         ##Leer parametros
         ContEnsayo.leerParametros()
@@ -266,8 +287,20 @@ class Ui_MainWindow(QtGui.QDialog):
         ui.setupUi(frmingobs, ContEnsayo)
         frmingobs.exec_()
 
+    def Optimizacion(self):
+        global ContEnsayo
+        frmopt=QtGui.QDialog()
+        ui= vistaoptimizacion.optimizacion(ContEnsayo,frmopt)
+        self.widget = ui
+        print "muestro la opt"
+
+    def limpiarDibujante(self):
+
+        self.dibujante = None          
+
     def generar_graficas(self):
 
+        
         if self.dibujante != None:
 
             print u'Ya hay una instancia corriendo'
@@ -275,19 +308,16 @@ class Ui_MainWindow(QtGui.QDialog):
 
         else:
             ##Codigo de alvaro para generar una matriz
-            ran = random.randint(10, 30)
-            print 'ran: ' + str(ran)
-            zcol = []
+            #ran = random.randint(10, 30)
+            #print 'ran: ' + str(ran)
+            #zcol = []
+            #for i in range(0, ran):
+            #    z = np.random.multivariate_normal((1, 1), [[ran, 0], [0, ran]], ran).T
+            #    z = z**2
+            #    zcol.append(z)
 
-            for i in range(0, ran):
-                z = np.random.multivariate_normal((1, 1), [[ran, 0], [0, ran]], ran).T
-                z = z**2
-                zcol.append(z)
-
-            #matrix = [np.arange(0, ran), zcol]          
-            
+            #matrix = [np.arange(0, ran), zcol]                      
             #print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
-
             global ContEnsayo
 
             pozo = ContEnsayo.dominio.obtenerPozoBombeo()
@@ -310,10 +340,19 @@ class Ui_MainWindow(QtGui.QDialog):
 
                         if len(poz.observaciones) > 0:
 
-                            self.dibujante = dibujante(self, ContEnsayo.dominio)#Hay que pasarle la ventana principal
+                            ##formulario de discretizacion temporal
+                            frmDiscretizaciones=QtGui.QDialog()
+                            ui= discretizaciones.ventanaDiscretizaciones()
+                            ui.setupUi(frmDiscretizaciones, ContEnsayo)
+                            frmDiscretizaciones.exec_()
+##                            QtCore.QObject.connect(frmDiscretizaciones, QtCore.SIGNAL(_fromUtf8("closed()")), self.graficar)
+                            print 'Formulario de discretizaciones se cerro ' 
+                            nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
+                            self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
                             self.dibujante.show()
                             QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
-                            print 'Dibujante invocado'
+                            print 'Dibujante invocado'                            
+                                                      
 
                         else:
 
@@ -336,6 +375,62 @@ class Ui_MainWindow(QtGui.QDialog):
                             "Error",
                             "No hay pozo de bombeo")                      
 
+
+
+    def GraficasOptimizacion(self):
+        
+        if self.dibujanteOpt != None:
+            print u'Ya hay una instancia corriendo'
+            self.self.dibujanteOpt.raise_()#Aca mostramos la ventana si ya existe
+        else:
+            global ContEnsayo
+            pozo = ContEnsayo.dominio.obtenerPozoBombeo()
+            if len(ContEnsayo.dominio.listaPozo) < 1:
+                QtGui.QMessageBox.information(self,
+                    "Error",
+                    "No hay ningun pozo")                
+            else:
+                if pozo != None:                    
+                    if len(pozo.ensayos) > 0:
+                        poz = ContEnsayo.dominio.obtenerPozoObservacion()
+                        if len(poz.observaciones) > 0:
+                            ##formulario de discretizacion temporal
+
+                            ####aca cambiar todo para mandar al formulario del pozo                            
+                            
+                            frmDiscretizaciones=QtGui.QDialog()
+                            ui= discretizaciones.ventanaDiscretizaciones()
+                            ui.setupUi(frmDiscretizaciones, ContEnsayo)
+                            frmDiscretizaciones.exec_()
+
+                            print 'Formulario de discretizaciones se cerro ' 
+                            nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
+                            self.dibujanteOpt = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
+                            self.dibujanteOpt.show()
+                            QtCore.QObject.connect(self.dibujanteOpt, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujanteOpt)
+                            print 'Dibujante invocado'                            
+                                                      
+
+                        else:
+
+                            #print 'No hay observaciones asociadas al pozo'
+                            QtGui.QMessageBox.information(self,
+                                "Error",
+                                "No hay observaciones asociadas al pozo")                             
+
+                    else:
+
+                        #print 'No hay ensayos asociados al pozo'
+                        QtGui.QMessageBox.information(self,
+                            "Error",
+                            "No hay ensayos asociados al pozo")                           
+
+                else:
+
+                    #print 'No hay pozo de bombeo'
+                    QtGui.QMessageBox.information(self,
+                            "Error",
+                            "No hay pozo de bombeo")  
 
     def generar_graficas2(self):
         global ContEnsayo
@@ -507,9 +602,8 @@ class Ui_MainWindow(QtGui.QDialog):
         y1=4
         r = QtCore.QLineF(x0, y0, x1, y1)
         barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
-        barrera.id = ContEnsayo.agregarRecta(1, x0, y0, x1, y1)
-        self.ui.caja.rectas.append(barrera)
-	
+        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1)
+        self.ui.caja.rectas.append(barrera)	
 
 
 
@@ -522,6 +616,16 @@ class Ui_MainWindow(QtGui.QDialog):
         poz2.id = elementoDominio.ContEnsayo.agregarPozo(250, 100) 
 
         self.ui.caja.botones.append(poz2)
+
+
+        pobs2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+
+        pobs2.setX(500)
+        pobs2.setY(500)
+
+        pobs2.id = elementoDominio.ContEnsayo.agregarPozo(500, 500) 
+
+        self.ui.caja.botones.append(pobs2)        
         
 
 
@@ -529,11 +633,19 @@ class Ui_MainWindow(QtGui.QDialog):
         noexec=1
         
         self.ventanaImpoObs(noexec)
-        self.vimp.archivo="ficheros/demoobs.ods"
+        self.vimp.archivo="ficheros/observaciones.txt"        
         self.vimp.nombre.setText('obs1')
+        self.vimp.ext="txt"
+        self.vimp.accionaceptar()
+        self.vimp.close()
+
+        self.ventanaImpoObs(noexec)
+        self.vimp.archivo="ficheros/demoobs.ods"        
+        self.vimp.nombre.setText('obs2')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
+        
         
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/demo1pozo.ods"
@@ -557,6 +669,12 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
+
+        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar() 
+        
 
         asoe.setupUi(frmasociar, b.id, ContEnsayo)        
         asoe.oe=ContEnsayo.ensayos[0]
@@ -585,7 +703,7 @@ class Ui_MainWindow(QtGui.QDialog):
         m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
         m.setearValores([1000,0.0001])
         #Adherimos la vista del dominio
-        self.ui = Ui_Form()
+        self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo)
 
 
@@ -604,7 +722,7 @@ class Ui_MainWindow(QtGui.QDialog):
         x1=2
         y1=4
         r = QtCore.QLineF(x0, y0, x1, y1)
-        ContEnsayo.agregarRecta(1, x0, y0, x1, y1)
+        ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1)
 
         
         poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
@@ -617,25 +735,45 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui.caja.botones.append(poz2)
 
 
-        poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        poe = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
-        poz2.setX(7.5)
-        poz2.setY(2.5)
+        poe.setX(7.5)
+        poe.setY(2.5)
 
-        poz2.id = elementoDominio.ContEnsayo.agregarPozo(7.5, 2.5) 
+        poe.id = elementoDominio.ContEnsayo.agregarPozo(7.5, 2.5) 
 
-        self.ui.caja.botones.append(poz2)
+        self.ui.caja.botones.append(poe)
+
+
+
+        pobs2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+
+        pobs2.setX(5)
+        pobs2.setY(5)
+
+        pobs2.id = elementoDominio.ContEnsayo.agregarPozo(5, 5) 
+
+        self.ui.caja.botones.append(pobs2)
+
         
 
 
         noexec=1
         
         self.ventanaImpoObs(noexec)
-        self.vimp.archivo="ficheros/demoobs.ods"
+##        self.vimp.archivo="ficheros/demoobs.ods"
+        self.vimp.archivo="ficheros/observaciones.txt"        
         self.vimp.nombre.setText('obs1')
-        self.vimp.ext="ods"
+        self.vimp.ext="txt"
         self.vimp.accionaceptar()
         self.vimp.close()
+
+        self.ventanaImpoObs(noexec)
+        self.vimp.archivo="ficheros/demoobs.ods"        
+        self.vimp.nombre.setText('obs2')
+        self.vimp.ext="ods"
+        self.vimp.accionaceptar()
+        self.vimp.close()        
         
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/demo1pozo.ods"
@@ -660,6 +798,11 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.tipo="o"
         asoe.asociar()
 
+        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar()        
+
         asoe.setupUi(frmasociar, b.id, ContEnsayo)        
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
@@ -672,12 +815,6 @@ class Ui_MainWindow(QtGui.QDialog):
         
         print 'se carga el demo'
 
-        
-
-            
-    def limpiarDibujante(self):
-
-        self.dibujante = None
 
     def generar_video(self):
 
@@ -690,6 +827,7 @@ if __name__ == "__main__":
     app.setStyleSheet("QLineEdit{color: blue} \n"
                       "QLabel{color: red} \n"
                       "QPushButton{color: navy}")
+
     MainWindow = QtGui.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)

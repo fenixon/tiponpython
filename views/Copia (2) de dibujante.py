@@ -25,24 +25,23 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, dominio=None, nix=None, niy=None, ti=None, tf=None, nit=None, tfo=None):#Hay que pasarle la ventana que lo invoca
+    def __init__(self, parent = None, dominio=None):#Hay que pasarle la ventana que lo invoca
 
-        print u'Iniciando dibujante...'
         QMainWindow.__init__(self, parent)
-##        ti=0.0
+        ti=0.0
 ##        tf=3.0
-##        tf=0.3
-
+        tf=0.3
+        ##      
         ##justito para que quede 0.1 el dt        
 ##        nit=int(tf/0.1)
 ##        nit=100
-##        nit=10
+        nit=100
 
         ##el mismo ancho y alto para que quede cada 1 unidad
 ####        nix=dominio.ancho
-##        nix=4
+        nix=40
 ##        niy=dominio.alto
-##        niy=4
+        niy=40
 
         ##discretizacion temporal
         dt=(tf-ti)/nit
@@ -74,8 +73,10 @@ class dibujante(QMainWindow):
         self.dt=dt
         self.nix=nix
         self.niy=niy
-        self.tfo=tfo
-        self.cardt=0           
+        self.cardt=0
+
+           
+
 
         ##Llamado a procesar la barrera.. para generar los pozos virtuales porque se duplican por precensia de la barrera
         dominio.procesarBarrera()
@@ -83,61 +84,65 @@ class dibujante(QMainWindow):
         ##LLAMADO AL METODO DE SOLUCION
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
         ### se envian ademas todas las discretizaciones
-        print u'Empieaza...'
         matrix=dominio.metodo.calcular(tiempos,xx,yy)
 
         matx = dominio.metodo.gradienteX()
 
         maty = dominio.metodo.gradienteY()
 
-        ming = dominio.metodo.minimoMatriz()
-
-        maxg = dominio.metodo.maximoMatriz()
-        print u'Termina'
-
-        #pozoBombeo=dominio.obtenerPozoBombeo()
+        ##se obtiene un pozo de observacion el primero por defecto
+        pozoObservacion=dominio.obtenerPozoObservacion()            
+        ##Obtener una observacion de ensayo ...que pasa cuando hay mas de una asociada?????        
+        observaciones=pozoObservacion.observaciones[0].devolverO()
+        self.observaciones = observaciones
+      
+        pozoBombeo=dominio.obtenerPozoBombeo()
         ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
-        #bombeos=pozoBombeo.ensayos[0].devolverB()           
-        #self.bombeos=bombeos
+        bombeos=pozoBombeo.ensayos[0].devolverB()           
+        self.bombeos=bombeos
         
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.dia = None
+
 
 #### Codigo nuevo introducido para prueba
 
         #fig2 = Figure(figsize = (1.5, 2.5))
 
-        #fig2 = Figure(figsize = (1.8 * 4, 2.4 * 4))
-        #axu2 = fig2.add_subplot(2, 2, 1)
-        #axd2 = fig2.add_subplot(2, 2, 2)
-        #axt2 = fig2.add_subplot(2, 2, 3, projection = '3d')
-        #axc2 = fig2.add_subplot(2, 2, 4)
-        #fig2.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
+        fig2 = Figure(figsize = (1.8 * 4, 2.4 * 4))
+        axu2 = fig2.add_subplot(2, 2, 1)
+        axd2 = fig2.add_subplot(2, 2, 2)
+        axt2 = fig2.add_subplot(2, 2, 3, projection = '3d')
+        axc2 = fig2.add_subplot(2, 2, 4)
+        fig2.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
         
         #axt = Axes3D(fig2)        
 ##        superficies=np.zeros((len(tiempos)),Poly3DCollection)
         superficies=[]
-        #for i in range(0,nit):            
-        #    Z = matrix[i]
-        #    axt2.cla()
+        for i in range(0,nit):            
+            Z = matrix[i]
+            axt2.cla()
 ##        print 'Matriz generada '
 ##            print 't: '+str(i)
 ##            print 'Z: \n' + str(Z)
-        #    surf = axt2.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
+            surf = axt2.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
             
-        #    superficies.append(surf)
+            superficies.append(surf)
 ##            canvas = FigureCanvas(fig2)
 ##            canvas.draw()        
 
+
 #### fIN Codigo nuevo introducido para prueba
 
-        self.fm = fm(matrix, matx, maty, dominio, X,Y, xx, yy, tiempos, superficies, ming, maxg)
+        ran=0
+        self.fm = fm(matrix, matx, maty, dominio, observaciones, bombeos,X,Y, xx, yy, tiempos, superficies)
+##        ran = random.randint(1, 10)
 
-        self.fm.plotU()
+        
+        self.fm.plotU(ran)
         ##1ero plotT dps plotD        
-        self.fm.plotT(0)
-        self.fm.plotD(0)
-        self.fm.plotC(0)
+        self.fm.plotT(ran, 0)
+##        self.fm.plotD(ran, 0)
+##        self.fm.plotC(ran, 0)
         self.main_frame = QWidget()
         self.setWindowTitle(u'Gráficas')
         self.setMaximumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
@@ -148,9 +153,7 @@ class dibujante(QMainWindow):
         self.canvas.setParent(self.main_frame)
         #self.mpl_toolbar = NavigationToolbar(self.canvas, self.main_frame)
         self.canvas.draw()
-##        self.vel = [1, 2, 3, 4, 5, 6]
-        ## menos velocidades        
-        self.vel = [1, 2, 3]
+        self.vel = [1, 2, 3, 4, 5, 6]
         self.velActual = 0
         self.inter = 1
 
@@ -232,11 +235,10 @@ class dibujante(QMainWindow):
         ##Cada un segundo, dps aca cambiar la velocidad de reproduccion
         self.timer.setInterval(1000 * self.vel[self.velActual])
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reproducirBucle)
-        print u'...Dibujante listo!!'
 
-    def draw(self):
-        self.canvas.draw()
-        self.fm.axt.mouse_init()
+##    def draw(self):
+##        self.canvas.draw()
+##        self.fm.axt.mouse_init()
 
     def actualizarSlider(self):
         ran=0
@@ -250,10 +252,10 @@ class dibujante(QMainWindow):
         #if len(auxt)>0 :
         #    cardt=auxt[0]
         ##AHORA SE CALCULO PARA TODOS LOS TIEMPOS DE LA DISCRETIZACION TEMPORAL
-        self.fm.plotD(self.cardt)
-        self.fm.plotT(self.cardt)
-        self.fm.plotC(self.cardt)
-        self.draw()
+####        self.fm.plotD(ran, self.cardt)
+        self.fm.plotT(ran, self.cardt)
+##        self.fm.plotC(ran, self.cardt)
+##        self.draw()
         #else:
         #    print 'no hay valores para t: '+str(t)
             
@@ -313,9 +315,9 @@ class dibujante(QMainWindow):
 
         print 'vel '+str(self.velActual+1)
 
-        print 'la vel: '+str(1000 / (self.vel[self.velActual]))
+        print 'la vel: '+str(1000 / (2*self.vel[self.velActual]))
 
-        self.timer.setInterval(1000 / (self.vel[self.velActual]))
+        self.timer.setInterval(1000 / (2*self.vel[self.velActual]))
         self.velocidadb.setText(QString(str(self.velActual + 1) + 'x'))
 
     def guardar(self):
@@ -326,11 +328,10 @@ class dibujante(QMainWindow):
         self.estadob.setValue(0)
         self.cardt=0
 
-        self.dia = None
+        dia = None
 
-        self.dia = videoDialog(self.fm)
-        self.dia.center()
-        self.dia.show()
+        dia = videoDialog(self.fm)
+        dia.show()
 
     def center(self):
 

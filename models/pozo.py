@@ -10,6 +10,9 @@ class pozo(object):
                 self.y = y
                 self.ensayos=[]
                 self.observaciones=[]
+                #lista de Observaciones solucionadas para cada pozo de observacion
+                self.obssolucionadas=[]
+                self.nivelesOptimos=[]
                
         def agregarObservaciones(self, observaciones):
                 self.observaciones.append(observaciones)
@@ -19,19 +22,35 @@ class pozo(object):
                 self.x = x
                 self.y = y
 
+        def instanciarSolucionadas(self, num, tiempos):
+                self.obssolucionadas=[]
+                for t in tiempos:
+                        #nuevao=observacion(t, num)
+                        self.obssolucionadas.append(num)
+
+        def instanciarNivelesOptimos(self, num, tiempos):
+                self.nivelesOptimos=[]
+                for t in tiempos:
+                        self.nivelesOptimos.append(num)                
+        
+        def devolverSolucionadas(self):
+                return self.obssolucionadas
+
+        def devolverNivelesOptimos(self):
+                return self.nivelesOptimos
+
         def copiarAPozoVirtual(self,p,tipo):
 
-                print 'pozo virutal x: '+str(self.x) + 'pozo virutal y: '+str(self.y) 
+##                print 'pozo virutal x: '+str(self.x) + 'pozo virutal y: '+str(self.y) 
                 
                 bombeosn=[]                
                 bombeosp=p.ensayos[0].devolverBProc()
                 
-                #CUANDO ES POSITIVA LA BARRERA EN EL 1?
-                if tipo == 1:
+                if tipo == "positivo":
                     #si en positiva se restan todos los caudales
                     for b in bombeosp:
                           bombeosn.append(bombeo(b.tiempo, -b.caudal))
-                          print 'caudal: '+str(-b.caudal)
+##                          print 'caudal: '+str(-b.caudal)
                           
                 else:
                     ##si es negativa la copia es exacta

@@ -1274,8 +1274,8 @@ class Ui_Form(object):
 		self.groupBoxDominio.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
 		self.groupBoxDominio.setTitle(QtGui.QApplication.translate("Form", "Dominio", None, QtGui.QApplication.UnicodeUTF8))
 
-		self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
-						" border: 2px solid green;}")
+##		self.groupBoxDominio.setStyleSheet("QGroupBox{background-color: white; \n"
+##						" border: 2px solid green;}")
 
 
 		#Caja de elementos especifica del dominio

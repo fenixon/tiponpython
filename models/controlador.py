@@ -35,6 +35,14 @@ class Proyecto(object):
         ##Inicial la lista de parametros
         self.cargarParametros()
 
+        self.nix=4
+        self.niy=4
+
+        self.ti=0.0
+        self.tf=0.3
+        nit=10
+        tfo=1.8        
+
     def cargarParametros(self):
         ###Si se quiere un parametro nuevo se tiene q agregar        
         self.parametros.append(parametros('S','m^2/d'))    #parametro 0
@@ -60,7 +68,18 @@ class Proyecto(object):
         return obse
 
     def eliminarObservaciones(self, obse):
-        self.observaciones.remove(obse)             
+        self.observaciones.remove(obse)
+
+    def setearValoresDiscretizaciones(self, nix, niy, ti, tf, nit, tfo):
+        self.nix=nix
+        self.niy=niy
+        self.ti=ti
+        self.tf=tf
+        self.nit=nit
+        self.tfo=tfo      
+
+    def devolverValoresDiscretizaciones(self):
+        return [self.nix, self.niy, self.ti, self.tf, self.nit, self.tfo] 
 
     def verificarFormato(self,lista, t):
         control=True

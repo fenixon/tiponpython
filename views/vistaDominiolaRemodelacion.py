@@ -436,21 +436,22 @@ self.scene())
 
 			#try:
 				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
-
+				self.transformarCoordenada(posicion)
 				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
 					item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
 					self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
-
-					self.transformarCoordenada(posicion)
 
 					#Se muestran sus coordenadas
 					#elementoDominio.gbCoord.setPozoExistente(item.id)
 					elementoDominio.pozoSeleccionado = item.id
 
+					#elementoDominio.ContEnsayo.moverPozo(item.id, self.a1, self.a2)
 
 					elementoDominio.gbCoord.actualizarCoordenadasPozo(item.id)
 
-					elementoDominio.Dominio.rectaSeleccionada['id'] = 0 
+					elementoDominio.Dominio.rectaSeleccionada['id'] = 0
+
+
 
 					for pozo in elementoDominio.Dominio.botones:
 						if pozo.id != item.id:
@@ -1439,9 +1440,11 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
             #coordenadas = {}
             #coordenadas['x'] = elementoDominio.Dominio.a1
             #coordenadas['y'] = elementoDominio.Dominio.a2
-
+            print coordenadas['x'], " ", coordenadas['y']
+            print "NO PASA BOLO"
             if elementoDominio.pozoSeleccionado == 0:
 		print coordenadas['x'], " ", coordenadas['y']
+		print "HOLA BOLUDO"
                 self.lineEdit.setText(QtCore.QString.number(coordenadas['x'], 10))
                 self.lineEdit_2.setText(QtCore.QString.number(coordenadas['y'], 10))
 
@@ -1478,27 +1481,20 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
     def setActualizar(self):
         
         elementoDominio.Dominio.rectaSeleccionada['id'] = 0
-        
+
         if elementoDominio.pozoSeleccionado != 0:
+            elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()))
+
             for pozo in elementoDominio.Dominio.botones:
                 if pozo.id == elementoDominio.pozoSeleccionado:
                     pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
-
-                    for pozo in elementoDominio.Dominio.botones:
-                        if pozo.id == elementoDominio.pozoSeleccionado:
-
-				elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
-
- 				pozo.setX(elementoDominio.Dominio.a1)
-
-				pozo.setY(elementoDominio.Dominio.a2 - 10)
-
-				elementoDominio.ContEnsayo.moverPozo(elementoDominio.pozoSeleccionado, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2)
-
+		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
+		    pozo.setX(elementoDominio.Dominio.a1)
+		    pozo.setY(elementoDominio.Dominio.a2 - 10)
                     elementoDominio.pozoSeleccionado = 0
+                    print "ACTUALIZAMO SIN SELECCIONAR"
                     return
-
-
+        return
 
         if self.tipoElemento == "pozo":
             
@@ -1506,14 +1502,10 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
             for pozo in elementoDominio.Dominio.botones:
                 if pozo.id == self.idElemento:
-
 			elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
-
 			pozo.setX(elementoDominio.Dominio.a1)
-
 			pozo.setY(elementoDominio.Dominio.a2 - 10)
-
-
+			elementoDominio.pozoSeleccionado = 0
 
 
 
@@ -1597,7 +1589,6 @@ elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
 
     def actualizarCoordenadasPozo(self, idPozo):
         pozo = elementoDominio.ContEnsayo.buscarPozo(idPozo)
-	print pozo.x, " ", pozo.y
         self.lineEdit.setText(QtCore.QString.number(pozo.x, 10))
         self.lineEdit_2.setText(QtCore.QString.number(pozo.y, 10))
         elementoDominio.Dominio.rectaSeleccionada['id'] = 0
@@ -1698,9 +1689,60 @@ class UiForm(object):
 
 		elementoDominio.ContEnsayo = ContEnsayo
 
+
+		#La resolucion de la pantalla se podria, mas adelante usar una funcion para detectar que resolucion tenes
+		resolucionX=1280
+		resolucionY=1024
+		anchomaximo=resolucionX
+		altomaximo=resolucionY-100
+
+		alto=ContEnsayo.dominio.alto
+		altoView=alto
+		if alto<350:
+			alto=350
+		if alto+100>altomaximo:
+			alto=altomaximo-100
+			altoView=alto
+
+		ancho=ContEnsayo.dominio.ancho
+		anchoView=ancho
+
+		if ancho<50:
+			ancho=50
+		if ancho+300>anchomaximo:
+			ancho=anchomaximo-300
+			anchoView=ancho
+
+		principalAncho=ancho+300
+		principalAlto=alto+100
+		principaly=altomaximo/2-principalAlto/2
+
+		if principaly>80:
+			principaly=80
+		else:
+			if  principaly<=20:
+				principaly=20
+		principalx=anchomaximo/2-principalAncho/2
+
+		if principalx>200:
+			principalx=200
+		else:
+			if principalx<=0:
+				principalx=0
+
+		contenedorDominioAncho=ancho+30
+		contenedorDominioAlto=alto+50
+
+		posicionBarraTareas=ancho+100
+		anchoBarraTareas=165
+
+		segundaColY=anchoBarraTareas/2 +1
+
+
+
 		#Seteo del formulario que contendra todos los widgets del dominio
 		self.frame = QtGui.QFrame(Form) 
-		self.frame.setGeometry(QtCore.QRect(170, 80, 900, 600))
+		self.frame.setGeometry(QtCore.QRect(principalx, principaly,principalAncho ,principalAlto))
 		self.frame.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
 		self.frame.setFrameShape(QtGui.QFrame.StyledPanel)
 		self.frame.setFrameShadow(QtGui.QFrame.Raised)

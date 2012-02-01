@@ -14,7 +14,10 @@ class figuraOpt():
         if z == None:
             self.axt.plot(xx,yy, 'r.')
             self.axt.plot(x, y, 'b')
-            
+
+            #self.axt.set_title('Grafica de Funcion objetivo')
+            self.axt.set_xlabel('t')
+            self.axt.set_ylabel('h')                          
 
             lista = [0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4,
                 4, 4, 5, 5, 5, 5, 6, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 8, 9, 9,
@@ -34,4 +37,10 @@ class figuraOpt():
             #ax = p.Axes(self.fig)
             self.axt.contour(x, y, z)
             self.axt.plot(xx, yy, 'rx')
+
+            #self.axt.set_title('Grafica de Parametros')
+            self.axt.set_xlabel('T')
+            self.axt.set_ylabel('S')             
+
+          
             

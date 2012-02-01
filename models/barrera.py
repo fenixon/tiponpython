@@ -57,7 +57,5 @@ class barrera():
                                 self.gamma=-self.x1*self.y2 + self.y1*self.x2                                
 
                 def devolverCoef(self):
-                    ##poner el calculo q habia puesto
-##                    print 'x1 '+str(self.x1)+'x2 '+str(self.x2)+'y1 '+str(self.y1)+'y2 '+str(self.y2)
                     return [self.alfa,self.beta,self.gamma]
 

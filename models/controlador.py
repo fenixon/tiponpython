@@ -19,6 +19,7 @@ class Proyecto(object):
         self.ensayos=[]
         self.observaciones=[]
         self.dominio = dominio.dominio()
+        self.metodo=None
 
         #Lista que guardan pozo y recta
 ##      self.listaPozo = []

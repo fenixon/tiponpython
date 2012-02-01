@@ -28,6 +28,7 @@ from vistaDominiolaRemodelacion import  *
 import discretizaciones
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
+from views.graficarOpt import graficarOpt
 
 import random#Solo para pruebas
 

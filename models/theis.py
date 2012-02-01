@@ -165,6 +165,9 @@ class Theis(metodoSolucion.metodoAnalitico):
             except:
                 print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
 
+
+        #print str(s)
+        
         return [s, dsdT, dsdS]
                             
 
@@ -228,7 +231,10 @@ if __name__ == "__main__":
     ui = Theis(cont,1)
 ##    Calcula bien el metodo de tezis para un pozo solo
     #ui.calcularprueba(1,1,500,1000,0.0001)
-    ui.calcularprueba(1269.39978869,0.002,630.0,1000,0.0001)
+    #ui.calcularpozoGenerico(1,1,500,1000,0.0001)
+
+    #Error - r: 1091.15599791t: 0.09Q: 480.0T: 999.456893055S: 0.000100226593018desc 0.0
+    #ui.calcularpozoGenerico(1091.15599791,0.09,480.0,999.456893055,0.000100226593018)
                                  
 ##    ui.calcular()
     

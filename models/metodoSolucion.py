@@ -11,12 +11,19 @@ class metodoSolucion(object):
     def __init__(self, dominio, parametros): 
 ##        self.paramcard=cardinales
         self.dominio=dominio
+        ##Maximos y minimos de la grafica              
+        self.min=1000000
+        self.max=-1000000
+
+
+        print 'SE INSTANCIO'
+
+        
         ## Asociar el metodo al dominio
         self.dominio.metodo=self                      
         self.listaParametros=[]
         for i in self.paramcard:
-            self.listaParametros.append(parametros[i])
-            
+            self.listaParametros.append(parametros[i])            
         #print "Se ha creado el Metodo de Solucion"
         
     def __del__(self):
@@ -93,10 +100,6 @@ class metodoSolucion(object):
         
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
         Todoslospbombeo=d.obtenerPBombeoYVirtuales()
-        
-        ##Maximos y minimos de la grafica              
-        self.min=1000000
-        self.max=-1000000
         
         for pozoBombeo in Todoslospbombeo:
             ###Esto se podria obtener desde el dominio        
@@ -249,18 +252,18 @@ class metodoSolucion(object):
         return self.max
 
     ##Metodo que se llama luego de la Optimizacion, para graficar los pozos de observacions con S y T optimos
-    def funcionObjetivo(self,Topt,Sopt):
+    def funcionObjetivo(self,Topt,Sopt, pozoObservacion):
 
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
         Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()
         ##Obtener todos los pozos de observacion
-        TodoslospozosObservacion=self.dominio.obtenerPozosdeObservacion()        
+##        TodoslospozosObservacion=self.dominio.obtenerPozosdeObservacion()        
         ##usar la misma discretizacion para el calculo del metodo de solucion
         tiempos=self.tiempos
 
         ##Se instancias de una para todos los tiempos una lista de Niveles optimos para cada pozo de observacion
-        for pozoObservacion in TodoslospozosObservacion:
-            pozoObservacion.instanciarNivelesOptimos(self.dominio.calcularH0(pozoObservacion.x, pozoObservacion.y), tiempos)        
+##        for pozoObservacion in TodoslospozosObservacion:
+        pozoObservacion.instanciarNivelesOptimos(self.dominio.calcularH0(pozoObservacion.x, pozoObservacion.y), tiempos)        
         
         for pozoBombeo in Todoslospbombeo:
             x0=pozoBombeo.x
@@ -270,40 +273,41 @@ class metodoSolucion(object):
             cardt=0
             for t in tiempos:        
                 #Calculo para todos los pozos de observacion
-                for pozoObservacion in TodoslospozosObservacion:
-                    x=pozoObservacion.x
-                    y=pozoObservacion.y
-                    #calculo de la distancia radial            
-                    #sqrt(|X0-X1|^2 + |y0-y1|^2)
-                    r=np.sqrt(np.square(x0-x) + np.square(y0-y))
-                    for bom in bombeos:
-                        ## El tiempo t nunca puede ser 0, sino t da error                    
-                        tpozo=bom.tiempo
-                        Q=bom.caudal                    
-                        ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
-                        tmandado=round(float(float(t)-float(tpozo)),14)
+##                for pozoObservacion in TodoslospozosObservacion:
+                x=pozoObservacion.x
+                y=pozoObservacion.y
+                #calculo de la distancia radial            
+                #sqrt(|X0-X1|^2 + |y0-y1|^2)
+                r=np.sqrt(np.square(x0-x) + np.square(y0-y))
+                for bom in bombeos:
+                ## El tiempo t nunca puede ser 0, sino t da error                    
+                    tpozo=bom.tiempo
+                    Q=bom.caudal                    
+                    ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
+                    tmandado=round(float(float(t)-float(tpozo)),14)
 
-                        if tmandado>0:
-                            #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
-                            #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
-                            told=tmandado
-                            try:
-                                s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
-                            except:
-                                print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
-                                print 't mandado: '+str(told) + 't pozo: '+str(tpozo)
-                                s=0
-                        else:
-                            s=0
+                    if tmandado>0:
+                        #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
+                        #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
+                        told=tmandado
+                        try:
+                            s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
+                        except:
+                            print 'Error - r: ' + str(r) +'t: '+str(tmandado) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
+                            print 't mandado: '+str(told) + 't pozo: '+str(tpozo)
+                            s=0.0
+                    else:
+                        s=0.0
 
-                        #Se actualizan los niveles Optimos                      
-                        pozoObservacion.nivelesOptimos[cardt]=pozoObservacion.nivelesOptimos[cardt]-s
+                    print 'Error - r: ' + str(r) +'t: '+str(tmandado) + 'Q: ' + str(Q) + 'T: '+str(Topt) + 'S: '+str(Sopt)+'desc '+str(float(s)) 
 
+                    #Se actualizan los niveles Optimos                      
+                    pozoObservacion.nivelesOptimos[cardt]=float(pozoObservacion.nivelesOptimos[cardt])-float(s)
                 #se incrementa el cardinal del tiempo
-                cardt=cardt+1
-                
+                cardt=cardt+1                
+        #pozoObservacion.nivelesOptimos[0]=9.0
     
-
+        
 class metodoAnalitico(metodoSolucion):
     pass
 

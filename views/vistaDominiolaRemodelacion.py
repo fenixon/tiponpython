@@ -1464,8 +1464,13 @@ np.int32(self.lineEdit_4.text())))
                     barrera = vistaBarrera(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
 np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
 
-                    barrera.id = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
+
+                    barrera.id = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+np.int32(self.lineEdit_4.text()))
+
                     elementoDominio.Dominio.rectas.append(barrera)
+
+		    print "Coordenadas con las que se guarda x1 ", elementoDominio.Dominio.a1, " Y1 ",elementoDominio.Dominio.a2, " x2 ", elementoDominio.Dominio.b1, " y2 ",elementoDominio.Dominio.b2
 
 		else:
                     elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1()))
@@ -1474,12 +1479,12 @@ np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
 
                     barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, "barrera", elementoDominio.Dominio.scene())
 
-		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(barrera.line().x1(), barrera.line().y1()))
-		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(barrera.line().x2(), barrera.line().y2()))
 
                     #elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.a1 - 15, elementoDominio.Dominio.a2 - 10, elementoDominio.Dominio.b1 - 15, elementoDominio.Dominio.b2 - 10)
 
                     barrera.id = elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
+
+		    print "Coordenadas con las que se guarda con vista previa x1 ", barrera.line().x1(), " Y1 ",barrera.line().y1(), " x2 ", barrera.line().x2(), " y2 ",barrera.line().y2()
 
 		    self.setRectaExistente(barrera.id, 0)
 
@@ -1634,7 +1639,10 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 
 		    elementoDominio.Dominio.rectaCandidata.setLine(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2))
 
-		    elementoDominio.ContEnsayo.actualizarRectaCandidata(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
+		    elementoDominio.ContEnsayo.actualizarRectaCandidata(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+np.int32(self.lineEdit_4.text()))
+
+
 
 
 

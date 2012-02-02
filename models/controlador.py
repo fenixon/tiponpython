@@ -325,7 +325,7 @@ class Proyecto(object):
             rectay = QtCore.QLine(puntoP, puntoR)   
 
             #Recta proxima a las x
-            if  np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):               
+            if  np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
                 
                 return R.id
 
@@ -336,6 +336,10 @@ class Proyecto(object):
 
     def agregarRectaCandidata(self, tipo, x1, y1, x2, y2):
         self.rectaCandidata = barrera(x1, x2, y1, y2, tipo)
+
+    def actualizarRectaCandidata(self, x1, y1, x2, y2):
+		self.rectaCandidata.actualizarBarrera2(x1, x2, y1, y2)
+
 
     def hayRectaCandidata(self):
 

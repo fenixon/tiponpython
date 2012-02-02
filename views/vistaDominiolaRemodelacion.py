@@ -180,6 +180,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.setAcceptDrops(True)
 		self.setObjectName(_fromUtf8("Dominio"))
 		self.setMouseTracking(True)
+
 		#Variables a considerar
 		self.presionandoRecta = False
 
@@ -272,14 +273,16 @@ self.scene())
 
 
 		else:
-			r = QtCore.QLineF(position.x(), position.y(), (position.x() + 350), (position.y() + 350))
 
 			self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
-			self.transformarCoordenadaY(QtCore.QPoint((position.x() + 350), (position.y() + 350)))
+			self.transformarCoordenadaY(QtCore.QPoint((position.x() - 350), (position.y() - 350)))
 
-			barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
+			#barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
 
-			barrera.id = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), np.float32(r.x1()), np.float32(r.y1()), np.float32(r.x2()), np.float32(r.y2()))
+			barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, (elementoDominio.Dominio.b1), (elementoDominio.Dominio.b2), "barrera", elementoDominio.Dominio.scene())
+
+
+			barrera.id = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, (elementoDominio.Dominio.b1), (elementoDominio.Dominio.b2))
 
 			elementoDominio.gbCoord.setRectaExistente(barrera.id, 0)
 
@@ -433,7 +436,7 @@ self.scene())
 
 		if item != None:
 
-			#try:
+			try:
 				posicion = self.mapToScene(QtCore.QPoint(e.pos().x(), e.pos().y()))
 				self.transformarCoordenada(posicion)
 				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
@@ -541,8 +544,8 @@ self.scene())
 					elementoDominio.menuMouse.move(np.int(e.pos().x()), np.int(e.pos().y()))
 
 					elementoDominio.menuMouse.show()
-			#except:
-			#	print "No es pozo ni barrera."
+			except:
+				print "No es pozo ni barrera."
 
 
 
@@ -664,7 +667,39 @@ self.scene())
 			self.alto = self.scene().height()
 
 
+	def dibujarRecta(self, bid):
+		for x in self.rectas:
+			if bid == x.id:
+				r = elementoDominio.ContEnsayo.buscarRecta(x.id)
+				print "x1 ", r.x1, " y1 ", r.y1, " x3 ", r.x3, " y3 ", r.y3
+				print "x4 ", r.x4, " y4 ", r.y4, " x2 ", r.x2, " y2 ", r.y2
+				x.setPen(QtCore.Qt.red)
+				if r.x1 < r.x2 :
+					x.setLine(QtCore.QLineF( r.x4, r.y4, r.x3, r.y3))
+				else:
+					x.setLine(QtCore.QLineF( r.x3, r.y3, r.x4, r.y4))
 
+		"""
+			else:
+				painter.setPen(QtCore.Qt.blue)
+				painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+				if x.x1 < x.x2 :
+					painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+					painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+				else:
+					painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+					painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
+		
+		else:
+			painter.setPen(QtCore.Qt.blue)
+			painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+			if x.x1 < x.x2 :
+				painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+				painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+			else:
+				painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+				painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
+		"""
 
 #Escena contenedora de los items graficos
 class escenaGrafica(QtGui.QGraphicsScene):
@@ -1722,14 +1757,12 @@ crear dominio
 
 class UiForm(object):
 
-	def setupUi(self, Form, ContEnsayo):
-
+	def setupUi(self, Form, ContEnsayo, appalto, appancho):
 
 		elementoDominio.ContEnsayo = ContEnsayo
-
-		#La resolucion de la pantalla se podria, mas adelante usar una funcion para detectar que resolucion tenes
-		resolucionX=1280
-		resolucionY=1024
+		print "ALTO ", appalto, " ANCHO",  appancho
+		resolucionX=appalto
+		resolucionY=appancho
 		anchomaximo=resolucionX
 		altomaximo=resolucionY-100
 
@@ -1815,23 +1848,20 @@ class UiForm(object):
 
 		self.groupBox.setObjectName(_fromUtf8("groupBox"))
 
-
 		#Creacion de botones de la barra de herramientas
 		self.pozo = boton(QtGui.QIcon("content/images/blackDotIcon.png"), "", self.groupBox, "pozo")
 		self.barrera = boton(QtGui.QIcon("content/images/blackBarrera.png"), "", self.groupBox, "barrera")
-
 		self.zoomIn = QtGui.QPushButton(QtGui.QIcon("content/images/zoomIn.png"), "", self.groupBox)
-
 		self.zoomOut = QtGui.QPushButton(QtGui.QIcon("content/images/zoomOut.png"), "", self.groupBox)
-
 		self.zoomIn.setGeometry(QtCore.QRect(80, 20, 41, 23))
 
 		self.zoomOut.setGeometry(QtCore.QRect(80, 50, 41, 23))
 
 		self.barrera.setGeometry(QtCore.QRect(15, 50, 41, 23))
+
 		self.barrera.id = 1001
 
-                #coordenadas que se muestran 
+		#coordenadas que se muestran 
 		self.coordenadas = QtGui.QLabel(self.frame)
 		self.coordenadas.setGeometry(QtCore.QRect(posicionBarraTareas, 375, anchoBarraTareas, 20))
 		elementoDominio.coordenadas = self.coordenadas
@@ -1846,7 +1876,6 @@ class UiForm(object):
 		self.caja=elementoDominio.Dominio
 
 		#Barra de Coordenadas
-
 		elementoDominio.gbCoord = gbCoordenadas(self.frame, posicionBarraTareas, anchoBarraTareas, segundaColY)
 		elementoDominio.gbCoord.setStyleSheet("QGroupBox{border: 2px solid; border-radius: 25px;} \n"
 							"QLabel, QPushButton{border: 2px solid red;}")

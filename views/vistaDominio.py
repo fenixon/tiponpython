@@ -431,7 +431,7 @@ class box(QtGui.QGroupBox):
         self.dibujarRectas(painter)
         painter.end()
         
-    #Funcion de dibujado de lineas    
+    #Funcion de dibujado de lineas
     def dibujarRectas(self, painter):
         self.rectas = elementoDominio.ContEnsayo.dibujarRecta()
         for x in self.rectas:  
@@ -463,8 +463,6 @@ class box(QtGui.QGroupBox):
                 else:
                       painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
                       painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
-                
-            
 
         if elementoDominio.ContEnsayo.hayRectaCandidata():
 

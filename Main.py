@@ -214,16 +214,16 @@ class Ui_MainWindow(QtGui.QDialog):
         
 	#Adherimos la vista del dominio
 	#self.ui = Ui_Form()
-        self.ui = UiForm()
 
-        ui.setupUi(frmNuevoProyecto,ContEnsayo)
-        
+        self.ui = UiForm()
+        ui.setupUi(frmNuevoProyecto, ContEnsayo)
+
         QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL('clicked()'), self.abrirDominio)
 
         frmNuevoProyecto.exec_()
 
     def abrirDominio(self):
-        self.ui.setupUi(MainWindow, ContEnsayo)
+        self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
 
     def ventanaImportarProyecto(self, noexec=None):
@@ -502,7 +502,7 @@ class Ui_MainWindow(QtGui.QDialog):
         m.setearValores([1000,0.0001])
         #Adherimos la vista del dominio
         self.ui = UiForm()
-        self.ui.setupUi(MainWindow, ContEnsayo)
+        self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
         b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
@@ -571,7 +571,7 @@ class Ui_MainWindow(QtGui.QDialog):
         m.setearValores([1000,0.0001])
         #Adherimos la vista del dominio
         self.ui = UiForm()
-        self.ui.setupUi(MainWindow, ContEnsayo)
+        self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
 
 
@@ -704,7 +704,8 @@ class Ui_MainWindow(QtGui.QDialog):
         m.setearValores([1000,0.0001])
         #Adherimos la vista del dominio
         self.ui = UiForm()
-        self.ui.setupUi(MainWindow, ContEnsayo)
+
+        self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
 
         b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())

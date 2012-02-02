@@ -606,7 +606,7 @@ class Ui_MainWindow(QtGui.QDialog):
         y1=4
         r = QtCore.QLineF(x0, y0, x1, y1)
         barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
-        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1)
+        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
         self.ui.caja.rectas.append(barrera)	
 
 

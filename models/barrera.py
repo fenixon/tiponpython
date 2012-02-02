@@ -11,7 +11,7 @@ class barrera():
                                 self.y2 = y2
                                 self.tipo = tipo
                                 self.calcularRecta()
-      
+
 
                 def actualizarBarrera(self, x1, x2, y1, y2, tipo):
                                 self.x1 = x1

@@ -282,8 +282,6 @@ self.scene())
 			self.transformarCoordenadaY(QtCore.QPoint((position.x() - 35), (position.y() - 35)))
 
 
-			print " X1 ", elementoDominio.Dominio.a1, " Y1 ",  elementoDominio.Dominio.a2, " X2 ",  elementoDominio.Dominio.b1, " Y2 ", elementoDominio.Dominio.b2
-
 			barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, "barrera", elementoDominio.Dominio.scene())
 
 
@@ -412,8 +410,6 @@ self.scene())
 
 				#Recta proxima a las x
 				if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
-					print self.a1, " +++ ", self.a2
-
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
 					if self.a2 >= self.alto:
 						if self.a1 <= 0:
@@ -558,7 +554,7 @@ self.scene())
 
 					elementoDominio.gbCoord.actualizarCoordenadasPozo(item.id)
 
-					elementoDominio.Dominio.rectaSeleccionada['id'] = 0
+					self.rectaSeleccionada['id'] = 0
 
 					for pozo in elementoDominio.Dominio.botones:
 						if pozo.id != item.id:
@@ -627,6 +623,7 @@ self.scene())
 					item.setPen(QtCore.Qt.red)
 					self.moviendo = True
 					self.movido = item
+					self.rectaSeleccionada['id'] = item.id
 
 					elementoDominio.gbCoord.setRectaExistente(item.id, 0)
 
@@ -646,7 +643,7 @@ self.scene())
 						if r.id != item.id:
 							r.setPen(QtCore.Qt.black)
 
-
+					self.rectaSeleccionada['id'] = item.id
 					item.setPen(QtCore.Qt.red)
 					elementoDominio.selectedMenuMouse["tipo"] = "recta"
 					elementoDominio.selectedMenuMouse["id"] = item.id
@@ -1722,16 +1719,16 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), self.cbTipo.c
 
             for recta in elementoDominio.Dominio.rectas:
                 if recta.id == self.idElemento:
+		    if self.rectaSeleccionada['id'] > 0:
+                        elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
-                    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+                        elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(  np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
 
-                    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit_3.text()) ), np.int32(self.lineEdit_4.text())))
-
-                    recta.setLine(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2,
-elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
+                    recta.setLine(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text()))
 
                     recta.setPen(QtCore.Qt.black)
 
+		    return
 
 
     def setRectaExistente(self, idElemento, irRE):

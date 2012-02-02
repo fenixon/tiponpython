@@ -169,7 +169,7 @@ class dibujante(QMainWindow):
         reversab = QPushButton()
         reversab.setMinimumSize(32, 32)
         reversab.setMaximumSize(32, 32)
-        reversab.setIcon(QIcon('content/images/reproducir.png'))
+        reversab.setIcon(QIcon('content/images/retroceder.png'))
         self.reversab = reversab
         QtCore.QObject.connect(self.reversab, QtCore.SIGNAL(_fromUtf8('released()')), self.reversa)
 

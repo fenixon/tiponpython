@@ -259,13 +259,15 @@ self.scene())
 
 		if elementoDominio.elementoDominio == 0:
 			b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", elementoDominio.Dominio.scene())
+
 			b.id = elementoDominio.ContEnsayo.agregarPozo(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2)
-			print elementoDominio.Dominio.a1, " -- ", elementoDominio.Dominio.a2
 
 			self.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.a1, elementoDominio.Dominio.a2))
 
 			b.setX(elementoDominio.Dominio.a1 - 15)
+
 			b.setY(elementoDominio.Dominio.a2 -10)
+
 			self.botones.append(b)
 
 			elementoDominio.gbCoord.setPozoExistente(b.id)
@@ -274,15 +276,18 @@ self.scene())
 
 		else:
 
-			self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
-			self.transformarCoordenadaY(QtCore.QPoint((position.x() - 350), (position.y() - 350)))
-
 			#barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
 
-			barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, (elementoDominio.Dominio.b1), (elementoDominio.Dominio.b2), "barrera", elementoDominio.Dominio.scene())
+			self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
+			self.transformarCoordenadaY(QtCore.QPoint((position.x() - 35), (position.y() - 35)))
 
 
-			barrera.id = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, (elementoDominio.Dominio.b1), (elementoDominio.Dominio.b2))
+			print " X1 ", elementoDominio.Dominio.a1, " Y1 ",  elementoDominio.Dominio.a2, " X2 ",  elementoDominio.Dominio.b1, " Y2 ", elementoDominio.Dominio.b2
+
+			barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, "barrera", elementoDominio.Dominio.scene())
+
+
+			barrera.id = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
 
 			elementoDominio.gbCoord.setRectaExistente(barrera.id, 0)
 
@@ -401,24 +406,126 @@ self.scene())
 				valor1 = np.absolute(recta.dx() /2)
 				valor2 = np.absolute(recta.dy() /2)
 
+				self.transformarCoordenada(QtCore.QPoint(punto.x(), punto.y()))
+
+				self.transformarCoordenadaY(QtCore.QPoint(punto.x(), punto.y()))
 
 				#Recta proxima a las x
 				if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
+					print self.a1, " +++ ", self.a2
+
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
-					self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
+					if self.a2 >= self.alto:
+						if self.a1 <= 0:
+							self.movido.setLine(0, 0, self.movido.line().x2(), self.movido.line().y2())
+						elif self.a1 >= self.ancho:
+							self.movido.setLine(self.ancho, 0, self.movido.line().x2(), self.movido.line().y2())
+						else:
+							self.movido.setLine(punto.x(), 0, self.movido.line().x2(), self.movido.line().y2())
+
+					elif self.a2 <= 0:
+						if self.a1 <= 0:
+							self.movido.setLine(0, self.alto, self.movido.line().x2(), self.movido.line().y2())
+						elif self.a1 >= self.alto:
+							self.movido.setLine(self.ancho, self.alto, self.movido.line().x2(), self.movido.line().y2())
+						else:
+							self.movido.setLine(punto.x(), self.alto, self.movido.line().x2(), self.movido.line().y2())
+					elif self.a1 <= 0:
+						self.movido.setLine(0, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+					elif self.a1 >= self.ancho :
+						self.movido.setLine(self.ancho, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+					else:
+						self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
+
 					self.movido.eje = "x"
 
 				#Recta proxima a las y
 				elif np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
-					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
+ 
+					if self.b2 >= self.alto:
+						if self.b1 <= 0:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, 0)
+
+						elif self.b1 >= self.ancho:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, 0)
+
+						else:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), 0)
+
+
+					elif self.b2 <= 0:
+						if self.b1 <= 0:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, self.alto)
+						elif self.b1 >= self.alto:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, self.alto)
+						else:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), self.alto)
+
+					elif self.b1 <= 0:
+						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, punto.y())
+					elif self.b1 >= self.ancho :
+						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, punto.y())
+					else:
+						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
+
+ 
 					self.movido.eje = "y"
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
 				elif  self.movido.eje == "x":
-					self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
+					if self.a2 >= self.alto:
+						if self.a1 <= 0:
+							self.movido.setLine(0, 0, self.movido.line().x2(), self.movido.line().y2())
+						elif self.a1 >= self.ancho:
+							self.movido.setLine(self.ancho, 0, self.movido.line().x2(), self.movido.line().y2())
+						else:
+							self.movido.setLine(punto.x(), 0, self.movido.line().x2(), self.movido.line().y2())
+
+
+					elif self.a2 <= 0:
+						if self.a1 <= 0:
+							self.movido.setLine(0, self.alto, self.movido.line().x2(), self.movido.line().y2())
+						elif self.a1 >= self.alto:
+							self.movido.setLine(self.ancho, self.alto, self.movido.line().x2(), self.movido.line().y2())
+						else:
+							self.movido.setLine(punto.x(), self.alto, self.movido.line().x2(), self.movido.line().y2())
+					elif self.a1 <= 0:
+						self.movido.setLine(0, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+					elif self.a1 >= self.ancho:
+						self.movido.setLine(self.ancho, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+					else:
+						self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
+
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
 				elif self.movido.eje == "y":
-					self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
+ 
+					if self.b2 >= self.alto:
+						if self.b1 <= 0:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, 0)
+
+						elif self.b1 >= self.ancho:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, 0)
+
+						else:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), 0)
+
+
+					elif self.b2 <= 0:
+						if self.b1 <= 0:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, self.alto)
+						elif self.b1 >= self.alto:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, self.alto)
+						else:
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), self.alto)
+
+					elif self.b1 <= 0:
+						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, punto.y())
+					elif self.b1 >= self.ancho :
+						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, punto.y())
+					else:
+						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
+ 
+
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
 				self.transformarCoordenada(QtCore.QPoint(self.movido.line().x1(), self.movido.line().y1()))
@@ -441,7 +548,6 @@ self.scene())
 				self.transformarCoordenada(posicion)
 				if item.tooltip == "pozo" and e.button() == QtCore.Qt.LeftButton:
 					item.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
-					print "Idenfitificador ", item.id
 					self.setCursor(QtGui.QCursor(QtCore.Qt.ClosedHandCursor))
 
 					#Se muestran sus coordenadas
@@ -472,6 +578,9 @@ self.scene())
 						if pozo.id != item.id:
 							pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
 
+
+					for r in elementoDominio.Dominio.rectas:
+						r.setPen(QtCore.Qt.black)
 
 					elementoDominio.selectedMenuMouse["tipo"] = "punto"
 					elementoDominio.selectedMenuMouse["id"] = item.id
@@ -518,7 +627,26 @@ self.scene())
 					item.setPen(QtCore.Qt.red)
 					self.moviendo = True
 					self.movido = item
+
+					elementoDominio.gbCoord.setRectaExistente(item.id, 0)
+
+					for pozo in elementoDominio.Dominio.botones:
+						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+					for r in elementoDominio.Dominio.rectas:
+						if r.id != item.id:
+							r.setPen(QtCore.Qt.black)
+
 				elif item.tooltip == "barrera" and e.button() == QtCore.Qt.RightButton:
+
+					for pozo in elementoDominio.Dominio.botones:
+						pozo.setPixmap(QtGui.QPixmap("content/images/blackDotIcon.png"))
+
+					for r in elementoDominio.Dominio.rectas:
+						if r.id != item.id:
+							r.setPen(QtCore.Qt.black)
+
+
 					item.setPen(QtCore.Qt.red)
 					elementoDominio.selectedMenuMouse["tipo"] = "recta"
 					elementoDominio.selectedMenuMouse["id"] = item.id
@@ -777,7 +905,12 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 	eje = ""
 
 	def __init__(self, x1, y1, x2, y2, tooltip, escena):
-		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, escena)
+
+		elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(x1, y1))
+
+		elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(x2, y2))
+
+		super(vistaBarrera, self).__init__(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, escena)
 		self.init(tooltip)
 
 	def init(self, tooltip):
@@ -1558,7 +1691,6 @@ np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.
 		        pozo.setY(elementoDominio.Dominio.a2 - 10)
 
                     elementoDominio.pozoSeleccionado = 0
-                    print "ACTUALIZAMO SIN SELECCIONAR ", pozo.id
                     return
 
         if self.tipoElemento == "pozo":
@@ -1608,55 +1740,100 @@ elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
             self.tipoElemento = "barrera"
             self.idElemento = idElemento
 
-            recta = elementoDominio.ContEnsayo.buscarRecta(self.idElemento)
+        recta = elementoDominio.ContEnsayo.buscarRecta(self.idElemento)
 
-            if irRE == 0:
+        if irRE == 0:
+	    if elementoDominio.Dominio.a1 <= 0:
+                self.lineEdit.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.a1 >= elementoDominio.Dominio.ancho:
+                self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.ancho, 10))
+	    else:
                 self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.a1, 10))
+
+	    if elementoDominio.Dominio.a2 <= 0:
+                self.lineEdit_2.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.a2 >= elementoDominio.Dominio.alto:
+                self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    else:
                 self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
+
+	    if elementoDominio.Dominio.b1 <= 0:
+                self.lineEdit_3.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.b1 >= elementoDominio.Dominio.ancho:
+                self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.ancho, 10))
+	    else:
                 self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.b1, 10))
+	    if elementoDominio.Dominio.b2 <= 0:
+                self.lineEdit_4.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.b2 >= elementoDominio.Dominio.alto:
+                self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    else:
                 self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
 
-		if recta.tipo == "Positivo":
-		    self.cbTipo.setCurrentIndex(1)
-		else:
-		    self.cbTipo.setCurrentIndex(0)
+	    if recta.tipo == "Positivo":
+	        self.cbTipo.setCurrentIndex(1)
+	    else:
+	        self.cbTipo.setCurrentIndex(0)
 
-            else:
+        else:
 
-                recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
-
+            recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
+	    if elementoDominio.Dominio.a1 <= 0:
+                self.lineEdit.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.a1 >= elementoDominio.Dominio.ancho:
+                self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.ancho, 10))
+	    else:
                 self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.a1, 10))
+
+	    if elementoDominio.Dominio.a2 <= 0:
+                self.lineEdit_2.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.a2 >= elementoDominio.Dominio.alto:
+                self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    else:
                 self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
+
+	    if elementoDominio.Dominio.b1 <= 0:
+                self.lineEdit_3.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.b1 >= elementoDominio.Dominio.ancho:
+                self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.ancho, 10))
+	    else:
                 self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.b1, 10))
+	    if elementoDominio.Dominio.b2 <= 0:
+                self.lineEdit_4.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.b2 >= elementoDominio.Dominio.alto:
+                self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    else:
                 self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
 
-		if recta.tipo == "Positivo":
-		    self.cbTipo.setCurrentIndex(1)
-		else:
-		    self.cbTipo.setCurrentIndex(0)
 
 
-            if not self.btnActualizar.isVisible():
+	    if recta.tipo == "Positivo":
+	        self.cbTipo.setCurrentIndex(1)
+	    else:
+	        self.cbTipo.setCurrentIndex(0)
 
-                self.btnActualizar.setVisible(True)
 
-                self.btnAceptar.setVisible(False)
-                self.btnCancelar.setVisible(False)
-                self.btnPrevia.setVisible(False)
+        if not self.btnActualizar.isVisible():
 
-                self.lineEdit.setVisible(True)
-                self.lineEdit_2.setVisible(True)
-                self.eliminarPlacebos()
+            self.btnActualizar.setVisible(True)
 
-            self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
-            self.lineEdit_3.setVisible(True)
-            self.lineEdit_4.setVisible(True)
-            self.label_5.setVisible(True)
-            self.label_4.setVisible(True)
-            self.label_3.setVisible(True)
-	    self.label_2.setVisible(True)
-            self.label.setVisible(True)
-            self.cbTipo.setVisible(True)
+            self.btnAceptar.setVisible(False)
+            self.btnCancelar.setVisible(False)
+            self.btnPrevia.setVisible(False)
+
+            self.lineEdit.setVisible(True)
+            self.lineEdit_2.setVisible(True)
+            self.eliminarPlacebos()
+
+        self.label.setText(QtGui.QApplication.translate("Form", "Recta", None, QtGui.QApplication.UnicodeUTF8))
+        self.lineEdit_3.setVisible(True)
+        self.lineEdit_4.setVisible(True)
+        self.label_5.setVisible(True)
+        self.label_4.setVisible(True)
+        self.label_3.setVisible(True)
+	self.label_2.setVisible(True)
+        self.label.setVisible(True)
+        self.cbTipo.setVisible(True)
 
 
 
@@ -1760,7 +1937,7 @@ class UiForm(object):
 	def setupUi(self, Form, ContEnsayo, appalto, appancho):
 
 		elementoDominio.ContEnsayo = ContEnsayo
-		print "ALTO ", appalto, " ANCHO",  appancho
+
 		resolucionX=appalto
 		resolucionY=appancho
 		anchomaximo=resolucionX

@@ -41,26 +41,9 @@ class barrera():
                 def calcularRecta( self, alto, ancho ):
       
                                 self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
-				"""
-                                self.n = 0
-                                xPorm = self.m * self.x1
 
-                                if xPorm < 0 :
-                                                self.n = self.y1 +  xPorm
-                                else:
-                                                self.n = self.y1 -  xPorm
-
- 
-                                self.x3 = self.x1 - 600
-
-                                self.y3 = (self.m * self.x3) + self.n
-                                
-                                self.x4 = self.x2 + 600
-                                
-                                self.y4 = (self.m * self.x4) + self.n
-				"""
 				print "alto ", alto, " ancho ", ancho, " x1 ", self.x1, " y1  ", self.y1 
-				
+
                                 self.n = self.x1 * self.m * -1 + self.y1 
                                 
                                 print " m = ", self.m, " n = ", self.n
@@ -90,19 +73,16 @@ class barrera():
 					if self.x6 > ancho or self.x6 < 0:
 					    self.x6 = ancho
 					    self.y6 = (self.m * self.x6) + self.n
-					    
-					    
+				    if self.x5 != 0 or self.y5 != 0 and self.x6 != 0 or self.y6 != 0:
+				        self.x1 = self.x5
+				        self.y1 = self.y5
+				        self.x2 = self.x6
+				        self.y2 = self.y6
 
-    				self.x1 = self.x5
-				self.y1 = self.y5
-				 
-				self.x2 = self.x6
-				self.y2 = self.y6
 
-                                
                                 print self.x6, " ++ ", self.y6
 
-				
+
                                 ## calculo de los coeficientes de la recta
                                 ## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
                                 self.alfa=-self.y1+self.y2

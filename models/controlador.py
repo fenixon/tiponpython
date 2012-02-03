@@ -172,8 +172,13 @@ class Proyecto(object):
 
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2, alto, ancho):
-	print tipo, x1, y1, x2, y2
+	print "x1 ", x1, " y1 ", y1, " x2 ", x2, " y2 " ,y2, " alto ", alto, " ancho ",ancho
+
         r = barrera(x1, x2, y1, y2, tipo, alto, ancho)
+
+	print "x1 ", r.x1, " y1 ", r.y1, " x2 ", r.x2, " y2 " , r.y2, " alto ", alto, " ancho ",ancho
+
+
         self.idR = self.idR + 1
         r.id = self.idR
 	self.dominio.listaRecta.append(r)
@@ -182,7 +187,6 @@ class Proyecto(object):
         self.dominio.listaRecta.append(r)
 
     def buscarRecta(self, idElemento):
-
         for recta in self.dominio.listaRecta:
             if recta.id == idElemento:
                 return recta
@@ -191,7 +195,7 @@ class Proyecto(object):
         return self.dominio.listaRecta
 
     def buscarPuntoEnRecta(self, x, y):
-        
+
         for barrera in self.dominio.listaRecta:
 
             recta = QtCore.QLine(barrera.x1, barrera.y1, barrera.x2, barrera.y2)

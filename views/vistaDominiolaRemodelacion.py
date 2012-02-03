@@ -285,7 +285,7 @@ self.scene())
 			ident = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), self.a1, self.a2, self.b1, self.b2, self.alto, self.ancho)
 
 			r = elementoDominio.ContEnsayo.buscarRecta(ident)
-			
+
 			barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
 
 			#self.transformarCoordenada(QtCore.QPoint(barrera.line().x1(), barrera.line().y1()))
@@ -541,7 +541,14 @@ self.scene())
 
 	def mousePressEvent(self, e):
 
-		item = self.itemAt(e.pos().x(), e.pos().y())
+		item = None
+
+		listaItems = self.items (QtCore.QRect(e.pos().x(), e.pos().y(), 5, 5))
+		if len(listaItems) > 0:
+			print len(listaItems)
+			item = listaItems[0]
+
+		
 
 		if item != None:
 
@@ -682,12 +689,10 @@ self.scene())
 
 	def mouseReleaseEvent(self, e):
 
-     	        print "LIBERADO", self.rectaSeleccionada['id']
 		if self.rectaSeleccionada['id'] > 0:
 		    r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
 		    self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
    		    self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
-		    print "x1 ", r.x1, " y1 ", r.y1, " x2 ", r.x2, " y2 ", r.y2
 		    self.movido.setLine(r.x1, self.a2, r.x2, self.b2)
 
 
@@ -1471,9 +1476,10 @@ class gbCoordenadas(QtGui.QGroupBox):
 np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 		    r = elementoDominio.ContEnsayo.buscarRecta(ident)
-   		    print "el ident", ident, "Esto es lo que tiene r", r.y1, " ", r.y2 
+   		    print "el ident", ident, "Esto es lo que tiene r  x1 ", r.x1, " y1 ", r.y1, " x2 ", r.x2 , " y2 ", r.y2 
 		    
-   		    barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
+   		    barrera = vistaBarrera(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
 
 		    barrera.id = ident
 
@@ -1486,7 +1492,6 @@ np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
 np.int32(self.lineEdit_4.text()))
 		    """
 
-		    
                     elementoDominio.Dominio.rectas.append(barrera)
 
 		    print "Coordenadas con las que se guarda x1 ", elementoDominio.Dominio.a1, " Y1 ",elementoDominio.Dominio.a2, " x2 ", elementoDominio.Dominio.b1, " y2 ",elementoDominio.Dominio.b2

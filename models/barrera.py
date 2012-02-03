@@ -39,55 +39,58 @@ class barrera():
                                 
 
                 def calcularRecta( self, alto, ancho ):
-      
-                                self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
 
-				print "alto ", alto, " ancho ", ancho, " x1 ", self.x1, " y1  ", self.y1 
+				try:
 
-                                self.n = self.x1 * self.m * -1 + self.y1 
-                                
-                                print " m = ", self.m, " n = ", self.n
-                                self.y5 = 0
+					self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
 
-                                self.x5 = (self.y5 - self.n ) / self.m
-                                
-				print self.x5, " ++ ", self.y5
-				
-                                self.x6 = 0
+					print "alto ", alto, " ancho ", ancho, " x1 ", self.x1, " y1  ", self.y1, " x2 ", self.x2, " y2 ", self.y2
 
-                                self.y6 = (self.m * self.x6) + self.n
+					self.n = self.x1 * self.m * -1 + self.y1 
 
-                                if alto > 0 and ancho > 0:
+					print " m = ", self.m, " n = ", self.n
+					self.y5 = 0
 
-     				    if self.x5 > ancho or self.x5 < 0:
-				        self.x5 = ancho
-					self.y5 = (self.m * self.x5) + self.n 
-					if self.y5 > alto or self.y5 < 0:
-					    self.y5 = alto
-					    self.x5 = (self.y5 - self.n ) / self.m
-					    
-					    
-				    if self.y6 > alto or self.y6 < 0:
-				        self.y6 = alto
-					self.x6 = (self.y6 - self.n ) / self.m
-					if self.x6 > ancho or self.x6 < 0:
-					    self.x6 = ancho
-					    self.y6 = (self.m * self.x6) + self.n
-				    if self.x5 != 0 or self.y5 != 0 and self.x6 != 0 or self.y6 != 0:
-				        self.x1 = self.x5
-				        self.y1 = self.y5
-				        self.x2 = self.x6
-				        self.y2 = self.y6
+					self.x5 = (self.y5 - self.n ) / self.m
+
+					print self.x5, " ++ ", self.y5
+
+					self.x6 = 0
+
+					self.y6 = (self.m * self.x6) + self.n
+
+					if alto > 0 and ancho > 0:
+
+						if self.x5 > ancho or self.x5 < 0:
+							self.x5 = ancho
+							self.y5 = (self.m * self.x5) + self.n 
+							if self.y5 > alto or self.y5 < 0:
+								self.y5 = alto
+								self.x5 = (self.y5 - self.n ) / self.m
+						if self.y6 > alto or self.y6 < 0:
+							self.y6 = alto
+							self.x6 = (self.y6 - self.n ) / self.m
+							if self.x6 > ancho or self.x6 < 0:
+								self.x6 = ancho
+								self.y6 = (self.m * self.x6) + self.n
+						if self.x5 != 0 or self.y5 != 0 and self.x6 != 0 or self.y6 != 0:
+							self.x1 = self.x5
+							self.y1 = self.y5
+							self.x2 = self.x6
+							self.y2 = self.y6
+
+						print self.x5, " ++ ", self.y5
+						print self.x6, " ++ ", self.y6
 
 
-                                print self.x6, " ++ ", self.y6
+						## calculo de los coeficientes de la recta
+						## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
+						self.alfa=-self.y1+self.y2
+						self.beta=self.x1-self.x2
+						self.gamma=-self.x1*self.y2 + self.y1*self.x2
 
-
-                                ## calculo de los coeficientes de la recta
-                                ## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
-                                self.alfa=-self.y1+self.y2
-                                self.beta=self.x1-self.x2
-                                self.gamma=-self.x1*self.y2 + self.y1*self.x2                                
+				except:
+					print "ERROR!!!!"
 
                 def devolverCoef(self):
                     return [self.alfa,self.beta,self.gamma]

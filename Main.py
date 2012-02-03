@@ -401,30 +401,29 @@ class Ui_MainWindow(QtGui.QDialog):
                         if len(poz.observaciones) > 0:
                             ##formulario de discretizacion temporal
 
-                            ####aca cambiar todo para mandar al formulario del pozo                            
+                            ####aca cambiar todo para mandar al formulario del pozo
 
                             nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                            frm=QtGui.QDialog()
+                            frm=QtGui.QWidget()
                             grop = graficarOpt()
                             self.grop = grop.setupUi(frm, ContEnsayo.obtenerDominio(), ti, tf,nit)
-                            frm.exec_()
+                            frm.show()
                             QtCore.QObject.connect(self.grop, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarGrop)
-                            print 'Dibujante invocado'                            
-                                                      
+                            print 'Dibujante invocado'
 
                         else:
 
                             #print 'No hay observaciones asociadas al pozo'
                             QtGui.QMessageBox.information(self,
                                 "Error",
-                                "No hay observaciones asociadas al pozo")                             
+                                "No hay observaciones asociadas al pozo")
 
                     else:
 
                         #print 'No hay ensayos asociados al pozo'
                         QtGui.QMessageBox.information(self,
                             "Error",
-                            "No hay ensayos asociados al pozo")                           
+                            "No hay ensayos asociados al pozo")
 
                 else:
 

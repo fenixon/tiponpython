@@ -140,16 +140,15 @@ class dibujante(QMainWindow):
         self.fm.plotC(0)
         self.main_frame = QWidget()
         self.setWindowTitle(u'Gráficas')
-        self.setMaximumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
-        self.setMinimumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
+#        self.setMaximumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
+#        self.setMinimumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
+        self.setMinimumSize(276, 568)
 ##        print 'Figure: width: ' + str(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi()) + ', height: ' +str(self.fm.fig.get_figheight() * self.fm.fig.get_dpi()) + ', dpi: ' + str(self.fm.fig.get_dpi())
         self.center()
         self.canvas = FigureCanvas(self.fm.fig)
         self.canvas.setParent(self.main_frame)
-        #self.mpl_toolbar = NavigationToolbar(self.canvas, self.main_frame)
+        self.canvas.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.canvas.draw()
-##        self.vel = [1, 2, 3, 4, 5, 6]
-        ## menos velocidades        
         self.vel = [1, 2, 3]
         self.velActual = 0
         self.inter = 1

@@ -66,15 +66,15 @@ class barrera():
 							if self.y5 > alto or self.y5 < 0:
 								self.y5 = alto
 								self.x5 = (self.y5 - self.n ) / self.m
+							self.x1 = self.x5
+							self.y1 = self.y5
+
 						if self.y6 > alto or self.y6 < 0:
 							self.y6 = alto
 							self.x6 = (self.y6 - self.n ) / self.m
 							if self.x6 > ancho or self.x6 < 0:
 								self.x6 = ancho
 								self.y6 = (self.m * self.x6) + self.n
-						if self.x5 != 0 or self.y5 != 0 and self.x6 != 0 or self.y6 != 0:
-							self.x1 = self.x5
-							self.y1 = self.y5
 							self.x2 = self.x6
 							self.y2 = self.y6
 

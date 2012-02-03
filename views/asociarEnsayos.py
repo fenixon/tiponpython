@@ -87,6 +87,8 @@ class Ui_Dialog(QtGui.QDialog):
         self.opcionensayo.setChecked(True)
         self.listarEnsayos()
         self.vistaDatosControlador.resizeColumnsToContents()
+        self.tiporem=None
+        self.tipo="e"
 
         QtCore.QObject.connect(self.opcionobservacion, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarObservaciones)
         QtCore.QObject.connect(self.opcionensayo, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarEnsayos)
@@ -166,7 +168,12 @@ class Ui_Dialog(QtGui.QDialog):
         self.vistaEnsayos.resizeColumnsToContents()
         self.vistaObservaciones.resizeColumnsToContents()
         self.vistaDatosControlador.resizeColumnsToContents()
-        
+
+        if self.tiporem==self.tipo:
+            if self.tipo=="o" :
+                self.listarObservaciones()
+            else:
+                self.listarEnsayos()
 
     def aceptar(self):
         if self.demo!=True :
@@ -231,7 +238,7 @@ class Ui_Dialog(QtGui.QDialog):
             ####  hay que desacioar del controlador el ensayo cargado
             if self.tiporem=="o" :
                 self.p.eliminarObservaciones(self.oerem)
-                ContEnsayo.restaurarObservaciones(self.oerem)
+                ContEnsayo.restaurarObservacion(self.oerem)
             else:
                 self.p.eliminarEnsayo(self.oerem)
                 ContEnsayo.restaurarEnsayo(self.oerem)

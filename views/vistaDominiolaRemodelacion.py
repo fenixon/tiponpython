@@ -279,7 +279,7 @@ self.scene())
 			#barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
 
 			self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
-			self.transformarCoordenadaY(QtCore.QPoint((position.x() - 35), (position.y() - 35)))
+			self.transformarCoordenadaY(QtCore.QPoint((position.x() + 50), (position.y() + 50)))
 
 
 			barrera = vistaBarrera(self.a1, self.a2, self.b1, self.b2, "barrera", elementoDominio.Dominio.scene())

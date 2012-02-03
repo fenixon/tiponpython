@@ -35,8 +35,7 @@ class barrera():
                                 self.y2 = y2
                                 self.calcularRecta(alto, ancho)
 
-                                
-                                
+
 
                 def calcularRecta( self, alto, ancho ):
 

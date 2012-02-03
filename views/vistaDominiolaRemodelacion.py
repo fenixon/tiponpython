@@ -417,64 +417,14 @@ self.scene())
 				#Recta proxima a las x
 				if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
-					if self.a2 >= self.alto:
-						if self.a1 <= 0:
-							self.movido.setLine(0, 0, self.movido.line().x2(), self.movido.line().y2())
-						elif self.a1 >= self.ancho:
-							self.movido.setLine(self.ancho, 0, self.movido.line().x2(), self.movido.line().y2())
-						else:
-							self.movido.setLine(punto.x(), 0, self.movido.line().x2(), self.movido.line().y2())
-
-					elif self.a2 <= 0:
-						if self.a1 <= 0:
-							self.movido.setLine(0, self.alto, self.movido.line().x2(), self.movido.line().y2())
-						elif self.a1 >= self.alto:
-							self.movido.setLine(self.ancho, self.alto, self.movido.line().x2(), self.movido.line().y2())
-						else:
-							self.movido.setLine(punto.x(), self.alto, self.movido.line().x2(), self.movido.line().y2())
-					elif self.a1 <= 0:
-						self.movido.setLine(0, punto.y(), self.movido.line().x2(), self.movido.line().y2())
-					elif self.a1 >= self.ancho :
-						self.movido.setLine(self.ancho, punto.y(), self.movido.line().x2(), self.movido.line().y2())
-					else:
-						self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
-
 					self.movido.eje = "x"
 
-				#Recta proxima a las y
+					#Recta proxima a las y
 				elif np.absolute(rectaw.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectaw.dy()) < np.absolute((recta.dy() / 2)):
- 
-					if self.b2 >= self.alto:
-						if self.b1 <= 0:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, 0)
-
-						elif self.b1 >= self.ancho:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, 0)
-
-						else:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), 0)
-
-
-					elif self.b2 <= 0:
-						if self.b1 <= 0:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, self.alto)
-						elif self.b1 >= self.alto:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, self.alto)
-						else:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), self.alto)
-
-					elif self.b1 <= 0:
-						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, punto.y())
-					elif self.b1 >= self.ancho :
-						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, punto.y())
-					else:
-						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
-
- 
 					self.movido.eje = "y"
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
-				elif  self.movido.eje == "x":
+				if  self.movido.eje == "x":
 					if self.a2 >= self.alto:
 						if self.a1 <= 0:
 							self.movido.setLine(0, 0, self.movido.line().x2(), self.movido.line().y2())
@@ -534,7 +484,8 @@ self.scene())
 
 				self.transformarCoordenadaY(QtCore.QPoint(self.movido.line().x2(), self.movido.line().y2()))
 
-				elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.movido.line().x1(), self.a2, self.movido.line().x2(), self.b2, self.alto, self.ancho)
+				#elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.movido.line().x1(), self.a2, self.movido.line().x2(), self.b2, self.alto, self.ancho)
+				elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.a1, self.a2, self.b1, self.b2, self.alto, self.ancho)
 
 				elementoDominio.gbCoord.setRectaExistente(self.movido.id, 0)
 
@@ -690,10 +641,11 @@ self.scene())
 	def mouseReleaseEvent(self, e):
 
 		if self.rectaSeleccionada['id'] > 0:
-		    r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
-		    self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
-   		    self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
-		    self.movido.setLine(r.x1, self.a2, r.x2, self.b2)
+			r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
+			self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
+			self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
+			self.movido.setLine(r.x1, self.a2, r.x2, self.b2)
+			self.rectaSeleccionada['id'] = 0
 
 
 		self.moviendo = False
@@ -909,7 +861,7 @@ class vistaPozo(QtGui.QGraphicsPixmapItem):
 				if x.tooltip == "pozo":
 
 					elementoDominio.ContEnsayo.moverPozo(x.id, posicion.x(), posicion.y())
-					elementoDominio.gbCoord.actualizarCoordenadasPozo(x.id)
+				        elementoDominio.gbCoord.actualizarCoordenadasPozo(x.id)
 
 
 
@@ -1658,16 +1610,16 @@ np.int32(self.lineEdit_4.text()))
 		    elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(),
 np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
-		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()) , np.int32(self.lineEdit_2.text())))
 
-		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit_3.text()) ), np.int32(self.lineEdit_4.text())))
+		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
 
 
 		    elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, elementoDominio.Dominio.scene())
 		else:
-		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit.text()) ), np.int32(self.lineEdit_2.text())))
+		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
-		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( elementoDominio.Dominio.ejeEscena.x() + np.int32( np.int32(self.lineEdit_3.text()) ), np.int32(self.lineEdit_4.text())))
+		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
 
 		    elementoDominio.Dominio.rectaCandidata.setLine(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2))
 

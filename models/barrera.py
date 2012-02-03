@@ -41,7 +41,7 @@ class barrera():
 
 				try:
 
-					self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
+                                        self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
 
 					print "alto ", alto, " ancho ", ancho, " x1 ", self.x1, " y1  ", self.y1, " x2 ", self.x2, " y2 ", self.y2
 
@@ -82,11 +82,11 @@ class barrera():
 						print self.x6, " ++ ", self.y6
 
 
-						## calculo de los coeficientes de la recta
-						## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
-						self.alfa=-self.y1+self.y2
-						self.beta=self.x1-self.x2
-						self.gamma=-self.x1*self.y2 + self.y1*self.x2
+                                        ## calculo de los coeficientes de la recta
+                                        ## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
+                                        self.alfa=-self.y1+self.y2
+                                        self.beta=self.x1-self.x2
+                                        self.gamma=-self.x1*self.y2 + self.y1*self.x2
 
 				except:
 					print "ERROR!!!!"

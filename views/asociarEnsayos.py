@@ -2,12 +2,13 @@
 
 # Form implementation generated from reading ui file 'asociarEnsayos.ui'
 #
-# Created: Mon Dec 26 19:39:44 2011
+# Created: Thu Feb 02 18:47:42 2012
 #      by: PyQt4 UI code generator 4.9
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
+import sys
 import modelotabla
 import controlador
 
@@ -17,147 +18,242 @@ except AttributeError:
     _fromUtf8 = lambda s: s
 
 class Ui_Dialog(QtGui.QDialog):
-    def setupUi(self, Dialog, idpozo, cont):
-
+    def setupUi(self, Asociarensayos, idpozo, cont, demo):
         global ContEnsayo
         ContEnsayo=cont
-        
         self.p=cont.buscarPozo(idpozo)
-####    Poner el titulito con el nombre del pozo        
-        Dialog.setObjectName(_fromUtf8("Asociar ensayos"))
-        
-        Dialog.resize(638, 252)
+        self.guardar=Asociarensayos       
+        self.demo=demo
+        ##Almacenar datos para desacer cambios al dar cancelar
 
-        self.guardar=Dialog
+        ContEnsayo.copiarObservacionesEnsayos()
+        self.pcopia=self.p.copiaSuperficial()
+    
+        
+        Asociarensayos.setObjectName(_fromUtf8("Asociarensayos"))
+        Asociarensayos.resize(692, 295)
 
-        
-        
-        self.model_po=modelotabla.modelotabla(self.p.observaciones,["Observaciones", "Nombre"])        
-        self.listWidget = QtGui.QTableView(Dialog)
-        self.listWidget.setGeometry(QtCore.QRect(30, 20, 181, 211))
-        self.listWidget.setObjectName(_fromUtf8("listWidget"))
-        self.listWidget.setModel(self.model_po)
+        self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Id", "Nombre"])
+        self.vistaEnsayos = QtGui.QTableView(Asociarensayos)
+        self.vistaEnsayos.setGeometry(QtCore.QRect(280, 50, 181, 191))
+        self.vistaEnsayos.setObjectName(_fromUtf8("vistaEnsayos"))
+        self.vistaEnsayos.setModel(self.model_pe)
+        self.vistaEnsayos.resizeColumnsToContents()
 
-        self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Ensayos", "Nombre"])  
-        self.listWidget_2 = QtGui.QTableView(Dialog)
-        self.listWidget_2.setGeometry(QtCore.QRect(230, 20, 181, 211))
-        self.listWidget_2.setObjectName(_fromUtf8("listWidget_2"))
-        self.listWidget_2.setModel(self.model_pe)
+        self.model_po=modelotabla.modelotabla(self.p.observaciones,["Id", "Nombre"]) 
+        self.vistaObservaciones = QtGui.QTableView(Asociarensayos)
+        self.vistaObservaciones.setGeometry(QtCore.QRect(480, 50, 181, 191))
+        self.vistaObservaciones.setObjectName(_fromUtf8("vistaObservaciones"))
+        self.vistaObservaciones.setModel(self.model_po)
+        self.vistaObservaciones.resizeColumnsToContents()
         
+        self.vistaDatosControlador = QtGui.QTableView(Asociarensayos)
+        self.vistaDatosControlador.setGeometry(QtCore.QRect(30, 80, 191, 161))
+        self.vistaDatosControlador.setObjectName(_fromUtf8("vistaDatosControlador"))
         
-        self.pushButton = QtGui.QPushButton(Dialog)
-        self.pushButton.setGeometry(QtCore.QRect(430, 20, 181, 23))
-        self.pushButton.setObjectName(_fromUtf8("pushButton"))
-        self.pushButton_2 = QtGui.QPushButton(Dialog)
-        self.pushButton_2.setGeometry(QtCore.QRect(430, 50, 181, 23))
-        self.pushButton_2.setObjectName(_fromUtf8("pushButton_2"))
-        
-        self.listado = QtGui.QTableView(Dialog)
-        self.listado.setGeometry(QtCore.QRect(430, 80, 181, 121))
-        self.listado.setObjectName(_fromUtf8("listado"))
+        self.btn_Cancelar = QtGui.QPushButton(Asociarensayos)
+        self.btn_Cancelar.setGeometry(QtCore.QRect(360, 260, 101, 23))
+        self.btn_Cancelar.setObjectName(_fromUtf8("btn_Cancelar"))
+        self.btn_Agregar = QtGui.QPushButton(Asociarensayos)
+        self.btn_Agregar.setGeometry(QtCore.QRect(230, 120, 41, 23))
+        self.btn_Agregar.setObjectName(_fromUtf8("btn_Agregar"))
+        self.opcionensayo = QtGui.QRadioButton(Asociarensayos)
+        self.opcionensayo.setGeometry(QtCore.QRect(30, 20, 191, 21))
+        self.opcionensayo.setObjectName(_fromUtf8("opcionensayo"))
+        self.opcionobservacion = QtGui.QRadioButton(Asociarensayos)
+        self.opcionobservacion.setGeometry(QtCore.QRect(30, 50, 201, 21))
+        self.opcionobservacion.setObjectName(_fromUtf8("opcionobservacion"))
+        self.btn_Remover = QtGui.QPushButton(Asociarensayos)
+        self.btn_Remover.setGeometry(QtCore.QRect(230, 170, 41, 23))
+        self.btn_Remover.setObjectName(_fromUtf8("btn_Remover"))
+        self.label = QtGui.QLabel(Asociarensayos)
+        self.label.setGeometry(QtCore.QRect(280, 20, 181, 21))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.label_2 = QtGui.QLabel(Asociarensayos)
+        self.label_2.setGeometry(QtCore.QRect(480, 20, 191, 21))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.btn_Aceptar = QtGui.QPushButton(Asociarensayos)
+        self.btn_Aceptar.setGeometry(QtCore.QRect(230, 260, 101, 23))
+        self.btn_Aceptar.setObjectName(_fromUtf8("btn_Aceptar"))
+        ##Por defecto se eligen ensayos
+        self.opcionensayo.setChecked(True)
+        self.listarEnsayos()
+        self.vistaDatosControlador.resizeColumnsToContents()
 
-        
-        self.pushButton_3 = QtGui.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(530, 210, 81, 23))
-        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
-        
-        self.pushButton_4 = QtGui.QPushButton(Dialog)
-        self.pushButton_4.setGeometry(QtCore.QRect(430, 210, 91, 23))
-        self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
+        QtCore.QObject.connect(self.opcionobservacion, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarObservaciones)
+        QtCore.QObject.connect(self.opcionensayo, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarEnsayos)
+        QtCore.QObject.connect(self.vistaDatosControlador, QtCore.SIGNAL(_fromUtf8("clicked(QModelIndex)")), self.seleccionarDato)
 
-        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarObservaciones)
-        QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarEnsayos)
-        QtCore.QObject.connect(self.listado, QtCore.SIGNAL(_fromUtf8("clicked(QModelIndex)")), self.seleccionarDato)
-        
-        QtCore.QObject.connect(self.pushButton_4, QtCore.SIGNAL(_fromUtf8("clicked()")),self.asociar)
-        QtCore.QObject.connect(self.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")),self.cancelar)
+        QtCore.QObject.connect(self.vistaEnsayos, QtCore.SIGNAL(_fromUtf8("clicked(QModelIndex)")), self.seleccionarDatoRemEnsayo)
+        QtCore.QObject.connect(self.vistaObservaciones, QtCore.SIGNAL(_fromUtf8("clicked(QModelIndex)")), self.seleccionarDatoRemObservacion)
         
         
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        QtCore.QObject.connect(self.btn_Agregar, QtCore.SIGNAL(_fromUtf8("clicked()")),self.asociar)
+        QtCore.QObject.connect(self.btn_Remover, QtCore.SIGNAL(_fromUtf8("clicked()")),self.desasociar)
+        QtCore.QObject.connect(self.btn_Aceptar, QtCore.SIGNAL(_fromUtf8("clicked()")),self.aceptar)
+        QtCore.QObject.connect(self.btn_Cancelar, QtCore.SIGNAL(_fromUtf8("clicked()")),self.cancelar)
+        #QtCore.QObject.connect(self.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")),self.cancelar)        
 
-    def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Pozo n° "+str(self.p.id), None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(QtGui.QApplication.translate("Dialog", "Asociar observacion", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_2.setText(QtGui.QApplication.translate("Dialog", "Asociar ensayo de bombeo", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_3.setText(QtGui.QApplication.translate("Dialog", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton_4.setText(QtGui.QApplication.translate("Dialog", "Agregar", None, QtGui.QApplication.UnicodeUTF8))
+        self.retranslateUi(Asociarensayos)
+        QtCore.QMetaObject.connectSlotsByName(Asociarensayos)
 
+    def retranslateUi(self, Asociarensayos):
+        Asociarensayos.setWindowTitle(QtGui.QApplication.translate("Asociarensayos", "Pozo n° "+str(self.p.id), None, QtGui.QApplication.UnicodeUTF8))
+        
+        self.btn_Cancelar.setText(QtGui.QApplication.translate("Asociarensayos", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_Agregar.setText(QtGui.QApplication.translate("Asociarensayos", ">>", None, QtGui.QApplication.UnicodeUTF8))
+        self.opcionensayo.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Ensayo de bombeo", None, QtGui.QApplication.UnicodeUTF8))
+        self.opcionobservacion.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Conjunto de observaciones", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_Remover.setText(QtGui.QApplication.translate("Asociarensayos", "<<", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Asociarensayos", "Ensayos de bombeo asociados", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Asociarensayos", "Conj. de observaciones asociados", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_Aceptar.setText(QtGui.QApplication.translate("Asociarensayos", "Aceptar", None, QtGui.QApplication.UnicodeUTF8))
 
     def listarObservaciones(self):
 ##      al clickear en observaciones se va a mostrar el listado
         global ContEnsayo
-        print 'observaciones'
+        #print 'observaciones'
         obss=ContEnsayo.observaciones
-        self.model=modelotabla.modelotabla(obss, ["Lista de observaciones", "Nombre"])
-        self.listado.setModel(self.model)
+        self.model=modelotabla.modelotabla(obss, ["Id", "Nombre"])
+        self.vistaDatosControlador.setModel(self.model)
         self.tipo="o"
 
     def listarEnsayos(self):
 ##      al clickear en ensayos se va a mostrar el listado de ensayos
         global ContEnsayo
-        print 'ensayos'
+#       print 'ensayos'
         enss=ContEnsayo.ensayos
-        self.model=modelotabla.modelotabla(enss, ["Lista de ensayos", "Nombre"])
-        self.listado.setModel(self.model)
+        self.model=modelotabla.modelotabla(enss, ["Id", "Nombre"])
+        self.vistaDatosControlador.setModel(self.model)
         self.tipo="e"
 
     def seleccionarDato(self, item):
         global ContEnsayo
         ## Al hacer click en un item del listado se recupera el objeto        
         self.oe=self.model.objeto(item)
-        print 'selecciono un dato'
-        print self.oe
+        #print 'selecciono un dato'
+        #print self.oe
+
+    def seleccionarDatoRemEnsayo(self, item):
+        global ContEnsayo
+        ## Al hacer click en un item del listado se recupera el objeto        
+        self.oerem=self.model_pe.objeto(item)
+        #print 'selecciono un dato'
+        #print self.oe
+        self.tiporem="e"
+    def seleccionarDatoRemObservacion(self, item):
+        global ContEnsayo
+        ## Al hacer click en un item del listado se recupera el objeto        
+        self.oerem=self.model_po.objeto(item)
+        #print 'selecciono un dato'
+        #print self.oe
+        self.tiporem="o"           
 
     def refrescar(self):
-        self.model_po=modelotabla.modelotabla(self.p.observaciones,["Observaciones"])        
-        self.listWidget.setModel(self.model_po)
-        self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Ensayos"])  
-        self.listWidget_2.setModel(self.model_pe)        
+        self.model_po=modelotabla.modelotabla(self.p.observaciones,["Id", "Nombre"])       
+        self.vistaObservaciones.setModel(self.model_po)
+        self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Id", "Nombre"])
+        self.vistaEnsayos.setModel(self.model_pe)
+
+        self.vistaEnsayos.resizeColumnsToContents()
+        self.vistaObservaciones.resizeColumnsToContents()
+        self.vistaDatosControlador.resizeColumnsToContents()
+        
+
+    def aceptar(self):
+        if self.demo!=True :
+            reply = QtGui.QMessageBox.question(self,
+                            "Informacion",
+                            "Los datos han sido almacenados")
+        self.guardar.close()
     
     def cancelar(self):
+        ContEnsayo.restaurarObservacionesEnsayos()
+        self.p.restaurarPozo(self.pcopia)
+        if self.demo!=True :
+            reply = QtGui.QMessageBox.question(self,
+                            "Informacion",
+                            "Todas las acciones han sido canceladas")         
         self.guardar.close()
 
     def asociar(self):
         global ContEnsayo
         ####  mensajito si realmente quiere hacer la asociacion
-
-##        msj=QtGui.QMessageBox()
-##        msj.addButton('holi', QtGui.QMessageBox.AcceptRole)
-##        msj.information(self,'titu', 'holita')
-        
-        reply = QtGui.QMessageBox.question(self,"Informacion",
-                "¿Realmente desea asociar este item al pozo seleccionado?. ",
-                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
+        if self.demo==True :
+            reply = QtGui.QMessageBox.Yes
+        else:
+            reply = QtGui.QMessageBox.question(self,"Confirmación",
+                    "¿Realmente desea asociar este item al pozo seleccionado?. ",
+                    QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
+            
         if reply == QtGui.QMessageBox.Yes:
-        
+            ####  hay que desacioar del controlador el ensayo cargado
             if self.tipo=="o" :
                 self.p.agregarObservaciones(self.oe)
                 ContEnsayo.eliminarObservaciones(self.oe)
             else:
                 self.p.agregarEnsayo(self.oe)
                 ContEnsayo.eliminarEnsayo(self.oe)
+
+            if self.demo==True :
+                reply = QtGui.QMessageBox.Ok
+            else:                            
+                reply = QtGui.QMessageBox.information(self,
+                        "Informacion",
+                        "La asociación ha sido efectuada satisfactoriamente")
             
-            ####  hay que desacioar del controlador el ensayo cargado            
-                
-            reply = QtGui.QMessageBox.information(self,
-                    "Informacion",
-                    "La asociación ha sido efectuada satisfactoriamente")
-            if reply == QtGui.QMessageBox.Ok:
-                print "asociado"
-                self.refrescar()
-                
+            #if reply == QtGui.QMessageBox.Ok:
+            #print "asociado"
+            self.refrescar()                
+            #else:
+            #print "Escape"
+
+
+    def desasociar(self):
+        global ContEnsayo
+        ####  mensajito si realmente quiere hacer la asociacion
+        if self.demo==True :
+            reply = QtGui.QMessageBox.Yes
+        else:
+            reply = QtGui.QMessageBox.question(self,"Confirmación",
+                    "¿Realmente desea desasociar este item con el pozo seleccionado?. ",
+                    QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
+            
+        if reply == QtGui.QMessageBox.Yes:
+            ####  hay que desacioar del controlador el ensayo cargado
+            if self.tiporem=="o" :
+                self.p.eliminarObservaciones(self.oerem)
+                ContEnsayo.restaurarObservaciones(self.oerem)
             else:
-                print "Escape"            
-##            self.guardar.close()
-        
+                self.p.eliminarEnsayo(self.oerem)
+                ContEnsayo.restaurarEnsayo(self.oerem)
+
+            if self.demo==True :
+                reply = QtGui.QMessageBox.Ok
+            else:                            
+                reply = QtGui.QMessageBox.information(self,
+                        "Informacion",
+                        "Los datos han sido desasoaciados correctamente")
+            
+            #if reply == QtGui.QMessageBox.Ok:
+            #print "asociado"
+            self.refrescar()                
+            #else:
+            #print "Escape"
             
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)
-    frmasociarensayos = QtGui.QWidget()
+    frmImpProyecto = QtGui.QWidget()
     ui = Ui_Dialog()
-    ui.setupUi(frmasociarensayos)
-    frmasociarensayos.show()
-    sys.exit(app.exec_())        
-
+    ui.setupUi(frmImpProyecto)
+    frmImpProyecto.show()
+    sys.exit(app.exec_())

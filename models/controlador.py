@@ -18,6 +18,8 @@ class Proyecto(object):
         self.ultimoIdObs=0
         self.ensayos=[]
         self.observaciones=[]
+        self.ensayosCopia=[]
+        self.observacionesCopia=[]
         self.dominio = dominio.dominio()
         self.metodo=None
 
@@ -59,6 +61,9 @@ class Proyecto(object):
         self.ensayos.append(e)
         return e
 
+    def restaurarEnsayo(self, e):
+        self.ensayos.append(e) 
+
     def eliminarEnsayo(self, e):
         self.ensayos.remove(e)
 
@@ -67,6 +72,25 @@ class Proyecto(object):
         obse=observacionesensayo.observacionesensayo(observaciones, self.ultimoIdObs, nombre)
         self.observaciones.append(obse)
         return obse
+
+    def restaurarObservacion(self, obse):
+        self.observaciones.append(obse)
+
+    def copiarObservacionesEnsayos(self):
+        self.ensayosCopia=[]
+        self.observacionesCopia=[]        
+        for e in self.ensayos:
+                self.ensayosCopia.append(e.copiaSuperficial())
+        for o in self.observaciones:
+                self.observacionesCopia.append(o.copiaSuperficial())
+
+    def restaurarObservacionesEnsayos(self):
+        self.ensayos=[]
+        self.observaciones=[]        
+        for e in self.ensayosCopia:
+                self.ensayos.append(e.copiaSuperficial())
+        for o in self.observacionesCopia:
+                self.observaciones.append(o.copiaSuperficial())                 
 
     def eliminarObservaciones(self, obse):
         self.observaciones.remove(obse)

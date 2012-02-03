@@ -1,0 +1,77 @@
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'asociarEnsayos.ui'
+#
+# Created: Thu Feb 02 18:59:43 2012
+#      by: PyQt4 UI code generator 4.9
+#
+# WARNING! All changes made in this file will be lost!
+
+from PyQt4 import QtCore, QtGui
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    _fromUtf8 = lambda s: s
+
+class Ui_Asociarensayos(object):
+    def setupUi(self, Asociarensayos):
+        Asociarensayos.setObjectName(_fromUtf8("Asociarensayos"))
+        Asociarensayos.resize(692, 295)
+        self.vistaEnsayos = QtGui.QListWidget(Asociarensayos)
+        self.vistaEnsayos.setGeometry(QtCore.QRect(280, 50, 181, 191))
+        self.vistaEnsayos.setObjectName(_fromUtf8("vistaEnsayos"))
+        self.vistaObservaciones = QtGui.QListWidget(Asociarensayos)
+        self.vistaObservaciones.setGeometry(QtCore.QRect(480, 50, 181, 191))
+        self.vistaObservaciones.setObjectName(_fromUtf8("vistaObservaciones"))
+        self.vistaDatosControlador = QtGui.QListWidget(Asociarensayos)
+        self.vistaDatosControlador.setGeometry(QtCore.QRect(30, 80, 191, 161))
+        self.vistaDatosControlador.setObjectName(_fromUtf8("vistaDatosControlador"))
+        self.btn_Cancelar = QtGui.QPushButton(Asociarensayos)
+        self.btn_Cancelar.setGeometry(QtCore.QRect(360, 260, 101, 23))
+        self.btn_Cancelar.setObjectName(_fromUtf8("btn_Cancelar"))
+        self.btn_Agregar = QtGui.QPushButton(Asociarensayos)
+        self.btn_Agregar.setGeometry(QtCore.QRect(230, 120, 41, 23))
+        self.btn_Agregar.setObjectName(_fromUtf8("btn_Agregar"))
+        self.opcionensayo = QtGui.QRadioButton(Asociarensayos)
+        self.opcionensayo.setGeometry(QtCore.QRect(30, 20, 191, 21))
+        self.opcionensayo.setChecked(True)
+        self.opcionensayo.setObjectName(_fromUtf8("opcionensayo"))
+        self.opcionobservacion = QtGui.QRadioButton(Asociarensayos)
+        self.opcionobservacion.setGeometry(QtCore.QRect(30, 50, 201, 21))
+        self.opcionobservacion.setObjectName(_fromUtf8("opcionobservacion"))
+        self.btn_Remover = QtGui.QPushButton(Asociarensayos)
+        self.btn_Remover.setGeometry(QtCore.QRect(230, 170, 41, 23))
+        self.btn_Remover.setObjectName(_fromUtf8("btn_Remover"))
+        self.label = QtGui.QLabel(Asociarensayos)
+        self.label.setGeometry(QtCore.QRect(280, 20, 181, 21))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label.setFont(font)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.label_2 = QtGui.QLabel(Asociarensayos)
+        self.label_2.setGeometry(QtCore.QRect(480, 20, 191, 21))
+        font = QtGui.QFont()
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.btn_Aceptar = QtGui.QPushButton(Asociarensayos)
+        self.btn_Aceptar.setGeometry(QtCore.QRect(230, 260, 101, 23))
+        self.btn_Aceptar.setObjectName(_fromUtf8("btn_Aceptar"))
+
+        self.retranslateUi(Asociarensayos)
+        QtCore.QMetaObject.connectSlotsByName(Asociarensayos)
+
+    def retranslateUi(self, Asociarensayos):
+        Asociarensayos.setWindowTitle(QtGui.QApplication.translate("Asociarensayos", "Pozo", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_Cancelar.setText(QtGui.QApplication.translate("Asociarensayos", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_Agregar.setText(QtGui.QApplication.translate("Asociarensayos", ">>", None, QtGui.QApplication.UnicodeUTF8))
+        self.opcionensayo.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Ensayo de bombeo", None, QtGui.QApplication.UnicodeUTF8))
+        self.opcionobservacion.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Conjunto de observaciones", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_Remover.setText(QtGui.QApplication.translate("Asociarensayos", "<<", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Asociarensayos", "Ensayos de bombeo asociados", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Asociarensayos", "Conj. de observaciones asociados", None, QtGui.QApplication.UnicodeUTF8))
+        self.btn_Aceptar.setText(QtGui.QApplication.translate("Asociarensayos", "Aceptar", None, QtGui.QApplication.UnicodeUTF8))
+

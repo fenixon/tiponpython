@@ -20,13 +20,14 @@ except AttributeError:
     _fromUtf8 = lambda s: s
 
 class Ui_Dialog(QtGui.QDialog):
-    def setupUi(self, Dialog, cont):
+    def setupUi(self, Dialog, cont, demo=None):
         ##Se recupera el controlador instanciado en el main
         ##Se usa ContEnsayo(el mismo nombre) para no marear
         ##el nombre del parametro tiene que ser otro sino salta la 3 al ser global y local
         global ContEnsayo
         ContEnsayo=cont
         self.archivo=""
+        self.demo=demo
         
         Dialog.setObjectName(_fromUtf8("ImportarCaudalBombeado"))
         Dialog.resize(572, 177)
@@ -165,10 +166,13 @@ class Ui_Dialog(QtGui.QDialog):
                 "El archivo ingresado tiene un formato incorrecto. Verifique que los tiempos esten ordenados correctamente.")           
         else:
             ##      Se manda al controlador los bombeos y te retorna el ultimo ensayo creado
-            e=ContEnsayo.agregarEnsayo(bombeos, n)          
-            reply = QtGui.QMessageBox.information(self,
-                "Informacion",
-                "Se ha creado un nuevo ensayo de bombeo en el sistema. El id es: " + str(e.id))
+            e=ContEnsayo.agregarEnsayo(bombeos, n)
+            if self.demo==True:
+                reply = QtGui.QMessageBox.Ok
+            else:
+                reply = QtGui.QMessageBox.information(self,
+                    "Informacion",
+                    "Se ha creado un nuevo ensayo de bombeo en el sistema. El id es: " + str(e.id))
         
             if reply == QtGui.QMessageBox.Ok:
                 print "OK"

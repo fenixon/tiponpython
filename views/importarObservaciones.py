@@ -20,13 +20,14 @@ except AttributeError:
     _fromUtf8 = lambda s: s
 
 class Ui_Dialog(QtGui.QDialog):
-    def setupUi(self, Dialog, cont):
+    def setupUi(self, Dialog, cont, demo=None):
         ##Se recupera el controlador instanciado en el main
         ##Se usa ContEnsayo(el mismo nombre) para no marear
         ##el nombre del parametro tiene que ser otro sino salta la 3 al ser global y local
         global ContEnsayo
         ContEnsayo=cont
         self.archivo=""
+        self.demo=demo
         
         Dialog.setObjectName(_fromUtf8("ImportarObservacionesEnsayo"))
         Dialog.resize(572, 177)     
@@ -166,10 +167,16 @@ class Ui_Dialog(QtGui.QDialog):
         else:
             ##      Se manda al controlador las observaciones y se retorna el id de las observaciones                           
             obse=ContEnsayo.agregarObservacion(observaciones, nombre)                
+
+
+            if self.demo==True:
+                reply = QtGui.QMessageBox.Ok
+            else:
+                reply = QtGui.QMessageBox.information(self,
+                        "Informacion",
+                        "Se ha creado un nuevo conjunto de observaciones en el sistema. El id es:" + str(obse.id))
               
-            reply = QtGui.QMessageBox.information(self,
-                    "Informacion",
-                    "Se ha creado un nuevo conjunto de observaciones en el sistema. El id es:" + str(obse.id))
+
             if reply == QtGui.QMessageBox.Ok:
                 print "OK"
                 self.guardar.close()            

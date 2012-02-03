@@ -228,12 +228,12 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
 
-    def ventanaImportarProyecto(self, noexec=None):
+    def ventanaImportarProyecto(self, noexec=None, demo=None):
         global ContEnsayo
         frmImpCaudal = QtGui.QDialog()
         ui = importarCaudal.Ui_Dialog()
         ## Se envia al nuevo formulario el controlador instanciado
-        ui.setupUi(frmImpCaudal, ContEnsayo)
+        ui.setupUi(frmImpCaudal, ContEnsayo, demo)
         self.importar=ui
         if noexec==None:
             frmImpCaudal.exec_()
@@ -259,7 +259,7 @@ class Ui_MainWindow(QtGui.QDialog):
         ui.setupUi(frmIngBombeo, ContEnsayo)
         frmIngBombeo.exec_()
 
-    def ventanaImpoObs(self, noexec=None):
+    def ventanaImpoObs(self, noexec=None, demo=None):
         global ContEnsayo
         frmimpobs=QtGui.QDialog()
         ui= importarObservaciones.Ui_Dialog()
@@ -636,14 +636,14 @@ class Ui_MainWindow(QtGui.QDialog):
 
         noexec=1
         
-        self.ventanaImpoObs(noexec)
+        self.ventanaImpoObs(noexec, True)
         self.vimp.archivo="ficheros/observaciones.txt"        
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="txt"
         self.vimp.accionaceptar()
         self.vimp.close()
 
-        self.ventanaImpoObs(noexec)
+        self.ventanaImpoObs(noexec, True)
         self.vimp.archivo="ficheros/demoobs.ods"        
         self.vimp.nombre.setText('obs2')
         self.vimp.ext="ods"
@@ -651,7 +651,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.vimp.close()
         
         
-        self.ventanaImportarProyecto(noexec)
+        self.ventanaImportarProyecto(noexec, True)
         self.importar.archivo="ficheros/demo1pozo.ods"
         self.importar.nombre.setText('ens1')
         self.importar.ext="ods"
@@ -659,7 +659,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.importar.close()
 
 
-        self.ventanaImportarProyecto(noexec)
+        self.ventanaImportarProyecto(noexec, True)
         self.importar.archivo="ficheros/demo2pozo.ods"
         self.importar.nombre.setText('ens2')
         self.importar.ext="ods"
@@ -669,23 +669,23 @@ class Ui_MainWindow(QtGui.QDialog):
         
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
-        asoe.setupUi(frmasociar, poe.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, poe.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar() 
         
 
-        asoe.setupUi(frmasociar, b.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar()       
 
-        asoe.setupUi(frmasociar, poz2.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, poz2.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar() 

@@ -18,3 +18,7 @@ class observacionesensayo(object):
 ##    def generarId(self):
         #a implementar un mecanismo para generar id
 ##        return 1        
+
+    def copiaSuperficial(self):
+        o=observacionesensayo(self.__observaciones, self.id, self.nombre)
+        return o

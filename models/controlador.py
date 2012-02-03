@@ -19,6 +19,7 @@ class Proyecto(object):
         self.ensayos=[]
         self.observaciones=[]
         self.dominio = dominio.dominio()
+        self.metodo=None
 
         #Lista que guardan pozo y recta
 ##      self.listaPozo = []
@@ -170,9 +171,9 @@ class Proyecto(object):
        
 
     #CRUD de barreras
-    def agregarRecta(self, tipo, x1, y1, x2, y2):
+    def agregarRecta(self, tipo, x1, y1, x2, y2, alto, ancho):
 	print tipo, x1, y1, x2, y2
-        r = barrera(x1, x2, y1, y2, tipo)
+        r = barrera(x1, x2, y1, y2, tipo, alto, ancho)
         self.idR = self.idR + 1
         r.id = self.idR
 	self.dominio.listaRecta.append(r)
@@ -296,7 +297,14 @@ class Proyecto(object):
                 recta.actualizarBarrera2(x1, x2, y1, y2)
                 return
 
+    def actualizarRectaC(self, idElemento, x1, y1, x2, y2, alto, ancho):
+        for recta in self.dominio.listaRecta:
+            if recta.id == idElemento:
+                recta.actualizarBarrera3(x1, x2, y1, y2, alto, ancho)
+                return
 
+                
+                
     def buscarPuntoPorQ(self, x, y):
         for Q in self.dominio.listaRecta:
             
@@ -334,11 +342,11 @@ class Proyecto(object):
             if recta.id == idElemento:
                 self.dominio.listaRecta.remove(recta)
 
-    def agregarRectaCandidata(self, tipo, x1, y1, x2, y2):
-        self.rectaCandidata = barrera(x1, x2, y1, y2, tipo)
+    def agregarRectaCandidata(self, tipo, x1, y1, x2, y2, alto, ancho):
+        self.rectaCandidata = barrera(x1, x2, y1, y2, tipo, alto, ancho)
 
-    def actualizarRectaCandidata(self, x1, y1, x2, y2):
-		self.rectaCandidata.actualizarBarrera2(x1, x2, y1, y2)
+    def actualizarRectaCandidata(self, x1, y1, x2, y2, alto, ancho):
+		self.rectaCandidata.actualizarBarrera3(x1, x2, y1, y2, alto, ancho)
 
 
     def hayRectaCandidata(self):

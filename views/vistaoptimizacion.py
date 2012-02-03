@@ -198,3 +198,6 @@ class optimizacion(QtGui.QWidget):
             #print o.nivelpiezometrico
             #print "tiempo:" + str(t_obs[1])
             print "fin"
+
+        reply = QtGui.QMessageBox.information(self,"Informacion","El proceso de optimizacion a concluido")
+        self.close()

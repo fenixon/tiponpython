@@ -58,16 +58,17 @@ class Ui_Dialog(QtGui.QDialog):
 
         
         self.pushButton_3 = QtGui.QPushButton(Dialog)
-        self.pushButton_3.setGeometry(QtCore.QRect(430, 210, 91, 23))
+        self.pushButton_3.setGeometry(QtCore.QRect(530, 210, 81, 23))
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
         
         self.pushButton_4 = QtGui.QPushButton(Dialog)
-        self.pushButton_4.setGeometry(QtCore.QRect(530, 210, 81, 23))
+        self.pushButton_4.setGeometry(QtCore.QRect(430, 210, 91, 23))
         self.pushButton_4.setObjectName(_fromUtf8("pushButton_4"))
 
         QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarObservaciones)
         QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarEnsayos)
         QtCore.QObject.connect(self.listado, QtCore.SIGNAL(_fromUtf8("clicked(QModelIndex)")), self.seleccionarDato)
+        
         QtCore.QObject.connect(self.pushButton_4, QtCore.SIGNAL(_fromUtf8("clicked()")),self.asociar)
         QtCore.QObject.connect(self.pushButton_3, QtCore.SIGNAL(_fromUtf8("clicked()")),self.cancelar)
         
@@ -120,6 +121,11 @@ class Ui_Dialog(QtGui.QDialog):
     def asociar(self):
         global ContEnsayo
         ####  mensajito si realmente quiere hacer la asociacion
+
+##        msj=QtGui.QMessageBox()
+##        msj.addButton('holi', QtGui.QMessageBox.AcceptRole)
+##        msj.information(self,'titu', 'holita')
+        
         reply = QtGui.QMessageBox.question(self,"Informacion",
                 "¿Realmente desea asociar este item al pozo seleccionado?. ",
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)

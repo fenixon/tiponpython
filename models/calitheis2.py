@@ -50,7 +50,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 	def setobservaciones(self):
 		#obtengo las observaciones importadas
 		observaciones= self.pozo.observaciones[0].devolverO()
-		self.obs=self.pozo.devolverSolucionadas()
+##		self.obs=self.pozo.devolverSolucionadas()
 		#coordenadas del pozo de observacion
 		x0=self.pozo.x
 		y0=self.pozo.y		
@@ -90,13 +90,18 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		tpozo=self.tpozo
 		N_obs=len(self.t_obs)
 		self.obs=numpy.zeros((N_obs),float)
-		self.d=self.controlador.obtenerDominio()
-		#self.d=dominio()
-		#self.d.alto = 10
-		#self.d.ancho = 10
-		#self.d.a=0
-		#self.d.b=0
-		#self.d.c=10
+		self.domActual=self.controlador.obtenerDominio()
+		self.d=dominio()
+##		self.d.alto = 10
+		self.d.alto = self.domActual.alto
+##		self.d.ancho = 10
+		self.d.alto = self.domActual.ancho
+		self.d.a=0
+                self.d.a = self.domActual.a		
+		self.d.b=0
+		self.d.b = self.domActual.b
+		self.d.c=10
+		self.d.c = self.domActual.c
 		
 		for i in range(N_obs):
 			#m.setearValores([T,S])
@@ -115,6 +120,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		Q=self.Q
 		tpozo=self.tpozo
 		obs=self.obs
+		print obs
 		t_obs=self.t_obs
 		r_obs=self.r_obs
 		Tmin=int(self.listaParametros[0].valoresParametro.valor)
@@ -132,7 +138,8 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		obs_sim=numpy.zeros((N_obs),float)
 		T_vec=numpy.zeros((N_int_T),float)		
 		T_vec=numpy.zeros((N_int_T),float)
-		S_vec=numpy.zeros((N_int_S),float)		
+		S_vec=numpy.zeros((N_int_S),float)
+		obj=numpy.zeros((N_int_T,N_int_S),float)
 
 		Tinf=Tmin
 		Tsup=Tmax
@@ -177,6 +184,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 						else:
 							obs_sim[k]=0
 						f=f+ numpy.power((obs_sim[k]-obs[k]),2)/numpy.power((obs[k]),2)
+						obj[j,i]= obj[j,i] + f;
 						
 					if (f<f_min):
 						f_min=f
@@ -211,6 +219,7 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
                 self.T=T
                 self.S=S
                 self.obs_sim=obs_sim
+                self.obj=obj
 		
 		return [T, S, f_min,obs_sim]
 

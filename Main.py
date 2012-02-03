@@ -28,6 +28,7 @@ from vistaDominiolaRemodelacion import  *
 import discretizaciones
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
+from views.graficarOpt import graficarOpt
 
 import random#Solo para pruebas
 
@@ -191,7 +192,8 @@ class Ui_MainWindow(QtGui.QDialog):
         
 
         ##Leer parametros
-        ContEnsayo.leerParametros()
+        ##ContEnsayo.leerParametros()
+        self.grop = None
 
         ####Prueba de instanciar un metodo de solucion
         ####Se le pasa el dominio, los parametros cargados en el sistema        
@@ -376,12 +378,15 @@ class Ui_MainWindow(QtGui.QDialog):
                             "No hay pozo de bombeo")                      
 
 
+    def limpiarGrop(self):
+
+        self.grop = None
 
     def GraficasOptimizacion(self):
         
-        if self.dibujanteOpt != None:
+        if self.grop != None:
             print u'Ya hay una instancia corriendo'
-            self.self.dibujanteOpt.raise_()#Aca mostramos la ventana si ya existe
+            self.grop.raise_()#Aca mostramos la ventana si ya existe
         else:
             global ContEnsayo
             pozo = ContEnsayo.dominio.obtenerPozoBombeo()
@@ -397,17 +402,13 @@ class Ui_MainWindow(QtGui.QDialog):
                             ##formulario de discretizacion temporal
 
                             ####aca cambiar todo para mandar al formulario del pozo                            
-                            
-                            frmDiscretizaciones=QtGui.QDialog()
-                            ui= discretizaciones.ventanaDiscretizaciones()
-                            ui.setupUi(frmDiscretizaciones, ContEnsayo)
-                            frmDiscretizaciones.exec_()
 
-                            print 'Formulario de discretizaciones se cerro ' 
                             nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                            self.dibujanteOpt = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
-                            self.dibujanteOpt.show()
-                            QtCore.QObject.connect(self.dibujanteOpt, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujanteOpt)
+                            frm=QtGui.QDialog()
+                            grop = graficarOpt()
+                            self.grop = grop.setupUi(frm, ContEnsayo.obtenerDominio(), ti, tf,nit)
+                            frm.exec_()
+                            QtCore.QObject.connect(self.grop, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarGrop)
                             print 'Dibujante invocado'                            
                                                       
 
@@ -430,7 +431,10 @@ class Ui_MainWindow(QtGui.QDialog):
                     #print 'No hay pozo de bombeo'
                     QtGui.QMessageBox.information(self,
                             "Error",
-                            "No hay pozo de bombeo")  
+                            "No hay pozo de bombeo")
+
+
+
 
     def generar_graficas2(self):
         global ContEnsayo
@@ -602,7 +606,7 @@ class Ui_MainWindow(QtGui.QDialog):
         y1=4
         r = QtCore.QLineF(x0, y0, x1, y1)
         barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
-        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1)
+        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
         self.ui.caja.rectas.append(barrera)	
 
 
@@ -829,7 +833,18 @@ if __name__ == "__main__":
                       "QLabel{color: red} \n"
                       "QPushButton{color: navy}")
 
-    MainWindow = QtGui.QMainWindow()
+    # Get the locale settings
+    locale = unicode(QtCore.QLocale.system().name())
+    # This is to make Qt use locale configuration; i.e. Standard Buttons
+    # in your system's language.
+    qtTranslator=QtCore.QTranslator()
+    qtTranslator.load("qt_" + locale,
+                    QtCore.QLibraryInfo.location(
+                    QtCore.QLibraryInfo.TranslationsPath)
+                    )
+    app.installTranslator(qtTranslator)
+
+    MainWindow = QtGui.QMainWindow()   
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()

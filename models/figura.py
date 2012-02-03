@@ -43,7 +43,7 @@ class figura():
 
         self.axt.set_ylim3d(0,1000)
         self.axt.set_xlim3d(0,1000)
-        self.axt.set_zlim3d(self.ming, self.maxg)        
+        self.axt.set_zlim3d(self.ming, self.maxg)
 
     def plotU(self):
 
@@ -51,7 +51,7 @@ class figura():
         ax.cla()
         ax.set_title('Descensos h en tiempo t')
         ax.set_xlabel('t')
-        ax.set_ylabel('h')        
+        ax.set_ylabel('h')
         #x = np.arange(0, ran, .05)
         #print 'Aleatorio: ' + str(ran)
         #x = np.arange(0, 10, .05)#Descensos (h), son números que representan el nivel piezométrico
@@ -61,26 +61,26 @@ class figura():
         #auxty = [i for i,x in enumerate(self.yy) if x == pozoObs.y]
 
         #h = self.matrix[:, auxty[0], auxtx[0]]
-        #t = self.tiempos    
+        #t = self.tiempos
         d=self.dominio
         ##Obtener todos los pozos de observacion
-        TodoslospozosObservacion=d.obtenerPozosdeObservacion()        
+        TodoslospozosObservacion=d.obtenerPozosdeObservacion()
 
         ##recorrer todos los pozos de observacion
         for pozoObservacion in TodoslospozosObservacion:
             #h = self.matrix[:, auxty[0], auxtx[0]]
             h = pozoObservacion.devolverSolucionadas()
-            t = self.tiempos                
+            t = self.tiempos
             ax.plot(t, h, 'b')
-            for conjob in pozoObservacion.observaciones:         
+            for conjob in pozoObservacion.observaciones:
                 ##Obtener todas las observacion del conjunto de observaciones
-                self.observaciones=conjob.devolverO()       
+                self.observaciones=conjob.devolverO()
 
                 x=[]
                 y=[]
                 for ob in self.observaciones:
                     x.append(ob.tiempo)
-                    y.append(ob.nivelpiezometrico)              
+                    y.append(ob.nivelpiezometrico)
                 ax.plot(x,y, 'r.')
         #print 'First plot loaded...'
 
@@ -122,11 +122,11 @@ class figura():
         #X = np.arange(-5, 5, 0.25)
         #Y = np.arange(-5, 5, 0.25)
 
-        
+
 ##      La matriz tiene que ir hasta el 0..99 En realidad de 0 a 100
 ##      Esta lina no estaba funcionando  
 ##      X, Y = np.meshgrid(np.arange(0, max(X), 1), np.arange(0, max(Y), 1))
-        #X, Y = np.meshgrid(xx, Y)       
+        #X, Y = np.meshgrid(xx, Y)
         #print '\n' + str(X) + '\n' + str(Y) + '\n'
         #R = np.sqrt(X**2 + Y**2)
         #Z = np.sin(R)
@@ -135,7 +135,7 @@ class figura():
         #Z = 10.0 * (Z2 - Z1)
         #print 'Z: \n' + str(Z)
 
-        Z = self.matrix[t]      
+        Z = self.matrix[t]
 
 ##        print 'Matriz generada '
 ##        print 'Z: \n' + str(Z)
@@ -160,13 +160,13 @@ class figura():
 
 ##        canvas = FigureCanvas(fig2)
 ##        canvas.draw() 
-        
+
 ##        p.show()
 
         surf = ax.plot_surface(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
 
 ###     comente lo de los limites porque hay que setearlos segun como venga el dominio
-##      Esto tiene que cambiar segun los valores maximos y minimos de Z                 
+##      Esto tiene que cambiar segun los valores maximos y minimos de Z
 ##        ax.set_zlim3d(9.3, 10)
         ax.set_zlim3d(self.ming, self.maxg)
         #ax.set_zlim3d(-100, 100)# viewrange for z-axis should be [-4,4]
@@ -200,32 +200,32 @@ class figura():
         #yl = ax.ylabel("y (km)")
 
     def salvar(self, filename = None, width = None, height = None, velocidad = None, directorio = None):#Esto se lo pasa el dialogo
-        
+
         print 'Evaluando entradas...'
         print 'Nombre del archivo: ' + filename
         print 'Ancho: ' + str(width)
         print 'Alto: ' + str(height)
         print 'Velocidad: ' + velocidad
         print 'Listo, entradas correctas.'
-        
+
         aux = len(self.matrix)
         for i in range(0, aux):
-        
+
             print u'Imágen ' + str(i + 1)
-            
+
             self.plotD(i)
             self.plotT(i)
             self.plotC(i)
-            
+
             tmpfilename = 'temp/_tmp_' + str(i) + '.png'
 
             #Regla de tres para sacar el dpi que debería tener cada imagen del video según el tamalo ingresado.
             ppp = ((float(width) + float(height)) * self.fig.get_dpi()) / ((self.fig.get_figwidth() + self.fig.get_figheight()) * self.fig.get_dpi())
 
             self.fig.savefig(tmpfilename, dpi=ppp)
-            
+
             print 'Creada.'
-            
+
         print u'Imágenes preparadas y listas'
 
         command = ('mplayer/mencoder.exe',#Para la version de linux hay que cambiar esto y sacar el .exe
@@ -240,19 +240,19 @@ class figura():
             'copy',
             '-o',
             directorio + '/' + filename + '.avi')
-        
+
         print u"\n\nSe ejecutará:\n%s\n\n" % ' '.join(command)
         subprocess.check_call(command)
 
         print u'Comienza borrado de imagenes temporales.'
 
         for i in range(0, aux):
-        
+
             print u'Imágen ' + str(i + 1)
-            
+
             tmpfilename = 'temp/_tmp_' + str(i) + '.png'
             os.remove(tmpfilename)
-            
+
             print 'Borrada.'
-        
+
         print 'Pronto.'

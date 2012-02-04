@@ -198,15 +198,11 @@ class Proyecto(object):
     def agregarRecta(self, tipo, x1, y1, x2, y2, alto, ancho):
 
         r = barrera(x1, x2, y1, y2, tipo, alto, ancho)
-
-
-
         self.idR = self.idR + 1
         r.id = self.idR
 	self.dominio.listaRecta.append(r)
 	return r.id
 
-        self.dominio.listaRecta.append(r)
 
     def buscarRecta(self, idElemento):
         for recta in self.dominio.listaRecta:

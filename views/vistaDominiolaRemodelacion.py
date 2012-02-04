@@ -1571,15 +1571,16 @@ class gbCoordenadas(QtGui.QGroupBox):
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 
 		if not elementoDominio.ContEnsayo.hayRectaCandidata():
-		  
-		    ident = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
-np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
+
+		    print "EJE ESCENA X ", elementoDominio.Dominio.ejeEscena.x(), " Y", elementoDominio.Dominio.ejeEscena.y()
+
+		    ident = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit.text()), elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_2.text()), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit_3.text()),
+elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 		    r = elementoDominio.ContEnsayo.buscarRecta(ident)
    		    print "el ident", ident, "Esto es lo que tiene r  x1 ", r.x1, " y1 ", r.y1, " x2 ", r.x2 , " y2 ", r.y2 
-		    
-   		    barrera = vistaBarrera(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
-np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
+		    barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
+   		    #barrera = vistaBarrera(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
 
 		    barrera.id = ident
 
@@ -1594,7 +1595,6 @@ np.int32(self.lineEdit_4.text()))
 
                     elementoDominio.Dominio.rectas.append(barrera)
 
-		    print "Coordenadas con las que se guarda x1 ", elementoDominio.Dominio.a1, " Y1 ",elementoDominio.Dominio.a2, " x2 ", elementoDominio.Dominio.b1, " y2 ",elementoDominio.Dominio.b2
 
 		else:
                     elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1()))

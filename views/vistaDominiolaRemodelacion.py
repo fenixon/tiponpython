@@ -645,9 +645,10 @@ self.scene())
 
 		if self.rectaSeleccionada['id'] > 0:
 			r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
-			self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
-			self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
-			self.movido.setLine(r.x1, self.a2, r.x2, self.b2)
+			#self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
+			#self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
+			#self.movido.setLine(r.x1, self.a2, r.x2, self.b2)
+			self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
 			self.rectaSeleccionada['id'] = 0
 
 

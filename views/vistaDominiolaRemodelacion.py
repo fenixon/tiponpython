@@ -767,23 +767,28 @@ self.scene())
 
 		if self.rectaSeleccionada['id'] > 0:
 			r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
+
+
+			print "VALOR DE RECTA x1", r.x1, " y1", r.y1, " x2", r.x2, " y2", r.y2 
+			print "Valor del movido x1",  self.movido.line().x1() ," y1 ", self.movido.line().y1()," x2", self.movido.line().x2()," y2", self.movido.line().y2()
+ 
+
 			if self.transformarX:
+				print " PASAMOS  POR X"
 				self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
+				print "Esto vale el punto X p", self.a1, " q", self.a2
 				self.transformarX = False
-				self.movido.setLine(self.a1, self.a2, r.x2, r.y2)
+				self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
 
 			elif self.transformarY:
+				print " PASAMOS  POR Y"
+				print "Esto vale el punto Y p", self.b1, " q", self.b2
 				self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
 				self.transformarY = False
-				self.movido.setLine(r.x1, r.y1, self.b1, self.b2)
-
-			else:
-			#self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
-			#self.movido.setLine(r.x1, self.a2, r.x2, self.b2)
 				self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
+
+
 			self.rectaSeleccionada['id'] = 0
-
-
 		self.moviendo = False
 		self.movido = None
 		self.setCursor(QtGui.QCursor(QtCore.Qt.OpenHandCursor))
@@ -1011,7 +1016,7 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 
 	def __init__(self, x1, y1, x2, y2, tooltip, escena):
 
-		print "Luego del drop x1 ", x1, " y1 ", y1, " x2 ", x2, " y2 ", y2
+		#print "Luego del drop x1 ", x1, " y1 ", y1, " x2 ", x2, " y2 ", y2
 
 		#elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(x1, y1))
 
@@ -1863,6 +1868,10 @@ np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.
         if self.tipoElemento == "barrera":
             elementoDominio.ContEnsayo.actualizarRectaC(self.idElemento, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()),
 np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho )
+
+	    print "Estos son los datos", np.int32(self.lineEdit.text()), " ", np.int32(self.lineEdit_2.text()), " ", np.int32(self.lineEdit_3.text()), " ", np.int32(self.lineEdit_4.text())
+
+
             for recta in elementoDominio.Dominio.rectas:
                 if recta.id == self.idElemento:
                     #elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
@@ -1874,6 +1883,8 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
 		    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
    		    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
    		    #recta.setLine(r.x1, elementoDominio.Dominio.a2, r.x2, elementoDominio.Dominio.b2)
+		    print "La recta paga la vbuelta con esto ", r.x1, " ", r.y1, " ", r.x2, " ", r.y2
+
 		    recta.setLine(r.x1, r.y1, r.x2, r.y2)
                     recta.setPen(QtCore.Qt.black)
 		    elementoDominio.Dominio.rectaSeleccionada['id'] = 0

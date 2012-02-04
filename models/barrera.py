@@ -39,82 +39,87 @@ class barrera():
 
                 def calcularRecta( self, alto, ancho ):
 
-				try:
+				#try:
 
-					if self.x1 == 0 and self.y1 >= self.alto:
-						self.y1 = self.alto
-						return
+				if self.x1 == 0 and self.y1 >= self.alto:
+					self.y1 = self.alto
+					return
 
-					if self.x1 == self.ancho and self.y1 >= self.alto:
-						self.y1 = self.alto
-						return
+				if self.x1 == self.ancho and self.y1 >= self.alto:
+					self.y1 = self.alto
+					return
 
-					if self.y1 >= self.alto:
-						self.y1 = self.alto
-						return
+				if self.y1 >= self.alto:
+					self.y1 = self.alto
+					return
 
-					if self.x1 == 0:
-						return
+				if self.x1 == 0:
+					return
 
-					if self.x2 == 0 and self.y2 >= self.alto:
-						self.y2 = self.alto
-						return
+				if self.x2 == 0 and self.y2 >= self.alto:
+					self.y2 = self.alto
+					return
 
-					if self.x2 == self.ancho and self.y2 >= self.alto:
-						self.y1 = self.alto
-						return
+				if self.x2 == self.ancho and self.y2 >= self.alto:
+					self.y1 = self.alto
+					return
 
-					if self.y2 >= self.alto:
-						self.y2 = self.alto
-						return
+				if self.y2 >= self.alto:
+					self.y2 = self.alto
+					return
 
-					if self.x2 == 0:
-						return
-
-
+				if self.x2 == 0:
+					return
 
 
-					self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
-
-					self.n = self.x1 * self.m * -1 + self.y1 
-
-					self.y5 = 0
-
-					self.x5 = (self.y5 - self.n ) / self.m
-
-					self.x6 = 0
-
-					self.y6 = (self.m * self.x6) + self.n
-
-					if alto > 0 and ancho > 0:
-
-						if self.x5 > ancho or self.x5 < 0:
-							self.x5 = ancho
-							self.y5 = (self.m * self.x5) + self.n 
-							if self.y5 > alto or self.y5 < 0:
-								self.y5 = alto
-								self.x5 = (self.y5 - self.n ) / self.m
-							self.x1 = self.x5
-							self.y1 = self.y5
-
-						if self.y6 > alto or self.y6 < 0:
-							self.y6 = alto
-							self.x6 = (self.y6 - self.n ) / self.m
-							if self.x6 > ancho or self.x6 < 0:
-								self.x6 = ancho
-								self.y6 = (self.m * self.x6) + self.n
-							self.x2 = self.x6
-							self.y2 = self.y6
 
 
-						## calculo de los coeficientes de la recta
-						## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
-						self.alfa=-self.y1+self.y2
-						self.beta=self.x1-self.x2
-						self.gamma=-self.x1*self.y2 + self.y1*self.x2
+				self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
 
-				except:
-					print "ERROR!!!!"
+				self.n = self.x1 * self.m * -1 + self.y1 
+
+				self.y5 = 0
+
+				self.x5 = (self.y5 - self.n ) / self.m
+
+				self.x6 = 0
+
+				self.y6 = (self.m * self.x6) + self.n
+
+				if alto > 0 and ancho > 0:
+
+					if self.x5 > ancho or self.x5 < 0:
+						self.x5 = ancho
+						self.y5 = (self.m * self.x5) + self.n 
+						if self.y5 > alto or self.y5 < 0:
+							self.y5 = alto
+							self.x5 = (self.y5 - self.n ) / self.m
+						self.x1 = self.x5
+						self.y1 = self.y5
+
+					if self.y6 > alto or self.y6 < 0:
+						self.y6 = alto
+						self.x6 = (self.y6 - self.n ) / self.m
+						if self.x6 > ancho or self.x6 < 0:
+							self.x6 = ancho
+							self.y6 = (self.m * self.x6) + self.n
+						self.x2 = self.x6
+						self.y2 = self.y6
+
+					self.x1 = self.x5
+					self.y1 = self.y5
+					self.x2 = self.x6
+					self.y2 = self.y6
+
+
+					## calculo de los coeficientes de la recta
+					## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
+					self.alfa=-self.y1+self.y2
+					self.beta=self.x1-self.x2
+					self.gamma=-self.x1*self.y2 + self.y1*self.x2
+
+				#except:
+				#	print "ERROR!!!!"
 
                 def devolverCoef(self):
                     return [self.alfa,self.beta,self.gamma]

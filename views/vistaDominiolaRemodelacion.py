@@ -1597,9 +1597,7 @@ np.int32(self.lineEdit_4.text()))
 
 
 		else:
-                    elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1()))
 
-                    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPointF(elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2()))
 		    """
                     barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, "barrera", elementoDominio.Dominio.scene())
 
@@ -1609,8 +1607,7 @@ np.int32(self.lineEdit_4.text()))
 
                     #barrera.id = elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
 
-                    print "FFFVEAMOS ", elementoDominio.Dominio.a1, " ", elementoDominio.Dominio.a2," ", elementoDominio.Dominio.b1," ", elementoDominio.Dominio.b2
-                    ident = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
+                    ident = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 		    r = elementoDominio.ContEnsayo.buscarRecta(ident)
 		    
@@ -1755,26 +1752,38 @@ np.int32(self.lineEdit_4.text()))
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 	        if not elementoDominio.ContEnsayo.hayRectaCandidata():
-		    elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(),
-np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
-
-		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()) , np.int32(self.lineEdit_2.text())))
-
-		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
+		    #elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(),np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 
-		    elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, elementoDominio.Dominio.scene())
+		    ident = elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit.text()), elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_2.text()), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit_3.text()),
+elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
+
+
+		    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()) , np.int32(self.lineEdit_2.text())))
+
+		    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
+
+		    candidata = elementoDominio.ContEnsayo.obtenerCandidata()
+
+		    elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(candidata.x1, candidata.y1, candidata.x2, candidata.y2), None, elementoDominio.Dominio.scene())
+
+
 		else:
-		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
 
-		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
-
-		    elementoDominio.Dominio.rectaCandidata.setLine(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2))
-
-		    elementoDominio.ContEnsayo.actualizarRectaCandidata(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
-np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
+		    elementoDominio.ContEnsayo.actualizarRectaCandidata(elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit.text()), elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_2.text()), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit_3.text()),
+elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 
+		    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
+
+		    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
+
+		    candidata = elementoDominio.ContEnsayo.obtenerCandidata()
+
+
+		    #elementoDominio.Dominio.rectaCandidata.setLine(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2))
+
+		    elementoDominio.Dominio.rectaCandidata.setLine(QtCore.QLineF(candidata.x1, candidata.y1, candidata.x2, candidata.y2))
 
 
 

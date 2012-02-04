@@ -366,6 +366,9 @@ class Proyecto(object):
 		self.rectaCandidata.actualizarBarrera3(x1, x2, y1, y2, alto, ancho)
 
 
+    def obtenerCandidata(self):
+        return self.rectaCandidata
+
     def hayRectaCandidata(self):
 
         if self.rectaCandidata:

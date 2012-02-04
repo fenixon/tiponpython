@@ -39,6 +39,7 @@ class barrera():
 
                 def calcularRecta( self, alto, ancho ):
 
+
 				#try:
 				"""
 				if self.x1 == 0 and self.y1 >= alto:

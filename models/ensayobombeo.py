@@ -48,4 +48,8 @@ class ensayobombeo(object):
 ##    def generarId(self):
         #a implementar un mecanismo para generar id
 ##        return 1
-        
+
+    def copiaSuperficial(self):
+        e=ensayobombeo(self.__bombeos, self.id, self.nombre)
+        e.__bombeosproc=self.__bombeosproc
+        return e

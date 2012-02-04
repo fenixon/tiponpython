@@ -635,7 +635,7 @@ class menu(QtGui.QListView):
                 
 	  	frmasociar=QtGui.QDialog()
                 ui= asociarEnsayos.Ui_Dialog()
-                ui.setupUi(frmasociar, elementoDominio.selectedMenuMouse["id"], elementoDominio.ContEnsayo)
+                ui.setupUi(frmasociar, elementoDominio.selectedMenuMouse["id"], elementoDominio.ContEnsayo, False)
                 frmasociar.exec_()
                 elementoDominio.widget = frmasociar
                 self.hide()

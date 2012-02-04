@@ -206,7 +206,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.eje.setX(5)
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto)
 
-		print " eje -> x ", self.eje.x(), " eje -> y", self.eje.y()
+		# COM print " eje -> x ", self.eje.x(), " eje -> y", self.eje.y()
 
 		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho + 5, self.eje.y()), None, self.scene())
 
@@ -221,7 +221,7 @@ self.scene())
 
 		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
 
-		print " ejeEscena -> x ", self.ejeEscena.x(), " ejeEscena -> y", self.ejeEscena.y()
+		# COM print " ejeEscena -> x ", self.ejeEscena.x(), " ejeEscena -> y", self.ejeEscena.y()
 
 		self.a1 = 0
 
@@ -281,7 +281,7 @@ self.scene())
 
 			#barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
 
-			self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
+			#self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
 			self.transformarCoordenadaY(QtCore.QPoint((position.x() + 50), (position.y() + 50)))
 
 
@@ -878,11 +878,18 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 
 	def __init__(self, x1, y1, x2, y2, tooltip, escena):
 
-		elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(x1, y1))
+		print "Luego del drop x1 ", x1, " y1 ", y1, " x2 ", x2, " y2 ", y2
 
-		elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(x2, y2))
+		#elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(x1, y1))
 
-		super(vistaBarrera, self).__init__(QtCore.QLineF(elementoDominio.Dominio.a1 - 15, elementoDominio.Dominio.a2 - 10, elementoDominio.Dominio.b1 - 15, elementoDominio.Dominio.b2 - 10), None, escena)
+		#elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(x2, y2))
+		#print "La transformada lo deja asi x1 ", elementoDominio.Dominio.a1, " y1 ", elementoDominio.Dominio.a2, " x2 ", elementoDominio.Dominio.b1, " y2 ", elementoDominio.Dominio.b2
+
+
+		#super(vistaBarrera, self).__init__(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, escena)
+
+		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, escena)
+
 		self.init(tooltip)
 
 	def init(self, tooltip):

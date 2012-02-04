@@ -206,6 +206,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.eje.setX(5)
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto)
 
+		print " eje -> x ", self.eje.x(), " eje -> y", self.eje.y()
 
 		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho + 5, self.eje.y()), None, self.scene())
 
@@ -219,6 +220,8 @@ self.scene())
 self.scene())
 
 		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
+
+		print " ejeEscena -> x ", self.ejeEscena.x(), " ejeEscena -> y", self.ejeEscena.y()
 
 		self.a1 = 0
 

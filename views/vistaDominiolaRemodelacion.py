@@ -1738,10 +1738,10 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
                     #elementoDominio.ContEnsayo.actualizarRectaCoordenada(recta.id, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
                     
 		    r = elementoDominio.ContEnsayo.buscarRecta(recta.id)
-		    elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
-   		    elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
-   		    recta.setLine(r.x1, elementoDominio.Dominio.a2, r.x2, elementoDominio.Dominio.b2)
-   		    
+		    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
+   		    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
+   		    #recta.setLine(r.x1, elementoDominio.Dominio.a2, r.x2, elementoDominio.Dominio.b2)
+		    recta.setLine(r.x1, r.y1, r.x2, r.y2)
                     recta.setPen(QtCore.Qt.black)
 		    elementoDominio.Dominio.rectaSeleccionada['id'] = 0
 		    return

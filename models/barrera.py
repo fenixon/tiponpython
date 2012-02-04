@@ -41,18 +41,46 @@ class barrera():
 
 				try:
 
-					self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
+					if self.x1 == 0 and self.y1 >= self.alto:
+						self.y1 = self.alto
+						return
 
-					print "alto ", alto, " ancho ", ancho, " x1 ", self.x1, " y1  ", self.y1, " x2 ", self.x2, " y2 ", self.y2
+					if self.x1 == self.ancho and self.y1 >= self.alto:
+						self.y1 = self.alto
+						return
+
+					if self.y1 >= self.alto:
+						self.y1 = self.alto
+						return
+
+					if self.x1 == 0:
+						return
+
+					if self.x2 == 0 and self.y2 >= self.alto:
+						self.y2 = self.alto
+						return
+
+					if self.x2 == self.ancho and self.y2 >= self.alto:
+						self.y1 = self.alto
+						return
+
+					if self.y2 >= self.alto:
+						self.y2 = self.alto
+						return
+
+					if self.x2 == 0:
+						return
+
+
+
+
+					self.m  =  (self.y2 - self.y1)  /   (self.x2 - self.x1) 
 
 					self.n = self.x1 * self.m * -1 + self.y1 
 
-					print " m = ", self.m, " n = ", self.n
 					self.y5 = 0
 
 					self.x5 = (self.y5 - self.n ) / self.m
-
-					print self.x5, " ++ ", self.y5
 
 					self.x6 = 0
 
@@ -77,9 +105,6 @@ class barrera():
 								self.y6 = (self.m * self.x6) + self.n
 							self.x2 = self.x6
 							self.y2 = self.y6
-
-						print self.x5, " ++ ", self.y5
-						print self.x6, " ++ ", self.y6
 
 
 						## calculo de los coeficientes de la recta

@@ -235,7 +235,8 @@ self.scene())
 
 		self.ancho = elementoDominio.ContEnsayo.dominio.ancho
 
-
+		self.transformarX = False
+		self.transformarY = False
 
 	#Sobreescribimos dragEnterEvent para pemitir
 	#la accion de este evento.
@@ -413,9 +414,11 @@ self.scene())
 				valor1 = np.absolute(recta.dx() /2)
 				valor2 = np.absolute(recta.dy() /2)
 
-				self.transformarCoordenada(QtCore.QPoint(punto.x(), punto.y()))
+				#self.transformarCoordenada(QtCore.QPoint(punto.x(), punto.y()))
 
 				self.transformarCoordenadaY(QtCore.QPoint(punto.x(), punto.y()))
+
+				print "Veamos que tienen luego de la transformada a1 ", self.a1, " a2", self.a2
 
 				#Recta proxima a las x
 				if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
@@ -430,65 +433,187 @@ self.scene())
 				if  self.movido.eje == "x":
 					if self.a2 >= self.alto:
 						if self.a1 <= 0:
+
 							self.movido.setLine(0, 0, self.movido.line().x2(), self.movido.line().y2())
+
+							self.transformarX = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, self.alto, "X", self.alto, self.ancho)
+
+
+
 						elif self.a1 >= self.ancho:
 							self.movido.setLine(self.ancho, 0, self.movido.line().x2(), self.movido.line().y2())
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.ancho, self.alto, "X", self.alto, self.ancho)
+
+							self.transformarX = True
+
+
+
 						else:
-							self.movido.setLine(punto.x(), 0, self.movido.line().x2(), self.movido.line().y2())
+							self.movido.setLine(self.a1, 0, self.movido.line().x2(), self.movido.line().y2())
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.a1, self.alto, "X", self.alto, self.ancho)
+
+							self.transformarX = True
 
 
 					elif self.a2 <= 0:
 						if self.a1 <= 0:
 							self.movido.setLine(0, self.alto, self.movido.line().x2(), self.movido.line().y2())
-						elif self.a1 >= self.alto:
+
+							self.transformarX = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, 0, "X", self.alto, self.ancho)
+
+
+
+						elif self.a1 >= self.ancho:
 							self.movido.setLine(self.ancho, self.alto, self.movido.line().x2(), self.movido.line().y2())
+
+							self.transformarX = True
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.ancho, 0, "X", self.alto, self.ancho)
+
 						else:
-							self.movido.setLine(punto.x(), self.alto, self.movido.line().x2(), self.movido.line().y2())
+							self.movido.setLine(self.a1, self.alto, self.movido.line().x2(), self.movido.line().y2())
+
+							self.transformarX = True
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.a1, 0, "X", self.alto, self.ancho)
+
+
+
 					elif self.a1 <= 0:
 						self.movido.setLine(0, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+
+						self.transformarX = True
+
+						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, punto.y(), "X", self.alto, self.ancho)
+
+
 					elif self.a1 >= self.ancho:
 						self.movido.setLine(self.ancho, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+
+						self.transformarX = True
+
+						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.alto, punto.y(), "X", self.alto, self.ancho)
+
+
 					else:
 						self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
 
+						self.transformarX = True
+
+						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, punto.x(), punto.y(), "X", self.alto, self.ancho)
+
+
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeFDiagCursor))
+
 				elif self.movido.eje == "y":
  
 					if self.b2 >= self.alto:
 						if self.b1 <= 0:
 							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, 0)
 
+
+							self.transformarY = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, self.alto, "Y", self.alto, self.ancho)
+
+
+
 						elif self.b1 >= self.ancho:
 							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, 0)
 
+							self.transformarY = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.ancho, self.alto, "Y", self.alto, self.ancho)
+
+
+
 						else:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), 0)
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.b1, 0)
+
+
+							self.transformarY = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.b1, self.alto, "Y", self.alto, self.ancho)
+
 
 
 					elif self.b2 <= 0:
 						if self.b1 <= 0:
 							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, self.alto)
+
+							self.transformarY = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, 0, "Y", self.alto, self.ancho)
+
+
 						elif self.b1 >= self.alto:
 							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, self.alto)
+
+							self.transformarY = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.ancho, 0, "Y", self.alto, self.ancho)
+
 						else:
-							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), self.alto)
+							self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.b1, self.alto)
+
+							self.transformarY = True
+
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.b1, 0, "Y", self.alto, self.ancho)
+
+
 
 					elif self.b1 <= 0:
 						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), 0, punto.y())
+
+
+						self.transformarY = True
+
+
+						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, punto.y(), "Y", self.alto, self.ancho)
+
 					elif self.b1 >= self.ancho :
 						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), self.ancho, punto.y())
+
+
+						self.transformarY = True
+
+
+						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.ancho, punto.y(), "Y", self.alto, self.ancho)
+
+
 					else:
 						self.movido.setLine(self.movido.line().x1(), self.movido.line().y1(), punto.x(), punto.y())
  
 
+						self.transformarY = True
+
+
+						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, punto.x(), punto.y(), "Y", self.alto, self.ancho)
+
+
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
-				self.transformarCoordenada(QtCore.QPoint(self.movido.line().x1(), self.movido.line().y1()))
+				#self.transformarCoordenada(QtCore.QPoint(self.movido.line().x1(), self.movido.line().y1()))
 
-				self.transformarCoordenadaY(QtCore.QPoint(self.movido.line().x2(), self.movido.line().y2()))
+				#self.transformarCoordenadaY(QtCore.QPoint(self.movido.line().x2(), self.movido.line().y2()))
 
 				#elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.movido.line().x1(), self.a2, self.movido.line().x2(), self.b2, self.alto, self.ancho)
-				elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.a1, self.a2, self.b1, self.b2, self.alto, self.ancho)
+				#elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.a1, self.a2, self.b1, self.b2, self.alto, self.ancho)
 
 				elementoDominio.gbCoord.setRectaExistente(self.movido.id, 0)
 
@@ -499,10 +624,7 @@ self.scene())
 
 		listaItems = self.items (QtCore.QRect(e.pos().x(), e.pos().y(), 5, 5))
 		if len(listaItems) > 0:
-			print len(listaItems)
 			item = listaItems[0]
-
-		
 
 		if item != None:
 
@@ -645,10 +767,20 @@ self.scene())
 
 		if self.rectaSeleccionada['id'] > 0:
 			r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
-			#self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
+			if self.transformarX:
+				self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
+				self.transformarX = False
+				self.movido.setLine(self.a1, self.a2, r.x2, r.y2)
+
+			elif self.transformarY:
+				self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
+				self.transformarY = False
+				self.movido.setLine(r.x1, r.y1, self.b1, self.b2)
+
+			else:
 			#self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
 			#self.movido.setLine(r.x1, self.a2, r.x2, self.b2)
-			self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
+				self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
 			self.rectaSeleccionada['id'] = 0
 
 
@@ -1755,6 +1887,8 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
             self.idElemento = idElemento
 
         recta = elementoDominio.ContEnsayo.buscarRecta(self.idElemento)
+
+	print "RECTA X1", recta.x1, " y1 ", recta.y1
 
         if irRE == 0:
 	    if recta.x1 <= 0:

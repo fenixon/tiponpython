@@ -172,11 +172,9 @@ class Proyecto(object):
 
     #CRUD de barreras
     def agregarRecta(self, tipo, x1, y1, x2, y2, alto, ancho):
-	print "x1 ", x1, " y1 ", y1, " x2 ", x2, " y2 " ,y2, " alto ", alto, " ancho ",ancho
 
         r = barrera(x1, x2, y1, y2, tipo, alto, ancho)
 
-	print "x1 ", r.x1, " y1 ", r.y1, " x2 ", r.x2, " y2 " , r.y2, " alto ", alto, " ancho ",ancho
 
 
         self.idR = self.idR + 1
@@ -274,20 +272,15 @@ class Proyecto(object):
         return lista
 
 
-    def actualizarRecta(self, idRecta, x, y, tipoPunto):
+    def actualizarRecta(self, idRecta, x, y, tipoPunto, alto, ancho):
         for barrera in self.dominio.listaRecta:
             if barrera.id == idRecta:
-                
-                if tipoPunto == "R":                    
-                    recta = QtCore.QLine(barrera.x1, barrera.y1, x, y)
-                    
-                    if np.absolute(recta.dy()) > 1 and  np.absolute(recta.dx()) > 1:
-                        barrera.actualizarBarrera(barrera.x1, x, barrera.y1, y, barrera.tipo)
-                else:                
-                    recta = QtCore.QLine(x, y, barrera.x2, barrera.y2)
-                    
-                    if np.absolute(recta.dx()) > 1 and np.absolute(recta.dy()) > 1:
-                       barrera.actualizarBarrera(x, barrera.x2,  y, barrera.y2, barrera.tipo)
+                if tipoPunto == "Y":
+                    barrera.actualizarBarrera3(barrera.x1, x, barrera.y1, y, alto, ancho)
+                else:
+		    print " VALOR DE X ", x, " DE Y", y
+                    barrera.actualizarBarrera3(x, barrera.x2,  y, barrera.y2, alto, ancho)
+		    print " VALOR DE X ", barrera.x1, " DE Y", barrera.y1
 
     def actualizarRectaCoord(self, idElemento, x1, y1, x2, y2, tipo):
         for recta in self.dominio.listaRecta:

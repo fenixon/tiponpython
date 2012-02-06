@@ -1751,6 +1751,7 @@ np.int32(self.lineEdit_4.text()))
 
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
+		print elementoDominio.ContEnsayo.hayRectaCandidata()
 	        if not elementoDominio.ContEnsayo.hayRectaCandidata():
 		    #elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(),np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 

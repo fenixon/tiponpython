@@ -125,6 +125,8 @@ class barrera():
 					self.beta=self.x1-self.x2
 					self.gamma=-self.x1*self.y2 + self.y1*self.x2
 
+
+
 				#except:
 				#	print "ERROR!!!!"
 

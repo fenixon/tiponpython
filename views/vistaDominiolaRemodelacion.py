@@ -129,8 +129,6 @@ de efectuar las acciones del menu desplegado.
 
 class elementoDominio(object):
 
-    acepto = True
-
     elementoDominio = 0
 
     reloj = False
@@ -1164,10 +1162,6 @@ class boton(QtGui.QPushButton):
                 drag.setPixmap(pixmap)
                 elementoDominio.elementoDominio = 1
 
-
-
-            elementoDominio.idElemento = self.id
-
             drag.setMimeData(mimedata)
             drag.setHotSpot(e.pos() - self.rect().topLeft())
             dropAction = drag.start(QtCore.Qt.MoveAction)
@@ -1849,7 +1843,6 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 
     def setActualizar(self):
 
-	print self.tipoElemento, "  *  ", self.idElemento
         elementoDominio.Dominio.rectaSeleccionada['id'] = 0
 
         if elementoDominio.pozoSeleccionado != 0:

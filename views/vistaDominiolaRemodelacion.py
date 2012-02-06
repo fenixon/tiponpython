@@ -296,9 +296,10 @@ self.scene())
 
 			elementoDominio.gbCoord.setRectaExistente(barrera.id, 0)
 
+			self.rectas.append(barrera)
+
 			elementoDominio.gbCoord.setActualizar()
 
-			self.rectas.append(barrera)
 
 		e.setDropAction(QtCore.Qt.MoveAction)
 		e.accept()
@@ -1848,6 +1849,7 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 
     def setActualizar(self):
 
+	print self.tipoElemento, "  *  ", self.idElemento
         elementoDominio.Dominio.rectaSeleccionada['id'] = 0
 
         if elementoDominio.pozoSeleccionado != 0:

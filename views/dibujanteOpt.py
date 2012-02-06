@@ -6,22 +6,21 @@ from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas
 from models.figuraOpt import figuraOpt as FigureOpt
 
 
-class dibujanteOpt(QMainWindow):
+class dibujanteOpt(QWidget):
 
     def __init__(self, x = None, y = None, z = None, xx = None, yy = None, parent = None):
 
-        QMainWindow.__init__(self, parent)
-        self.setAttribute(Qt.WA_DeleteOnClose)        
-
+        QWidget.__init__(self, parent)
+        self.setAttribute(Qt.WA_DeleteOnClose)
         self.fig = FigureOpt(x, y, z, xx, yy)
 
         if z == None:
 
-            self.setWindowTitle(QApplication.translate("frmdibujanteOpt", "Grafica de Funcion objetivo", None, QApplication.UnicodeUTF8))
+            self.setWindowTitle(QString(u'Gráfica de Función objetivo'))
 
         else:
 
-            self.setWindowTitle(QApplication.translate("frmdibujanteOpt", "Grafica de Parametros", None, QApplication.UnicodeUTF8))
+            self.setWindowTitle(QString(u'Gráfica de Parametros'))
 
 ##            self.fig = FigureOpt(x, y, xx,yy)
 
@@ -29,9 +28,12 @@ class dibujanteOpt(QMainWindow):
 
         self.canvas.draw()
 
-        self.setCentralWidget(self.canvas)
+        vbox = QVBoxLayout()
+        vbox.addWidget(self.canvas)
+        self.setLayout(vbox)
 
         self.center()
+        self.setMinimumSize(288, 384)
 
     def center(self):
 

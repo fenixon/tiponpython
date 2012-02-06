@@ -206,8 +206,6 @@ class vistaGrafica(QtGui.QGraphicsView):
 		self.eje.setX(5)
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto)
 
-		# COM print " eje -> x ", self.eje.x(), " eje -> y", self.eje.y()
-
 		self.ejeX = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), elementoDominio.ContEnsayo.dominio.ancho + 5, self.eje.y()), None, self.scene())
 
 		self.ejeY = QtGui.QGraphicsLineItem(QtCore.QLineF(self.eje.x(), self.eje.y(), self.eje.x(), 0), None,
@@ -220,8 +218,6 @@ self.scene())
 self.scene())
 
 		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
-
-		# COM print " ejeEscena -> x ", self.ejeEscena.x(), " ejeEscena -> y", self.ejeEscena.y()
 
 		self.a1 = 0
 
@@ -292,12 +288,15 @@ self.scene())
 
 			barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
 
+
 			#self.transformarCoordenada(QtCore.QPoint(barrera.line().x1(), barrera.line().y1()))
 			#self.transformarCoordenadaY(QtCore.QPoint(barrera.line().x2(), barrera.line().y2()))
 
 			barrera.id = ident
 
 			elementoDominio.gbCoord.setRectaExistente(barrera.id, 0)
+
+			elementoDominio.gbCoord.setActualizar()
 
 			self.rectas.append(barrera)
 
@@ -417,7 +416,6 @@ self.scene())
 
 				self.transformarCoordenadaY(QtCore.QPoint(punto.x(), punto.y()))
 
-				print "Veamos que tienen luego de la transformada a1 ", self.a1, " a2", self.a2
 
 				#Recta proxima a las x
 				if np.absolute(rectay.dx()) < np.absolute(recta.dx() /2) and  np.absolute(rectay.dy()) < np.absolute((recta.dy() / 2)):
@@ -803,18 +801,19 @@ self.scene())
 			r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
 
 
-			print "VALOR DE RECTA x1", r.x1, " y1", r.y1, " x2", r.x2, " y2", r.y2 
-			print "Valor del movido x1",  self.movido.line().x1() ," y1 ", self.movido.line().y1()," x2", self.movido.line().x2()," y2", self.movido.line().y2()
-
 			if self.transformarX:
 				self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
 				self.transformarX = False
 				self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
 
+				elementoDominio.gbCoord.setActualizar()
+
 			elif self.transformarY:
 				self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
 				self.transformarY = False
 				self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
+
+				elementoDominio.gbCoord.setActualizar()
 
 
 			self.rectaSeleccionada['id'] = 0
@@ -1045,13 +1044,9 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 
 	def __init__(self, x1, y1, x2, y2, tooltip, escena):
 
-		#print "Luego del drop x1 ", x1, " y1 ", y1, " x2 ", x2, " y2 ", y2
-
 		#elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(x1, y1))
 
 		#elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(x2, y2))
-		#print "La transformada lo deja asi x1 ", elementoDominio.Dominio.a1, " y1 ", elementoDominio.Dominio.a2, " x2 ", elementoDominio.Dominio.b1, " y2 ", elementoDominio.Dominio.b2
-
 
 		#super(vistaBarrera, self).__init__(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, escena)
 
@@ -1293,10 +1288,7 @@ class menu(QtGui.QListView):
                 return
             #Si no es ninguna opcion predeterminada, las opcoines son para elegir metodos de optimizacion
             if valor.toString() != "Optimizar" and valor.toString() != "Salir" and valor.toString() != "Eliminar" and valor.toString() != "Asociar" :
-                print "valor es optimizar"
                 #Agrego ala coleccion de pozos para optimizar
-                print "Agrego para optimizar el pozo "
-                print elementoDominio.selectedMenuMouse["id"]
                 elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())
                 frmopt=QtGui.QDialog()
                 ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
@@ -1601,13 +1593,10 @@ class gbCoordenadas(QtGui.QGroupBox):
 
 		if not elementoDominio.ContEnsayo.hayRectaCandidata():
 
-		    print "EJE ESCENA X ", elementoDominio.Dominio.ejeEscena.x(), " Y", elementoDominio.Dominio.ejeEscena.y()
-
 		    ident = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit.text()), elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_2.text()), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit_3.text()),
 elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 		    r = elementoDominio.ContEnsayo.buscarRecta(ident)
-   		    print "el ident", ident, "Esto es lo que tiene r  x1 ", r.x1, " y1 ", r.y1, " x2 ", r.x2 , " y2 ", r.y2 
 		    barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
    		    #barrera = vistaBarrera(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
 
@@ -1780,7 +1769,6 @@ np.int32(self.lineEdit_4.text()))
 
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
-		print elementoDominio.ContEnsayo.hayRectaCandidata()
 	        if not elementoDominio.ContEnsayo.hayRectaCandidata():
 		    #elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(),np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
@@ -1913,7 +1901,6 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
             elementoDominio.ContEnsayo.actualizarRectaC(self.idElemento, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 
-
             for recta in elementoDominio.Dominio.rectas:
                 if recta.id == self.idElemento:
                     #elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
@@ -1924,7 +1911,6 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 		    r = elementoDominio.ContEnsayo.buscarRecta(recta.id)
 
    		    #recta.setLine(r.x1, elementoDominio.Dominio.a2, r.x2, elementoDominio.Dominio.b2)
-		    print "La recta paga la vbuelta con esto ", r.x1, " ", r.y1, " ", r.x2, " ", r.y2
 
 		    recta.setLine(r.x1, r.y1, r.x2, r.y2)
                     recta.setPen(QtCore.Qt.black)

@@ -330,7 +330,6 @@ self.scene())
 
 					elementoDominio.gbCoord.actualizarCoordenadasPozo(self.movido.id)
 					elementoDominio.ContEnsayo.moverPozo(self.movido.id, self.a1, self.a2)
-
 				elif self.a1 <= 0:
 					if self.a2 > 0 and self.a2 < self.alto:
 						self.movido.setPixmap(QtGui.QPixmap("content/images/redDotIcon.png"))
@@ -489,22 +488,57 @@ self.scene())
 
 
 					elif self.a1 <= 0:
-						self.movido.setLine(0, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+						if self.a2 <= 0:
+							self.movido.setLine(0, self.alto, self.movido.line().x2(), self.movido.line().y2())
 
-						self.transformarX = True
+							self.transformarX = True
 
-						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, punto.y(), "X", self.alto, self.ancho)
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, 0, "X", self.alto, self.ancho)
+
+						elif self.a2 >= self.alto:
+							self.movido.setLine(0, 0, self.movido.line().x2(), self.movido.line().y2())
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, self.alto, "X", self.alto, self.ancho)
+
+							self.transformarX = True
+
+
+						else:
+
+							self.movido.setLine(0, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+
+							self.transformarX = True
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, 0, punto.y(), "X", self.alto, self.ancho)
 
 
 					elif self.a1 >= self.ancho:
-						self.movido.setLine(self.ancho, punto.y(), self.movido.line().x2(), self.movido.line().y2())
 
-						self.transformarX = True
+						if self.a2 <= 0:
 
-						elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.alto, punto.y(), "X", self.alto, self.ancho)
+							self.movido.setLine(self.ancho, self.alto, self.movido.line().x2(), self.movido.line().y2())
 
+							self.transformarX = True
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.ancho, 0, "X", self.alto, self.ancho)
+
+						elif self.a2 >= self.alto:
+							self.movido.setLine(self.ancho, 0, self.movido.line().x2(), self.movido.line().y2())
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.ancho, self.alto, "X", self.alto, self.ancho)
+
+							self.transformarX = True
+
+						else:
+
+							self.movido.setLine(self.ancho, punto.y(), self.movido.line().x2(), self.movido.line().y2())
+
+							self.transformarX = True
+
+							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.alto, punto.y(), "X", self.alto, self.ancho)
 
 					else:
+						print "SE DEBERIA DE ENTRAR SIEMPRE POR ACA"
 						self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
 
 						self.transformarX = True
@@ -771,18 +805,13 @@ self.scene())
 
 			print "VALOR DE RECTA x1", r.x1, " y1", r.y1, " x2", r.x2, " y2", r.y2 
 			print "Valor del movido x1",  self.movido.line().x1() ," y1 ", self.movido.line().y1()," x2", self.movido.line().x2()," y2", self.movido.line().y2()
- 
 
 			if self.transformarX:
-				print " PASAMOS  POR X"
 				self.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
-				print "Esto vale el punto X p", self.a1, " q", self.a2
 				self.transformarX = False
 				self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
 
 			elif self.transformarY:
-				print " PASAMOS  POR Y"
-				print "Esto vale el punto Y p", self.b1, " q", self.b2
 				self.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
 				self.transformarY = False
 				self.movido.setLine(r.x1, r.y1, r.x2, r.y2)
@@ -1876,10 +1905,13 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 
 
         if self.tipoElemento == "barrera":
-            elementoDominio.ContEnsayo.actualizarRectaC(self.idElemento, np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()),
-np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho )
 
-	    print "Estos son los datos", np.int32(self.lineEdit.text()), " ", np.int32(self.lineEdit_2.text()), " ", np.int32(self.lineEdit_3.text()), " ", np.int32(self.lineEdit_4.text())
+            elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(np.int(self.lineEdit.text()), np.int(self.lineEdit_2.text())))
+
+            elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPointF(np.int(self.lineEdit_3.text()), np.int(self.lineEdit_4.text())))
+
+            elementoDominio.ContEnsayo.actualizarRectaC(self.idElemento, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
+
 
 
             for recta in elementoDominio.Dominio.rectas:
@@ -1890,8 +1922,7 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
                     #elementoDominio.ContEnsayo.actualizarRectaCoordenada(recta.id, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
                     
 		    r = elementoDominio.ContEnsayo.buscarRecta(recta.id)
-		    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPointF(r.x1, r.y1))
-   		    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPointF(r.x2, r.y2))
+
    		    #recta.setLine(r.x1, elementoDominio.Dominio.a2, r.x2, elementoDominio.Dominio.b2)
 		    print "La recta paga la vbuelta con esto ", r.x1, " ", r.y1, " ", r.x2, " ", r.y2
 
@@ -1909,8 +1940,6 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
 
         recta = elementoDominio.ContEnsayo.buscarRecta(self.idElemento)
 
-	print "RECTA X1", recta.x1, " y1 ", recta.y1
-
         if irRE == 0:
 	    if recta.x1 <= 0:
                 self.lineEdit.setText(QtCore.QString.number(0, 10))
@@ -1920,11 +1949,15 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
                 self.lineEdit.setText(QtCore.QString.number(recta.x1, 10))
 
 	    if recta.y1 <= 0:
-                self.lineEdit_2.setText(QtCore.QString.number(0, 10))
-	    elif recta.y1 >= elementoDominio.Dominio.alto:
                 self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    elif recta.y1 >= elementoDominio.Dominio.alto:
+                self.lineEdit_2.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.movido != None and elementoDominio.Dominio.movido != "":
+	        if elementoDominio.Dominio.movido.eje == "x":
+                    self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
 	    else:
-                self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
+	        self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
+
 
 	    if recta.x2 <= 0:
                 self.lineEdit_3.setText(QtCore.QString.number(0, 10))
@@ -1932,18 +1965,24 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
                 self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.ancho, 10))
 	    else:
                 self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
+
+
 	    if recta.y2 <= 0:
-                self.lineEdit_4.setText(QtCore.QString.number(0, 10))
-	    elif recta.y2 >= elementoDominio.Dominio.alto:
                 self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    elif recta.y2 >= elementoDominio.Dominio.alto:
+                self.lineEdit_4.setText(QtCore.QString.number(0, 10))
+	    elif elementoDominio.Dominio.movido != None and elementoDominio.Dominio.movido != "":
+	        if elementoDominio.Dominio.movido.eje != "x":
+                    self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
 	    else:
-                self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+	        self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
 
 	    if recta.tipo == "Positivo":
 	        self.cbTipo.setCurrentIndex(1)
 	    else:
 	        self.cbTipo.setCurrentIndex(0)
 
+	"""
         else:
 
             recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
@@ -1973,18 +2012,11 @@ np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDomin
                 self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
 	    else:
                 self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
-
 	    if recta.tipo == "Positivo":
 	        self.cbTipo.setCurrentIndex(1)
 	    else:
 	        self.cbTipo.setCurrentIndex(0)
-
-
-
-	    if recta.tipo == "Positivo":
-	        self.cbTipo.setCurrentIndex(1)
-	    else:
-	        self.cbTipo.setCurrentIndex(0)
+	"""
 
 
         if not self.btnActualizar.isVisible():

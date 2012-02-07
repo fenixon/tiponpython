@@ -12,6 +12,7 @@ import sys
 import condicionExterna
 import metodoSolucion
 import parametros
+from Hantush import Hantush
 from theis import Theis
 import CondicionesExternas
 import numpy as np
@@ -137,7 +138,7 @@ class Ui_frmNuevoProyecto(object):
         self.txtC.setGeometry(QtCore.QRect(200, 110, 113, 28))
         self.txtC.setObjectName(_fromUtf8("txtC"))
 
-        tipos = ['Analitico']
+        tipos = ['Analitico','Numerico']
         self.cmbTipo.addItems(tipos)
         self.cambioTipo(self.cmbTipo.currentText())
         self.cambioMetodo(self.cmbMetodo.currentText())
@@ -153,7 +154,7 @@ class Ui_frmNuevoProyecto(object):
         QtCore.QObject.connect(self.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.guardarSalir)
         QtCore.QObject.connect(self.cmbTipo, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.cambioTipo)
         QtCore.QObject.connect(self.btnCondicionesExternas, QtCore.SIGNAL(_fromUtf8("clicked()")), self.ventanaCondicionesExternas)
-        QtCore.QObject.connect(self.cmbTipo, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.cambioMetodo)
+        QtCore.QObject.connect(self.cmbMetodo, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.cambioMetodo)
         QtCore.QMetaObject.connectSlotsByName(frmNuevoProyecto)
 
 
@@ -164,54 +165,56 @@ class Ui_frmNuevoProyecto(object):
         frmCondicionesExternas.exec_()
 
     def cambioMetodo(self,nombreMetodo):
-        if(controlador.metodo != None):
-            for n in range(0,len(controlador.metodo.listaParametros)):
-                ejec='self.txtParam'+ str(n) +' = None'
-                print 'chau caja'
-                exec(ejec)
-            controlador.metodo = None
-        ejec = 'metodo= %s(controlador.dominio, controlador.parametros)' % (nombreMetodo)
-        exec(ejec)
-        controlador.metodo=metodo
-        #seteando dimension de interfaz por defecto
-        ventanaY=496
-        groupboxY=21
-        botonY = 460
-        elementoNuevoY =20
-        self.gbParametrosDominio.setGeometry(QtCore.QRect(30, 430, 351, groupboxY))
-        self.btnNuevo.setGeometry(QtCore.QRect(230, botonY , 99, 23))
-        ventana.resize(405, ventanaY)
-        #agregando nuevos elementos
-        self.val = QtGui.QDoubleValidator(-100, 900, 5, self.gbParametrosDominio)
-        for n in range(0,len(controlador.metodo.listaParametros)):
-            ejec='self.txtParam'+ str(n) +' = cajaTexto(self.gbParametrosDominio)'
+        if nombreMetodo != '':
+            if(controlador.metodo != None):
+                for n in range(0,len(controlador.metodo.listaParametros)):
+                    ejec='self.txtParam'+ str(n) +' = None'
+                    exec(ejec)
+                    print 'chau caja'
+                    ejec='self.lblParam'+ str(n) +' = None'
+                    exec(ejec)
+                controlador.metodo = None
+            ejec = 'metodo= %s(controlador.dominio, controlador.parametros)' % (nombreMetodo)
             exec(ejec)
-            ejec='self.txtParam'+ str(n) +'.setGeometry(QtCore.QRect(200, '+ str(elementoNuevoY) +', 113, 28))'
-            exec(ejec)
-            ejec='self.txtParam'+ str(n) +'.setObjectName(_fromUtf8("txtParam'+ str(n) +'"))'
-            exec(ejec)
-            ejec='self.txtParam'+ str(n) +'.setValidator(self.val)'
-            exec(ejec)
-            print 'hola caja'
-            ejec= 'self.lblParam'+ str(n) +' = QtGui.QLabel(self.gbParametrosDominio)'
-            exec(ejec)
-            ejec= 'self.lblParam'+ str(n) +'.setGeometry(QtCore.QRect(10, '+ str(elementoNuevoY+7) +', 171, 18))'
-            exec(ejec)
-            ejec= 'self.lblParam'+ str(n) +'.setText(QtGui.QApplication.translate("frmNuevoProyecto", str(controlador.metodo.listaParametros['+ str(n) +'].nombre), None, QtGui.QApplication.UnicodeUTF8))'
-            exec(ejec)
-            ejec= 'self.lblParam'+ str(n) +'.setObjectName(_fromUtf8("lblParam'+ str(n) +'"))'
-            exec(ejec)
-            ejec= 'self.lblParam'+ str(n) +'.setAlignment(QtCore.Qt.AlignHCenter)'
-            exec(ejec)
-
-            #alargando la interfaz
-            elementoNuevoY = elementoNuevoY + 40
-            groupboxY = groupboxY + 40
-            ventanaY = ventanaY + 40
-            botonY = botonY + 40
-            ventana.resize(405, ventanaY)
-            self.gbParametrosDominio.setGeometry(QtCore.QRect(30, 430 , 351, groupboxY))
+            controlador.metodo=metodo
+            #seteando dimension de interfaz por defecto
+            ventanaY=496
+            groupboxY=21
+            botonY = 460
+            elementoNuevoY =20
+            self.gbParametrosDominio.setGeometry(QtCore.QRect(30, 430, 351, groupboxY))
             self.btnNuevo.setGeometry(QtCore.QRect(230, botonY , 99, 23))
+            ventana.resize(405, ventanaY)
+            #agregando nuevos elementos
+            self.val = QtGui.QDoubleValidator(-100, 900, 5, self.gbParametrosDominio)
+            for n in range(0,len(controlador.metodo.listaParametros)):
+                ejec='self.txtParam'+ str(n) +' = cajaTexto(self.gbParametrosDominio)'
+                exec(ejec)
+                ejec='self.txtParam'+ str(n) +'.setGeometry(QtCore.QRect(200, '+ str(elementoNuevoY) +', 113, 28))'
+                exec(ejec)
+                ejec='self.txtParam'+ str(n) +'.setObjectName(_fromUtf8("txtParam'+ str(n) +'"))'
+                exec(ejec)
+                ejec='self.txtParam'+ str(n) +'.setValidator(self.val)'
+                exec(ejec)
+                print 'hola caja'
+                ejec= 'self.lblParam'+ str(n) +' = QtGui.QLabel(self.gbParametrosDominio)'
+                exec(ejec)
+                ejec= 'self.lblParam'+ str(n) +'.setGeometry(QtCore.QRect(10, '+ str(elementoNuevoY+7) +', 171, 18))'
+                exec(ejec)
+                ejec= 'self.lblParam'+ str(n) +'.setText(QtGui.QApplication.translate("frmNuevoProyecto", str(controlador.metodo.listaParametros['+ str(n) +'].nombre), None, QtGui.QApplication.UnicodeUTF8))'
+                exec(ejec)
+                ejec= 'self.lblParam'+ str(n) +'.setObjectName(_fromUtf8("lblParam'+ str(n) +'"))'
+                exec(ejec)
+                ejec= 'self.lblParam'+ str(n) +'.setAlignment(QtCore.Qt.AlignHCenter)'
+                exec(ejec)
+                #alargando la interfaz
+                elementoNuevoY = elementoNuevoY + 40
+                groupboxY = groupboxY + 40
+                ventanaY = ventanaY + 40
+                botonY = botonY + 40
+                ventana.resize(405, ventanaY)
+                self.gbParametrosDominio.setGeometry(QtCore.QRect(30, 430 , 351, groupboxY))
+                self.btnNuevo.setGeometry(QtCore.QRect(230, botonY , 99, 23))
 
 
     def guardarSalir(self):
@@ -239,7 +242,7 @@ class Ui_frmNuevoProyecto(object):
     def cambioTipo(self, tipo):
         self.cmbMetodo.clear()
         if tipo == 'Numerico':
-            metodos = ['Ninguno']
+            metodos = ['Hantush']
             self.btnCondicionesExternas.setEnabled(True)
         else:
             metodos = ['Theis']

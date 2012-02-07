@@ -35,7 +35,7 @@ class Ui_Dialog(QtGui.QDialog):
         self.label.setObjectName(_fromUtf8("label"))
         self.label_2 = QtGui.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(100, 100, 46, 13))
-        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Caudal", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Nivel", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.txtcaudal = QtGui.QTextEdit(Dialog)
         self.txtcaudal.setGeometry(QtCore.QRect(170, 90, 101, 31))
@@ -60,25 +60,41 @@ class Ui_Dialog(QtGui.QDialog):
 
     def agregar(self):
         global ContEnsayo
+        control=True
+        
         t=float(self.txttiempo.toPlainText())
-        n=float(self.txtcaudal.toPlainText())
         print "tiempo: "+str(t)
-        print "caudal: "+str(n)
-        o=observacion.observacion(t,n)
-        self.observaciones.append(o)
+##      Se verifica que vengas los datos con sus tiempos ordenados de manera creciente sino salta         
+        control=ContEnsayo.verificarFormato(self.observaciones, t)
 
-        reply = QtGui.QMessageBox.information(self,
-                "Informacion",
-                "Se agrego la nueva observacion del ensayo. Presione finalizar para guardar las observaciones")
+        if (control==False):
+            reply = QtGui.QMessageBox.information(self,
+                "Error",
+                "Los datos de bombeo no fueron agregaos. Debe ingresar un valor para el tiempo mayor a los ingresados anteriormente.")
+            
+        else:  
+            n=float(self.txtcaudal.toPlainText())        
+            print "caudal: "+str(n)
+            o=observacion.observacion(t,n)
+            self.observaciones.append(o)
 
-        self.txttiempo.setText('')
-        self.txtcaudal.setText('')        
+            reply = QtGui.QMessageBox.information(None,
+                    "Informacion",
+                    "Se agrego la nueva observacion del ensayo. Presione finalizar para guardar las observaciones")
+
+            self.txttiempo.setText('')
+            self.txtcaudal.setText('')        
         
 
     def finalizar(self):
         global ContEnsayo
+
+        ####Pedir un nombre para el ensayo
+        nombre, ok=QtGui.QInputDialog.getText(self,"Finalzar registro ",
+                                   "Nombre: ", QtGui.QLineEdit.Normal)  
+        
 ##      Se manda al controlador las observaciones y se retorna el id de las observaciones                           
-        obse=ContEnsayo.agregarObservacion(self.observaciones)        
+        obse=ContEnsayo.agregarObservacion(self.observaciones, nombre)        
        
         reply = QtGui.QMessageBox.information(self,
                 "Informacion",

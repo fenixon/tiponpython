@@ -401,10 +401,10 @@ numericas y analiticas (idem con las optimizaciones)
 <XPD:OBJ name="OwnedViews[12]" type="UMLClassView" guid="V4+fsXKrrUa07aRJOusq4gAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Left" type="integer">492</XPD:ATTR>
-<XPD:ATTR name="Top" type="integer">424</XPD:ATTR>
+<XPD:ATTR name="Left" type="integer">488</XPD:ATTR>
+<XPD:ATTR name="Top" type="integer">416</XPD:ATTR>
 <XPD:ATTR name="Width" type="integer">133</XPD:ATTR>
-<XPD:ATTR name="Height" type="integer">57</XPD:ATTR>
+<XPD:ATTR name="Height" type="integer">69</XPD:ATTR>
 <XPD:REF name="Model">0n/tY5i7C02mDNyohQSAEQAA</XPD:REF>
 <XPD:OBJ name="NameCompartment" type="UMLNameCompartmentView" guid="uSB13JN3AkuinSWQfsyyqAAA">
 <XPD:OBJ name="NameLabel" type="LabelView" guid="SMWbIqPBwkGovl32Wiwg6wAA">
@@ -432,10 +432,10 @@ numericas y analiticas (idem con las optimizaciones)
 <XPD:OBJ name="OwnedViews[13]" type="UMLClassView" guid="QxskBH2KYUSje4mM1eEPlwAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Left" type="integer">328</XPD:ATTR>
-<XPD:ATTR name="Top" type="integer">424</XPD:ATTR>
+<XPD:ATTR name="Left" type="integer">340</XPD:ATTR>
+<XPD:ATTR name="Top" type="integer">416</XPD:ATTR>
 <XPD:ATTR name="Width" type="integer">96</XPD:ATTR>
-<XPD:ATTR name="Height" type="integer">56</XPD:ATTR>
+<XPD:ATTR name="Height" type="integer">69</XPD:ATTR>
 <XPD:REF name="Model">5ZubYF+cp0KoxGnY5bI75gAA</XPD:REF>
 <XPD:OBJ name="NameCompartment" type="UMLNameCompartmentView" guid="IFeoc0BSrkeMi1r3uMZyAwAA">
 <XPD:OBJ name="NameLabel" type="LabelView" guid="vEr0+t6I4EeZLfux1Raf5wAA">
@@ -1240,7 +1240,7 @@ nivel piezometrico
 <XPD:OBJ name="OwnedViews[26]" type="UMLAssociationView" guid="5NO0lNocIUCZP1BBYPzIaAAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">354,479;323,520</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">358,484;327,520</XPD:ATTR>
 <XPD:REF name="Model">/+IprvvBr0Kgdcph3bY9tQAA</XPD:REF>
 <XPD:REF name="Head">ApfePQMgik+7+IWWF3cZ1wAA</XPD:REF>
 <XPD:REF name="Tail">QxskBH2KYUSje4mM1eEPlwAA</XPD:REF>
@@ -1324,7 +1324,7 @@ nivel piezometrico
 <XPD:OBJ name="OwnedViews[27]" type="UMLAssociationView" guid="t4s6JgGdP0KdwkSFjCM+qgAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">426,384;396,424</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">430,384;409,416</XPD:ATTR>
 <XPD:REF name="Model">V6yz3zv1yU+IiD1yPMw/eAAA</XPD:REF>
 <XPD:REF name="Head">QxskBH2KYUSje4mM1eEPlwAA</XPD:REF>
 <XPD:REF name="Tail">QXUi4Vmg/0+Hy6m1HO8s9wAA</XPD:REF>
@@ -1408,7 +1408,7 @@ nivel piezometrico
 <XPD:OBJ name="OwnedViews[28]" type="UMLAssociationView" guid="viYVA4KB9EmClsSlQrfJHAAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">490,384;530,424</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">489,384;521,416</XPD:ATTR>
 <XPD:REF name="Model">0j3VLTNXkECnuayTDao4SQAA</XPD:REF>
 <XPD:REF name="Head">V4+fsXKrrUa07aRJOusq4gAA</XPD:REF>
 <XPD:REF name="Tail">QXUi4Vmg/0+Hy6m1HO8s9wAA</XPD:REF>
@@ -1492,7 +1492,7 @@ nivel piezometrico
 <XPD:OBJ name="OwnedViews[29]" type="UMLAssociationView" guid="8C3AwN3xwEiFAEFsVBseSwAA">
 <XPD:ATTR name="LineColor" type="string">clMaroon</XPD:ATTR>
 <XPD:ATTR name="FillColor" type="string">$00B9FFFF</XPD:ATTR>
-<XPD:ATTR name="Points" type="Points">578,480;606,520</XPD:ATTR>
+<XPD:ATTR name="Points" type="Points">579,484;605,520</XPD:ATTR>
 <XPD:REF name="Model">c9dZbARfPUCELUjnX10yAAAA</XPD:REF>
 <XPD:REF name="Head">Qcu68pheIEayEPQSlescrwAA</XPD:REF>
 <XPD:REF name="Tail">V4+fsXKrrUa07aRJOusq4gAA</XPD:REF>
@@ -2167,9 +2167,14 @@ nivel piezometrico
 <XPD:REF name="Associations[1]">Ds8n0eMPXkShdsRIElYdSgAA</XPD:REF>
 <XPD:REF name="Associations[2]">3JQQydAgAEOtrYytzTokWAAA</XPD:REF>
 <XPD:REF name="Associations[3]">ziMJORAv1E23xN0opJd4RQAA</XPD:REF>
-<XPD:ATTR name="#Attributes" type="integer">1</XPD:ATTR>
+<XPD:ATTR name="#Attributes" type="integer">2</XPD:ATTR>
 <XPD:OBJ name="Attributes[0]" type="UMLAttribute" guid="j45Pb+3haUC2z12e5FT1jQAA">
 <XPD:ATTR name="Name" type="string">id</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
+<XPD:REF name="Owner">0n/tY5i7C02mDNyohQSAEQAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Attributes[1]" type="UMLAttribute" guid="rQ5MJbtckESecrAnATkYCwAA">
+<XPD:ATTR name="Name" type="string">Nombre</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">0n/tY5i7C02mDNyohQSAEQAA</XPD:REF>
 </XPD:OBJ>
@@ -2187,9 +2192,14 @@ nivel piezometrico
 <XPD:REF name="Associations[1]">3r5a+cqu7EutIRIcdtwoOAAA</XPD:REF>
 <XPD:REF name="Associations[2]">2V42Q5bYbk2/BCExd5ycmQAA</XPD:REF>
 <XPD:REF name="Associations[3]">ocIsZOEU9U6S8hAmJY5luQAA</XPD:REF>
-<XPD:ATTR name="#Attributes" type="integer">1</XPD:ATTR>
+<XPD:ATTR name="#Attributes" type="integer">2</XPD:ATTR>
 <XPD:OBJ name="Attributes[0]" type="UMLAttribute" guid="DIZfKA/cUUuzbeL8YbwizgAA">
 <XPD:ATTR name="Name" type="string">id</XPD:ATTR>
+<XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
+<XPD:REF name="Owner">5ZubYF+cp0KoxGnY5bI75gAA</XPD:REF>
+</XPD:OBJ>
+<XPD:OBJ name="Attributes[1]" type="UMLAttribute" guid="f/e+OOem/kaQ8EAjUT4YngAA">
+<XPD:ATTR name="Name" type="string">Nombre</XPD:ATTR>
 <XPD:ATTR name="Visibility" type="UMLVisibilityKind">vkPrivate</XPD:ATTR>
 <XPD:REF name="Owner">5ZubYF+cp0KoxGnY5bI75gAA</XPD:REF>
 </XPD:OBJ>

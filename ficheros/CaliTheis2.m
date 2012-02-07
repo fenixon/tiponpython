@@ -1,4 +1,4 @@
-function [T S f_min obs_sim ]=CaliTheis2(Q,obs,r_obs,t_obs,Tmin,Tmax,Smin,Smax)
+function [T, S, f_min, obs_sim ]=CaliTheis2(Q,obs,r_obs,t_obs,Tmin,Tmax,Smin,Smax)
 
 
 %Parametros
@@ -20,7 +20,12 @@ Tsup=Tmax;
 Sinf=Smin;
 Ssup=Smax;
 
+
+T=0
+S=0
+
 ref=0;
+
 
 while ref < N_ref_max
     
@@ -40,19 +45,23 @@ while ref < N_ref_max
     
     f_min=realmax;
     
+    
     for i=1:N_int_T
         for j=1:N_int_S
             f=0;
             for k=1:N_obs
                 obs_sim(k) = Theis(r_obs(k),t_obs(k),Q,T_vec(i),S_vec(j));
                 f=f+(obs_sim(k)-obs(k))^2/obs(k)^2;
-            end
-            
+            end          
+                        
             if f<f_min
                 f_min=f;
                 T=T_vec(i);
                 S=S_vec(j);
+                strcat('T: ',num2str(T_vec(i)),'-S: ',num2str(S_vec(j)),'-f: ',num2str(f), '-fmin: ',num2str(f_min), '-Tmin: ',num2str(T), '-Smin: ',num2str(S))
             end
+            
+            
              
         end
     end

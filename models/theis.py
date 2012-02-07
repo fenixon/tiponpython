@@ -42,54 +42,133 @@ class Theis(metodoSolucion.metodoAnalitico):
  
         #u=r^2*S/T/t/4;
         u=numpy.power(r,2)*S/T/t/4.000
-        #print 'r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
+        
         
         if (nargout == 1):
             w=self.WTheis(u) 
             s=Q/4.000/numpy.pi/T*w
         else:
             lista=[]
-            ## se captura en dos parametros la lista q devuelve            
-            w,dWdu=self.WTheis(u)
+            try:
+                ## se captura en dos parametros la lista q devuelve            
+                w,dWdu=self.WTheis(u)
 
-            #print "u.. " + str(u)
-            #print "w.. " + str(w)
-            ## w=lista[0]           
-            ## dWdu=lista[1]
-            #print "dw.. " + str(dWdu)
+                #print "u.. " + str(u)
+                #print "w.. " + str(w)
+                ## w=lista[0]           
+                ## dWdu=lista[1]
+                #print "dw.. " + str(dWdu)
 
-            #print "Q "+ str(Q)
-            #print "T "+ str(T)
+                #print "Q "+ str(Q)
+                #print "T "+ str(T)
 
-            #print "pi "+ str(numpy.pi)
-            
-            s=Q/4.000/numpy.pi/T*w
+                #print "pi "+ str(numpy.pi)
+                
+                s=Q/4.000/numpy.pi/T*w
 
 
-            #print "s "+ str(s)
-            #print str(s)
-            #dsdT=s*(-1/T + dWdu*(-u/T)/w);
+                #print "s "+ str(s)
+                #print str(s)
+                #dsdT=s*(-1/T + dWdu*(-u/T)/w);
+                if w==0:
+                    aux1=0
+                else:
+                    aux1=dWdu*(-u/T)/w
+                # print "T " + str(T)
+                
+                aux2=-1.000/T
 
-            aux1=dWdu*(-u/T)/w
-            # print "T " + str(T)
-            
-            aux2=-1.000/T
+                #print "aux1 " + str(aux1)
+                #print "aux2 " + str(aux2)
+                
+                dsdT=s*(aux2 + aux1)
 
-            #print "aux1 " + str(aux1)
-            #print "aux2 " + str(aux2)
-            
-            dsdT=s*(aux2 + aux1)
+                ## print "dsdT " + str(dsdT)
+                if w==0:
+                    dsdS=0
+                else:                
+                    dsdS=s/w*dWdu*u/S
+                
+                #print "s "+ str(s)
 
-            ## print "dsdT " + str(dsdT)
-            
-            dsdS=s/w*dWdu*u/S
-            
-            #print "s "+ str(s)
-
-            #+" "+str(dsdT)+" "+str(dsdS)
+                #+" "+str(dsdT)+" "+str(dsdS)
+            except:
+                print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
 
         return [s, dsdT, dsdS]
 
+
+
+    def calcularpozoGenerico(self,r,t,Q, T, S):
+
+        #print "T: "+str(T)
+        #print "S: "+str(S)
+        
+        # [s, dsdT, dsdS]=Theis(r,t,Q,T,S)
+        # nro de valores que devuelve la funcion, esto lo vemos dps xq varia
+        nargout=3        
+        if r<=0.15 :
+            r=0.15
+ 
+        #u=r^2*S/T/t/4;
+        u=numpy.power(r,2)*S/T/t/4.000
+        
+        
+        if (nargout == 1):
+            w=self.WTheis(u) 
+            s=Q/4.000/numpy.pi/T*w
+        else:
+            lista=[]
+            try:
+                ## se captura en dos parametros la lista q devuelve            
+                w,dWdu=self.WTheis(u)
+
+                #print "u.. " + str(u)
+                #print "w.. " + str(w)
+                ## w=lista[0]           
+                ## dWdu=lista[1]
+                #print "dw.. " + str(dWdu)
+
+                #print "Q "+ str(Q)
+                #print "T "+ str(T)
+
+                #print "pi "+ str(numpy.pi)
+                
+                s=Q/4.000/numpy.pi/T*w
+
+
+                #print "s "+ str(s)
+                #print str(s)
+                #dsdT=s*(-1/T + dWdu*(-u/T)/w);
+                if w==0:
+                    aux1=0
+                else:
+                    aux1=dWdu*(-u/T)/w
+                # print "T " + str(T)
+                
+                aux2=-1.000/T
+
+                #print "aux1 " + str(aux1)
+                #print "aux2 " + str(aux2)
+                
+                dsdT=s*(aux2 + aux1)
+
+                ## print "dsdT " + str(dsdT)
+                if w==0:
+                    dsdS=0
+                else:                
+                    dsdS=s/w*dWdu*u/S
+                
+                #print "s "+ str(s)
+
+                #+" "+str(dsdT)+" "+str(dsdS)
+            except:
+                print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
+
+
+        #print str(s)
+        
+        return [s, dsdT, dsdS]
                             
 
 
@@ -102,12 +181,12 @@ class Theis(metodoSolucion.metodoAnalitico):
         nargin=1
         
         if u>20 :
-            if (nargout == 1):
-                W=0
-            else:    
-                W=0;
-                dW=0
-            return
+            #if (nargout == 1):
+            #    W=0
+            #else:    
+            W=0
+            dW=0
+            return [W, dW]
         else:
             if u>=1:
                 err=1e-10;mgrid[-5:6,-5:6]
@@ -149,9 +228,13 @@ class Theis(metodoSolucion.metodoAnalitico):
 
 if __name__ == "__main__":
     cont=1
-    ui = Theis(cont)
+    ui = Theis(cont,1)
 ##    Calcula bien el metodo de tezis para un pozo solo
-    ui.calcularpozo(1,1,500,1000,0.0001)
+    #ui.calcularprueba(1,1,500,1000,0.0001)
+    #ui.calcularpozoGenerico(1,1,500,1000,0.0001)
+
+    #Error - r: 1091.15599791t: 0.09Q: 480.0T: 999.456893055S: 0.000100226593018desc 0.0
+    #ui.calcularpozoGenerico(1091.15599791,0.09,480.0,999.456893055,0.000100226593018)
                                  
 ##    ui.calcular()
     

@@ -77,12 +77,22 @@ class Ui_Dialog(QtGui.QDialog):
 
     def browse(self):
         print "navegar"
+
+        
+##        self.archivo = QtGui.QApplication.translate("Dialog", QtGui.QFileDialog.getOpenFileName(
+##                       self,
+##                       "Elegir un archivo para abrir",
+##                       "C:\wamp\www\prueba",
+##                       "Fichero de datos (*.txt *.ods)"),
+##                       None, QtGui.QApplication.UnicodeUTF8);
+
         self.archivo = QtGui.QFileDialog.getOpenFileName(
-                         self,
-                         "Elegir un archivo para abrir",
-                         "C:\wamp\www\prueba",
-                         "Fichero de datos (*.txt *.ods)");
-        print self.archivo
+                       self,
+                       "Elegir un archivo para abrir",
+                       "C:\wamp\www\prueba",
+                       "Fichero de datos (*.txt *.ods)");
+        
+##        print self.archivo
         partes=self.archivo.split(".")
         ext=partes[len(partes)-1]
         if ext!="txt" and ext!="ods" :

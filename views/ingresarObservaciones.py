@@ -35,7 +35,7 @@ class Ui_Dialog(QtGui.QDialog):
         self.label.setObjectName(_fromUtf8("label"))
         self.label_2 = QtGui.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(100, 100, 46, 13))
-        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Caudal", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Dialog", "Nivel", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.txtcaudal = QtGui.QTextEdit(Dialog)
         self.txtcaudal.setGeometry(QtCore.QRect(170, 90, 101, 31))

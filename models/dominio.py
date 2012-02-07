@@ -87,12 +87,12 @@ class dominio(object):
             ##se obtiene la primera recta q pasa si son mas ???
             recta=self.listaRecta[0]
             alfa,beta,gamma=recta.devolverCoef()
-
-##            print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
+##          print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
 
             #Recorrer todos los pozos para irlos replicando
             ##solo para los pozos de bombeo
-            for p in self.obtenerPozosdeBombeo():             
+            Todoslospozos=self.obtenerPozosdeBombeo();
+            for p in Todoslospozos:             
                 x=0
                 y=0
                 
@@ -132,10 +132,24 @@ class dominio(object):
                 #se instancia un nuevo pozo cn una nueva lista de bombeos
                 pvirtual=pozo(x,y)
                 pvirtual.copiarAPozoVirtual(p,recta.tipo)
+                self.pozosVirtuales.append(pvirtual)                
 
-                self.pozosVirtuales.append(pvirtual)
+            ##barrera.signo=sign( p(1).x*barrera.alfa + p(1).y*barrera.beta +barrera.gamma );
+            valorsigno=Todoslospozos[0].x * alfa + Todoslospozos[0].y * beta + gamma
 
-                
+            print np.sign(valorsigno)
+            
+            recta.setearSigno(np.sign(valorsigno))
+##            if valorsigno==0:                
+##                barrera.signo=0
+##            else:
+##                if valorsigno>0
+##                    barrera.signo=1
+##                    recta.setearSigno(1)
+##                else:
+##                    barrera.signo=-1
+##                    recta.setearSigno(-1)
+                    
         else:
             print 'no hay barreras'
             

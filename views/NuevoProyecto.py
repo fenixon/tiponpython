@@ -168,10 +168,14 @@ class Ui_frmNuevoProyecto(object):
         if nombreMetodo != '':
             if(controlador.metodo != None):
                 for n in range(0,len(controlador.metodo.listaParametros)):
-                    ejec='self.txtParam'+ str(n) +' = None'
+                    ejec='self.txtParam'+ str(n) +'.setVisible(False)'
+                    exec(ejec)
+                    ejec='del self.txtParam'+ str(n)
                     exec(ejec)
                     print 'chau caja'
-                    ejec='self.lblParam'+ str(n) +' = None'
+                    ejec='self.lblParam'+ str(n) +'.setVisible(False)'
+                    exec(ejec)
+                    ejec='del self.lblParam'+ str(n)
                     exec(ejec)
                 controlador.metodo = None
             ejec = 'metodo= %s(controlador.dominio, controlador.parametros)' % (nombreMetodo)
@@ -196,6 +200,8 @@ class Ui_frmNuevoProyecto(object):
                 exec(ejec)
                 ejec='self.txtParam'+ str(n) +'.setValidator(self.val)'
                 exec(ejec)
+                ejec='self.txtParam'+ str(n) +'.setVisible(True)'
+                exec(ejec)
                 print 'hola caja'
                 ejec= 'self.lblParam'+ str(n) +' = QtGui.QLabel(self.gbParametrosDominio)'
                 exec(ejec)
@@ -207,6 +213,8 @@ class Ui_frmNuevoProyecto(object):
                 exec(ejec)
                 ejec= 'self.lblParam'+ str(n) +'.setAlignment(QtCore.Qt.AlignHCenter)'
                 exec(ejec)
+                ejec= 'self.lblParam'+ str(n) +'.setVisible(True)'
+                exec(ejec)
                 #alargando la interfaz
                 elementoNuevoY = elementoNuevoY + 40
                 groupboxY = groupboxY + 40
@@ -215,6 +223,8 @@ class Ui_frmNuevoProyecto(object):
                 ventana.resize(405, ventanaY)
                 self.gbParametrosDominio.setGeometry(QtCore.QRect(30, 430 , 351, groupboxY))
                 self.btnNuevo.setGeometry(QtCore.QRect(230, botonY , 99, 23))
+
+
 
 
     def guardarSalir(self):

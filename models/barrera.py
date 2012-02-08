@@ -10,6 +10,7 @@ class barrera():
                                 self.y1 = y1
                                 self.y2 = y2
                                 self.tipo = tipo
+                                self.signo=0
                                 self.calcularRecta(alto , ancho)
 
 
@@ -36,6 +37,8 @@ class barrera():
                                 self.calcularRecta(alto, ancho)
 
 
+                def setearSigno(self,s):
+                                self.signo=s
 
                 def calcularRecta( self, alto, ancho ):
 

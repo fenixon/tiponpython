@@ -112,7 +112,7 @@ class Ui_Dialog(QtGui.QDialog):
         
         self.btn_Cancelar.setText(QtGui.QApplication.translate("Asociarensayos", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_Agregar.setText(QtGui.QApplication.translate("Asociarensayos", ">>", None, QtGui.QApplication.UnicodeUTF8))
-        self.opcionensayo.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Ensayo de bombeo", None, QtGui.QApplication.UnicodeUTF8))
+        self.opcionensayo.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar bombeo", None, QtGui.QApplication.UnicodeUTF8))
         self.opcionobservacion.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Conjunto de observaciones", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_Remover.setText(QtGui.QApplication.translate("Asociarensayos", "<<", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("Asociarensayos", "Ensayos de bombeo asociados", None, QtGui.QApplication.UnicodeUTF8))

@@ -76,11 +76,11 @@ class Ui_Dialog(QtGui.QDialog):
 
     def browse(self):
         print "navegar"
-        self.archivo = QtGui.QFileDialog.getOpenFileName(
-                         self,
-                         "Elegir un archivo para abrir",
-                         "C:\wamp\www\prueba",
-                         "Fichero de datos (*.txt *.ods)");
+        self.archivo = (QtGui.QFileDialog.getOpenFileName(
+                        self,
+                        "Elegir un archivo para abrir",
+                        "ficheros",
+                        "Fichero de datos (*.txt *.ods)")).__str__();
         print self.archivo
         partes=self.archivo.split(".")
         ext=partes[len(partes)-1]
@@ -134,7 +134,9 @@ class Ui_Dialog(QtGui.QDialog):
                         break                        
         else:
             
-            f= zipfile.ZipFile((str(self.archivo))) 
+            ##07-02 Solucionado problema de caracteres raros en la ruta            
+            #f= zipfile.ZipFile((str(self.archivo)))
+            f= zipfile.ZipFile((self.archivo)) 
             fcontent = f.read('content.xml')
             contenido = xml.dom.minidom.parseString(fcontent)
 

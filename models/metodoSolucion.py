@@ -215,7 +215,25 @@ class metodoSolucion(object):
                 cardt=cardt+1
 
                             
+        ## correccion por barrera
+        ## if haybarrera
+        if len(d.listaRecta)>0:
+            ##se obtiene la primera recta
+            recta=d.listaRecta[0]
+            alfa,beta,gamma=recta.devolverCoef()            
 
+            cardx=0
+            for x in xx:
+                cardy=0
+                for y in yy:
+                    #hay que cargar la matriz primero en el indice y luego en el x
+                    if np.sign(x*alfa + y*beta +gamma)!= recta.signo:
+                        ## h(j,i,:) =h0(j,i);                        
+                        self.matrizDescenso[:,cardy,cardx]=H0[cardy,cardx]
+                        self.gyh[:,cardy,cardx]=0
+                        self.gxh[:,cardy,cardx]=0
+                    cardy=cardy+1            
+                cardx=cardx+1
 
 
         

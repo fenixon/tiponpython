@@ -68,7 +68,7 @@ class Ui_Dialog(QtGui.QDialog):
         control=ContEnsayo.verificarFormato(self.bombeos, t)
 
         if (control==False):
-            reply = QtGui.QMessageBox.information(self,
+            reply = QtGui.QMessageBox.critical(self,
                 "Error",
                 "Los datos de bombeo no fueron agregaos. Debe ingresar un valor para el tiempo mayor a los ingresados anteriormente.")
             
@@ -79,7 +79,7 @@ class Ui_Dialog(QtGui.QDialog):
             self.bombeos.append(b)
 
             reply = QtGui.QMessageBox.information(self,
-                    "Informacion",
+                    "Información",
                     "Se agregaron los datos del bombeo. Presione finalizar para guardar el ensayo")
 
             self.txttiempo.setText('')
@@ -97,7 +97,7 @@ class Ui_Dialog(QtGui.QDialog):
         e=ContEnsayo.agregarEnsayo(self.bombeos, nombre)        
         
         reply = QtGui.QMessageBox.information(self,
-                "Informacion",
+                "Información",
                 "Se ha creado un nuevo ensayo de bombeo en el sistema. El id es: " + str(e.id))
 
         if reply == QtGui.QMessageBox.Ok:

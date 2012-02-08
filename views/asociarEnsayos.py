@@ -89,6 +89,8 @@ class Ui_Dialog(QtGui.QDialog):
         self.vistaDatosControlador.resizeColumnsToContents()
         self.tiporem=None
         self.tipo="e"
+        self.oe=None
+        self.oerem=None
 
         QtCore.QObject.connect(self.opcionobservacion, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarObservaciones)
         QtCore.QObject.connect(self.opcionensayo, QtCore.SIGNAL(_fromUtf8("clicked()")),self.listarEnsayos)
@@ -108,14 +110,14 @@ class Ui_Dialog(QtGui.QDialog):
         QtCore.QMetaObject.connectSlotsByName(Asociarensayos)
 
     def retranslateUi(self, Asociarensayos):
-        Asociarensayos.setWindowTitle(QtGui.QApplication.translate("Asociarensayos", "Pozo nÂ° "+str(self.p.id), None, QtGui.QApplication.UnicodeUTF8))
+        Asociarensayos.setWindowTitle(QtGui.QApplication.translate("Asociarensayos", "Pozo n° "+str(self.p.id), None, QtGui.QApplication.UnicodeUTF8))
         
         self.btn_Cancelar.setText(QtGui.QApplication.translate("Asociarensayos", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_Agregar.setText(QtGui.QApplication.translate("Asociarensayos", ">>", None, QtGui.QApplication.UnicodeUTF8))
-        self.opcionensayo.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar bombeo", None, QtGui.QApplication.UnicodeUTF8))
+        self.opcionensayo.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Conjunto de bombeos", None, QtGui.QApplication.UnicodeUTF8))
         self.opcionobservacion.setText(QtGui.QApplication.translate("Asociarensayos", "Asociar Conjunto de observaciones", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_Remover.setText(QtGui.QApplication.translate("Asociarensayos", "<<", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(QtGui.QApplication.translate("Asociarensayos", "Ensayos de bombeo asociados", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Asociarensayos", "Conj. de bombeos asociados", None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setText(QtGui.QApplication.translate("Asociarensayos", "Conj. de observaciones asociados", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_Aceptar.setText(QtGui.QApplication.translate("Asociarensayos", "Aceptar", None, QtGui.QApplication.UnicodeUTF8))
 
@@ -159,7 +161,7 @@ class Ui_Dialog(QtGui.QDialog):
         #print self.oe
         self.tiporem="o"           
 
-    def refrescar(self):
+    def refrescar(self, actualizarControlador):
         self.model_po=modelotabla.modelotabla(self.p.observaciones,["Id", "Nombre"])       
         self.vistaObservaciones.setModel(self.model_po)
         self.model_pe=modelotabla.modelotabla(self.p.ensayos,["Id", "Nombre"])
@@ -169,16 +171,19 @@ class Ui_Dialog(QtGui.QDialog):
         self.vistaObservaciones.resizeColumnsToContents()
         self.vistaDatosControlador.resizeColumnsToContents()
 
-        if self.tiporem==self.tipo:
+        if self.tiporem==self.tipo or actualizarControlador:
+            print "dice que ira a actualizar el listado del controlador"
             if self.tipo=="o" :
+                print "va a cargar las observaciones"
                 self.listarObservaciones()
             else:
+                print "va a cargar los bombeos"
                 self.listarEnsayos()
 
     def aceptar(self):
         if self.demo!=True :
             reply = QtGui.QMessageBox.question(self,
-                            "Informacion",
+                            "Información",
                             "Los datos han sido almacenados")
         self.guardar.close()
     
@@ -187,75 +192,89 @@ class Ui_Dialog(QtGui.QDialog):
         self.p.restaurarPozo(self.pcopia)
         if self.demo!=True :
             reply = QtGui.QMessageBox.question(self,
-                            "Informacion",
+                            "Información",
                             "Todas las acciones han sido canceladas")         
         self.guardar.close()
 
     def asociar(self):
         global ContEnsayo
         ####  mensajito si realmente quiere hacer la asociacion
-        if self.demo==True :
-            reply = QtGui.QMessageBox.Yes
-        else:
-            reply = QtGui.QMessageBox.question(self,"ConfirmaciÃ³n",
-                    "Â¿Realmente desea asociar este item al pozo seleccionado?. ",
-                    QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
+        if self.oe!=None:
+##            print "al final no esta vacio se puede asociar "
             
-        if reply == QtGui.QMessageBox.Yes:
-            ####  hay que desacioar del controlador el ensayo cargado
-            if self.tipo=="o" :
-                self.p.agregarObservaciones(self.oe)
-                ContEnsayo.eliminarObservaciones(self.oe)
-            else:
-                self.p.agregarEnsayo(self.oe)
-                ContEnsayo.eliminarEnsayo(self.oe)
-
             if self.demo==True :
-                reply = QtGui.QMessageBox.Ok
-            else:                            
-                reply = QtGui.QMessageBox.information(self,
-                        "Informacion",
-                        "La asociaciÃ³n ha sido efectuada satisfactoriamente")
-            
-            #if reply == QtGui.QMessageBox.Ok:
-            #print "asociado"
-            self.refrescar()                
-            #else:
-            #print "Escape"
+                reply = QtGui.QMessageBox.Yes
+            else:
+                reply = QtGui.QMessageBox.question(self,"Confirmación",
+                        "¿Realmente desea asociar este ítem al pozo seleccionado?.",
+                        QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
+                
+            if reply == QtGui.QMessageBox.Yes:
+                ####  hay que desacioar del controlador el ensayo cargado
+                if self.tipo=="o" :
+                    self.p.agregarObservaciones(self.oe)
+                    ContEnsayo.eliminarObservaciones(self.oe)
+                else:
+                    self.p.agregarEnsayo(self.oe)
+                    ContEnsayo.eliminarEnsayo(self.oe)
 
+                if self.demo==True :
+                    reply = QtGui.QMessageBox.Ok
+                else:                            
+                    reply = QtGui.QMessageBox.information(self,
+                            "Información",
+                            "La asociación ha sido efectuada satisfactoriamente")
+                
+                #if reply == QtGui.QMessageBox.Ok:
+                #print "asociado"
+                self.oe=None
+                self.refrescar(True)                
+                #else:
+                #print "Escape"
+        else:            
+            reply = QtGui.QMessageBox.warning(self,
+                    "Información",
+                    "Debe seleccionar un elemento para asociar")
 
     def desasociar(self):
         global ContEnsayo
         ####  mensajito si realmente quiere hacer la asociacion
-        if self.demo==True :
-            reply = QtGui.QMessageBox.Yes
-        else:
-            reply = QtGui.QMessageBox.question(self,"ConfirmaciÃ³n",
-                    "Â¿Realmente desea desasociar este item con el pozo seleccionado?. ",
-                    QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
-            
-        if reply == QtGui.QMessageBox.Yes:
-            ####  hay que desacioar del controlador el ensayo cargado
-            if self.tiporem=="o" :
-                self.p.eliminarObservaciones(self.oerem)
-                ContEnsayo.restaurarObservacion(self.oerem)
-            else:
-                self.p.eliminarEnsayo(self.oerem)
-                ContEnsayo.restaurarEnsayo(self.oerem)
-
+        if self.oerem!=None:
+##            print "al final no esta vacio se puede asociar"
+        
             if self.demo==True :
-                reply = QtGui.QMessageBox.Ok
-            else:                            
-                reply = QtGui.QMessageBox.information(self,
-                        "Informacion",
-                        "Los datos han sido desasoaciados correctamente")
-            
-            #if reply == QtGui.QMessageBox.Ok:
-            #print "asociado"
-            self.refrescar()                
-            #else:
-            #print "Escape"
-            
+                reply = QtGui.QMessageBox.Yes
+            else:
+                reply = QtGui.QMessageBox.question(self,"Confirmación",
+                        "¿Realmente desea desasociar este item con el pozo seleccionado?. ",
+                        QtGui.QMessageBox.Yes | QtGui.QMessageBox.No | QtGui.QMessageBox.Cancel)
+                
+            if reply == QtGui.QMessageBox.Yes:
+                ####  hay que desacioar del controlador el ensayo cargado
+                if self.tiporem=="o" :
+                    self.p.eliminarObservaciones(self.oerem)
+                    ContEnsayo.restaurarObservacion(self.oerem)
+                else:
+                    self.p.eliminarEnsayo(self.oerem)
+                    ContEnsayo.restaurarEnsayo(self.oerem)
+
+                if self.demo==True :
+                    reply = QtGui.QMessageBox.Ok
+                else:                            
+                    reply = QtGui.QMessageBox.information(self,
+                            "Información",
+                            "Los datos han sido desasoaciados correctamente")
+                
+                #if reply == QtGui.QMessageBox.Ok:
+                #print "asociado"
+                self.oerem=None
+                self.refrescar(False)                
+                #else:
+                #print "Escape"
+        else:
+            reply = QtGui.QMessageBox.warning(self,
+                    "Información",
+                    "Debe seleccionar un elemento para desasociar")           
 
 if __name__ == "__main__":
     app = QtGui.QApplication(sys.argv)

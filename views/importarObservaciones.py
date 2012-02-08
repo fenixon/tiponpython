@@ -88,7 +88,7 @@ class Ui_Dialog(QtGui.QDialog):
             self.archivo=""
             self.textEdit.setText("")
             QtGui.QMessageBox.information(self,
-                "Informacion",
+                "Información",
                 "El tipo de archivo ingresado no es correcto")
         else:
             self.textEdit.setText(self.archivo)
@@ -163,7 +163,7 @@ class Ui_Dialog(QtGui.QDialog):
                     break
 
         if (control==False):
-            reply = QtGui.QMessageBox.information(self,
+            reply = QtGui.QMessageBox.critical(self,
                 "Error",
                 "El archivo ingresado tiene un formato incorrecto. Verifique que los tiempos esten ordenados correctamente.")           
         else:
@@ -175,7 +175,7 @@ class Ui_Dialog(QtGui.QDialog):
                 reply = QtGui.QMessageBox.Ok
             else:
                 reply = QtGui.QMessageBox.information(self,
-                        "Informacion",
+                        "Información",
                         "Se ha creado un nuevo conjunto de observaciones en el sistema. El id es:" + str(obse.id))
               
 

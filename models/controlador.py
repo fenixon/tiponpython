@@ -3,6 +3,7 @@ from pozo  import pozo
 from barrera import barrera
 from calitheis2 import *
 from calibracion2 import *
+from calihantush import *
 import numpy as np
 import observacion
 import observacionesensayo
@@ -148,7 +149,7 @@ class Proyecto(object):
     def optimizacioneslistar(self):
         self.optimizaciones = QtCore.QStringList()
         
-        self.optimizaciones << "CaliTheis2" << "calibracion2"
+        self.optimizaciones << "CaliTheis2" << "calibracion2" << "CaliHantush"
          
         return self.optimizaciones
     def optimizacioneslistarmenos(self,nolistar):

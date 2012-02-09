@@ -23,6 +23,8 @@ class Theis(metodoSolucion.metodoAnalitico):
         ## probar llamar al metodo padre        
         metodoSolucion.metodoAnalitico.__init__(self,dominio,parametros)
         #print 'Se creo el loco theis'
+        ##Theis es un metodo que acepta barrera        
+        self.aceptaBarrera=True
 
     def calcularpozo(self,r,t,Q):
 
@@ -95,6 +97,9 @@ class Theis(metodoSolucion.metodoAnalitico):
             except:
                 print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
 
+        #if t==0.03:
+        #    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) + 's: '+str(s) 
+
         return [s, dsdT, dsdS]
 
 
@@ -166,7 +171,7 @@ class Theis(metodoSolucion.metodoAnalitico):
                 print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
 
 
-        #print str(s)
+        print str(s)
         
         return [s, dsdT, dsdS]
                             
@@ -231,7 +236,15 @@ if __name__ == "__main__":
     ui = Theis(cont,1)
 ##    Calcula bien el metodo de tezis para un pozo solo
     #ui.calcularprueba(1,1,500,1000,0.0001)
-    #ui.calcularpozoGenerico(1,1,500,1000,0.0001)
+
+    #Theis()
+    #ui.calcularpozoGenerico(559.0169,0.03,480,700,1.1e-4)
+    
+
+    #Error - r: 559.016994375t: 0.03Q: 480.0T: 700S: 0.0001s: 0.0410170857301
+    ui.calcularpozoGenerico(559.016994375,0.03,480.0,700,0.0001)
+
+    #Error - r: t: Q: T: 700S: s: -0.0410170857301
 
     #Error - r: 1091.15599791t: 0.09Q: 480.0T: 999.456893055S: 0.000100226593018desc 0.0
     #ui.calcularpozoGenerico(1091.15599791,0.09,480.0,999.456893055,0.000100226593018)

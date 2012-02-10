@@ -99,7 +99,12 @@ class metodoSolucion(object):
             cardt=cardt+1
         
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
-        Todoslospbombeo=d.obtenerPBombeoYVirtuales()
+        if self.aceptaBarrera==True :
+            Todoslospbombeo=d.obtenerPBombeoYVirtuales()            
+        else:
+            Todoslospbombeo=d.obtenerPozosdeBombeo()
+
+        print "holaa" +str(Todoslospbombeo)
         
         for pozoBombeo in Todoslospbombeo:
             ###Esto se podria obtener desde el dominio        
@@ -115,9 +120,9 @@ class metodoSolucion(object):
             ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
             bombeos=pozoBombeo.ensayos[0].devolverBProc()
 
-##            for bom in bombeos:
-##                print 'tiempos: '+str(bom.tiempo)
-##                print 'caudal: '+str(bom.caudal)
+            for bom in bombeos:
+                print 'tiempos: '+str(bom.tiempo)
+                print 'caudal: '+str(bom.caudal)
                 
             cardt=0
             for t in tiempos:
@@ -138,6 +143,8 @@ class metodoSolucion(object):
                             ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
                             tmandado=round(float(float(t)-float(tpozo)),14)
 
+
+
                             if tmandado>0:
                                 #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
                                 #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
@@ -151,11 +158,15 @@ class metodoSolucion(object):
                             else:
                                 s=0
 
+                            #if t>=0.3:
+                            #    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
 
-##                            if t==0.03:
-##                                print 'Punto ('+str(x)+', '+str(y)+') pozo ('+str(x0)+', '+str(y0)+') caudal pozo: '+str(Q)+' tiempo pozo: '+str(tpozo)+' tiempo: '+str(t)
+                            if t==0.03:
+                                #print 'Punto ('+str(x)+', '+str(y)+') pozo ('+str(x0)+', '+str(y0)+') caudal pozo: '+str(Q)+' tiempo pozo: '+str(tpozo)+' tiempo: '+str(t), '-Cual es el descenso: '+str(s)
+                                print 'r ('+str(r)+') caudal pozo: '+str(Q)+' tiempo : '+str(tmandado), '-Cual es el descenso: '+str(s)
+                                
 ##                                print 'Que habia? '+ str(self.matrizDescenso[cardt,cardy,cardx])
-##                                print 'Cual es el descenso: '+str(s)
+                                #print 'Cual es el descenso: '+str(s)
 
                             #el nivel "h" se calcula como "h=Ho-s"
                             #print 'h: '+ str(h)+ 'H0: '+str(H0)+'s: '+str(s)
@@ -180,6 +191,8 @@ class metodoSolucion(object):
                 [self.gyh[cardt,:,:],self.gxh[cardt,:,:]] = np.gradient(-self.matrizDescenso[cardt,:,:],xx[1],yy[len(yy)-2])            
 
 
+                #print "arranco el calculo"
+
                 #Calculo para todos los pozos de observacion
                 for pozoObservacion in TodoslospozosObservacion:
                     x=pozoObservacion.x
@@ -194,13 +207,16 @@ class metodoSolucion(object):
                         Q=bom.caudal                    
                         ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
                         tmandado=round(float(float(t)-float(tpozo)),14)
-
+                        print tmandado
                         if tmandado>0:
                             #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
                             #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
                             told=tmandado
                             try:
                                 s,dsdT,dsdS=self.calcularpozo(r, tmandado, Q)
+                                
+                                if t==0.3:
+                                    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)+'s: '+str(s)                                
                             except:
                                 print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
                                 print 'T mandado: '+str(told) + 'T pozo: '+str(tpozo)
@@ -217,7 +233,7 @@ class metodoSolucion(object):
                             
         ## correccion por barrera
         ## if haybarrera
-        if len(d.listaRecta)>0:
+        if len(d.listaRecta)>0 and self.aceptaBarrera==True:
             ##se obtiene la primera recta
             recta=d.listaRecta[0]
             alfa,beta,gamma=recta.devolverCoef()            
@@ -226,12 +242,13 @@ class metodoSolucion(object):
             for x in xx:
                 cardy=0
                 for y in yy:
-                    #hay que cargar la matriz primero en el indice y luego en el x
+                   #hay que cargar la matriz primero en el indice y luego en el x
                     if np.sign(x*alfa + y*beta +gamma)!= recta.signo:
                         ## h(j,i,:) =h0(j,i);                        
                         self.matrizDescenso[:,cardy,cardx]=H0[cardy,cardx]
                         self.gyh[:,cardy,cardx]=0
                         self.gxh[:,cardy,cardx]=0
+##                        print self.matrizDescenso[10,cardy,cardx]
                     cardy=cardy+1            
                 cardx=cardx+1
 
@@ -273,7 +290,10 @@ class metodoSolucion(object):
     def funcionObjetivo(self,Topt,Sopt, pozoObservacion):
 
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
-        Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()
+        if self.aceptaBarrera==True :
+            Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()
+        else:
+            Todoslospbombeo=self.dominio.obtenerPozosdeBombeo()        
         ##Obtener todos los pozos de observacion
 ##        TodoslospozosObservacion=self.dominio.obtenerPozosdeObservacion()        
         ##usar la misma discretizacion para el calculo del metodo de solucion
@@ -324,10 +344,52 @@ class metodoSolucion(object):
                 #se incrementa el cardinal del tiempo
                 cardt=cardt+1                
         #pozoObservacion.nivelesOptimos[0]=9.0
+
+
+    ##Metodo que se llama desde la Optimizacion, para graficar hayar los desdencos dentro del algoritmo
+    def funcionObjetivo2(self,x,y,t,Topt,Sopt, pozoObservacion):
+
+        ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
+        if self.aceptaBarrera==True :
+            Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()
+        else:
+            Todoslospbombeo=self.dominio.obtenerPozosdeBombeo()  
+        
+        descenso=0
+        for pozoBombeo in Todoslospbombeo:
+            x0=pozoBombeo.x
+            y0=pozoBombeo.y       
+            bombeos=pozoBombeo.ensayos[0].devolverBProc()
+
+            #calculo de la distancia radial            
+            #sqrt(|X0-X1|^2 + |y0-y1|^2)
+            r=np.sqrt(np.square(x0-x) + np.square(y0-y))
+
+            for bom in bombeos:
+            ## El tiempo t nunca puede ser 0, sino t da error                    
+                tpozo=bom.tiempo
+                Q=bom.caudal                    
+                ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
+                tmandado=round(float(float(t)-float(tpozo)),14)
+
+                if tmandado>0:
+                    #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
+                    try:
+                        s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
+                    except:
+                        s=0.0
+                else:
+                    s=0.0
+                #Se actualizan los niveles Optimos
+                descenso=descenso + float(s)
+                
+        return descenso
     
         
 class metodoAnalitico(metodoSolucion):
-    pass
+    def __init__(self, dominio, parametros):
+        self.aceptaBarrera=False
+        metodoSolucion.__init__(self,dominio,parametros)
 
 class metodoNumerico(metodoSolucion):
     pass

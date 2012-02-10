@@ -23,6 +23,7 @@ import metodoSolucion
 import asociarEnsayos
 import metodooptimizacion
 from theis import *
+from Hantush import *
 #from vistaDominio import  *
 from vistaDominiolaRemodelacion import  *
 import discretizaciones
@@ -180,7 +181,7 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
-        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000)
+        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000hantush)
         #tCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
 
@@ -340,28 +341,28 @@ class Ui_MainWindow(QtGui.QDialog):
 
                         poz = ContEnsayo.dominio.obtenerPozoObservacion()
 
-                        if len(poz.observaciones) > 0:
+                        #if len(poz.observaciones) > 0:
 
                             ##formulario de discretizacion temporal
-                            frmDiscretizaciones=QtGui.QDialog()
-                            ui= discretizaciones.ventanaDiscretizaciones()
-                            ui.setupUi(frmDiscretizaciones, ContEnsayo)
-                            frmDiscretizaciones.exec_()
+                        frmDiscretizaciones=QtGui.QDialog()
+                        ui= discretizaciones.ventanaDiscretizaciones()
+                        ui.setupUi(frmDiscretizaciones, ContEnsayo)
+                        frmDiscretizaciones.exec_()
 ##                            QtCore.QObject.connect(frmDiscretizaciones, QtCore.SIGNAL(_fromUtf8("closed()")), self.graficar)
-                            print 'Formulario de discretizaciones se cerro ' 
-                            nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                            self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
-                            self.dibujante.show()
-                            QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
-                            print 'Dibujante invocado'                            
+                        print 'Formulario de discretizaciones se cerro ' 
+                        nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
+                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
+                        self.dibujante.show()
+                        QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
+                        print 'Dibujante invocado'                            
                                                       
 
-                        else:
+                        #else:
 
                             #print 'No hay observaciones asociadas al pozo'
-                            QtGui.QMessageBox.information(self,
-                                "Error",
-                                "No hay observaciones asociadas al pozo")                             
+                         #   QtGui.QMessageBox.information(self,
+                         #       "Error",
+                         #       "No hay observaciones asociadas al pozo")                             
 
                     else:
 
@@ -691,6 +692,66 @@ class Ui_MainWindow(QtGui.QDialog):
         
         print 'se carga el demo'
 
+
+
+
+    def cargar_demobarrera1000hantush(self):
+        global ContEnsayo
+
+        ContEnsayo.dominio.alto = 1000
+        ContEnsayo.dominio.ancho = 1000
+        ContEnsayo.dominio.a=0
+        ContEnsayo.dominio.b=0
+        ContEnsayo.dominio.c=10
+        ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
+##        m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros)
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+##        m.setearValores([1000,0.0001,676.7])
+        m.setearValores([700,1.1e-4])
+        #Adherimos la vista del dominio
+        self.ui = UiForm()
+        self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
+
+
+        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+
+        b.setX(500)
+        b.setY(250)
+
+        b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
+
+        self.ui.caja.botones.append(b)   
+
+        x0=250
+        y0=0
+        x1=500
+        y1=1000
+        r = QtCore.QLineF(x0, y0, x1, y1)
+        barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
+        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
+        self.ui.caja.rectas.append(barrera)	        
+
+
+        noexec=1     
+            
+        self.ventanaImportarProyecto(noexec, True)
+        self.importar.archivo="ficheros/bombeos.txt"
+        self.importar.nombre.setText('ens1')
+        self.importar.ext="txt"
+        self.importar.accionaceptar()
+        self.importar.close()
+       
+        frmasociar=QtGui.QDialog()
+        asoe=asociarEnsayos.Ui_Dialog()
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.ensayos[0]
+        asoe.tipo="e"
+        asoe.asociar()       
+        
+        print 'se carga el demo'
+
+
+        
 
 
     def cargar_demobarrera(self):

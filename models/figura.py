@@ -137,8 +137,8 @@ class figura():
 
         Z = self.matrix[t]
 
-##        print 'Matriz generada '
-##        print 'Z: \n' + str(Z)
+        print 'Matriz generada '
+        print 'Z: \n' + str(Z)
 
 ##        auxt = [i for i,x in enumerate(self.tiempos) if x == t]
 ##        print t

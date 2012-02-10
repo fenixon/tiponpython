@@ -89,7 +89,7 @@ class dominio(object):
             ##se obtiene la primera recta q pasa si son mas ???
             recta=self.listaRecta[0]
             alfa,beta,gamma=recta.devolverCoef()
-##          print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
+            print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
 
             #Recorrer todos los pozos para irlos replicando
             ##solo para los pozos de bombeo

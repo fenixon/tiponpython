@@ -161,7 +161,7 @@ class Proyecto(object):
                 self.opt << x
         
         return self.opt
-    def asociarPozoOptimiazion(self,idElemento,metodo):
+    """def asociarPozoOptimiazion(self,idElemento,metodo):
         for pozo in self.dominio.listaPozo:
             if pozo.id == idElemento:
                 #en self.dominio.listaPozoOptimiza[idElemento] ahi 
@@ -175,11 +175,48 @@ class Proyecto(object):
                 #for p in ui.getparametros():
                 #    print p
                 self.dominio.listaPozoOptimiza[idElemento]= ui
-        print "se agrego a la lista de optimizaciones"
+        print "se agrego a la lista de optimizaciones" """
+
+    def instanciaoptimizacion(self,metodo):
+        objeto=eval(str(metodo) + "()")
+        return objeto
+
+
+    def asociarPozoOptimiazion(self,idElemento,metodo):
+        for pozo in self.dominio.listaPozo:
+            if pozo.id == idElemento:
+                #print "instancio:" + metodo
+                #ui = eval(str(metodo) + "()")
+                #Busco el indice del metodo
+                claves=self.dominio.optimizaciones.keys()
+                token=False
+                for clave in claves:
+                    if (clave==metodo):
+                        #Si existe el metodo en el diccionario, le agrego el pozo
+                        token=True
+                        self.dominio.optimizaciones[clave].append(idElemento)
+                if (token==False): #Si no existe el metodo, lo creo y le agrego el pozo
+                    self.dominio.optimizaciones[metodo]=[]
+                    self.dominio.optimizaciones[metodo].append(idElemento)      
+                    #self.dominio.listaPozoOptimiza[metodo]= ui
+                              
+                #self.dominio.optimizaciones[metodo]= ui
+        print "se agrego a la lista de optimizaciones" 
+
+    def listarPozosObsParaOptimizar(self):
+        return self.dominio.optimizaciones
 
     def listarPozosParaOptimizar(self):
         return self.dominio.listaPozoOptimiza
 
+    def quitarPozoOptimizacion(self,idpozo,metodo):
+        print "entro en el metodo pa quitar"
+        claves=self.dominio.optimizaciones.keys()
+        for clave in claves:
+            if (clave==metodo):
+                self.dominio.optimizaciones[metodo].remove(idpozo)
+                print "Se quito el pozo"
+            
 
     def retornarCoordenadas(self, idElemento):
         listaRetorno = {}

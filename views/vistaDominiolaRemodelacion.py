@@ -1285,10 +1285,10 @@ class menu(QtGui.QListView):
             if valor.toString() != "Optimizar" and valor.toString() != "Salir" and valor.toString() != "Eliminar" and valor.toString() != "Asociar" :
                 #Agrego ala coleccion de pozos para optimizar
                 elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())
-                frmopt=QtGui.QDialog()
+                frmopt=QtGui.QWidget()
                 ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
                 #ui.setupUi(frmopt,elementoDominio.ContEnsayo)
-                #frmopt.show()
+                frmopt.show()
                 elementoDominio.widget = ui
                 getattr(self,'reset')()
                 getattr(self,'hide')()

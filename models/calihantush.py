@@ -144,14 +144,14 @@ class CaliHantush(metodooptimizacion.metodooptimizacion):
 						for n_med in range(1,numeroobs(1)):
 							h_med=obs(n_obs).h(n_med)
 							#absoluto
-							descensos=n.calcularpozo(r_obs[n_med],t_obs[n_med],Q)[0]
-							obj(n_S,n_T,n_c)= obj(n_S,n_T,n_c) + (h_med - (Hopuntoobs - descensos) )^2
+							descensos=n.calcularpozo(r_obs[n_obs],t_obs[n_med],Q)[0]
+							#obj(n_S,n_T,n_c)= obj(n_S,n_T,n_c) + (h_med - (Hopuntoobs - descensos) )^2
 							if (obj(n_S,n_T,n_c)< minobj):
 								minobj=obj(n_S,n_T,n_c)
 								iToptimo=n_T
 								iSoptimo=n_S
 								icoptimo=n_c
-							obj(n_S,n_T,n_c)=np.log(obj(n_S,n_T,n_c))
+							#obj(n_S,n_T,n_c)=np.log(obj(n_S,n_T,n_c))
 					acui.T=Test_T(iToptimo)
 					acui.S=Test_S(iSoptimo)
 					acui.c=Test_c(icoptimo)

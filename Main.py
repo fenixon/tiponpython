@@ -291,8 +291,10 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def Optimizacion(self):
         global ContEnsayo
-        frmopt=QtGui.QDialog()
-        ui= vistaoptimizacion.optimizacion(ContEnsayo,frmopt)
+        frmopt=QtGui.QWidget()
+        #ui= vistaoptimizacion.optimizacion(ContEnsayo,frmopt)
+        ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+        frmopt.show()
         self.widget = ui
         print "muestro la opt"
 

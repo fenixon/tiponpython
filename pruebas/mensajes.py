@@ -138,7 +138,12 @@ class Ui_MainWindow(QtGui.QDialog):
     
         msj=QtGui.QMessageBox()
         msj.addButton('piin', QtGui.QMessageBox.AcceptRole)
-        msj.information(self,'titu', 'holita')
+
+        s="¿Realmente desea asociar este item al pozo seleccionado?. "
+##        g=s.decode('iso-8859-2')
+
+        g=s
+        msj.information(self,g, 'holita')
 
         
 

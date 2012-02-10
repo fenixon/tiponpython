@@ -1,0 +1,15 @@
+﻿Dificultades del proceso
+
+Como parte natural de un proceso de desarrollo, el individuo o el grupo, se ha de encontrar con obstáculos a superar en cualquier momento del transcurso. Nuestra situación no fue la excepción, y ante los nuevos retos, y el poco tiempo de duración que teniamos del proceso del proyecto, por supuesto que surgieron nuevas dificultades en los diferentes ámbitos, los más destacados fueron: 
+
+En la agenda y planificación de reuniones con Pablo Gamazo, surgió la común problemática de encontrar días y horarios para generar el intercambio, esto a través de una comunicación virtual dada la distancia física entre Paysandú y Salto.
+
+Dado el alto contenido técnico hidrológico existente en el proyecto, antes de conformar una idea clara sobre la realidad del problema se debió invertir tiempo en la investigación de cual era el dominio sobre el que debíamos trabajar, esto incluye la aclaración de detalles y terminologías técnicas exclusivas de la hidrología.
+
+El alto detalle técnico también transigió al proyecto un contenido matemático específico de la materia, el cual fue absorbido por el grupo de manera sastifactoria, no obstante, al ser un grupo más práctico para el desarrollo de soluciones informáticas, el entendimiento de la teoría matemática también requirió buena parte de nuestro tiempo, para comprender su naturaleza y funcionamiento.
+
+En la elección de lenguajes y herramientas, se llegó a la conclusión que Python brindaba el ámbito más óptimo para elaborar el proyecto, en este sentido el problema aquí fue que para el grupo este lenguaje era desconocido, lo que conllevó a aprender su sintáxis, forma de codificación y ejecución. También requirió buena parte del tiempo la comprensión de la interfaz gráfica elegida, PyQt4, y el funcionamiento de la herramienta de graficado matplotlib.
+
+
+
+

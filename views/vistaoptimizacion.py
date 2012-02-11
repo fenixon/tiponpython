@@ -119,13 +119,16 @@ class optimizacion(QtGui.QWidget):
         super(optimizacion, self).__init__()
         global model
         global controlador
+        global opt
         controlador=cont
         #Obtengo el diccionario de las asociaciones
         diccionario=controlador.listarPozosObsParaOptimizar()
         claves=diccionario.keys()
         for clave in claves:
             print str(clave)
-            self.modelmetodo = formulario(controlador.instanciaoptimizacion(clave))
+            opt=controlador.instanciaoptimizacion(clave)
+            self.modelmetodo = formulario(opt)
+            
         #model=arraymodel(diccionario[clave],clave,controlador)    
         model=arraymodel(clave,controlador)    
         print diccionario
@@ -204,7 +207,7 @@ class optimizacion(QtGui.QWidget):
         tableView.show()
         tableView.setModel(self.modelmetodo)
         self.ventana.resize(tableView.width(), tableView.height())
-        
+
     def retranslateUi(self, Form):
         pass
 
@@ -248,6 +251,15 @@ class optimizacion(QtGui.QWidget):
 
     def procesar(self):
         print "Proceso Calitheis2"
+        opt.setcontrolador(controlador)
+        opt.setpozos(controlador.listarPozosObsParaOptimizar()[m])
+        T, S, f_min,obs_sim=opt.calcular()
+        print "Valor optimo de T: " + str(T)
+        print "Valor optimo de S: " +str(S)
+        print "Valor optimo de f_min: " +str(f_min)
+        print "Valor optimo de obs_sim: " +str(obs_sim)
+        print "------------------------------------------------"
+        print "fin"        
 
 if __name__ == "__main__":
     import sys

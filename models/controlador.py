@@ -3,7 +3,7 @@ from pozo  import pozo
 from barrera import barrera
 from calitheis2 import *
 from calibracion2 import *
-#from calihantush import *
+from calihantush import *
 import numpy as np
 import observacion
 import observacionesensayo

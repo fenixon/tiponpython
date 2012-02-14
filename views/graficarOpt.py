@@ -11,6 +11,7 @@ from PyQt4 import QtCore, QtGui
 
 from models.dominio import dominio
 from views.dibujanteOpt import dibujanteOpt
+from models.metodoSolucion import metodoSolucion
 
 import numpy as np
 
@@ -61,16 +62,23 @@ class graficarOpt(object):
 
     def cargarCombo(self):
 
-        lista = self.dominio.listaPozoOptimiza
+        #lista = self.dominio.listaPozoOptimiza
+        lista = self.dominio.optimizacioneshechas
 
         for i in lista:
+            print "item cargado ",i
 
-            self.pozo.addItem(QtCore.QString(str(lista[i].pozo.id)), lista[i].pozo.id)
+            #self.pozo.addItem(QtCore.QString(str(lista[i].pozo.id)), lista[i].pozo.id)
+            self.pozo.addItem(i, i)
 
     def grafParametrosFunc(self):
 
-        lista = self.dominio.listaPozoOptimiza
-        pozoActual = self.dominio.listaPozoOptimiza[self.pozo.itemData(self.pozo.currentIndex()).toPyObject()]
+        #lista = self.dominio.listaPozoOptimiza
+        lista = self.dominio.optimizacioneshechas
+        #pozoActual = self.dominio.listaPozoOptimiza[self.pozo.itemData(self.pozo.currentIndex()).toPyObject()]
+        pozoActual = self.dominio.optimizacioneshechas[self.pozo.itemData(self.pozo.currentIndex()).toPyObject().__str__()]
+
+        print "item ",pozoActual
         self.dib = None
 
         if self.dib != None:
@@ -97,7 +105,9 @@ class graficarOpt(object):
 
     def grafObservacionesFunc(self):
 
-        pozoActual = self.dominio.listaPozoOptimiza[self.pozo.itemData(self.pozo.currentIndex()).toPyObject()]
+        pozoActual = self.dominio.optimizacioneshechas[self.pozo.itemData(self.pozo.currentIndex()).toPyObject().__str__()]
+
+        print "item ",pozoActual
         self.dib = None
 
         if self.dib != None:
@@ -108,16 +118,8 @@ class graficarOpt(object):
 
             T = float(pozoActual.T)
             S = float(pozoActual.S)
-            pozoObservacion=pozoActual.pozo
-
-##            print 'T '+str(T)
-##            print 'S '+str(S)
-##            print 'timepos '+str(self.dominio.metodo.tiempos)
-
-            self.dominio.metodo.funcionObjetivo(T,S,pozoObservacion)
-
-            h = pozoObservacion.devolverNivelesOptimos()
-            print 'h ' + str(h)
+            metodo=pozoActual.metodo
+            pozoObservaciones=pozoActual.pozosobs
 
             ##discretizacion temporal
             nit=self.nit
@@ -127,7 +129,6 @@ class graficarOpt(object):
             tiempos[0]=self.ti
 
             for i in range(1,nit):
-
                 tiempos[i]=tiempos[i-1]+dt
 
             t = tiempos
@@ -135,20 +136,35 @@ class graficarOpt(object):
             z=None
             xx=[]
             yy=[]
+            h=[]
+            metodo.tiempos=tiempos
 
-            for conjob in pozoObservacion.observaciones:
+##            print 'T '+str(T)
+##            print 'S '+str(S)
+##            print 'timepos '+str(self.dominio.metodo.tiempos)
 
-                ##Obtener todas las observacion del conjunto de observaciones
-                self.observaciones=conjob.devolverO()
+            for pozoObservacion in pozoObservaciones:
+                
+                metodo.funcionObjetivo(pozoObservacion)
+                h.append(pozoObservacion.devolverNivelesOptimos())
 
-                for ob in self.observaciones:
-                    xx.append(ob.tiempo)
-                    yy.append(ob.nivelpiezometrico)
+                print "niveles optimos ",pozoObservacion.devolverNivelesOptimos(), "T ",T, "S ", S
 
-            print 'xx '+str(xx)
-            print 'yy '+str(yy)
+                for conjob in pozoObservacion.observaciones:
+                    ##Obtener todas las observacion del conjunto de observaciones
+                    self.observaciones=conjob.devolverO()
+
+                    for ob in self.observaciones:
+                        xx.append(ob.tiempo)
+                        yy.append(ob.nivelpiezometrico)
+
+                    print 'xx '+str(xx)
+                    print 'yy '+str(yy)
+            print 'h ' + str(h)
 
             self.dib = dibujanteOpt(t, h, z, xx, yy)
+
+            
             self.dib.show()
             QtCore.QObject.connect(self.dib, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
 

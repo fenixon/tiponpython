@@ -15,13 +15,13 @@ import controlador
 
 class Theis(metodoSolucion.metodoAnalitico):
 
-    def __init__(self, dominio, parametros):
+    def __init__(self, dominio, parametros, asociar=None): 
         ##Lista de cardinales de los parametros que utiliza el metodo
         ##Parametros 0: S, parametro 1:T
         self.paramcard=[0,1]
         #### Llamar al constructor del metodo de solucion
         ## probar llamar al metodo padre        
-        metodoSolucion.metodoAnalitico.__init__(self,dominio,parametros)
+        metodoSolucion.metodoAnalitico.__init__(self,dominio,parametros, asociar)
         #print 'Se creo el loco theis'
         ##Theis es un metodo que acepta barrera        
         self.aceptaBarrera=True
@@ -171,7 +171,7 @@ class Theis(metodoSolucion.metodoAnalitico):
                 print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'T: '+str(T) + 'S: '+str(S) 
 
 
-        print str(s)
+        #print str(s)
         
         return [s, dsdT, dsdS]
                             

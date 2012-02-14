@@ -17,6 +17,9 @@ class dominio(object):
         self.listaPozoOptimiza ={}
         #Diccionario que guarda el metodo a utilizar y un vector con los pozos asociados al mismo
         self.optimizaciones={}
+        ##guarda las optimizaciones realizadas para el graficado
+        self.optimizacioneshechas={}
+        
         #Agregar el a, b, c de la ecuacion del plano. Valores que
         ##  deben ser seteados desde la creacion del proyecto
         self.a=1

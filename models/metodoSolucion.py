@@ -1,5 +1,6 @@
 import numpy as np
 from valoresParametros import valoresParametros
+from parametros import parametros
 ##from matplotlib.figure import Figure
 ####from mpl_toolkits.mplot3d.axes3d import Axes3D
 ##import matplotlib.mlab as mlab
@@ -8,22 +9,24 @@ from valoresParametros import valoresParametros
 
 class metodoSolucion(object):
 
-    def __init__(self, dominio, parametros): 
+    def __init__(self, dominio, parametrosC, asociar=None): 
 ##        self.paramcard=cardinales
         self.dominio=dominio
         ##Maximos y minimos de la grafica              
         self.min=1000000
         self.max=-1000000
+        self.asociar=asociar
 
-
-        print 'SE INSTANCIO'
+        #print 'SE INSTANCIO ',self.asociar
 
         
         ## Asociar el metodo al dominio
-        self.dominio.metodo=self                      
+        if self.asociar!=None and self.asociar==True :
+            self.dominio.metodo=self
+            print "setio el metodo al dominio "
         self.listaParametros=[]
         for i in self.paramcard:
-            self.listaParametros.append(parametros[i])            
+            self.listaParametros.append(parametros(parametrosC[i].nombre,parametrosC[i].unidad,parametrosC[i].valoresParametro))            
         #print "Se ha creado el Metodo de Solucion"
         
     def __del__(self):
@@ -39,7 +42,9 @@ class metodoSolucion(object):
             ##al parametro se le asocia el valor
             self.listaParametros[i].valoresParametro=v
             ## Tambien se asocia el valor al dominio poara que este lo guarde para futuros metodos de solucion
-            self.dominio.valores.append(v)
+            if self.asociar!=None and self.asociar==True :
+                self.dominio.valores.append(v)
+                print "setio el metodo al dominio "
 
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
     def calcular(self,tiempos,xx,yy):
@@ -48,6 +53,12 @@ class metodoSolucion(object):
                 
         # Recorrer todo el dominio
         d=self.dominio
+
+        ##Llamado a procesar la barrera.. para generar los pozos virtuales porque se duplican por precensia de la barrera
+        if self.aceptaBarrera==True :
+            d.procesarBarrera()
+
+        
         #Se guardan los valores para usarlos en todos los metodos
         self.tiempos=tiempos
         self.xx=xx
@@ -287,7 +298,9 @@ class metodoSolucion(object):
         return self.max
 
     ##Metodo que se llama luego de la Optimizacion, para graficar los pozos de observacions con S y T optimos
-    def funcionObjetivo(self,Topt,Sopt, pozoObservacion):
+    def funcionObjetivo(self,pozoObservacion):
+        Topt=self.listaParametros[0].valoresParametro.valor
+        Sopt=self.listaParametros[1].valoresParametro.valor
 
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
         if self.aceptaBarrera==True :
@@ -337,7 +350,7 @@ class metodoSolucion(object):
                     else:
                         s=0.0
 
-                    #print 'Error - r: ' + str(r) +'t: '+str(tmandado) + 'Q: ' + str(Q) + 'T: '+str(Topt) + 'S: '+str(Sopt)+'desc '+str(float(s)) 
+                    print 'Error - r: ' + str(r) +'t: '+str(tmandado) + 'Q: ' + str(Q) + 'T: '+str(Topt) + 'S: '+str(Sopt)+'desc '+str(float(s)) 
 
                     #Se actualizan los niveles Optimos                      
                     pozoObservacion.nivelesOptimos[cardt]=float(pozoObservacion.nivelesOptimos[cardt])-float(s)
@@ -347,8 +360,11 @@ class metodoSolucion(object):
 
 
     ##Metodo que se llama desde la Optimizacion, para graficar hayar los desdencos dentro del algoritmo
-    def funcionObjetivo2(self,x,y,t,Topt,Sopt, pozoObservacion):
-
+    def funcionObjetivo2(self,p,t,mostrar=None):
+        x=p.x
+        y=p.y
+        Topt=self.listaParametros[0].valoresParametro.valor
+        Sopt=self.listaParametros[1].valoresParametro.valor        
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
         if self.aceptaBarrera==True :
             Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()
@@ -356,6 +372,17 @@ class metodoSolucion(object):
             Todoslospbombeo=self.dominio.obtenerPozosdeBombeo()  
         
         descenso=0
+
+
+
+        if mostrar!=None:
+            print "acepta ",self.aceptaBarrera
+            print "todoslospboimbeo ", Todoslospbombeo 
+            
+            #print 'x_obs :', x, 'y_obs :', y, 't_med :', t
+                                      
+                                        
+        
         for pozoBombeo in Todoslospbombeo:
             x0=pozoBombeo.x
             y0=pozoBombeo.y       
@@ -382,14 +409,17 @@ class metodoSolucion(object):
                     s=0.0
                 #Se actualizan los niveles Optimos
                 descenso=descenso + float(s)
-                
+
+                #if mostrar!=None:
+                    #print 'p(i).x :', x0,'p(i).y :', y0,' p(i).q :', Q
+                    
         return descenso
     
         
 class metodoAnalitico(metodoSolucion):
-    def __init__(self, dominio, parametros):
+    def __init__(self, dominio, parametros, asociar=None):
         self.aceptaBarrera=False
-        metodoSolucion.__init__(self,dominio,parametros)
+        metodoSolucion.__init__(self,dominio,parametros, asociar)
 
 class metodoNumerico(metodoSolucion):
     pass

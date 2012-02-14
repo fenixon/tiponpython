@@ -49,8 +49,8 @@ class Proyecto(object):
 
     def cargarParametros(self):
         ###Si se quiere un parametro nuevo se tiene q agregar        
-        self.parametros.append(parametros('S','m^2/d'))    #parametro 0
-        self.parametros.append(parametros('T',''))    #parametro 1
+        self.parametros.append(parametros('T','m^2/d'))    #parametro 0
+        self.parametros.append(parametros('S',''))    #parametro 1
         self.parametros.append(parametros('C',''))    #parametro 2
         
     def leerParametros(self):

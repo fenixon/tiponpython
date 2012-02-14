@@ -178,7 +178,7 @@ class Ui_frmNuevoProyecto(object):
                     ejec='del self.lblParam'+ str(n)
                     exec(ejec)
                 controlador.metodo = None
-            ejec = 'metodo= %s(controlador.dominio, controlador.parametros)' % (nombreMetodo)
+            ejec = 'metodo= %s(controlador.dominio, controlador.parametros, True)' % (nombreMetodo)
             exec(ejec)
             controlador.metodo=metodo
             #seteando dimension de interfaz por defecto

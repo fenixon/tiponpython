@@ -18,7 +18,8 @@ class figuraOpt():
             self.ax.set_ylabel('h')
 
             self.ax.plot(xx, yy, 'r:')
-            self.ax.plot(x, y, 'b')
+            for h in y:
+                self.ax.plot(x, h, 'b')
 
         else:
 

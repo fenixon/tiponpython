@@ -77,9 +77,6 @@ class dibujante(QMainWindow):
         self.tfo=tfo
         self.cardt=0           
 
-        ##Llamado a procesar la barrera.. para generar los pozos virtuales porque se duplican por precensia de la barrera
-        dominio.procesarBarrera()
-
         ##LLAMADO AL METODO DE SOLUCION
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
         ### se envian ademas todas las discretizaciones

@@ -55,7 +55,8 @@ class formulario(QtCore.QAbstractListModel):
             #Seteo el parametro ingresado al objeto optimizacion
             o.setvalor(row,value.toString())
             self.dataChanged.emit(index,index)
-        return True        
+        return True
+    
 class arraymodel(QtCore.QAbstractListModel):
 
     def __init__(self,metodo,cont, parent = None):

@@ -407,11 +407,14 @@ class Ui_MainWindow(QtGui.QDialog):
                             ####aca cambiar todo para mandar al formulario del pozo
 
                             nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                            frm=QtGui.QWidget()
+                            #frm=QtGui.QWidget()
+                            frm=QtGui.QDialog()
                             grop = graficarOpt()
                             self.grop = grop.setupUi(frm, ContEnsayo.obtenerDominio(), ti, tf,nit)
-                            frm.show()
+                            #frm.show()
+                            frm.exec_()
                             QtCore.QObject.connect(self.grop, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarGrop)
+                            
                             print 'Dibujante invocado'
 
                         else:
@@ -707,7 +710,7 @@ class Ui_MainWindow(QtGui.QDialog):
         ContEnsayo.dominio.c=10
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
 ##        m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros)
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)                
 ##        m.setearValores([1000,0.0001,676.7])
         m.setearValores([700,1.1e-4])
         #Adherimos la vista del dominio
@@ -716,13 +719,16 @@ class Ui_MainWindow(QtGui.QDialog):
 
 
         b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-
         b.setX(500)
         b.setY(250)
-
         b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
+        self.ui.caja.botones.append(b)
 
-        self.ui.caja.botones.append(b)   
+        pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        pob.setX(600)
+        pob.setY(250)
+        pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
+        self.ui.caja.botones.append(pob)        
 
         x0=250
         y0=0
@@ -735,6 +741,14 @@ class Ui_MainWindow(QtGui.QDialog):
 
 
         noexec=1     
+
+
+        self.ventanaImpoObs(noexec, True)
+        self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"        
+        self.vimp.nombre.setText('obs1')
+        self.vimp.ext="ods"
+        self.vimp.accionaceptar()
+        self.vimp.close()
             
         self.ventanaImportarProyecto(noexec, True)
         self.importar.archivo="ficheros/bombeos.txt"
@@ -748,11 +762,14 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
-        asoe.asociar()       
+        asoe.asociar()
+
+        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar()         
         
         print 'se carga el demo'
-
-
         
 
 

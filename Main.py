@@ -407,12 +407,12 @@ class Ui_MainWindow(QtGui.QDialog):
                             ####aca cambiar todo para mandar al formulario del pozo
 
                             nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                            #frm=QtGui.QWidget()
-                            frm=QtGui.QDialog()
+                            frm=QtGui.QWidget()
+                            #frm=QtGui.QDialog()
                             grop = graficarOpt()
                             self.grop = grop.setupUi(frm, ContEnsayo.obtenerDominio(), ti, tf,nit)
-                            #frm.show()
-                            frm.exec_()
+                            frm.show()
+                            #frm.exec_()
                             QtCore.QObject.connect(self.grop, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarGrop)
                             
                             print 'Dibujante invocado'

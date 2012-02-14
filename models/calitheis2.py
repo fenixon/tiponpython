@@ -87,6 +87,8 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		S=0
                 metodo=None
 
+                #con los refinamientos queda re pesada
+                #while (ref<N_ref_max):
 
                 DT=Tsup-Tinf
                 DS=Ssup-Sinf
@@ -141,7 +143,27 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
                                         
                                 #if (f<f_min):
                                         #f_min=f
-
+                DT=DT*esc_ref
+                if (T-DT/2.0 <Tmin):
+                        Tinf=Tmin
+                        Tsup=Tmin+DT
+                elif(T+DT/2.0 >Tmax):
+                        Tsup=Tmax
+                        Tmin=Tmax-DT
+                else:
+                        Tsup=T+DT/2.0
+                        Tmin=T-DT/2.0
+                DS=DS*esc_ref
+                if (S-DS/2 <Smin):
+                        Sinf=Smin
+                        Ssup=Smin+DS
+                elif(S+DS/2 >Smax):
+                        Ssup=Smax
+                        Smin=Smax-DS
+                else:
+                        Ssup=S+DS/2.0
+                        Smin=S-DS/2.0
+                ref=ref+1
 
 
 

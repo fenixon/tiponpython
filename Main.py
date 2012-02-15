@@ -244,8 +244,8 @@ class Ui_MainWindow(QtGui.QDialog):
         enss=ContEnsayo.ensayos
         if len(enss)<=0 :
             QtGui.QMessageBox.information(self,
-                "Informacion",
-                "Aún no se ha ingresado ningún ensayo de bombeo")
+                u"Información",
+                u"No existe ningún conjunto de bombeos cargado en el sistema y sin asociar")
         else:
             frmVerBombeo = QtGui.QDialog()
             ui = verensayos.Ui_Dialog()
@@ -276,7 +276,7 @@ class Ui_MainWindow(QtGui.QDialog):
         if len(obss)<=0 :
             QtGui.QMessageBox.information(self,
                 u"Información",
-                u"Aún no se ha ingresado ninguna Observación de ensayo")
+                u"No existe ningún conjunto de observaciones cargado en el sistema y sin asociar")
         else:
             frmverobs=QtGui.QDialog()
             ui= verObservaciones.Ui_Dialog()
@@ -925,9 +925,14 @@ if __name__ == "__main__":
     # in your system's language.
     qtTranslator=QtCore.QTranslator()
     qtTranslator.load("qt_" + locale,
-                    QtCore.QLibraryInfo.location(
-                    QtCore.QLibraryInfo.TranslationsPath)
+                    "idiomas"
                     )
+    print "archivo idioma  qt_", locale
+    #print "ruta idioma ",QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.TranslationsPath)
+
+    #QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.TranslationsPath)
+
+    
     app.installTranslator(qtTranslator)
 
     MainWindow = QtGui.QMainWindow()   

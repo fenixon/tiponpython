@@ -307,9 +307,9 @@ class dibujante(QMainWindow):
         else:
             self.velActual = 0
 
-        print 'vel '+str(self.velActual+1)
+        #print 'vel '+str(self.velActual+1)
 
-        print 'la vel: '+str(1000 / (self.vel[self.velActual]))
+        #print 'la vel: '+str(1000 / (self.vel[self.velActual]))
 
         self.timer.setInterval(1000 / (self.vel[self.velActual]))
         self.velocidadb.setText(QString(str(self.velActual + 1) + 'x'))

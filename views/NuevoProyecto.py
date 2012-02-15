@@ -252,10 +252,10 @@ class Ui_frmNuevoProyecto(object):
     def cambioTipo(self, tipo):
         self.cmbMetodo.clear()
         if tipo == 'Numerico':
-            metodos = ['Hantush']
+            metodos = []
             self.btnCondicionesExternas.setEnabled(True)
         else:
-            metodos = ['Theis']
+            metodos = ['Theis', 'Hantush']
             self.btnCondicionesExternas.setEnabled(False)
         self.cmbMetodo.addItems(metodos)
 

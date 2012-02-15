@@ -44,7 +44,7 @@ class metodoSolucion(object):
             ## Tambien se asocia el valor al dominio poara que este lo guarde para futuros metodos de solucion
             if self.asociar!=None and self.asociar==True :
                 self.dominio.valores.append(v)
-                print "setio el metodo al dominio "
+                print "valor seteado para  ",self.listaParametros[i].nombre," es: ",v.valor
 
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
     def calcular(self,tiempos,xx,yy):
@@ -115,7 +115,7 @@ class metodoSolucion(object):
         else:
             Todoslospbombeo=d.obtenerPozosdeBombeo()
 
-        print "holaa" +str(Todoslospbombeo)
+        #print "holaa" +str(Todoslospbombeo)
         
         for pozoBombeo in Todoslospbombeo:
             ###Esto se podria obtener desde el dominio        
@@ -131,9 +131,9 @@ class metodoSolucion(object):
             ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
             bombeos=pozoBombeo.ensayos[0].devolverBProc()
 
-            for bom in bombeos:
-                print 'tiempos: '+str(bom.tiempo)
-                print 'caudal: '+str(bom.caudal)
+            #for bom in bombeos:
+            #    print 'tiempos: '+str(bom.tiempo)
+            #    print 'caudal: '+str(bom.caudal)
                 
             cardt=0
             for t in tiempos:
@@ -172,11 +172,11 @@ class metodoSolucion(object):
                             #if t>=0.3:
                             #    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
 
-                            if t==0.03:
+                            #if t==0.03:
                                 #print 'Punto ('+str(x)+', '+str(y)+') pozo ('+str(x0)+', '+str(y0)+') caudal pozo: '+str(Q)+' tiempo pozo: '+str(tpozo)+' tiempo: '+str(t), '-Cual es el descenso: '+str(s)
-                                print 'r ('+str(r)+') caudal pozo: '+str(Q)+' tiempo : '+str(tmandado), '-Cual es el descenso: '+str(s)
+                                #print 'r ('+str(r)+') caudal pozo: '+str(Q)+' tiempo : '+str(tmandado), '-Cual es el descenso: '+str(s)
                                 
-##                                print 'Que habia? '+ str(self.matrizDescenso[cardt,cardy,cardx])
+##                              print 'Que habia? '+ str(self.matrizDescenso[cardt,cardy,cardx])
                                 #print 'Cual es el descenso: '+str(s)
 
                             #el nivel "h" se calcula como "h=Ho-s"
@@ -226,8 +226,8 @@ class metodoSolucion(object):
                             try:
                                 s,dsdT,dsdS=self.calcularpozo(r, tmandado, Q)
                                 
-                                if t==0.3:
-                                    print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)+'s: '+str(s)                                
+                                #if t==0.3:
+                                    #print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)+'s: '+str(s)                                
                             except:
                                 print 'Error - r: ' + str(r) +'t: '+str(t) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
                                 print 'T mandado: '+str(told) + 'T pozo: '+str(tpozo)
@@ -350,7 +350,7 @@ class metodoSolucion(object):
                     else:
                         s=0.0
 
-                    print 'Error - r: ' + str(r) +'t: '+str(tmandado) + 'Q: ' + str(Q) + 'T: '+str(Topt) + 'S: '+str(Sopt)+'desc '+str(float(s)) 
+                    #print 'Error - r: ' + str(r) +'t: '+str(tmandado) + 'Q: ' + str(Q) + 'T: '+str(Topt) + 'S: '+str(Sopt)+'desc '+str(float(s)) 
 
                     #Se actualizan los niveles Optimos                      
                     pozoObservacion.nivelesOptimos[cardt]=float(pozoObservacion.nivelesOptimos[cardt])-float(s)
@@ -373,14 +373,11 @@ class metodoSolucion(object):
         
         descenso=0
 
-
-
         if mostrar!=None:
             print "acepta ",self.aceptaBarrera
             print "todoslospboimbeo ", Todoslospbombeo 
             
-            #print 'x_obs :', x, 'y_obs :', y, 't_med :', t
-                                      
+            #print 'x_obs :', x, 'y_obs :', y, 't_med :', t                                      
                                         
         
         for pozoBombeo in Todoslospbombeo:

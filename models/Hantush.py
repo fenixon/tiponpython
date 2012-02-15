@@ -43,7 +43,7 @@ class Hantush(metodoSolucion.metodoNumerico):
         dsdT = 0
         dsdS = 0
 
-        print "T ", T, " S ",S, "C ",c," r ",r, " Q ", Q, " s ", s
+        #print "T ", T, " S ",S, "C ",c," r ",r, " Q ", Q, " s ", s
         return [s, dsdT, dsdS]
 
 

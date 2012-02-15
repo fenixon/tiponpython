@@ -51,7 +51,8 @@ class Ui_MainWindow(QtGui.QDialog):
 
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
-        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Tipon Python", None, QtGui.QApplication.UnicodeUTF8))
+        
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Sistema de interpretación de ensayos de bombeo en acuíferos - TIP' 09", None, QtGui.QApplication.UnicodeUTF8))
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         MainWindow.setCentralWidget(self.centralwidget)
@@ -931,5 +932,5 @@ if __name__ == "__main__":
     MainWindow = QtGui.QMainWindow()   
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    MainWindow.show()
+    MainWindow.showMaximized()
     sys.exit(app.exec_())

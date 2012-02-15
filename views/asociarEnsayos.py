@@ -110,7 +110,9 @@ class Ui_Dialog(QtGui.QDialog):
         QtCore.QMetaObject.connectSlotsByName(Asociarensayos)
 
     def retranslateUi(self, Asociarensayos):
-        Asociarensayos.setWindowTitle(QtGui.QApplication.translate("Asociarensayos", "Pozo n° "+str(self.p.id), None, QtGui.QApplication.UnicodeUTF8))
+        #Asociarensayos.setWindowTitle(QtGui.QApplication.translate("Asociarensayos", u"Pozo n° "+str(self.p.id), None, QtGui.QApplication.UnicodeUTF8))
+
+        Asociarensayos.setWindowTitle( "Pozo n° "+str(self.p.id))
         
         self.btn_Cancelar.setText(QtGui.QApplication.translate("Asociarensayos", "Cancelar", None, QtGui.QApplication.UnicodeUTF8))
         self.btn_Agregar.setText(QtGui.QApplication.translate("Asociarensayos", ">>", None, QtGui.QApplication.UnicodeUTF8))
@@ -129,6 +131,7 @@ class Ui_Dialog(QtGui.QDialog):
         self.model=modelotabla.modelotabla(obss, ["Id", "Nombre"])
         self.vistaDatosControlador.setModel(self.model)
         self.tipo="o"
+        self.oe=None
 
     def listarEnsayos(self):
 ##      al clickear en ensayos se va a mostrar el listado de ensayos
@@ -138,6 +141,7 @@ class Ui_Dialog(QtGui.QDialog):
         self.model=modelotabla.modelotabla(enss, ["Id", "Nombre"])
         self.vistaDatosControlador.setModel(self.model)
         self.tipo="e"
+        self.oe=None
 
     def seleccionarDato(self, item):
         global ContEnsayo
@@ -199,9 +203,23 @@ class Ui_Dialog(QtGui.QDialog):
     def asociar(self):
         global ContEnsayo
         ####  mensajito si realmente quiere hacer la asociacion
+        ##Si no se ha seleccionado ningún elemento con click no se podrá realizar la asociacion
         if self.oe!=None:
 ##            print "al final no esta vacio se puede asociar "
-            
+
+            if self.tipo=="o" :
+                if len(self.p.observaciones)>0:
+                    reply = QtGui.QMessageBox.warning(self,
+                            "Advertencia",
+                            "Ya existe un conjunto de observaciones asociado al pozo seleccionado. Si lo considera necesario, primero desocie los datos y vuelva a relizar esta operación")
+                    return                
+            else:
+                if len(self.p.ensayos)>0:
+                    reply = QtGui.QMessageBox.warning(self,
+                            "Advertencia",
+                            "Ya existe un conjunto de bombeos asociado al pozo seleccionado. Si lo considera necesario, primero desocie los datos y vuelva a relizar esta operación")                                    
+                    return
+                
             if self.demo==True :
                 reply = QtGui.QMessageBox.Yes
             else:
@@ -233,7 +251,7 @@ class Ui_Dialog(QtGui.QDialog):
                 #print "Escape"
         else:            
             reply = QtGui.QMessageBox.warning(self,
-                    "Información",
+                    "Advertencia",
                     "Debe seleccionar un elemento para asociar")
 
     def desasociar(self):

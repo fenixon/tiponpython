@@ -293,12 +293,19 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def Optimizacion(self):
         global ContEnsayo
-        frmopt=QtGui.QWidget()
-        #ui= vistaoptimizacion.optimizacion(ContEnsayo,frmopt)
-        ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
-        frmopt.show()
-        self.widget = ui
-        print "muestro la opt"
+        diccionario=elementoDominio.ContEnsayo.listarPozosObsParaOptimizar()
+        claves=diccionario.keys()
+        if (claves!=[]):
+            frmopt=QtGui.QWidget()       
+            ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+            frmopt.show()
+            self.widget = ui
+            print "muestro la opt"
+        else:
+            #Si no existen asociaciones doy error
+            reply = QtGui.QMessageBox.warning(self,
+                            "Error",
+                            "No se realizaron asociaciones desde el dominio.") 
 
     def limpiarDibujante(self):
 

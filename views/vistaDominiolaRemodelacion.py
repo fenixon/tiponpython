@@ -1283,13 +1283,19 @@ class menu(QtGui.QListView):
                 return
             #Si no es ninguna opcion predeterminada, las opcoines son para elegir metodos de optimizacion
             if valor.toString() != "Optimizar" and valor.toString() != "Salir" and valor.toString() != "Eliminar" and valor.toString() != "Asociar" :
-                #Agrego ala coleccion de pozos para optimizar
-                elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())
-                frmopt=QtGui.QWidget()
-                ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
-                #ui.setupUi(frmopt,elementoDominio.ContEnsayo)
-                frmopt.show()
-                elementoDominio.widget = ui
+                #Verifico si el pozo ya no fue agregado
+                existe=elementoDominio.ContEnsayo.existeasociacionoptimizacion(elementoDominio.selectedMenuMouse["id"],valor.toString())
+                if (existe==False):
+                	#Si no existe agrego ala coleccion de pozos para optimizar
+                	elementoDominio.ContEnsayo.asociarPozoOptimiazion(elementoDominio.selectedMenuMouse["id"],valor.toString())
+                	frmopt=QtGui.QWidget()
+                	ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
+                	frmopt.show()
+                	elementoDominio.widget = ui
+                else:
+                    reply = QtGui.QMessageBox.warning(self,
+                                "Error",
+                                "Ya se ha agregado el pozo de observacion.")                 	
                 getattr(self,'reset')()
                 getattr(self,'hide')()
                 return

@@ -125,15 +125,20 @@ class optimizacion(QtGui.QWidget):
         #Obtengo el diccionario de las asociaciones
         diccionario=controlador.listarPozosObsParaOptimizar()
         claves=diccionario.keys()
-        for clave in claves:
-            print str(clave)
-            opt=controlador.instanciaoptimizacion(clave)
-            self.modelmetodo = formulario(opt)
-            
-        #model=arraymodel(diccionario[clave],clave,controlador)    
-        model=arraymodel(clave,controlador)    
-        print diccionario
-        self.setupUi()
+        print "claves:" + str(claves)
+        if (claves!=[]):
+            for clave in claves:
+                print str(clave)
+                self.metodoactual=str(clave)
+                opt=controlador.instanciaoptimizacion(clave)
+                self.modelmetodo = formulario(opt)
+                model=arraymodel(clave,controlador)
+                self.setupUi()
+        else:
+            #Si no existen asociaciones doy error
+            reply = QtGui.QMessageBox.warning(self,
+                            "Error",
+                            "No se realizaron asociaciones desde el dominio.") 
 
     def setupUi(self):
         Form.setObjectName(_fromUtf8("Form"))
@@ -152,7 +157,7 @@ class optimizacion(QtGui.QWidget):
         font.setPointSize(22)
         font.setItalic(True)
         self.label_2.setFont(font)
-        self.label_2.setText(QtGui.QApplication.translate("Form", "CaliTheis2", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_2.setText(QtGui.QApplication.translate("Form", self.metodoactual, None, QtGui.QApplication.UnicodeUTF8))
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.pushButton = QtGui.QPushButton(Form)
         self.pushButton.setGeometry(QtCore.QRect(340, 30, 75, 23))
@@ -181,9 +186,6 @@ class optimizacion(QtGui.QWidget):
         self.label_4.setGeometry(QtCore.QRect(70, 370, 131, 16))
         self.label_4.setText(QtGui.QApplication.translate("Form", "Incluir ala coleccion pozo:", None, QtGui.QApplication.UnicodeUTF8))
         self.label_4.setObjectName(_fromUtf8("label_4"))
-        self.comboBox = QtGui.QComboBox(Form)
-        self.comboBox.setGeometry(QtCore.QRect(200, 370, 31, 22))
-        self.comboBox.setObjectName(_fromUtf8("comboBox"))
         self.pushButton_2 = QtGui.QPushButton(Form)
         self.pushButton_2.setGeometry(QtCore.QRect(260, 370, 75, 23))
         self.pushButton_2.setText(QtGui.QApplication.translate("Form", "Agregar", None, QtGui.QApplication.UnicodeUTF8))
@@ -193,7 +195,7 @@ class optimizacion(QtGui.QWidget):
         self.pushButton_3.setText(QtGui.QApplication.translate("Form", "Procesar", None, QtGui.QApplication.UnicodeUTF8))
         self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
         self.lineEdit = QtGui.QLineEdit(Form)
-        self.lineEdit.setGeometry(QtCore.QRect(200, 400, 31, 20))
+        self.lineEdit.setGeometry(QtCore.QRect(200, 370, 31, 22))
         self.lineEdit.setObjectName(_fromUtf8("lineEdit"))
         self.connect(self.pushButton, QtCore.SIGNAL('clicked()'),self.setparametros)
         self.connect(self.pushButton_2, QtCore.SIGNAL('clicked()'),self.agregarpozo)
@@ -225,17 +227,17 @@ class optimizacion(QtGui.QWidget):
                     model.agregar(int(self.lineEdit.text()))
                 else:
                     #Si no tiene observaciones mando error
-                    reply = QtGui.QMessageBox.question(self,
+                    reply = QtGui.QMessageBox.warning(self,
                             "Error",
                             "El pozo ingresado, NO tiene observaciones asociadas.")                
             else:
                 #Si no existe en el dominio doy error
-                reply = QtGui.QMessageBox.question(self,
+                reply = QtGui.QMessageBox.warning(self,
                             "Error",
                             "El pozo ingresado no existe en el dominio.") 
         else:
                 #Si ya existe muestro error
-                reply = QtGui.QMessageBox.question(self,
+                reply = QtGui.QMessageBox.warning(self,
                             "Error",
                             "Ya se ha agregado el pozo de observacion") 
     def quitarPozoObs(self,item):

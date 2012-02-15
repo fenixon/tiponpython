@@ -23,7 +23,7 @@ try:
 except AttributeError:
     _fromUtf8 = lambda s: s
 
-class dibujante(QMainWindow):
+class dibujante_(QMainWindow):
 
     def __init__(self, parent = None, dominio=None, nix=None, niy=None, ti=None, tf=None, nit=None, tfo=None):
 

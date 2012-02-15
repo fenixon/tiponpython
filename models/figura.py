@@ -19,10 +19,14 @@ class figura():
     def __init__(self, matrix, matx, maty, dominio, X, Y, xx, yy, tiempos, superficies, ming, maxg, selected = None, parent = None):
 
         fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
-        self.axu = fig.add_subplot(2, 2, 1)
-        self.axd = fig.add_subplot(2, 2, 2)
-        self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
-        self.axc = fig.add_subplot(2, 2, 4)
+        #self.axu = fig.add_subplot(2, 2, 1)
+        #self.axd = fig.add_subplot(2, 2, 2)
+        #self.axt = fig.add_subplot(2, 2, 3, projection = '3d')
+        #self.axc = fig.add_subplot(2, 2, 4)
+
+        self.ax = None
+        self.axt = None
+
         fig.subplots_adjust(hspace=.2, wspace=.3, bottom=.07, left=.08, right=.92, top=.94)
 
         self.fig = fig
@@ -41,13 +45,24 @@ class figura():
         self.tiempos = tiempos
         self.superficies=superficies
 
-        self.axt.set_ylim3d(0,1000)
-        self.axt.set_xlim3d(0,1000)
-        self.axt.set_zlim3d(self.ming, self.maxg)
+        #self.axt.set_ylim3d(0,1000)
+        #self.axt.set_xlim3d(0,1000)
+        #self.axt.set_zlim3d(self.ming, self.maxg)
 
     def plotU(self):
 
-        ax = self.axu
+        #ax = self.axu
+        if self.axt != None:
+
+            self.fig.delaxes(self.axt)
+            self.axt = None
+
+
+        if self.ax == None:
+
+            self.ax = self.fig.add_subplot(111)
+
+        ax = self.ax
         ax.cla()
         ax.set_title('Descensos h en tiempo t')
         ax.set_xlabel('t')
@@ -104,19 +119,40 @@ class figura():
         #BUG DE MATPLOTLIB: se grafica solo si la matriz no es multiplo de ones, no hay una curva de nivel
         if not p.all(np.equal(Z,divi)):
 
-            ax = self.axd
+            #ax = self.axd
+            if self.axt != None:
+
+                self.fig.delaxes(self.axt)
+                self.axt = None
+
+            if self.ax == None:
+
+                self.ax = self.fig.add_subplot(111)
+
+            ax = self.ax
             ax.cla()
             #CS = contour(X, Y, Z)
             ax.contour(self.X, self.Y, Z)
             #clabel(CS, inline=1, fontsize=10)
             ax.set_title(u'Propagación')
 
-        print u'Segunda gráfica cargada.'
+        #print u'Segunda gráfica cargada.'
 
     def plotT(self, t):
 
         #add_subplot(filas, columnas, número de gráfica/posición, tipo de gráfica)
 ##        print 'Loading third plot...'
+        #ax = self.axt
+
+        if self.axt == None:
+
+            self.axt = self.fig.add_subplot(1, 1, 1, projection = '3d')
+
+        if self.ax != None:
+
+            self.fig.delaxes(self.ax)
+            self.ax = None
+
         ax = self.axt
         ax.cla()
         #X = np.arange(-5, 5, 0.25)
@@ -173,13 +209,23 @@ class figura():
 ##        ax.set_ylim3d(0, 20)# viewrange for y-axis should be [-2,2]
 ##        ax.set_xlim3d(0, 20)
         ax.set_title(u'Representación 3d')
-        print u'Gráfica en tres dimensiones cargada.'
+        #print u'Gráfica en tres dimensiones cargada.'
 #            fig.colorbar(surf, shrink=0.5, aspect=10)
 
     def plotC(self, t):
 
 ##        print 'Loading fourth plot...'
-        ax = self.axc
+        #ax = self.axc
+        if self.axt != None:
+
+            self.fig.delaxes(self.axt)
+            self.axt = None
+
+        if self.ax == None:
+
+            self.ax = self.fig.add_subplot(111)
+
+        ax = self.ax
         ax.cla()
         #x = np.linspace(0,10,11)
         #y = np.linspace(0,15,16)
@@ -195,23 +241,33 @@ class figura():
         q = ax.quiver(X, Y, u, v, color=['r'])
         #p2 = ax.quiverkey(q,1,16.5,50,"50 m/s",coordinates='data',color='r')
         ax.set_title('Velocidad')
-        print u'Cuarta gráfica cargada.'
+        #print u'Cuarta gráfica cargada.'
         #xl = ax.xlabel("x (km)")
         #yl = ax.ylabel("y (km)")
 
     def salvar(self, filename = None, width = None, height = None, velocidad = None, directorio = None):#Esto se lo pasa el dialogo
 
-        print 'Evaluando entradas...'
-        print 'Nombre del archivo: ' + filename
-        print 'Ancho: ' + str(width)
-        print 'Alto: ' + str(height)
-        print 'Velocidad: ' + velocidad
-        print 'Listo, entradas correctas.'
+        #print 'Evaluando entradas...'
+        #print 'Nombre del archivo: ' + filename
+        #print 'Ancho: ' + str(width)
+        #print 'Alto: ' + str(height)
+        #print 'Velocidad: ' + velocidad
+        #print 'Listo, entradas correctas.'
+
+        self.fig.clf()
+
+        self.fig.delaxes(self.ax)
+
+        self.axu = self.fig.add_subplot(2, 2, 1)
+        self.axd = self.fig.add_subplot(2, 2, 2)
+        self.axt = self.fig.add_subplot(2, 2, 3, projection = '3d')
+        self.axc = self.fig.add_subplot(2, 2, 4)
+
 
         aux = len(self.matrix)
         for i in range(0, aux):
 
-            print u'Imágen ' + str(i + 1)
+            #print u'Imágen ' + str(i + 1)
 
             self.plotD(i)
             self.plotT(i)
@@ -224,9 +280,9 @@ class figura():
 
             self.fig.savefig(tmpfilename, dpi=ppp)
 
-            print 'Creada.'
+            #print 'Creada.'
 
-        print u'Imágenes preparadas y listas'
+        #print u'Imágenes preparadas y listas'
 
         command = ('mplayer/mencoder.exe',#Para la version de linux hay que cambiar esto y sacar el .exe
             'mf://temp/_tmp_%d.png',
@@ -241,18 +297,23 @@ class figura():
             '-o',
             directorio + '/' + filename + '.avi')
 
-        print u"\n\nSe ejecutará:\n%s\n\n" % ' '.join(command)
+        #print u"\n\nSe ejecutará:\n%s\n\n" % ' '.join(command)
         subprocess.check_call(command)
 
-        print u'Comienza borrado de imagenes temporales.'
+        #print u'Comienza borrado de imagenes temporales.'
 
         for i in range(0, aux):
 
-            print u'Imágen ' + str(i + 1)
+            #print u'Imágen ' + str(i + 1)
 
             tmpfilename = 'temp/_tmp_' + str(i) + '.png'
             os.remove(tmpfilename)
 
-            print 'Borrada.'
+            #print 'Borrada.'
 
-        print 'Pronto.'
+        #print 'Pronto.'
+
+        self.fig.delaxes(self.axu)
+        self.fig.delaxes(self.axd)
+        self.fig.delaxes(self.axt)
+        self.fig.delaxes(self.axc)

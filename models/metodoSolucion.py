@@ -218,7 +218,7 @@ class metodoSolucion(object):
                         Q=bom.caudal                    
                         ##Al restar deja una diferencia de 1.8 * 10-16 por eso el redondeo                        
                         tmandado=round(float(float(t)-float(tpozo)),14)
-                        print tmandado
+                        #print tmandado
                         if tmandado>0:
                             #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
                             #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)

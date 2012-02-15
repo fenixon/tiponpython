@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 from PyQt4 import QtCore, QtGui
 from pozo  import pozo
 import numpy as np
@@ -138,7 +140,8 @@ class optimizacion(QtGui.QWidget):
             #Si no existen asociaciones doy error
             reply = QtGui.QMessageBox.warning(self,
                             "Error",
-                            "No se realizaron asociaciones desde el dominio.") 
+                            "No se realizaron asociaciones desde el dominio.")
+        self.padre=Formulario
 
     def setupUi(self):
         Form.setObjectName(_fromUtf8("Form"))
@@ -262,7 +265,10 @@ class optimizacion(QtGui.QWidget):
         print "Valor optimo de f_min: " +str(f_min)
         print "Valor optimo de obs_sim: " +str(obs_sim)
         print "------------------------------------------------"
-        print "fin"        
+        print "fin"
+
+        reply = QtGui.QMessageBox.information(self,u"Información",u"El proceso de optimización a concluido")
+        self.padre.close()        
 
 if __name__ == "__main__":
     import sys

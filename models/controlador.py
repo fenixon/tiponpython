@@ -202,6 +202,17 @@ class Proyecto(object):
                               
                 #self.dominio.optimizaciones[metodo]= ui
         print "se agrego a la lista de optimizaciones" 
+    def existeasociacionoptimizacion(self,idElemento,metodo):
+        #Busco el indice del metodo
+        claves=self.dominio.optimizaciones.keys()
+        token=False
+        for clave in claves:
+            if (clave==metodo):
+                #Busco si el metodo tiene el pozo ingresado
+                for pozo in self.dominio.optimizaciones[metodo]:
+                    if (pozo==idElemento):
+                        token=True
+        return token
 
     def listarPozosObsParaOptimizar(self):
         return self.dominio.optimizaciones

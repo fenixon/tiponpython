@@ -147,10 +147,13 @@ class figura():
         if self.axt == None:
 
             self.axt = self.fig.add_subplot(1, 1, 1, projection = '3d')
+            #Esto se agregó para darle la proyección necesaria igual a Matlab
+            self.axt.view_init(20,-140)
 
         if self.ax != None:
 
-            self.fig.delaxes(self.ax)
+            #Comento esto xq daba error al removerlo
+            #self.fig.delaxes(self.ax)
             self.ax = None
 
         ax = self.axt

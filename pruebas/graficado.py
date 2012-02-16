@@ -17,11 +17,7 @@ yy = np.linspace(10,0,niy);
 f = np.linspace(5,1,10);
 X, Y = np.meshgrid(xx, yy) 
 
-print xx
-print yy
-
 h0=np.zeros((niy,nix), float);
-
 print h0
 
 for i in range(0,nix):
@@ -35,22 +31,20 @@ fig=p.figure()
 ax = p3.Axes3D(fig)
 h0[1,1]=1
 
+ax.set_zorder(5)
+
+
+
+ax.view_init(20,-140)
+
 #ax.plot_surface(x,y,z)
 surf = ax.plot_surface(X, Y, h0)
-
-print yy
-
-#ax.contour(X,Y,h0)
-surf.set_array(f)
-
 
 ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
-p.show()
 
-#ax = fig.add_subplot(111, projection='3d')
-#ax.show()
+p.show()
 
 
 

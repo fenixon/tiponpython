@@ -27,8 +27,13 @@ class dibujante(QMainWindow):
 
     def __init__(self, parent = None, dominio=None, nix=None, niy=None, ti=None, tf=None, nit=None, tfo=None):
 
-        print u'Iniciando dibujante...'
         QMainWindow.__init__(self, parent)
+        self.dia = QDialog()
+        hbox1 = QHBoxLayout()
+        msgLabel = QLabel(QString(u'Calculando gráficas, espere un momento...'))
+        hbox1.addWidget(msgLabel)
+        self.dia.setLayout(hbox1)
+        self.dia.show()
 ##        ti=0.0
 ##        tf=3.0
 ##        tf=0.3
@@ -98,7 +103,6 @@ class dibujante(QMainWindow):
         #self.bombeos=bombeos
         
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
-        self.dia = None
 
 #### Codigo nuevo introducido para prueba
 
@@ -239,6 +243,8 @@ class dibujante(QMainWindow):
         ##Cada un segundo, dps aca cambiar la velocidad de reproduccion
         self.timer.setInterval(1000 * self.vel[self.velActual])
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reproducirBucle)
+        self.dia.close()
+        self.dia = None
         print u'...Dibujante listo!!'
 
     def draw(self):
@@ -325,16 +331,11 @@ class dibujante(QMainWindow):
         else:
             self.velActual = 0
 
-        print 'vel '+str(self.velActual+1)
-
-        print 'la vel: '+str(1000 / (self.vel[self.velActual]))
-
         self.timer.setInterval(1000 / (self.vel[self.velActual]))
         self.velocidadb.setText(QString(str(self.velActual + 1) + 'x'))
 
     def guardar(self):
 
-##        print u'Próximamente: guardará la animación de las gráficas en un video.'
         if self.timer.isActive() == True:
             self.reproducir()
         self.estadob.setValue(0)

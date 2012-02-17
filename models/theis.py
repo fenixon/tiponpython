@@ -25,6 +25,9 @@ class Theis(metodoSolucion.metodoAnalitico):
         #print 'Se creo el loco theis'
         ##Theis es un metodo que acepta barrera        
         self.aceptaBarrera=True
+        #Seteo las optimizaciones disponibles que puede aplicarse a theis
+        self.optimizaciones=['CaliTheis2']
+        #print "se creo theis"
 
     def calcularpozo(self,r,t,Q):
 

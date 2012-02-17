@@ -16,6 +16,8 @@ class metodoSolucion(object):
         self.min=1000000
         self.max=-1000000
         self.asociar=asociar
+        #Lista que contendra las optimizaciones para un metodo especifico
+        #self.optimizaciones=[]
 
         #print 'SE INSTANCIO ',self.asociar
 
@@ -32,6 +34,9 @@ class metodoSolucion(object):
     def __del__(self):
         #print "Se ha eliminado el Metodo de Solucion"
 	return
+
+    def getoptimizaciones(self):
+        return self.optimizaciones
 
     def setearValores(self, valores):
         i=0

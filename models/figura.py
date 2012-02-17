@@ -114,27 +114,30 @@ class figura():
 
 ##        print 'tam '+str(len(self.Y))
 
+        #ax = self.axd
+        if self.axt != None:
+
+            self.fig.delaxes(self.axt)
+            self.axt = None
+
+        if self.ax == None:
+
+            self.ax = self.fig.add_subplot(111)
+
+        ax = self.ax
+        ax.cla()
+        ax.set_title(u'Propagación')
+
         divi=np.zeros((len(self.Y),len(self.X)), float)
         divi[:,:]=Z[0,0]
         #BUG DE MATPLOTLIB: se grafica solo si la matriz no es multiplo de ones, no hay una curva de nivel
+        
         if not p.all(np.equal(Z,divi)):
 
-            #ax = self.axd
-            if self.axt != None:
-
-                self.fig.delaxes(self.axt)
-                self.axt = None
-
-            if self.ax == None:
-
-                self.ax = self.fig.add_subplot(111)
-
-            ax = self.ax
-            ax.cla()
             #CS = contour(X, Y, Z)
             ax.contour(self.X, self.Y, Z)
             #clabel(CS, inline=1, fontsize=10)
-            ax.set_title(u'Propagación')
+
 
         #print u'Segunda gráfica cargada.'
 
@@ -240,10 +243,18 @@ class figura():
         X = self.X
         Y = self.Y
         u = self.matx[t]
-        v = self.maty[t]*-1
-        q = ax.quiver(X, Y, u, v, color=['r'])
-        #p2 = ax.quiverkey(q,1,16.5,50,"50 m/s",coordinates='data',color='r')
         ax.set_title('Velocidad')
+        
+        ##Esta consulta es para que no salten los warnings porque los vectores son 000
+        divi=np.zeros((len(self.Y),len(self.X)), float)
+        if not p.all(np.equal(u,divi)):       
+            
+            v = self.maty[t]*-1
+            q = ax.quiver(X, Y, u, v, color=['r'])
+
+        #print "X ",X," Y ",Y, " u ",u," v ",v        
+        #p2 = ax.quiverkey(q,1,16.5,50,"50 m/s",coordinates='data',color='r')
+        
         #print u'Cuarta gráfica cargada.'
         #xl = ax.xlabel("x (km)")
         #yl = ax.ylabel("y (km)")

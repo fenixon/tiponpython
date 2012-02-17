@@ -25,6 +25,7 @@ class Hantush(metodoSolucion.metodoNumerico):
         #print 'Se creo el loco hantush'
         ##Hasntush que no acepta barrera        
         self.aceptaBarrera=False       
+        self.optimizaciones=['CaliHantush']
 
     def calcularpozo(self,r,t,Q):
 

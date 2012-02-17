@@ -147,11 +147,18 @@ class Proyecto(object):
         for x in self.dominio.listaPozo:
             if x.id == idElemento:
                 self.dominio.listaPozo.remove(x)
-    def optimizacioneslistar(self):
+    """def optimizacioneslistar(self):
         self.optimizaciones = QtCore.QStringList()
         
-        self.optimizaciones << "CaliTheis2" << "calibracion2" << "CaliHantush"
-         
+        self.optimizaciones << "CaliTheis2" << "calibracion2" << "CaliHantush"""
+    def optimizacioneslistar(self):
+        
+        self.optimizaciones = QtCore.QStringList()
+        #print metodo.getoptimizaciones()
+        print "optimizaciones:" + str(self.metodo.getoptimizaciones())
+        #self.optimizaciones << "CaliTheis2" << "calibracion2" << "CaliHantush"
+        for optimizacion in self.metodo.getoptimizaciones():
+            self.optimizaciones << str(optimizacion)
         return self.optimizaciones
     def optimizacioneslistarmenos(self,nolistar):
         self.opt = QtCore.QStringList()

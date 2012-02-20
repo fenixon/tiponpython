@@ -6,7 +6,6 @@ from PyQt4.QtGui import * #Para la interfáz gráfica
 from PyQt4.QtCore import * #Para la interfáz gráfica
 from PyQt4 import QtCore
 from matplotlib.backends.backend_qt4agg import FigureCanvasQTAgg as FigureCanvas #Clase para dibujar las gráficas
-from matplotlib.backends.backend_qt4agg import NavigationToolbar2QTAgg as NavigationToolbar #Clase para dibujar la barra de herramientas de navegación
 import threading
 from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d.axes3d import Axes3D
@@ -33,12 +32,14 @@ class dibujante(QMainWindow):
         msgLabel = QLabel(QString(u'Calculando gráficas, espere un momento...'))
         hbox1.addWidget(msgLabel)
         self.dia.setLayout(hbox1)
+        self.dia.setWindowTitle(QString(u'Gráficas...'))
+        self.dia.setModal(True)
         self.dia.show()
 ##        ti=0.0
 ##        tf=3.0
 ##        tf=0.3
 
-        ##justito para que quede 0.1 el dt        
+        ##justito para que quede 0.1 el dt
 ##        nit=int(tf/0.1)
 ##        nit=100
 ##        nit=10
@@ -53,26 +54,21 @@ class dibujante(QMainWindow):
         dt=(tf-ti)/nit
         nit=nit+1
         tiempos=np.zeros((nit),float)
-        tiempos[0]=ti        
+        tiempos[0]=ti
 
-        ##se suma 1 para que sea haga bien la division es un intervalo mas 0..100 (101)        
+        ##se suma 1 para que sea haga bien la division es un intervalo mas 0..100 (101)
         nix=nix+1
         niy=niy+1
 
         #discretizacion temporal
         for i in range(1,nit):
-            tiempos[i]=tiempos[i-1]+dt        
+            tiempos[i]=tiempos[i-1]+dt
 
         ##discretizacion espacial
-        xx = np.linspace(0,dominio.ancho,nix) ;
-        yy = np.linspace(dominio.alto,0,niy) ;
+        xx = np.linspace(0,dominio.ancho,nix)
+        yy = np.linspace(dominio.alto,0,niy)
         ##Se generan las matrices para usar en todas las graficas
         X, Y = np.meshgrid(xx, yy)
-
-##        print 'Matrices X, Y'
-##        print X
-##        print Y
-##        print '\n'
 
         self.ti=ti
         self.tf=tf
@@ -80,7 +76,7 @@ class dibujante(QMainWindow):
         self.nix=nix
         self.niy=niy
         self.tfo=tfo
-        self.cardt=0           
+        self.cardt=0
 
         ##LLAMADO AL METODO DE SOLUCION
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
@@ -98,10 +94,10 @@ class dibujante(QMainWindow):
         print u'Termina'
 
         #pozoBombeo=dominio.obtenerPozoBombeo()
-        ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
-        #bombeos=pozoBombeo.ensayos[0].devolverB()           
+        ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????
+        #bombeos=pozoBombeo.ensayos[0].devolverB()
         #self.bombeos=bombeos
-        
+
         self.setAttribute(QtCore.Qt.WA_DeleteOnClose)
 
 #### Codigo nuevo introducido para prueba
@@ -118,7 +114,7 @@ class dibujante(QMainWindow):
         #axt = Axes3D(fig2)        
 ##        superficies=np.zeros((len(tiempos)),Poly3DCollection)
         superficies=[]
-        #for i in range(0,nit):            
+        #for i in range(0,nit):
         #    Z = matrix[i]
         #    axt2.cla()
 ##        print 'Matriz generada '
@@ -134,19 +130,11 @@ class dibujante(QMainWindow):
 
         self.fm = fm(matrix, matx, maty, dominio, X,Y, xx, yy, tiempos, superficies, ming, maxg)
 
-        #self.fm.plotU()
-        ##1ero plotT dps plotD        
-        #self.fm.plotT(0)
-        #self.fm.plotD(0)
-        #self.fm.plotC(0)
         self.sel = 0
         self.grafSel(0)
         self.main_frame = QWidget()
         self.setWindowTitle(u'Gráficas')
-#        self.setMaximumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
-#        self.setMinimumSize(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi(), self.fm.fig.get_figheight() * self.fm.fig.get_dpi() + 43)
         self.setMinimumSize(276, 568)
-##        print 'Figure: width: ' + str(self.fm.fig.get_figwidth() * self.fm.fig.get_dpi()) + ', height: ' +str(self.fm.fig.get_figheight() * self.fm.fig.get_dpi()) + ', dpi: ' + str(self.fm.fig.get_dpi())
         self.center()
         self.canvas = FigureCanvas(self.fm.fig)
         self.canvas.setParent(self.main_frame)
@@ -201,14 +189,6 @@ class dibujante(QMainWindow):
         estadob.setMinimumSize(324, 32)
         estadob.setToolTip(u'Próximamente: mostrará el avance de la animación.')
 
-        ##cambie el tmp
-        ####se grafica lo que hay en el primer tiempo
-        #tmp = self.fm.matrix[0]
-        #Habia un tmp -1
-        #estadob.setMaximum(tmp[-1])
-        #estadob.setMaximum(20)
-        ##El maximo tiempo va a ser lo que hay en el ultimo tiempo de bombeo
-        ##estadob.setMaximum(self.bombeos[-1].tiempo*10)
         #Cambio por la discretizacion espacial
         estadob.setMaximum(int(tf/dt))
         estadob.setMinimum(0)
@@ -218,10 +198,8 @@ class dibujante(QMainWindow):
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderMoved()')), self.actualizarSlider)
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('valueChanged(int)')), self.actualizarSlider)
 
-        #timlab = QLabel(QString('0/' + str(self.bombeos[-1].tiempo)))
         #el tiempo final elejido por el usuario
         timlab = QLabel(QString('0/' + str(tf)))
-        #timlab=QLabel(QString('pepe'))
         self.timlab = timlab
 
         vbox = QVBoxLayout()
@@ -245,35 +223,21 @@ class dibujante(QMainWindow):
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reproducirBucle)
         self.dia.close()
         self.dia = None
-        print u'...Dibujante listo!!'
 
     def draw(self):
         self.canvas.draw()
-        #self.fm.axt.mouse_init()
 
     def actualizarSlider(self):
-        ran=0
-##        ran = random.randint(1, 10)
+
         ##se recupera el tiempo que viene multiplicado
-        #t=float(self.estadob.value()/10)
         t=float(self.estadob.value() * self.dt)
-##        print 'tiempo: '+ str(t)
-        #auxt=[i for i,x in enumerate(self.bombeos) if x.tiempo == t]
-        #print 'indices: '+str(auxt)
-        #if len(auxt)>0 :
-        #    cardt=auxt[0]
+
         ##AHORA SE CALCULO PARA TODOS LOS TIEMPOS DE LA DISCRETIZACION TEMPORAL
-        #self.fm.plotD(self.cardt)
-        #self.fm.plotT(self.cardt)
-        #self.fm.plotC(self.cardt)
         self.grafSel(self.cardt)
         self.draw()
-        #else:
-        #    print 'no hay valores para t: '+str(t)
 
         self.estadob.setToolTip(str(t) + '/' + str(self.estadob.maximum()*self.dt))
         self.timlab.setText(self.estadob.toolTip())
-##        print u'Posición: segundo ' + str(t)
 
     def reproducir(self):
 
@@ -287,7 +251,6 @@ class dibujante(QMainWindow):
 
             self.timer.start()
             self.reproducirb.setIcon(QIcon('content/images/pausar.png'))
-##            print u'Próximamente: reproducción de las gráficas.'
 
     def reproducirBucle(self):
 

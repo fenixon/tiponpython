@@ -256,6 +256,17 @@ class optimizacion(QtGui.QWidget):
         self.ventana.show()
 
     def procesar(self):
+
+        self.dia = QtGui.QDialog()
+        hbox1 = QtGui.QHBoxLayout()
+        self.dia.setGeometry(QtCore.QRect(500, 50, 200, 50))
+        msgLabel = QtGui.QLabel(QtCore.QString(u'Generando gráficas, espere un momento...'))
+        hbox1.addWidget(msgLabel)
+        self.dia.setLayout(hbox1)
+        self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
+        self.dia.setModal(True)
+        self.dia.show()
+        
         print "Proceso Calitheis2"
         opt.setcontrolador(controlador)
         opt.setpozos(controlador.listarPozosObsParaOptimizar()[m])
@@ -267,7 +278,11 @@ class optimizacion(QtGui.QWidget):
         print "------------------------------------------------"
         print "fin"
 
+        
+
         reply = QtGui.QMessageBox.information(self,u"Información",u"El proceso de optimización a concluido")
+        
+        self.dia.close()
         self.padre.close()        
 
 if __name__ == "__main__":

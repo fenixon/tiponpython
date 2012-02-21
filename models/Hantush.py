@@ -13,15 +13,18 @@ import scipy
 
 #from scipy.special import j0
 
-class Hantush(metodoSolucion.metodoNumerico):
+class Hantush(metodoSolucion.metodoAnalitico):
 
-    def __init__(self, dominio, parametros, asociar=None): 
+    def __init__(self, dominio, parametros, asociar=None):
+
+        print 'Instanciar Hantusheen '
+        
         ##Lista de cardinales de los parametros que utiliza el metodo
         ##Parametros 0: S, parametro 1:T, parametro 2:c
         self.paramcard=[0,1,2]
         #### Llamar al constructor del metodo de solucion
         ## probar llamar al metodo padre        
-        metodoSolucion.metodoNumerico.__init__(self,dominio,parametros, asociar)
+        metodoSolucion.metodoAnalitico.__init__(self,dominio,parametros, asociar)
         #print 'Se creo el loco hantush'
         ##Hasntush que no acepta barrera        
         self.aceptaBarrera=False       

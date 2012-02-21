@@ -24,17 +24,10 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, dominio=None, nix=None, niy=None, ti=None, tf=None, nit=None, tfo=None):
+    def __init__(self, parent = None, dominio=None, nix=None, niy=None, ti=None, tf=None, nit=None, tfo=None, dia=None):
 
         QMainWindow.__init__(self, parent)
-        self.dia = QDialog()
-        hbox1 = QHBoxLayout()
-        msgLabel = QLabel(QString(u'Calculando gráficas, espere un momento...'))
-        hbox1.addWidget(msgLabel)
-        self.dia.setLayout(hbox1)
-        self.dia.setWindowTitle(QString(u'Gráficas...'))
-        self.dia.setModal(True)
-        self.dia.show()
+        self.dia=dia
 ##        ti=0.0
 ##        tf=3.0
 ##        tf=0.3
@@ -150,10 +143,10 @@ class dibujante(QMainWindow):
         separador.setLineWidth(576)
 
         selectc = QComboBox()
-        selectc.addItem(QIcon(u'content/images/plot.png'), QString(u'Líneal'), 0)
-        selectc.addItem(QIcon(u'content/images/contour.png'), QString(u'Contorno'), 1)
+        selectc.addItem(QIcon(u'content/images/plot.png'), QString(u'Lineal'), 0)
+        selectc.addItem(QIcon(u'content/images/contour.png'), QString(u'Propagación'), 1)
         selectc.addItem(QIcon(u'content/images/contour.png'), QString(u'3D'), 2)
-        selectc.addItem(QIcon(u'content/images/quiver.png'), QString(u'Vectores'), 3)
+        selectc.addItem(QIcon(u'content/images/quiver.png'), QString(u'Velocidad'), 3)
         self.selectc = selectc
         QtCore.QObject.connect(self.selectc, QtCore.SIGNAL(_fromUtf8('currentIndexChanged (int)')), self.grafSele)
 

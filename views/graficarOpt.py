@@ -66,7 +66,7 @@ class graficarOpt(object):
         lista = self.dominio.optimizacioneshechas
 
         for i in lista:
-            print "item cargado ",i
+            #print "item cargado ",i
 
             #self.pozo.addItem(QtCore.QString(str(lista[i].pozo.id)), lista[i].pozo.id)
             self.pozo.addItem(i, i)
@@ -78,7 +78,7 @@ class graficarOpt(object):
         #pozoActual = self.dominio.listaPozoOptimiza[self.pozo.itemData(self.pozo.currentIndex()).toPyObject()]
         pozoActual = self.dominio.optimizacioneshechas[self.pozo.itemData(self.pozo.currentIndex()).toPyObject().__str__()]
 
-        print "item ",pozoActual
+        #print "item ",pozoActual
         self.dib = None
 
         if self.dib != None:
@@ -95,6 +95,8 @@ class graficarOpt(object):
             N_int_T = int(pozoActual.listaParametros[4].valoresParametro.valor)
             N_int_S = int(pozoActual.listaParametros[5].valoresParametro.valor)
 
+            #print " T ", pozoActual.T, " S ", pozoActual.S
+
             x = np.linspace(tMin, tMax, N_int_T)
             y = np.linspace(sMin, sMax, N_int_S)
             z = pozoActual.obj
@@ -107,7 +109,7 @@ class graficarOpt(object):
 
         pozoActual = self.dominio.optimizacioneshechas[self.pozo.itemData(self.pozo.currentIndex()).toPyObject().__str__()]
 
-        print "item ",pozoActual
+        #print "item ",pozoActual
         self.dib = None
 
         if self.dib != None:
@@ -132,7 +134,7 @@ class graficarOpt(object):
                 tiempos[i]=tiempos[i-1]+dt
 
             t = tiempos
-            print 'tiempos '+ str(t)
+            #print 'tiempos '+ str(t)
             z=None
             xx=[]
             yy=[]

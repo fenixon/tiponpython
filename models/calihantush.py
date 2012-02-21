@@ -43,14 +43,16 @@ class CaliHantush(metodooptimizacion.metodooptimizacion):
 		self.controlador=controlador
 
 	def calcular(self):
-		Q=self.Q
-		tpozo=self.tpozo
-		obs=self.obs
+		#Q=self.Q
+		#3tpozo=self.tpozo
+		#obs=self.obs
 		#print obs
-		t_obs=self.t_obs
-		r_obs=self.r_obs
-		Tmin=int(self.listaParametros[0].valoresParametro.valor)
-		Tmax=int(self.listaParametros[1].valoresParametro.valor)
+                self.d=self.controlador.obtenerDominio()
+		
+		#t_obs=self.t_obs
+		#r_obs=self.r_obs
+		Tmin=float(self.listaParametros[0].valoresParametro.valor)
+		Tmax=float(self.listaParametros[1].valoresParametro.valor)
 		Smin=float(self.listaParametros[2].valoresParametro.valor)
 		Smax=float(self.listaParametros[3].valoresParametro.valor)
 		T_Nint=int(self.listaParametros[4].valoresParametro.valor)
@@ -63,20 +65,25 @@ class CaliHantush(metodooptimizacion.metodooptimizacion):
 		Test_S=numpy.linspace(Smin,Smax,S_Nint)
 		Test_c=numpy.linspace(goteo_min,goteo_max,c_Nint)
 
-		[T_T, T_S] = meshgrid(Test_T, Test_S)
-		[T_T, T_c] = meshgrid(Test_T, Test_c)
+		#[T_T, T_S] = meshgrid(Test_T, Test_S)
+		#[T_T, T_c] = meshgrid(Test_T, Test_c)
 
-		obj=numpy.zeros(N_int_T,N_int_S,N_int_C)
+		obj=numpy.zeros((T_Nint,S_Nint,c_Nint),float)
 		minobj=999999999999999
-		iToptimo=0
-		iSoptimo=0
-		n=Hantush(self.d, self.controlador.parametros)
-		for n_T in range(1,T_Nint):
-			acui.T=Test_T(n_T)
-			for n_S in range(1,S_Nint):
-				acui.S=Test_S(n_S)
-				for n_c in range(1,c_Nint):
-					acui.c=Test_c(n_c)
+		iToptimo=0.0
+		iSoptimo=0.0
+		icoptimo=0.0
+		metodo=None
+		n=Hantush(self.d, self.controlador.parametros, None)
+		for n_T in range(T_Nint):
+			#acui.T=Test_T(n_T)
+			for n_S in range(S_Nint):
+				#acui.S=Test_S(n_S)
+				for n_c in range(c_Nint):
+					#acui.c=Test_c(n_c)
+					n.setearValores([Test_T[n_T], Test_S[n_S], Test_c[n_c]])
+
+					#print "paraemtros ", Test_T[n_T], Test_S[n_S], Test_c[n_c]
 					#Itero por todos los pozos de observacion
 					for p in self.pozosobs:
 						#Itero por las observaciones de un pozo
@@ -84,16 +91,30 @@ class CaliHantush(metodooptimizacion.metodooptimizacion):
 							t=obs.tiempo
 							descenso= n.funcionObjetivo2(p,t)
 							obj[n_S,n_T,n_c]= obj[n_S,n_T,n_c] + numpy.power((obs.nivelpiezometrico - (self.d.calcularH0( p.x, p.y ) - descenso) ),2)
-							if (obj(n_S,n_T,n_c)< minobj):
-								minobj=obj(n_S,n_T,n_c)
-								iToptimo=n_T
-								iSoptimo=n_S
-								icoptimo=n_c
-							obj[n_S,n_T,n_c]=np.log(obj[n_S,n_T,n_c])
-		acui.T=Test_T(iToptimo)
-		acui.S=Test_S(iSoptimo)
-		acui.c=Test_c(icoptimo)
-		return [acui.T,acui.S,acui.c,obj]
+
+
+                                                        #if n_T==0 and n_S==0 and n_c==0:
+                                                                #print "obj[1,1,1] :",obj[n_S,n_T,n_c],"tiempo :",obs.tiempo,"h :",obs.nivelpiezometrico,"descenso :",descenso
+				#Luego del for de goteo va la comparacion			
+                                if (obj[n_S,n_T,n_c]< minobj):
+                                        minobj=obj[n_S,n_T,n_c]
+                                        iToptimo=n_T
+                                        iSoptimo=n_S
+                                        icoptimo=n_c
+                                obj[n_S,n_T,n_c]=np.log(obj[n_S,n_T,n_c])
+		#acui.T=Test_T(iToptimo)
+		#acui.S=Test_S(iSoptimo)
+		#acui.c=Test_c(icoptimo)
+                self.T=Test_T[iToptimo]
+                self.S=Test_S[iSoptimo]
+                self.c=Test_c[icoptimo]
+                self.obj=obj[:,:,icoptimo]
+                
+                self.metodo=Hantush(self.d, self.controlador.parametros, None)
+                self.metodo.setearValores([self.T,self.S,self.c])              
+                self.d.optimizacioneshechas[self.__str__()]=self
+                return [self.T,self.S,"",self.obj]
+		#return [acui.T,acui.S,acui.c,obj]
 
 
 if __name__ == "__main__":

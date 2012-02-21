@@ -358,10 +358,21 @@ class Ui_MainWindow(QtGui.QDialog):
                         ui= discretizaciones.ventanaDiscretizaciones()
                         ui.setupUi(frmDiscretizaciones, ContEnsayo)
                         frmDiscretizaciones.exec_()
-##                            QtCore.QObject.connect(frmDiscretizaciones, QtCore.SIGNAL(_fromUtf8("closed()")), self.graficar)
+
+
+                        self.dia = QtGui.QDialog()
+                        hbox1 = QtGui.QHBoxLayout()
+                        self.dia.setGeometry(QtCore.QRect(500, 50, 200, 50))
+                        msgLabel = QtGui.QLabel(QtCore.QString(u'Generando gráficas, espere un momento...'))
+                        hbox1.addWidget(msgLabel)
+                        self.dia.setLayout(hbox1)
+                        self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
+                        self.dia.setModal(True)
+                        self.dia.show()
+                        
                         print 'Formulario de discretizaciones se cerro ' 
                         nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo)#Hay que pasarle la ventana principal
+                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo, self.dia)#Hay que pasarle la ventana principal
                         self.dibujante.show()
                         QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
                         print 'Dibujante invocado'                            
@@ -422,7 +433,7 @@ class Ui_MainWindow(QtGui.QDialog):
                             frm.show()
                             #frm.exec_()
                             QtCore.QObject.connect(self.grop, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarGrop)
-                            
+                            #
                             print 'Dibujante invocado'
 
                         else:
@@ -717,10 +728,14 @@ class Ui_MainWindow(QtGui.QDialog):
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-##        m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros)
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)                
-##        m.setearValores([1000,0.0001,676.7])
-        m.setearValores([700,1.1e-4])
+        m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros, True) 
+        #m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)                
+        m.setearValores([1000,1.e-4,676.7])
+        #m.setearValores([700,1.1e-4])
+
+        #print "c ",ContEnsayo.metodo.dominio.c
+        ContEnsayo.metodo=m        
+        
         #Adherimos la vista del dominio
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
@@ -752,14 +767,17 @@ class Ui_MainWindow(QtGui.QDialog):
 
 
         self.ventanaImpoObs(noexec, True)
-        self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"        
+        #self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"
+        self.vimp.archivo="ficheros/obsHantush.ods"        
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
             
         self.ventanaImportarProyecto(noexec, True)
-        self.importar.archivo="ficheros/bombeos.txt"
+        #self.importar.archivo="ficheros/bombeos.txt"
+        self.importar.archivo="ficheros/haintush.txt"
+        
         self.importar.nombre.setText('ens1')
         self.importar.ext="txt"
         self.importar.accionaceptar()

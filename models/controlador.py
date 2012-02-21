@@ -111,10 +111,10 @@ class Proyecto(object):
     def verificarFormato(self,lista, t):
         control=True
         i=0
-        print "control "
+        #print "control "
         while( i<len(lista) and control  ):
             control=t>lista[i].tiempo
-            print "tiempo "+str(t)+" tiempo vector "+str(lista[i].tiempo) + " control "+str(control)
+            #print "tiempo "+str(t)+" tiempo vector "+str(lista[i].tiempo) + " control "+str(control)
             i=i+1
         return control
 

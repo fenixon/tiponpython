@@ -83,8 +83,8 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		#n=Theis(self.d, self.controlador.parametros, None)
 		#T=self.controlador.obtenerDominio().metodo.listaParametros[0].valoresParametro.valor
 		#S=self.controlador.obtenerDominio().metodo.listaParametros[1].valoresParametro.valor
-		T=0
-		S=0
+		T=0.0
+		S=0.0
                 metodo=None
 
                 #con los refinamientos queda re pesada
@@ -103,12 +103,12 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
                 for a in range(1,N_int_S +1):
                         S_vec[a-1]=Sinf + (a-1)*auxS
                 
-                f_min=1.797693e+308 
+                f_min=1.797693e+308
+                n=Theis(self.d, self.controlador.parametros, None)
                 for i in range(N_int_T):
                         for j in range (N_int_S):
                                 f=0.0
-                                ##Para hacerlo mas prolijo
-                                n=Theis(self.d, self.controlador.parametros, None)
+                                ##Para hacerlo mas prolijo                                
                                 n.setearValores([T_vec[i],S_vec[j]])                                
                                 #Itero por todos los pozos de observacion
                                 for p in self.pozosobs:
@@ -178,8 +178,8 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 
                 
 
-                print "T dominio ", self.controlador.obtenerDominio().metodo.listaParametros[0].valoresParametro.valor
-		print "S dominio ",self.controlador.obtenerDominio().metodo.listaParametros[1].valoresParametro.valor
+                #print "T dominio ", self.controlador.obtenerDominio().metodo.listaParametros[0].valoresParametro.valor
+		#print "S dominio ",self.controlador.obtenerDominio().metodo.listaParametros[1].valoresParametro.valor
 
                 self.domActual.optimizacioneshechas[self.__str__()]=self
                 

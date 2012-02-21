@@ -3,6 +3,7 @@ from matplotlib.figure import Figure
 from mpl_toolkits.mplot3d.axes3d import Axes3D
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib import cm
 import pylab as p
 import mpl_toolkits.mplot3d.axes3d as p3
 
@@ -29,24 +30,24 @@ fig=p.figure()
 #fig = plt.figure()
 
 ax = p3.Axes3D(fig)
-h0[1,1]=1
+#h0[1,1]=1
 
-ax.set_zorder(5)
-
-
-
-ax.view_init(20,-140)
+#ax.set_zorder(5)
+#ax.view_init(20,-140)
 
 #ax.plot_surface(x,y,z)
-#surf = ax.plot_surface(X, Y, h0)
+surf = ax.plot_wireframe(X, Y, h0, cmap=cm.jet)
+#surf = ax.plot_surface(X, Y, h0 , cmap=cm.jet)
 
-plt.pcolormesh(X, Y, h0)
+#ax.pcolor(X, Y, h0)
 
-ax.set_xlabel('X')
-ax.set_ylabel('Y')
-ax.set_zlabel('Z')
+#plt.pcolormesh(X, Y, h0)
 
-p.show()
+#ax.set_xlabel('X')
+#ax.set_ylabel('Y')
+#ax.set_zlabel('Z')
+
+plt.show()
 
 
 

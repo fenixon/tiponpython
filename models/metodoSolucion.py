@@ -19,13 +19,13 @@ class metodoSolucion(object):
         #Lista que contendra las optimizaciones para un metodo especifico
         #self.optimizaciones=[]
 
+        #print 'MEtodo de solucion '
         #print 'SE INSTANCIO ',self.asociar
-
         
         ## Asociar el metodo al dominio
         if self.asociar!=None and self.asociar==True :
             self.dominio.metodo=self
-            print "setio el metodo al dominio "
+            #print "setio el metodo al dominio "
         self.listaParametros=[]
         for i in self.paramcard:
             self.listaParametros.append(parametros(parametrosC[i].nombre,parametrosC[i].unidad,parametrosC[i].valoresParametro))            
@@ -49,7 +49,7 @@ class metodoSolucion(object):
             ## Tambien se asocia el valor al dominio poara que este lo guarde para futuros metodos de solucion
             if self.asociar!=None and self.asociar==True :
                 self.dominio.valores.append(v)
-                print "valor seteado para  ",self.listaParametros[i].nombre," es: ",v.valor
+                #print "valor seteado para  ",self.listaParametros[i].nombre," es: ",v.valor
 
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
     def calcular(self,tiempos,xx,yy):
@@ -304,8 +304,8 @@ class metodoSolucion(object):
 
     ##Metodo que se llama luego de la Optimizacion, para graficar los pozos de observacions con S y T optimos
     def funcionObjetivo(self,pozoObservacion):
-        Topt=self.listaParametros[0].valoresParametro.valor
-        Sopt=self.listaParametros[1].valoresParametro.valor
+        #Topt=self.listaParametros[0].valoresParametro.valor
+        #Sopt=self.listaParametros[1].valoresParametro.valor
 
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
         if self.aceptaBarrera==True :
@@ -347,7 +347,8 @@ class metodoSolucion(object):
                         #print 'r '+str(r)+'t '+str(tmandado)+'Q '+str(Q)
                         told=tmandado
                         try:
-                            s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
+                            #s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
+                            s,dsdT,dsdS=self.calcularpozo(r, tmandado, Q)
                         except:
                             print 'Error - r: ' + str(r) +'t: '+str(tmandado) + 'Q: ' + str(Q) + 'x: '+str(x) + 'y: '+str(y)
                             print 't mandado: '+str(told) + 't pozo: '+str(tpozo)
@@ -368,8 +369,8 @@ class metodoSolucion(object):
     def funcionObjetivo2(self,p,t,mostrar=None):
         x=p.x
         y=p.y
-        Topt=self.listaParametros[0].valoresParametro.valor
-        Sopt=self.listaParametros[1].valoresParametro.valor        
+        #Topt=self.listaParametros[0].valoresParametro.valor
+        #Sopt=self.listaParametros[1].valoresParametro.valor        
         ##se recupera todos los pozos de bombeo que hay en el sistema + los virtuales
         if self.aceptaBarrera==True :
             Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()
@@ -404,7 +405,8 @@ class metodoSolucion(object):
                 if tmandado>0:
                     #Aca se llama al metodo Theis para ese punto, lo que nos da el descenso 's'
                     try:
-                        s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
+                        #s,dsdT,dsdS=self.calcularpozoGenerico(r, tmandado, Q, Topt, Sopt)
+                        s,dsdT,dsdS=self.calcularpozo(r, tmandado, Q)
                     except:
                         s=0.0
                 else:

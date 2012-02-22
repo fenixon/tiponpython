@@ -14,6 +14,7 @@ import metodoSolucion
 import parametros
 from Hantush import Hantush
 from theis import Theis
+from DiferenciaFinita import DiferenciaFinita
 import CondicionesExternas
 import numpy as np
 
@@ -252,7 +253,7 @@ class Ui_frmNuevoProyecto(object):
     def cambioTipo(self, tipo):
         self.cmbMetodo.clear()
         if tipo == 'Numerico':
-            metodos = []
+            metodos = ['DiferenciaFinita']
             self.btnCondicionesExternas.setEnabled(True)
         else:
             metodos = ['Theis', 'Hantush']

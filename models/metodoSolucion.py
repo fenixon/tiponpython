@@ -35,6 +35,9 @@ class metodoSolucion(object):
         #print "Se ha eliminado el Metodo de Solucion"
 	return
 
+    def gettipo(self):
+        return "solucion"
+
     def getoptimizaciones(self):
         return self.optimizaciones
 
@@ -50,6 +53,14 @@ class metodoSolucion(object):
             if self.asociar!=None and self.asociar==True :
                 self.dominio.valores.append(v)
                 #print "valor seteado para  ",self.listaParametros[i].nombre," es: ",v.valor
+  
+       
+class metodoAnalitico(metodoSolucion):
+    def __init__(self, dominio, parametros, asociar=None):
+        self.aceptaBarrera=False
+        metodoSolucion.__init__(self,dominio,parametros, asociar)
+    def gettipo(self):
+        return "analitico"
 
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
     def calcular(self,tiempos,xx,yy):
@@ -267,8 +278,6 @@ class metodoSolucion(object):
 ##                        print self.matrizDescenso[10,cardy,cardx]
                     cardy=cardy+1            
                 cardx=cardx+1
-
-
         
         
         ##ahora se soluciono lo del 0       
@@ -418,12 +427,12 @@ class metodoSolucion(object):
                     #print 'p(i).x :', x0,'p(i).y :', y0,' p(i).q :', Q
                     
         return descenso
+
+
     
-        
-class metodoAnalitico(metodoSolucion):
-    def __init__(self, dominio, parametros, asociar=None):
-        self.aceptaBarrera=False
-        metodoSolucion.__init__(self,dominio,parametros, asociar)
 
 class metodoNumerico(metodoSolucion):
-    pass
+    #pass
+    def gettipo(self):
+        return "numerico"  
+

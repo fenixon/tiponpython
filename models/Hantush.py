@@ -16,9 +16,7 @@ import scipy
 class Hantush(metodoSolucion.metodoAnalitico):
 
     def __init__(self, dominio, parametros, asociar=None):
-
-        print 'Instanciar Hantusheen '
-        
+       
         ##Lista de cardinales de los parametros que utiliza el metodo
         ##Parametros 0: S, parametro 1:T, parametro 2:c
         self.paramcard=[0,1,2]

@@ -64,20 +64,108 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
 
         #Para el elemento 1,1
         ##Aca jess donde tenes que tirar lineas a bocha!
+        A1=np.zeros((1,l),float)
+        A1[1]=-1/Ax[1]*(2*(T[1]*T[1+n]/(T[1]+T[1+n])))-1/Ay[1]*(2*(T[1]*T[2]/(T[1]+T[2])))
+        A1[1+1]=1/Ay[n-1]*(2*(T[1]*T[2]/(T[1]+T[2])))        
+        A1[1+n]=1/Ax[m-1]*(2*(T[1]*T[1+n]/(T[1]+T[1+n])))
+        A[1,1:l]=A1
 
+        #Para el elemento n,1
+        An=np.zeros((1,l),float)
+        An[n]=-1/Ax[1]*(2*(T[n]*T[n+n]/(T[n]+T[n+n])))-1/Ay[1]*(2*(T[n]*T[n-1]/(T[n]+T[n-1])))
+        An[n-1]=1/Ay[1]*(2*(T[n]*T[n-1]/(T[n]+T[n-1])))
+        An[n+n]=1/Ax[1]*(2*(T[n]*T[n+n]/(T[n]+T[n+n])))
+        A[n,1:l]=An
 
+        #Para los elementos comprendidos entre 1,2 y 1,m-1     
+        for k in range(m-2):
+            A[k*n+1,k*n+1]=-1/Ay[n-1]*(2*(T[k*n+1]*T[k*n+2]/(T[k*n+1]+T[k*n+2])))
+            A[k*n+1,k*n+2]=1/Ay[n-1]*(2*(T[k*n+1]*T[k*n+2]/(T[k*n+1]+T[k*n+2])))
 
+        #Para el elemento 1,m
+        Am=np.zeros((1,l),float)
+        Am[l-n+1]=-1/Ax[m-1]*(2*(T[l-2*n+1]*T[l-n+1]/(T[l-2*n+1]+T[l-n+1])))-1/Ay[n-1]*(2*(T[l-n+2]*T[l-n+1]/(T[l-n+2]+T[l-n+1])))
+        Am[l-2*n+1]=1/Ax[m-1]*(2*(T[l-2*n+1]*T[l-n+1]/(T[l-2*n+1]+T[l-n+1])))
+        Am[l-n+2]=1/Ay[n-1]*(2*(T[l-n+2]*T[l-n+1]/(T[l-n+2]+T[l-n+1])))
+        A[l-n+1,1:l]=Am
 
+        #Para los elementos comprendidos entre 2,m y n-1,m 
+        for k in range(1:n-2):
+            A[l-n+1+k,l-n+1+k]=-1/Ax[m-1]*(2*(T[l-n+1+k]*T[l-2*n+1+k]/(T[l-n+1+k]+T[l-2*n+1+k])))
+            A[l-n+1+k,l-2*n+1+k]=1/Ax[m-1]*(2*(T[l-n+1+k]*T[l-2*n+1+k]/(T[l-n+1+k]+T[l-2*n+1+k])))
 
+        #Para el elemento n,m
+        Anm=np.zeros((1,l),float)
+        Anm[l]=-1/Ax[m-1]*(2*(T[l]*T[l-n]/(T[l]+T[l-n])))-1/Ay[1]*(2*(T[l]*T[l-1]/(T[l]+T[l-1])))
+        Anm[l-1]=1/Ay[1]*(2*(T[l]*T[l-1]/(T[l]+T[l-1])))
+        Anm[l-n]=1/Ax[m-1]*(2*(T[l]*T[l-n]/(T[l]+T[l-n])))
+        A[l,1:l]=Anm
 
+        #Para los elementos comprendidos entre 2,1 y n-1,1 
+        for k in range(1:n-2):
+            A[k+1,k+1]=-1/Ax[1]*(2*(T[k+1]*T[k+n+1]/(T[k+1]+T[k+n+1])))
+            A[k+1,k+n+1]=1/Ax[1]*(2*(T[k+1]*T[k+n+1]/(T[k+1]+T[k+n+1])))
 
+        #Para los elementos comprendidos entre n,2 y n,m-1 
+        for k in range(1:m-2):
+            A[(1+k)*n,(1+k)*n]=-1/Ay[1]*(2*(T[(1+k)*n]*T[(1+k)*n-1])/(T[(1+k)*n]+T[(1+k)*n-1]))
+            A[(1+k)*n,(1+k)*n-1]=1/Ay[1]*(2*(T[(1+k)*n]*T[(1+k)*n-1])/(T[(1+k)*n]+T[(1+k)*n-1]))
 
+        #Para los elementos comprendidos entre 2,2 y n-1,m-1 
+        for i in range(m-2):
+            for j in range(n-2):
+                A[(i)*n+1+j,(i)*n+1+j]=-1/Ax[i]*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j-n]/(T[(i)*n+1+j]+T[(i)*n+1+j-n])))-(1/Ax[i+1])*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j+n]/(T[(i)*n+1+j]+T[(i)*n+1+j+n])))+(-1/Ay[n-j])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+j]/(T[(i)*n+1+j]+T[(i)*n+j])))-(1/Ay[n-j-1])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+2+j]/(T[(i)*n+1+j]+T[(i)*n+2+j])))
+                A[(i)*n+1+j,(i)*n+2+j]=(1/Ay[n-j-1])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+2+j]/(T[(i)*n+1+j]+T[(i)*n+2+j])))
+                A[(i)*n+1+j,(i)*n+j]=(1/Ay[n-j])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+j]/(T[(i)*n+1+j]+T[(i)*n+j])))
+                A[(i)*n+1+j,(i)*n+1+j-n]=(1/Ax[i])*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j-n]/(T[(i)*n+1+j]+T[(i)*n+1+j-n])))
+                A[(i)*n+1+j,(i)*n+1+j+n]=(1/Ax[i+1])*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j+n]/(T[(i)*n+1+j]+T[(i)*n+1+j+n])))
 
+        """S=np.identity(l,l)*acuiS
 
+        x1=np.zeros((l,l),float)
+        At=dt
+        h=np.ones(l,1)*10
+        for i in range(m-1):
+            h[1+n*i:n+n*i,1]=h0[1:n,i+1]
 
+        tetha=0.5
+        E=A*tetha-S/(At)
 
+        #Para los elementos conocidos
+        for k in range(1,l-n+1,n):  #arriba
+            E[k,1:l]=np.zeros(1,l)
+            E[k,k]=1
+            
+        for k in range(l-n+1,l):    #derecha
+            E[k,1:l]=np.zeros(1,l)
+            E[k,k]=1
 
+        for k in range((1,n),l,n):  #abajo
+            E[k,1:l]=np.zeros(1,l)
+            E[k,k]=1
 
+        for k in range(1,n):        #izq
+            E[k,1:l]=np.zeros(1,l)
+            E[k,k]=1
+            
+        B=numpy.power(E,-1)
+
+        for t1 in range(time):
+            b(1:l)=0
+            for i in range(Np):       
+                xp=xps[i]
+                yp=yps[i]
+                b2=self.generab(lx,ly,Ax,Ay,n,m,xp,yp,l,x,y)
+                Qt=Q[i]
+                b=b+b2*Qt
+            b1=(A*(tetha-1)-S/(At))*h+b        
+            b1(1:n:l-n+1)=h0(1,1:m)   #arriba
+            b1(l-n+1:l)=h0(1:n,m)     #derecha
+            b1(n:n:l)=h0(n,1:m)       #abajo
+            b1(1:n)=h0(1:n,1)         #izq
+
+            h=B*b1
+            x2[t1,1:l]=h"""
 
         ##Esto va a lo ultimo de todo y esta en otros scripts de Matlab
 

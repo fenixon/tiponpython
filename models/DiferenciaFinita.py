@@ -60,62 +60,63 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
         h0=np.zeros((niy,nix),float)
         for i in range(nix):
             for j in range(niy):                
-                h0[j,i]=self.dominio.devolverH0(i,j)
+                h0[j,i]=self.dominio.devolverH0(x[i],y[j])
 
         #Para el elemento 1,1
         ##Aca jess donde tenes que tirar lineas a bocha!
         A1=np.zeros((1,l),float)
-        A1[1]=-1/Ax[1]*(2*(T[1]*T[1+n]/(T[1]+T[1+n])))-1/Ay[1]*(2*(T[1]*T[2]/(T[1]+T[2])))
-        A1[1+1]=1/Ay[n-1]*(2*(T[1]*T[2]/(T[1]+T[2])))        
-        A1[1+n]=1/Ax[m-1]*(2*(T[1]*T[1+n]/(T[1]+T[1+n])))
-        A[1,1:l]=A1
+        A1[0]=-1/Ax[0]*(2*(T[0]*T[n]/(T[0]+T[n])))-1/Ay[0]*(2*(T[0]*T[1]/(T[0]+T[1])))
+        A1[1]=1/Ay[n-2]*(2*(T[0]*T[1]/(T[0]+T[1])))        
+        A1[n]=1/Ax[m-2]*(2*(T[0]*T[n]/(T[0]+T[n])))
+        A[0,0:l]=A1
 
         #Para el elemento n,1
         An=np.zeros((1,l),float)
-        An[n]=-1/Ax[1]*(2*(T[n]*T[n+n]/(T[n]+T[n+n])))-1/Ay[1]*(2*(T[n]*T[n-1]/(T[n]+T[n-1])))
-        An[n-1]=1/Ay[1]*(2*(T[n]*T[n-1]/(T[n]+T[n-1])))
-        An[n+n]=1/Ax[1]*(2*(T[n]*T[n+n]/(T[n]+T[n+n])))
-        A[n,1:l]=An
+        An[n-1]=-1/Ax[0]*(2*(T[n-1]*T[n+n-1]/(T[n-1]+T[n+n-1])))-1/Ay[0]*(2*(T[n-1]*T[n-2]/(T[n-1]+T[n-2])))
+        An[n-2]=1/Ay[0]*(2*(T[n-1]*T[n-2]/(T[n-1]+T[n-2])))
+        An[n+n-1]=1/Ax[0]*(2*(T[n-1]*T[n+n-1]/(T[n-1]+T[n+n-1])))
+        A[n-1,0:l]=An
 
         #Para los elementos comprendidos entre 1,2 y 1,m-1     
-        for k in range(m-2):
-            A[k*n+1,k*n+1]=-1/Ay[n-1]*(2*(T[k*n+1]*T[k*n+2]/(T[k*n+1]+T[k*n+2])))
-            A[k*n+1,k*n+2]=1/Ay[n-1]*(2*(T[k*n+1]*T[k*n+2]/(T[k*n+1]+T[k*n+2])))
+        for k in range(1,m-1):
+            A[k*n,k*n]=-1/Ay[n-2]*(2*(T[k*n]*T[k*n+1]/(T[k*n]+T[k*n+1])))
+            A[k*n,k*n+1]=1/Ay[n-2]*(2*(T[k*n]*T[k*n+1]/(T[k*n]+T[k*n+1])))
 
         #Para el elemento 1,m
         Am=np.zeros((1,l),float)
-        Am[l-n+1]=-1/Ax[m-1]*(2*(T[l-2*n+1]*T[l-n+1]/(T[l-2*n+1]+T[l-n+1])))-1/Ay[n-1]*(2*(T[l-n+2]*T[l-n+1]/(T[l-n+2]+T[l-n+1])))
-        Am[l-2*n+1]=1/Ax[m-1]*(2*(T[l-2*n+1]*T[l-n+1]/(T[l-2*n+1]+T[l-n+1])))
-        Am[l-n+2]=1/Ay[n-1]*(2*(T[l-n+2]*T[l-n+1]/(T[l-n+2]+T[l-n+1])))
-        A[l-n+1,1:l]=Am
+        Am[l-n]=-1/Ax[m-2]*(2*(T[l-2*n]*T[l-n]/(T[l-2*n]+T[l-n])))-1/Ay[n-2]*(2*(T[l-n+1]*T[l-n]/(T[l-n+1]+T[l-n])))
+        Am[l-2*n]=1/Ax[m-2]*(2*(T[l-2*n]*T[l-n]/(T[l-2*n]+T[l-n])))
+        Am[l-n+1]=1/Ay[n-2]*(2*(T[l-n+1]*T[l-n]/(T[l-n+1]+T[l-n])))
+        A[l-n,0:l]=Am
 
         #Para los elementos comprendidos entre 2,m y n-1,m 
-        for k in range(1:n-2):
-            A[l-n+1+k,l-n+1+k]=-1/Ax[m-1]*(2*(T[l-n+1+k]*T[l-2*n+1+k]/(T[l-n+1+k]+T[l-2*n+1+k])))
-            A[l-n+1+k,l-2*n+1+k]=1/Ax[m-1]*(2*(T[l-n+1+k]*T[l-2*n+1+k]/(T[l-n+1+k]+T[l-2*n+1+k])))
+        for k in range(n-2):
+            A[l-n+1+k,l-n+1+k]=-1/Ax[m-2]*(2*(T[l-n+1+k]*T[l-2*n+1+k]/(T[l-n+1+k]+T[l-2*n+1+k])))
+            A[l-n+1+k,l-2*n+1+k]=1/Ax[m-2]*(2*(T[l-n+1+k]*T[l-2*n+1+k]/(T[l-n+1+k]+T[l-2*n+1+k])))
 
         #Para el elemento n,m
         Anm=np.zeros((1,l),float)
-        Anm[l]=-1/Ax[m-1]*(2*(T[l]*T[l-n]/(T[l]+T[l-n])))-1/Ay[1]*(2*(T[l]*T[l-1]/(T[l]+T[l-1])))
-        Anm[l-1]=1/Ay[1]*(2*(T[l]*T[l-1]/(T[l]+T[l-1])))
-        Anm[l-n]=1/Ax[m-1]*(2*(T[l]*T[l-n]/(T[l]+T[l-n])))
-        A[l,1:l]=Anm
+        Anm[l-1]=-1/Ax[m-2]*(2*(T[l-1]*T[l-n-1]/(T[l-1]+T[l-n-1])))-1/Ay[0]*(2*(T[l-1]*T[l-2]/(T[l-1]+T[l-2])))
+        Anm[l-2]=1/Ay[0]*(2*(T[l-1]*T[l-2]/(T[l-1]+T[l-2])))
+        Anm[l-n-1]=1/Ax[m-2]*(2*(T[l-1]*T[l-n-1]/(T[l-1]+T[l-n-1])))
+        A[l-1,0:l]=Anm
 
         #Para los elementos comprendidos entre 2,1 y n-1,1 
-        for k in range(1:n-2):
-            A[k+1,k+1]=-1/Ax[1]*(2*(T[k+1]*T[k+n+1]/(T[k+1]+T[k+n+1])))
-            A[k+1,k+n+1]=1/Ax[1]*(2*(T[k+1]*T[k+n+1]/(T[k+1]+T[k+n+1])))
+        for k in range(n-2):
+            A[k+1,k+1]=-1/Ax[0]*(2*(T[k+1]*T[k+n+1]/(T[k+1]+T[k+n+1])))
+            A[k+1,k+n+1]=1/Ax[0]*(2*(T[k+1]*T[k+n+1]/(T[k+1]+T[k+n+1])))
 
         #Para los elementos comprendidos entre n,2 y n,m-1 
-        for k in range(1:m-2):
-            A[(1+k)*n,(1+k)*n]=-1/Ay[1]*(2*(T[(1+k)*n]*T[(1+k)*n-1])/(T[(1+k)*n]+T[(1+k)*n-1]))
-            A[(1+k)*n,(1+k)*n-1]=1/Ay[1]*(2*(T[(1+k)*n]*T[(1+k)*n-1])/(T[(1+k)*n]+T[(1+k)*n-1]))
+        for k in range(1,m-1):
+            A[(1+k)*n-1,(1+k)*n-1]=-1/Ay[0]*(2*(T[(1+k)*n-1]*T[(1+k)*n-2])/(T[(1+k)*n-1]+T[(1+k)*n-2]))
+            A[(1+k)*n-1,(1+k)*n-2]=1/Ay[0]*(2*(T[(1+k)*n-1]*T[(1+k)*n-2])/(T[(1+k)*n-1]+T[(1+k)*n-2]))
 
         #Para los elementos comprendidos entre 2,2 y n-1,m-1 
-        for i in range(m-2):
+        for i in range(1,m-1):
             for j in range(n-2):
-                A[(i)*n+1+j,(i)*n+1+j]=-1/Ax[i]*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j-n]/(T[(i)*n+1+j]+T[(i)*n+1+j-n])))-(1/Ax[i+1])*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j+n]/(T[(i)*n+1+j]+T[(i)*n+1+j+n])))+(-1/Ay[n-j])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+j]/(T[(i)*n+1+j]+T[(i)*n+j])))-(1/Ay[n-j-1])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+2+j]/(T[(i)*n+1+j]+T[(i)*n+2+j])))
-                A[(i)*n+1+j,(i)*n+2+j]=(1/Ay[n-j-1])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+2+j]/(T[(i)*n+1+j]+T[(i)*n+2+j])))
+                A[(i)*n+1+j,(i)*n+1+j]=-1/Ax[i-1]*2/(Ax[i-1]+Ax[i])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j-n]/(T[(i)*n+1+j]+T[(i)*n+1+j-n])))-(1/Ax[i])*2/(Ax[i-1]+Ax[i])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j+n]/(T[(i)*n+1+j]+T[(i)*n+1+j+n])))+(-1/Ay[n-j-2])*2/(Ay[n-j-2]+Ay[n-j-1-2])*(2*(T[(i)*n+1+j]*T[(i)*n+j]/(T[(i)*n+1+j]+T[(i)*n+j])))-(1/Ay[n-j-1-2])*2/(Ay[n-j-2]+Ay[n-j-1-2])*(2*(T[(i)*n+1+j]*T[(i)*n+2+j]/(T[(i)*n+1+j]+T[(i)*n+2+j])))
+                A[(i)*n+1+j,(i)*n+2+j]=(1/Ay[n-j-1-2])*2/(Ay[n-j-2]+Ay[n-j-1-2])*(2*(T[(i)*n+1+j]*T[(i)*n+2+j]/(T[(i)*n+1+j]+T[(i)*n+2+j])))
+                #hasta ak revision
                 A[(i)*n+1+j,(i)*n+j]=(1/Ay[n-j])*2/(Ay[n-j]+Ay[n-j-1])*(2*(T[(i)*n+1+j]*T[(i)*n+j]/(T[(i)*n+1+j]+T[(i)*n+j])))
                 A[(i)*n+1+j,(i)*n+1+j-n]=(1/Ax[i])*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j-n]/(T[(i)*n+1+j]+T[(i)*n+1+j-n])))
                 A[(i)*n+1+j,(i)*n+1+j+n]=(1/Ax[i+1])*2/(Ax[i]+Ax[i+1])*(2*(T[(i)*n+1+j]*T[(i)*n+1+j+n]/(T[(i)*n+1+j]+T[(i)*n+1+j+n])))
@@ -183,10 +184,10 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
                     pb[0,0]=x[j-1]
                     pb[0,1]=x[j]
                     break
-            for i in range(n)
+            for i in range(n):
                 if yo<y[i]:
                     pb[1,0]=y[i-1]
-                    pb(2,2)=y[i]
+                    pb[1,1]=y[i]
                     break
             io=i
             jo=j
@@ -215,7 +216,8 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
             for pozoObservacion in TodoslospozosObservacion:
                 hs1=x1[io+n*(jo-1)]
                 aa=io+n*(jo-1)
-                hs2=x1[io+n*(jo-1)-1)]
+                #hs2=x1(io+n*(jo-1)-1);
+                hs2=x1[io+n*(jo-1)-1]
                 aa=(io+n*(jo-1)-1)
                 hs3=x1[io+n*(jo-2)]
                 aa=io+n*(jo-2)

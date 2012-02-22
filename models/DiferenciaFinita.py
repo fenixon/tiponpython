@@ -23,7 +23,7 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
         self.aceptaBarrera=False       
         self.optimizaciones=['']
 
-    def calcular(self,ti, tf, nit, nix, niy, x, y):
+    def calcular(self,tiempos, ti, tf, nit, nix, niy, x, y):
         acuiT=float(self.listaParametros[0].valoresParametro.valor)
         acuiS=float(self.listaParametros[1].valoresParametro.valor)
         m=nix
@@ -63,7 +63,81 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
                 h0[j,i]=self.dominio.devolverH0(i,j)
 
         #Para el elemento 1,1
-        #return [s, dsdT, dsdS]
+        ##Aca jess donde tenes que tirar lineas a bocha!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        ##Esto va a lo ultimo de todo y esta en otros scripts de Matlab
+
+        ##Obtener todos los pozos de observacion
+        TodoslospozosObservacion=d.obtenerPozosdeObservacion()
+        ##Se instancias de una para todos los tiempos una lista de Observaciones solucionadas para cada pozo de observacion
+        for pozoObservacion in TodoslospozosObservacion:
+            pozoObservacion.instanciarSolucionadas(d.calcularH0(pozoObservacion.x, pozoObservacion.y), tiempos)
+
+            xo=pozoObservacion.x
+            yo=pozoObservacion.y
+            pb=np.zeros((2,2),float)
+            for j in range(m):
+                if xo<x[j]:
+                    pb[0,0]=x[j-1]
+                    pb[0,1]=x[j]
+                    break
+            for i in range(n)
+                if yo<y[i]:
+                    pb[1,0]=y[i-1]
+                    pb(2,2)=y[i]
+                    break
+            io=i
+            jo=j
+            
+        self.matrizDescenso=np.zeros((len(tiempos),n,m), float)
+        self.gyh=np.zeros((len(tiempos),n,m), float)
+        self.gxh=np.zeros((len(tiempos),n,m), float)       
+        
+        for i in range(len(tiempos)):
+            #de 0 a l-1 igual que matlab de 1 a l
+            x1=x2[i,0:l];
+            for k in range(n):
+                #hr(k+1,1:m)=x1(k+1:n:l-n+k+1);
+                #g(1:2:6) -> g[0:6:2]
+                self.matrizDescenso[i,k,0:m]=x1[k:l-n+k+1:n]                
+                #[gxh(:,:,i),gyh(:,:,i)] = gradient(-hr(:,:),Ax(1),Ay(1));
+                [self.gyh[i,:,:],self.gxh[i,:,:]] = np.gradient(-self.matrizDescenso[i,:,:],Ax[0],Ay[0])
+
+                for j in range(m):
+                    if self.matrizDescenso[i,k,j]>self.max:
+                        self.max=self.matrizDescenso[i,k,j]
+                    if self.matrizDescenso[i,k,j]<self.min:
+                        self.min=self.matrizDescenso[i,k,j]
+
+            #Calculo para todos los pozos de observacion
+            for pozoObservacion in TodoslospozosObservacion:
+                hs1=x1[io+n*(jo-1)]
+                aa=io+n*(jo-1)
+                hs2=x1[io+n*(jo-1)-1)]
+                aa=(io+n*(jo-1)-1)
+                hs3=x1[io+n*(jo-2)]
+                aa=io+n*(jo-2)
+                hs4=x1[io+n*(jo-2)-1]
+                aa=(io+n*(jo-2)-1)
+                #hsm(i,t)=(hs1+hs2+hs3+hs4)/4                
+                #Se actualizan solo las observaciones solucionadas
+                pozoObservacion.obssolucionadas[i]=(hs1+hs2+hs3+hs4)/4              
+
+        return self.matrizDescenso
 
     def generab(self,lx,ly,Ax,Ay,n,m,xp,yp,l,x,y):
 

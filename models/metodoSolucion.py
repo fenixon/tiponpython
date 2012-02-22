@@ -53,7 +53,18 @@ class metodoSolucion(object):
             if self.asociar!=None and self.asociar==True :
                 self.dominio.valores.append(v)
                 #print "valor seteado para  ",self.listaParametros[i].nombre," es: ",v.valor
-  
+
+    def gradienteX(self):
+        return self.gxh
+
+    def gradienteY(self):
+        return self.gyh
+
+    def minimoMatriz(self):
+        return self.min
+
+    def maximoMatriz(self):
+        return self.max    
        
 class metodoAnalitico(metodoSolucion):
     def __init__(self, dominio, parametros, asociar=None):
@@ -299,17 +310,6 @@ class metodoAnalitico(metodoSolucion):
         
         return self.matrizDescenso
 
-    def gradienteX(self):
-        return self.gxh
-
-    def gradienteY(self):
-        return self.gyh
-
-    def minimoMatriz(self):
-        return self.min
-
-    def maximoMatriz(self):
-        return self.max
 
     ##Metodo que se llama luego de la Optimizacion, para graficar los pozos de observacions con S y T optimos
     def funcionObjetivo(self,pozoObservacion):

@@ -12,7 +12,7 @@ import os #Provee al programa accesibilidad a funciones del sistema operativo, c
 
 class figura():
 
-    def __init__(self, matrix, matx, maty, dominio, X, Y, xx, yy, tiempos, superficies, ming, maxg, selected = None, parent = None):
+    def __init__(self, matrix, matx, maty, dominio, tipodis, X, Y, xx, yy, tiempos, superficies, ming, maxg, selected = None, parent = None):
 
         fig = Figure(figsize = (1.8 * 4, 2.4 * 4))
 
@@ -24,6 +24,7 @@ class figura():
         self.fig = fig
         self.matrix = matrix
         self.dominio=dominio
+        self.tipodis=tipodis
         self.X=X
         self.Y=Y
         self.matx = matx
@@ -157,7 +158,10 @@ class figura():
 
 ##        p.show()
 
-        surf = ax.plot_surface(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
+        if self.dominio.metodo.gettipo()=="analitico":       
+            surf = ax.plot_surface(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
+        else:
+            surf = ax.plot_wireframe(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)      
 
         ax.set_zlim3d(self.ming, self.maxg)
         ax.set_title(u'Evolución de niveles en el dominio (Problema directo, 3D)')
@@ -185,10 +189,18 @@ class figura():
 
         ##Esta consulta es para que no salten los warnings porque los vectores son 000
         divi=np.zeros((len(self.Y),len(self.X)), float)
-        if not p.all(np.equal(u,divi)):       
-            
-            v = self.maty[t]*-1
-            q = ax.quiver(X, Y, u, v, color=['r'])
+        if not p.all(np.equal(u,divi)):
+            if self.tipodis!=None and self.tipodis=="Logaritmica":
+                print 'Aún no disponible para este tipo de discretización'
+                    
+            else:
+                if self.tipodis==None:
+                    v = self.maty[t]*-1
+                elif self.tipodis=="Lineal":                    
+                    #quiver(x,y,gxh(:,:,i),gyh(:,:,i));
+                    v = self.maty[t]
+                q = ax.quiver(X, Y, u, v, color=['r'])
+           
 
     def salvar(self, filename = None, width = None, height = None, velocidad = None, directorio = None):#Esto se lo pasa el dialogo
 

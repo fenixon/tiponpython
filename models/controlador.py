@@ -280,9 +280,15 @@ class Proyecto(object):
         m=niy
         lx=self.dominio.ancho
         ly=self.dominio.alto
-        self.x=None
-        self.y=None
-    
+        self.X=None
+        self.Y=None
+        self.xx=None
+        self.yy=None
+        ##discretizacion temporal
+        dt=(tf-ti)/nit
+        self.dt=dt
+        self.tipodis=tipo
+        
         if (tipo!=None):
             if tipo=="Lineal":
                 #x=(0:m-1)*lx/(m-1);
@@ -318,12 +324,51 @@ class Proyecto(object):
                 #print "y ",y                
                 n=len(y)
                 
+
+            #(1:nit)*dt
+            ##discretizacion temporal
+            tiempos=np.zeros((nit),float)
+            tiempos[0]=dt
+            for i in range(1,nit):
+                tiempos[i]=tiempos[i-1]+dt
+
             self.nix=m
             self.niy=n
-            self.x=x
-            self.y=y                
-                
-          
+            self.X=x
+            self.Y=y
+            self.tiempos=tiempos           
+                        
+        else:
+            nit=nit+1
+            ##se suma 1 para que sea haga bien la division es un intervalo mas 0..100 (101)
+            nix=nix+1
+            niy=niy+1
+
+            ##discretizacion espacial
+            xx = np.linspace(0,self.dominio.ancho,nix)
+            yy = np.linspace(self.dominio.alto,0,niy)
+            ##Se generan las matrices para usar en todas las graficas
+            X, Y = np.meshgrid(xx, yy)
+            
+            ##discretizacion temporal
+            tiempos=np.zeros((nit),float)
+            tiempos[0]=ti
+            for i in range(1,nit):
+                tiempos[i]=tiempos[i-1]+dt
+
+            self.nit=nit
+            self.nix=nix
+            self.niy=niy
+            self.X=X
+            self.Y=Y
+            self.xx=xx
+            self.yy=yy                
+            self.tiempos=tiempos
+            
+
+    def devolverDiscretizaciones(self):
+        return [self.X,self.Y, self.xx, self.yy, self.tiempos,self.tipodis]
+         
 
     def devolverValoresDiscretizaciones(self):
         return [self.nix, self.niy, self.ti, self.tf, self.nit, self.tfo] 

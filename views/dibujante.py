@@ -36,6 +36,8 @@ class dibujante(QMainWindow):
         #self.niy=niy
         #self.tfo=tfo
         self.cardt=0
+        self.tiempos=tiempos
+        print 'ti ',ti
 
         ##LLAMADO AL METODO DE SOLUCION
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
@@ -157,7 +159,7 @@ class dibujante(QMainWindow):
             estadob.setMaximum(int(tf/dt)-1)
         else:
             estadob.setMaximum(int(tf/dt))
-        estadob.setMinimum(0)
+        estadob.setMinimum(ti)
 
         self.estadob = estadob
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('sliderReleased()')), self.actualizarSlider)
@@ -165,7 +167,7 @@ class dibujante(QMainWindow):
         QtCore.QObject.connect(self.estadob, QtCore.SIGNAL(_fromUtf8('valueChanged(int)')), self.actualizarSlider)
 
         #el tiempo final elejido por el usuario
-        timlab = QLabel(QString('0/' + str(tf)))
+        timlab = QLabel(QString(str(ti)+'/' + str(self.tiempos[-1])))
         self.timlab = timlab
 
         vbox = QVBoxLayout()
@@ -198,13 +200,13 @@ class dibujante(QMainWindow):
     def actualizarSlider(self):
 
         ##se recupera el tiempo que viene multiplicado
-        t=float(self.estadob.value() * self.dt)
+        t=float(self.tiempos[self.estadob.value()])
 
         ##AHORA SE CALCULO PARA TODOS LOS TIEMPOS DE LA DISCRETIZACION TEMPORAL
         self.grafSel(self.cardt)
         self.draw()
 
-        self.estadob.setToolTip(str(t) + '/' + str(self.estadob.maximum()*self.dt))
+        self.estadob.setToolTip(str(t) + '/' + str(self.tiempos[-1]))
         self.timlab.setText(self.estadob.toolTip())
 
     def reproducir(self):
@@ -217,22 +219,27 @@ class dibujante(QMainWindow):
 
         else:
 
-            self.timer.start()
+            if self.estadob.value() + self.inter > self.estadob.maximum():
+                self.cardt=0
+                self.estadob.setValue(0)
+                self.cardt=1
+            else:
+                self.cardt=self.cardt+1                
+
+            self.timer.start()            
             self.reproducirb.setIcon(QIcon('content/images/pausar.png'))
 
     def reproducirBucle(self):
 
         if self.estadob.value() + self.inter > self.estadob.maximum():
-
             self.reproducir()
-            self.estadob.setValue(0)
-            self.cardt=0
 
         elif self.estadob.value() + self.inter < self.estadob.minimum():
 
-            self.reproducir()
-            self.estadob.setValue(0)
             self.cardt=0
+            self.estadob.setValue(0)
+            self.cardt=-1
+            self.reproducir()
 
         else:
 

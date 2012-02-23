@@ -330,7 +330,7 @@ class Proyecto(object):
             #(1:nit)*dt
             ##discretizacion temporal
             tiempos=np.zeros((nit),float)
-            tiempos[0]=dt
+            tiempos[0]=ti
             tiemposobs=np.zeros((nit),float)
             dtobs=round((tf-ti)/(nit-1),2)
             tiemposobs[0]=dtobs            

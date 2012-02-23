@@ -14,7 +14,7 @@ import metodoSolucion
 import parametros
 from Hantush import Hantush
 from theis import Theis
-from DiferenciaFinita import DiferenciaFinita
+#from DiferenciaFinita import DiferenciaFinita
 import CondicionesExternas
 import numpy as np
 

@@ -24,58 +24,25 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, dominio=None, nix=None, niy=None, ti=None, tf=None, nit=None, tfo=None, dia=None):
+    def __init__(self, parent = None, dominio=None, tipodis=None, X=None,Y=None, xx=None, yy=None, nix=None, niy=None, tiempos=None, tiemposobs=None, ti=None, tf=None, dt=None, dia=None):
 
         QMainWindow.__init__(self, parent)
         self.dia=dia
-##        ti=0.0
-##        tf=3.0
-##        tf=0.3
-
-        ##justito para que quede 0.1 el dt
-##        nit=int(tf/0.1)
-##        nit=100
-##        nit=10
-
-        ##el mismo ancho y alto para que quede cada 1 unidad
-##        nix=dominio.ancho
-##        nix=4
-##        niy=dominio.alto
-##        niy=4
-
-        ##discretizacion temporal
-        dt=(tf-ti)/nit
-        nit=nit+1
-        tiempos=np.zeros((nit),float)
-        tiempos[0]=ti
-
-        ##se suma 1 para que sea haga bien la division es un intervalo mas 0..100 (101)
-        nix=nix+1
-        niy=niy+1
-
-        #discretizacion temporal
-        for i in range(1,nit):
-            tiempos[i]=tiempos[i-1]+dt
-
-        ##discretizacion espacial
-        xx = np.linspace(0,dominio.ancho,nix)
-        yy = np.linspace(dominio.alto,0,niy)
-        ##Se generan las matrices para usar en todas las graficas
-        X, Y = np.meshgrid(xx, yy)
 
         self.ti=ti
         self.tf=tf
         self.dt=dt
-        self.nix=nix
-        self.niy=niy
-        self.tfo=tfo
+        #self.nix=nix
+        #self.niy=niy
+        #self.tfo=tfo
         self.cardt=0
 
         ##LLAMADO AL METODO DE SOLUCION
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
         ### se envian ademas todas las discretizaciones
         print u'Empieaza...'
-        matrix=dominio.metodo.calcular(tiempos,xx,yy)
+        matrix=dominio.metodo.calcular(tiempos, ti, tf, dt, nix, niy, xx,yy, X, Y)
+    
 
         matx = dominio.metodo.gradienteX()
 
@@ -121,7 +88,7 @@ class dibujante(QMainWindow):
 
 #### fIN Codigo nuevo introducido para prueba
 
-        self.fm = fm(matrix, matx, maty, dominio, X,Y, xx, yy, tiempos, superficies, ming, maxg)
+        self.fm = fm(matrix, matx, maty, dominio, tipodis, X,Y, tiempos, tiemposobs, superficies, ming, maxg)
 
         self.sel = 0
         self.grafSel(0)
@@ -183,7 +150,13 @@ class dibujante(QMainWindow):
         estadob.setToolTip(u'Próximamente: mostrará el avance de la animación.')
 
         #Cambio por la discretizacion espacial
-        estadob.setMaximum(int(tf/dt))
+
+        print "tf ",tf,"dt ",dt, "maximo ",tf/dt
+
+        if dominio.metodo.gettipo()!="analitico":        
+            estadob.setMaximum(int(tf/dt)-1)
+        else:
+            estadob.setMaximum(int(tf/dt))
         estadob.setMinimum(0)
 
         self.estadob = estadob
@@ -214,8 +187,10 @@ class dibujante(QMainWindow):
         ##Cada un segundo, dps aca cambiar la velocidad de reproduccion
         self.timer.setInterval(1000 * self.vel[self.velActual])
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reproducirBucle)
-        self.dia.close()
-        self.dia = None
+
+        if self.dia!=None:
+            self.dia.close()
+            self.dia = None
 
     def draw(self):
         self.canvas.draw()

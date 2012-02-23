@@ -35,6 +35,9 @@ class metodoSolucion(object):
         #print "Se ha eliminado el Metodo de Solucion"
 	return
 
+    def gettipo(self):
+        return "solucion"
+
     def getoptimizaciones(self):
         return self.optimizaciones
 
@@ -51,8 +54,27 @@ class metodoSolucion(object):
                 self.dominio.valores.append(v)
                 #print "valor seteado para  ",self.listaParametros[i].nombre," es: ",v.valor
 
+    def gradienteX(self):
+        return self.gxh
+
+    def gradienteY(self):
+        return self.gyh
+
+    def minimoMatriz(self):
+        return self.min
+
+    def maximoMatriz(self):
+        return self.max    
+       
+class metodoAnalitico(metodoSolucion):
+    def __init__(self, dominio, parametros, asociar=None):
+        self.aceptaBarrera=False
+        metodoSolucion.__init__(self,dominio,parametros, asociar)
+    def gettipo(self):
+        return "analitico"
+
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
-    def calcular(self,tiempos,xx,yy):
+    def calcular(self,tiempos, ti, tf,dt, nix, niy, xx,yy, X, Y):
         # Se indentifica donde esta el pozo de bombeo           
         # Por ahora tomar el primero de bombeo que se detecte. Luego cambia cuando hayan mas pozos
                 
@@ -267,8 +289,6 @@ class metodoSolucion(object):
 ##                        print self.matrizDescenso[10,cardy,cardx]
                     cardy=cardy+1            
                 cardx=cardx+1
-
-
         
         
         ##ahora se soluciono lo del 0       
@@ -290,17 +310,6 @@ class metodoSolucion(object):
         
         return self.matrizDescenso
 
-    def gradienteX(self):
-        return self.gxh
-
-    def gradienteY(self):
-        return self.gyh
-
-    def minimoMatriz(self):
-        return self.min
-
-    def maximoMatriz(self):
-        return self.max
 
     ##Metodo que se llama luego de la Optimizacion, para graficar los pozos de observacions con S y T optimos
     def funcionObjetivo(self,pozoObservacion):
@@ -418,12 +427,12 @@ class metodoSolucion(object):
                     #print 'p(i).x :', x0,'p(i).y :', y0,' p(i).q :', Q
                     
         return descenso
+
+
     
-        
-class metodoAnalitico(metodoSolucion):
-    def __init__(self, dominio, parametros, asociar=None):
-        self.aceptaBarrera=False
-        metodoSolucion.__init__(self,dominio,parametros, asociar)
 
 class metodoNumerico(metodoSolucion):
-    pass
+    #pass
+    def gettipo(self):
+        return "numerico"  
+

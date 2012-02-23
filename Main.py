@@ -24,6 +24,7 @@ import asociarEnsayos
 import metodooptimizacion
 from theis import *
 from Hantush import *
+from DiferenciaFinita import *
 #from vistaDominio import  *
 from vistaDominiolaRemodelacion import  *
 import discretizaciones
@@ -369,10 +370,13 @@ class Ui_MainWindow(QtGui.QDialog):
                         self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
                         self.dia.setModal(True)
                         self.dia.show()
+                        self.dia=None
                         
                         print 'Formulario de discretizaciones se cerro ' 
                         nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo, self.dia)#Hay que pasarle la ventana principal
+                        X, Y,xx, yy, tiempos,tiemposobs, dt, tipodis=ContEnsayo.devolverDiscretizaciones()
+                                                
+                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), tipodis, X,Y, xx, yy,nix,niy, tiempos,tiemposobs, ti, tf, dt, self.dia)#Hay que pasarle la ventana principal
                         self.dibujante.show()
                         QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
                         print 'Dibujante invocado'                            
@@ -717,13 +721,85 @@ class Ui_MainWindow(QtGui.QDialog):
         print 'se carga el demo'
 
 
+    def cargar_demoNumerico(self):
+        global ContEnsayo
 
+        ContEnsayo.dominio.alto = 3000
+        ContEnsayo.dominio.ancho = 3000
+        
+        ContEnsayo.dominio.a=0
+        ContEnsayo.dominio.b=0
+        ContEnsayo.dominio.c=10
+        ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
+        m=DiferenciaFinita(ContEnsayo.dominio, ContEnsayo.parametros, True)              
+        m.setearValores([850,1.3e-4])        
+        ContEnsayo.metodo=m        
+        
+        #Adherimos la vista del dominio
+        self.ui = UiForm()
+        self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
+
+        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        b.setX(1500)
+        b.setY(1500)
+        b.id = elementoDominio.ContEnsayo.agregarPozo(1500, 1500) 
+        self.ui.caja.botones.append(b)
+
+        pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        pob.setX(1600)
+        pob.setY(1500)
+        pob.id = elementoDominio.ContEnsayo.agregarPozo(1600,1500) 
+        self.ui.caja.botones.append(pob)        
+
+        ##No hay barrera en dif finita
+        #x0=250
+        #y0=0
+        #x1=500
+        #y1=1000
+        #r = QtCore.QLineF(x0, y0, x1, y1)
+        #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
+        #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
+        #self.ui.caja.rectas.append(barrera)	      
+
+        noexec=1   
+
+        self.ventanaImpoObs(noexec, True)
+        #self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"
+        self.vimp.archivo="ficheros/obsdiferenciaf.ods"        
+        self.vimp.nombre.setText('obs1')
+        self.vimp.ext="ods"
+        self.vimp.accionaceptar()
+        self.vimp.close()
+            
+        self.ventanaImportarProyecto(noexec, True)
+        self.importar.archivo="ficheros/bombeos.txt"        
+        self.importar.nombre.setText('ens1')
+        self.importar.ext="txt"
+        self.importar.accionaceptar()
+        self.importar.close()
+       
+        frmasociar=QtGui.QDialog()
+        asoe=asociarEnsayos.Ui_Dialog()
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.ensayos[0]
+        asoe.tipo="e"
+        asoe.asociar()
+
+        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar()         
+        
+        print 'se carga el demo'
+
+        
 
     def cargar_demobarrera1000hantush(self):
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
+        
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10

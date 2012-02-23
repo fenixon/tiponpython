@@ -24,7 +24,7 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, dominio=None, tipodis=None, X=None,Y=None, xx=None, yy=None, tiempos=None, ti=None, tf=None, dt=None, dia=None):
+    def __init__(self, parent = None, dominio=None, tipodis=None, X=None,Y=None, xx=None, yy=None, nix=None, niy=None, tiempos=None, ti=None, tf=None, dt=None, dia=None):
 
         QMainWindow.__init__(self, parent)
         self.dia=dia
@@ -41,7 +41,8 @@ class dibujante(QMainWindow):
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
         ### se envian ademas todas las discretizaciones
         print u'Empieaza...'
-        matrix=dominio.metodo.calcular(tiempos,xx,yy)
+        matrix=dominio.metodo.calcular(tiempos, ti, tf, dt, nix, niy, xx,yy, X, Y)
+    
 
         matx = dominio.metodo.gradienteX()
 
@@ -180,8 +181,10 @@ class dibujante(QMainWindow):
         ##Cada un segundo, dps aca cambiar la velocidad de reproduccion
         self.timer.setInterval(1000 * self.vel[self.velActual])
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reproducirBucle)
-        self.dia.close()
-        self.dia = None
+
+        if self.dia!=None:
+            self.dia.close()
+            self.dia = None
 
     def draw(self):
         self.canvas.draw()

@@ -24,6 +24,7 @@ import asociarEnsayos
 import metodooptimizacion
 from theis import *
 from Hantush import *
+from DiferenciaFinita import *
 #from vistaDominio import  *
 from vistaDominiolaRemodelacion import  *
 import discretizaciones
@@ -369,13 +370,16 @@ class Ui_MainWindow(QtGui.QDialog):
                         #self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
                         #self.dia.setModal(True)
                         #self.dia.show()
+                        self.dia=None
                         
-                        #print 'Formulario de discretizaciones se cerro ' 
-                        #nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                        #self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), nix, niy, ti, tf, nit, tfo, self.dia)#Hay que pasarle la ventana principal
-                        #self.dibujante.show()
-                        #QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
-                        #print 'Dibujante invocado'                            
+                        print 'Formulario de discretizaciones se cerro ' 
+                        nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
+                        X, Y,xx, yy, tiempos, dt, tipodis=ContEnsayo.devolverDiscretizaciones()
+                                                
+                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), tipodis, X,Y, xx, yy,nix,niy, tiempos, ti, tf, dt, self.dia)#Hay que pasarle la ventana principal
+                        self.dibujante.show()
+                        QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
+                        print 'Dibujante invocado'                            
                                                       
 
                         #else:
@@ -727,7 +731,7 @@ class Ui_MainWindow(QtGui.QDialog):
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)              
+        m=DiferenciaFinita(ContEnsayo.dominio, ContEnsayo.parametros, True)              
         m.setearValores([850,1.3e-4])        
         ContEnsayo.metodo=m        
         

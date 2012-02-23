@@ -206,9 +206,9 @@ class Proyecto(object):
             
             for j in range (Ndiv):
                 #xde[j]=xp+np.exp(j*AD)
-                print "Las sumas"
-                print xp
-                print np.exp(j*AD)
+                #print "Las sumas"
+                #print xp
+                #print np.exp(j*AD)
                 #print np.add(xp,np.exp(j*AD)) 
                 xde.append(np.add(xp[0],np.exp((j+1)*AD)))
                 #[j]=
@@ -220,7 +220,7 @@ class Proyecto(object):
                     indde=j
                     break
 
-            print "dps del for xde ", xde
+            #print "dps del for xde ", xde
 
             for j in range(Ndiv):
                 xiz.append(xp[0]-np.exp((j+1)*AD))
@@ -253,18 +253,18 @@ class Proyecto(object):
                 
             x.append(lx)
 
-            print "Ix ", Ix
-            print "Ndiv ", Ndiv
-            print "DT ", DT
-            print "AD ", AD
-            print "indde ", indde
-            print "indiz ", indiz
-            print "xde ", xde
-            print "xiz ", xiz
-            print "x ", x          
+            #print "Ix ", Ix
+            #print "Ndiv ", Ndiv
+            #print "DT ", DT
+            #print "AD ", AD
+            #print "indde ", indde
+            #print "indiz ", indiz
+            #print "xde ", xde
+            #print "xiz ", xiz
+            #print "x ", x          
             
         Np=Np1
-        return [x]
+        return x
 
         
 
@@ -336,7 +336,10 @@ class Proyecto(object):
             self.niy=n
             self.X=x
             self.Y=y
-            self.tiempos=tiempos           
+            self.tiempos=tiempos
+
+
+            print self.X
                         
         else:
             nit=nit+1
@@ -367,7 +370,7 @@ class Proyecto(object):
             
 
     def devolverDiscretizaciones(self):
-        return [self.X,self.Y, self.xx, self.yy, self.tiempos,self.tipodis]
+        return [self.X,self.Y, self.xx, self.yy, self.tiempos, self.dt, self.tipodis]
          
 
     def devolverValoresDiscretizaciones(self):

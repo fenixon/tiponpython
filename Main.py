@@ -361,22 +361,22 @@ class Ui_MainWindow(QtGui.QDialog):
                         frmDiscretizaciones.exec_()
 
 
-                        #self.dia = QtGui.QDialog()
-                        #hbox1 = QtGui.QHBoxLayout()
-                        #self.dia.setGeometry(QtCore.QRect(500, 50, 200, 50))
-                        #msgLabel = QtGui.QLabel(QtCore.QString(u'Generando gráficas, espere un momento...'))
-                        #hbox1.addWidget(msgLabel)
-                        #self.dia.setLayout(hbox1)
-                        #self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
-                        #self.dia.setModal(True)
-                        #self.dia.show()
+                        self.dia = QtGui.QDialog()
+                        hbox1 = QtGui.QHBoxLayout()
+                        self.dia.setGeometry(QtCore.QRect(500, 50, 200, 50))
+                        msgLabel = QtGui.QLabel(QtCore.QString(u'Generando gráficas, espere un momento...'))
+                        hbox1.addWidget(msgLabel)
+                        self.dia.setLayout(hbox1)
+                        self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
+                        self.dia.setModal(True)
+                        self.dia.show()
                         self.dia=None
                         
                         print 'Formulario de discretizaciones se cerro ' 
                         nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
-                        X, Y,xx, yy, tiempos, dt, tipodis=ContEnsayo.devolverDiscretizaciones()
+                        X, Y,xx, yy, tiempos,tiemposobs, dt, tipodis=ContEnsayo.devolverDiscretizaciones()
                                                 
-                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), tipodis, X,Y, xx, yy,nix,niy, tiempos, ti, tf, dt, self.dia)#Hay que pasarle la ventana principal
+                        self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), tipodis, X,Y, xx, yy,nix,niy, tiempos,tiemposobs, ti, tf, dt, self.dia)#Hay que pasarle la ventana principal
                         self.dibujante.show()
                         QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
                         print 'Dibujante invocado'                            

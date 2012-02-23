@@ -53,9 +53,9 @@ class ventanaDiscretizaciones(QtGui.QDialog):
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
         self.comboBox.addItem(_fromUtf8(""))
         self.comboBox.addItem(_fromUtf8(""))
-        #self.comboBox.setEnabled(False)
-        #if cont.metodo.gettipo()=="numerico":
-        self.comboBox.setEnabled(True)
+        self.comboBox.setEnabled(False)
+        if cont.metodo.gettipo()=="numerico":
+            self.comboBox.setEnabled(True)
         
         self.groupBox_2 = QtGui.QGroupBox(Dialog)
         self.groupBox_2.setGeometry(QtCore.QRect(10, 140, 351, 121))
@@ -99,11 +99,11 @@ class ventanaDiscretizaciones(QtGui.QDialog):
         self.btn_Cancelar.setObjectName(_fromUtf8("btn_Cancelar"))
         self.dialogo=Dialog
 
-        self.txt_nix.setText("60")
-        self.txt_niy.setText("60")
+        self.txt_nix.setText("6")
+        self.txt_niy.setText("6")
         self.txt_ti.setText("0")
         self.txt_tf.setText("0.18")
-        self.txt_nit.setText("100")
+        self.txt_nit.setText("10")
 
 
         self.retranslateUi(Dialog)
@@ -136,10 +136,10 @@ class ventanaDiscretizaciones(QtGui.QDialog):
 
         
 
-        #if ContEnsayo.metodo.gettipo()=="numerico":
-        tipo=self.comboBox.itemData(self.comboBox.currentIndex()).toPyObject().__str__()
-        #else:
-        #    tipo=None
+        if ContEnsayo.metodo.gettipo()=="numerico":
+            tipo=self.comboBox.itemData(self.comboBox.currentIndex()).toPyObject().__str__()
+        else:
+            tipo=None
         
         tfo=10000
 

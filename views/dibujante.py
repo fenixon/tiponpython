@@ -24,7 +24,7 @@ except AttributeError:
 
 class dibujante(QMainWindow):
 
-    def __init__(self, parent = None, dominio=None, tipodis=None, X=None,Y=None, xx=None, yy=None, nix=None, niy=None, tiempos=None, ti=None, tf=None, dt=None, dia=None):
+    def __init__(self, parent = None, dominio=None, tipodis=None, X=None,Y=None, xx=None, yy=None, nix=None, niy=None, tiempos=None, tiemposobs=None, ti=None, tf=None, dt=None, dia=None):
 
         QMainWindow.__init__(self, parent)
         self.dia=dia
@@ -88,7 +88,7 @@ class dibujante(QMainWindow):
 
 #### fIN Codigo nuevo introducido para prueba
 
-        self.fm = fm(matrix, matx, maty, dominio, tipodis, X,Y, xx, yy, tiempos, superficies, ming, maxg)
+        self.fm = fm(matrix, matx, maty, dominio, tipodis, X,Y, tiempos, tiemposobs, superficies, ming, maxg)
 
         self.sel = 0
         self.grafSel(0)
@@ -150,7 +150,13 @@ class dibujante(QMainWindow):
         estadob.setToolTip(u'Próximamente: mostrará el avance de la animación.')
 
         #Cambio por la discretizacion espacial
-        estadob.setMaximum(int(tf/dt))
+
+        print "tf ",tf,"dt ",dt, "maximo ",tf/dt
+
+        if dominio.metodo.gettipo()!="analitico":        
+            estadob.setMaximum(int(tf/dt)-1)
+        else:
+            estadob.setMaximum(int(tf/dt))
         estadob.setMinimum(0)
 
         self.estadob = estadob

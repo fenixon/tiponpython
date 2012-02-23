@@ -38,6 +38,14 @@ h=np.ones((3),float)
 #print np.linalg.inv(S)
 #print np.power(S,-1)
 
-print A
-print h
-print np.dot(A,h)
+#print A
+#print h
+#print np.dot(A,h)
+
+m=6
+lx=3000
+#x=(0:m-1)*lx/(m-1);
+x=np.divide(np.multiply(range(m),lx),(m-1) )
+print x
+
+

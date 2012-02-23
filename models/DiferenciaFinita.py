@@ -23,7 +23,7 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
         self.aceptaBarrera=False       
         self.optimizaciones=['']
 
-    def calcular(self,tiempos, ti, tf,dt, nix, niy, xx,yy, x, y):
+    def calcular(self,tiempos, ti, tf,dt, nix, niy, x,y, X, Y):
         acuiT=float(self.listaParametros[0].valoresParametro.valor)
         acuiS=float(self.listaParametros[1].valoresParametro.valor)
         m=nix
@@ -200,8 +200,8 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
 
             if t1==0:
                 aux1=(A*(tetha-1)-S/(At))
-                aux2=np.dot(aux1,h)
-                aux3=aux2+b
+                #aux2=np.dot(aux1,h)
+                #aux3=aux2+b
                 
 
             #if t1==0:
@@ -219,13 +219,13 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
 
 
 
-        """print 'Asi quedo aux1'
+        print 'Asi quedo aux1'
         for i in range(m):
             for j in range(n):
                 if aux1[j,i]!=0:
                    print 'j ',j,'i ',i,'aux1[w]::',aux1[j,i]
 
-        print 'Asi quedo aux2' 
+        """print 'Asi quedo aux2' 
         for w in range (len(aux2)):
             if aux2[w]!=0:
                 print "indice::",w,"aux2[w]::",aux2[w]
@@ -293,18 +293,24 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
 
             #Calculo para todos los pozos de observacion
             for pozoObservacion in TodoslospozosObservacion:
-                hs1=x1[io+n*(jo-1)]
-                aa=io+n*(jo-1)
+                hs1=x1[io+n*(jo)]
+                aa=io+n*(jo)
+                #print aa
                 #hs2=x1(io+n*(jo-1)-1);
-                hs2=x1[io+n*(jo-1)-1]
+                hs2=x1[io+n*(jo)-1]
+                aa=(io+n*(jo)-1)
+                #print aa
+                hs3=x1[io+n*(jo-1)]
+                aa=io+n*(jo-1)
+                #print aa
+                hs4=x1[io+n*(jo-1)-1]
                 aa=(io+n*(jo-1)-1)
-                hs3=x1[io+n*(jo-2)]
-                aa=io+n*(jo-2)
-                hs4=x1[io+n*(jo-2)-1]
-                aa=(io+n*(jo-2)-1)
+                #print aa
                 #hsm(i,t)=(hs1+hs2+hs3+hs4)/4                
                 #Se actualizan solo las observaciones solucionadas
-                pozoObservacion.obssolucionadas[i]=(hs1+hs2+hs3+hs4)/4              
+                pozoObservacion.obssolucionadas[i]=(hs1+hs2+hs3+hs4)/4
+
+                print 'tiempo::',i,'-hsm::', pozoObservacion.obssolucionadas[i]
 
         return self.matrizDescenso
 

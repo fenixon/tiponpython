@@ -74,7 +74,7 @@ class metodoAnalitico(metodoSolucion):
         return "analitico"
 
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
-    def calcular(self,tiempos, ti, tf,dt, nix, niy, xx,yy, x, y):
+    def calcular(self,tiempos, ti, tf,dt, nix, niy, xx,yy, X, Y):
         # Se indentifica donde esta el pozo de bombeo           
         # Por ahora tomar el primero de bombeo que se detecte. Luego cambia cuando hayan mas pozos
                 

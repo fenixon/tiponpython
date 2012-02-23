@@ -312,33 +312,40 @@ class Proyecto(object):
                     xp.append(p.x)
                     yp.append(p.y)
                 xp=np.sort(xp)
-                x=self.creadiscesp(Np,lx,m,xp)
-
-                #print "x ",x                
+                x=self.creadiscesp(Np,lx,m,xp)                
                 m=len(x)
                 
                 #Calculo del eje y
                 yp=np.sort(yp)
-                y=self.creadiscesp(Np,ly,n,yp)
-
-                #print "y ",y                
+                y=self.creadiscesp(Np,ly,n,yp)                
                 n=len(y)
                 
+
+            print "x ",x
+            print "y ",y    
+
+            ##Se generan las matrices para usar en todas las graficas
+            X, Y = np.meshgrid(x, y)
 
             #(1:nit)*dt
             ##discretizacion temporal
             tiempos=np.zeros((nit),float)
             tiempos[0]=dt
+            tiemposobs=np.zeros((nit),float)
+            dtobs=round((tf-ti)/(nit-1),2)
+            tiemposobs[0]=dtobs            
             for i in range(1,nit):
                 tiempos[i]=tiempos[i-1]+dt
-
+                tiemposobs[i]=tiemposobs[i-1]+dtobs
+                
             self.nix=m
             self.niy=n
-            self.X=x
-            self.Y=y
+            self.X=X
+            self.Y=Y
+            self.xx=x
+            self.yy=y              
             self.tiempos=tiempos
-
-
+            self.tiemposobs=tiemposobs
             #print self.X
                         
         else:
@@ -355,9 +362,12 @@ class Proyecto(object):
             
             ##discretizacion temporal
             tiempos=np.zeros((nit),float)
+            tiemposobs=np.zeros((nit),float)
             tiempos[0]=ti
+            tiemposobs[0]=ti
             for i in range(1,nit):
                 tiempos[i]=tiempos[i-1]+dt
+                tiemposobs[i]=tiemposobs[i-1]+dt
 
             self.nit=nit
             self.nix=nix
@@ -367,10 +377,11 @@ class Proyecto(object):
             self.xx=xx
             self.yy=yy                
             self.tiempos=tiempos
+            self.tiemposobs=tiemposobs
             
 
     def devolverDiscretizaciones(self):
-        return [self.X,self.Y, self.xx, self.yy, self.tiempos, self.dt, self.tipodis]
+        return [self.X,self.Y, self.xx, self.yy, self.tiempos, self.tiemposobs, self.dt, self.tipodis]
          
 
     def devolverValoresDiscretizaciones(self):

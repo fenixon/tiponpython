@@ -88,11 +88,11 @@ class dominio(object):
 ##        print 'hizo el calculo de la recta'
         #Hay una barrera definida en el sistema
         ## cuando aparece la barrera se duplica todo se duplican los mismos ensayos        
-        if len(self.listaRecta)>0:
+        if len(self.listaRecta)>0 and self.dominio.metodo.aceptaBarrera==True:
             ##se obtiene la primera recta q pasa si son mas ???
             recta=self.listaRecta[0]
             alfa,beta,gamma=recta.devolverCoef()
-            print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
+            #print 'alfa: '+str(alfa)+'beta: '+str(beta)+'gamma: '+str(gamma)
 
             #Recorrer todos los pozos para irlos replicando
             ##solo para los pozos de bombeo

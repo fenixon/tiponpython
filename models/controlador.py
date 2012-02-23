@@ -321,8 +321,8 @@ class Proyecto(object):
                 n=len(y)
                 
 
-            print "x ",x
-            print "y ",y    
+            #print "x ",x
+            #print "y ",y    
 
             ##Se generan las matrices para usar en todas las graficas
             X, Y = np.meshgrid(x, y)
@@ -330,7 +330,7 @@ class Proyecto(object):
             #(1:nit)*dt
             ##discretizacion temporal
             tiempos=np.zeros((nit),float)
-            tiempos[0]=dt
+            tiempos[0]=ti
             tiemposobs=np.zeros((nit),float)
             dtobs=round((tf-ti)/(nit-1),2)
             tiemposobs[0]=dtobs            

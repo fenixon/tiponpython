@@ -183,7 +183,7 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
-        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000hantush)
+        QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000theis)
         #tCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
 
@@ -370,7 +370,7 @@ class Ui_MainWindow(QtGui.QDialog):
                         self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
                         self.dia.setModal(True)
                         self.dia.show()
-                        self.dia=None
+                        #self.dia=None
                         
                         print 'Formulario de discretizaciones se cerro ' 
                         nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
@@ -875,6 +875,86 @@ class Ui_MainWindow(QtGui.QDialog):
         
 
 
+    def cargar_demobarrera1000theis(self):
+        global ContEnsayo
+
+        ContEnsayo.dominio.alto = 1000
+        ContEnsayo.dominio.ancho = 1000
+        
+        ContEnsayo.dominio.a=0
+        ContEnsayo.dominio.b=0
+        ContEnsayo.dominio.c=10
+        ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
+        #m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros, True) 
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)                
+        #m.setearValores([1000,1.e-4,676.7])
+        m.setearValores([700,1.1e-4])
+
+        #print "c ",ContEnsayo.metodo.dominio.c
+        ContEnsayo.metodo=m        
+        
+        #Adherimos la vista del dominio
+        self.ui = UiForm()
+        self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
+
+
+        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        b.setX(500)
+        b.setY(250)
+        b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
+        self.ui.caja.botones.append(b)
+
+        pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        pob.setX(600)
+        pob.setY(250)
+        pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
+        self.ui.caja.botones.append(pob)        
+
+        x0=250
+        y0=0
+        x1=500
+        y1=1000
+        r = QtCore.QLineF(x0, y0, x1, y1)
+        barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
+        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
+        self.ui.caja.rectas.append(barrera)	        
+
+
+        noexec=1     
+
+
+        self.ventanaImpoObs(noexec, True)
+        self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"
+        #self.vimp.archivo="ficheros/obsHantush.ods"        
+        self.vimp.nombre.setText('obs1')
+        self.vimp.ext="ods"
+        self.vimp.accionaceptar()
+        self.vimp.close()
+            
+        self.ventanaImportarProyecto(noexec, True)
+        self.importar.archivo="ficheros/bombeos.txt"
+        #self.importar.archivo="ficheros/haintush.txt"
+        
+        self.importar.nombre.setText('ens1')
+        self.importar.ext="txt"
+        self.importar.accionaceptar()
+        self.importar.close()
+       
+        frmasociar=QtGui.QDialog()
+        asoe=asociarEnsayos.Ui_Dialog()
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.ensayos[0]
+        asoe.tipo="e"
+        asoe.asociar()
+
+        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.observaciones[0]
+        asoe.tipo="o"
+        asoe.asociar()         
+        
+        print 'se carga el demo'
+
+
     def cargar_demobarrera(self):
          
         global ContEnsayo
@@ -887,6 +967,7 @@ class Ui_MainWindow(QtGui.QDialog):
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
         m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
         m.setearValores([1000,0.0001])
+        ContEnsayo.metodo=m 
         #Adherimos la vista del dominio
         self.ui = UiForm()
 

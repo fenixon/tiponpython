@@ -133,15 +133,12 @@ class figura():
         ax = self.axt
         ax.cla()
 
+        #print "va en el tiempo: ",t, "valor: ",self.tiempos[t]
 
-        print "va en el tiempo: ",t, "valor: ",self.tiempos[t]
-
-        Z = self.matrix[t]
-
-        
+        Z = self.matrix[t]        
 
         #print "tamaño", len(Z)
-        print "Z ",Z
+        #print "Z ",Z
         #print "X " ,self.X
         #print "Y " ,self.Y        
 
@@ -168,7 +165,7 @@ class figura():
 
 ##        p.show()
 
-        print "tipo metodo ",self.dominio.metodo.gettipo()
+        #print "tipo metodo ",self.dominio.metodo.gettipo()
 
         if self.dominio.metodo.gettipo()=="analitico":       
             surf = ax.plot_surface(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=1, antialiased=False)

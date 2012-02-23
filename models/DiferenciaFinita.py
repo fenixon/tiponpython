@@ -198,8 +198,8 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
                
             b1=np.dot((A*(tetha-1)-S/(At)),h)+b
 
-            if t1==0:
-                aux1=(A*(tetha-1)-S/(At))
+            #if t1==0:
+                #aux1=(A*(tetha-1)-S/(At))
                 #aux2=np.dot(aux1,h)
                 #aux3=aux2+b
                 
@@ -219,13 +219,13 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
 
 
 
-        print 'Asi quedo aux1'
+        """print 'Asi quedo aux1'
         for i in range(m):
             for j in range(n):
                 if aux1[j,i]!=0:
                    print 'j ',j,'i ',i,'aux1[w]::',aux1[j,i]
 
-        """print 'Asi quedo aux2' 
+        print 'Asi quedo aux2' 
         for w in range (len(aux2)):
             if aux2[w]!=0:
                 print "indice::",w,"aux2[w]::",aux2[w]
@@ -310,7 +310,7 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
                 #Se actualizan solo las observaciones solucionadas
                 pozoObservacion.obssolucionadas[i]=(hs1+hs2+hs3+hs4)/4
 
-                print 'tiempo::',i,'-hsm::', pozoObservacion.obssolucionadas[i]
+                #print 'tiempo::',i,'-hsm::', pozoObservacion.obssolucionadas[i]
 
         return self.matrizDescenso
 

@@ -321,8 +321,8 @@ class Proyecto(object):
                 n=len(y)
                 
 
-            print "x ",x
-            print "y ",y    
+            #print "x ",x
+            #print "y ",y    
 
             ##Se generan las matrices para usar en todas las graficas
             X, Y = np.meshgrid(x, y)

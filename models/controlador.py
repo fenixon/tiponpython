@@ -339,7 +339,7 @@ class Proyecto(object):
             self.tiempos=tiempos
 
 
-            print self.X
+            #print self.X
                         
         else:
             nit=nit+1

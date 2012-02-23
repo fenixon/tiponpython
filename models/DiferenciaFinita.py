@@ -31,14 +31,15 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
         l=n*m
         i=range(m)
         j=range(n)
-        lx=self.dominio.ancho
-        ly=self.dominio.alto
+        self.d=self.dominio
+        lx=self.d.ancho
+        ly=self.d.alto
         A=np.identity(len(i)*len(j), float)
 
         if self.aceptaBarrera==True:
-            Todoslospbombeo=self.dominio.obtenerPBombeoYVirtuales()            
+            Todoslospbombeo=self.d.obtenerPBombeoYVirtuales()            
         else:
-            Todoslospbombeo=self.dominio.obtenerPozosdeBombeo()
+            Todoslospbombeo=self.d.obtenerPozosdeBombeo()
         Np=len(Todoslospbombeo)
         Q=[]
         xps=[]
@@ -74,7 +75,7 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
             for j in range(niy):
                 #print "xi",x[i], "yj ", y[j]
                 #dominio.H0a*x(i) +dominio.H0b*y(j) + dominio.H0c;
-                h0[j,i]=self.dominio.calcularH0(x[i], y[j])
+                h0[j,i]=self.d.calcularH0(x[i], y[j])
 
         #Para el elemento 1,1
         ##Aca jess donde tenes que tirar lineas a bocha!
@@ -148,9 +149,9 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
         #calculando decensos funcion del tiempo
         x1=np.zeros((l,l),float)
         At=dt
-        h=np.ones((l,1),float)*10
+        h=np.ones((l),float)*10
         for i in range(m):
-            h[n*i:n+n*i,0]=h0[0:n,i]
+            h[n*i:n+n*i]=h0[0:n,i]
 
         tetha=0.5
         E=A*tetha-S/(At)
@@ -175,7 +176,7 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
             E[k,k]=1
             
         B=np.linalg.inv(E)
-
+        x2=np.zeros((len(tiempos),l),float)
         for t1 in range(len(tiempos)):            
             #b(1:l)=0
             b=np.zeros((l),float) 
@@ -184,30 +185,75 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
                 yp=yps[i]
                 b2=self.generab(lx,ly,Ax,Ay,n,m,xp,yp,l,x,y)
                 Qt=Q[i]
+                #if t1==0:
+                    #for w in range(1621, 1630):
+                        #print 'pos ',w,'bw ',b2[w]                
+                #print "b2 ", b2,'-Qt-',Qt
+                #print '-Qt-',Qt                
                 b=b+b2*Qt
-                
-            b1=(A*(tetha-1)-S/(At))*h+b
 
-            print "b1 ", b1[0:l-n+1:n],"- h0 -", h0[0,0:m]
+            #print 'b--',b                
+                #for w in range(1621, 1630):
+                    #print 'pos ',w,'bw ',b[w]
+               
+            b1=np.dot((A*(tetha-1)-S/(At)),h)+b
 
+            if t1==0:
+                aux1=(A*(tetha-1)-S/(At))
+                aux2=np.dot(aux1,h)
+                aux3=aux2+b
                 
+
+            #if t1==0:
+            #    print "b1 ", b1, "A ", A            
+
+            #print "b1 ", b1[0:l-n+1:n],"- h0 -", h0[0,0:m]                
             #g(1:2:6) -> g[0:6:2]
-            b1[0:l-n+1:n]=h0[0,0:m]   #arriba
-            
+            b1[0:l-n+1:n]=h0[0,0:m]   #arriba            
             b1[l-n:l]=h0[0:n,m-1]     #derecha
             b1[n-1:l:n]=h0[n-1,0:m]   #abajo
             b1[0:n]=h0[0:n,0]         #izq
 
-            h=B*b1
+            h=np.dot(B,b1)
             x2[t1,0:l]=h
+
+
+
+        """print 'Asi quedo aux1'
+        for i in range(m):
+            for j in range(n):
+                if aux1[j,i]!=0:
+                   print 'j ',j,'i ',i,'aux1[w]::',aux1[j,i]
+
+        print 'Asi quedo aux2' 
+        for w in range (len(aux2)):
+            if aux2[w]!=0:
+                print "indice::",w,"aux2[w]::",aux2[w]
+
+        print 'Asi quedo aux3' 
+        for w in range (len(aux3)):
+            if aux3[w]!=0:
+                print "indice::",w,"aux3[w]::",aux3[w]"""                
+                   
+
+        #print "A[0,0] ",A[0,0]
+
+        #print "A", A
+        #print 'Asi quedo S '
+        #print S
+
+        #print 'Asi quedo S ', S
+        
+        #print 'tetha ',tetha
+        #print 'At ',At
 
         ##Esto va a lo ultimo de todo y esta en otros scripts de Matlab
 
         ##Obtener todos los pozos de observacion
-        TodoslospozosObservacion=d.obtenerPozosdeObservacion()
+        TodoslospozosObservacion=self.d.obtenerPozosdeObservacion()
         ##Se instancias de una para todos los tiempos una lista de Observaciones solucionadas para cada pozo de observacion
         for pozoObservacion in TodoslospozosObservacion:
-            pozoObservacion.instanciarSolucionadas(d.calcularH0(pozoObservacion.x, pozoObservacion.y), tiempos)
+            pozoObservacion.instanciarSolucionadas(self.d.calcularH0(pozoObservacion.x, pozoObservacion.y), tiempos)
 
             xo=pozoObservacion.x
             yo=pozoObservacion.y
@@ -263,7 +309,10 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
         return self.matrizDescenso
 
     def generab(self,lx,ly,Ax,Ay,n,m,xp,yp,l,x,y):
-
+        
+        #print "lx ",lx,"ly ",ly,"n ",n,"m ",m,"xp ",xp,"yp ",yp,"l ",l,"x ",x,"y ",y
+        #print "Ax ",Ax,"Ay ",Ay
+        
         #b2(1:l)=0;
         b2=np.zeros((l),float)          
         pb=np.zeros((2,2),float)
@@ -298,13 +347,13 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
                 ff[2]=(1/d3)/(1/d1+1/d2+1/d3+1/d4)
                 ff[3]=(1/d4)/(1/d1+1/d2+1/d3+1/d4)
 
-        b2[i+n*(j-1)]=ff[0]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
-        b2[i+n*(j-1)-1]=ff[1]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
-        b2[i+n*(j-2)]=ff[2]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
-        b2[i+n*(j-2)-1]=ff[3]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
+        b2[i+n*(j)]=ff[0]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
+        #print 'indice ',i+n*(j)
+        b2[i+n*(j)-1]=ff[1]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
+        b2[i+n*(j-1)]=ff[2]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
+        b2[i+n*(j-1)-1]=ff[3]/((pb[0,1]-pb[0,0])*(pb[1,1]-pb[1,0]))
 
         return b2
-
     
 
     def distancia(self, x1,y1,x2,y2 ):

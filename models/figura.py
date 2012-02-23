@@ -158,10 +158,10 @@ class figura():
 
 ##        p.show()
 
-        if self.dominio.metodo.gettipo()=="analitico":       
-            surf = ax.plot_surface(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
-        else:
-            surf = ax.plot_wireframe(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)      
+        #if self.dominio.metodo.gettipo()=="analitico":       
+        surf = ax.plot_surface(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)
+        #else:
+        #    surf = ax.plot_wireframe(self.X, self.Y, Z, rstride=1, cstride=1, cmap=cm.jet,linewidth=0, antialiased=False)      
 
         ax.set_zlim3d(self.ming, self.maxg)
         ax.set_title(u'Evolución de niveles en el dominio (Problema directo, 3D)')

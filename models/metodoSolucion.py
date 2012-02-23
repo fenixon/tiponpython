@@ -432,7 +432,9 @@ class metodoAnalitico(metodoSolucion):
     
 
 class metodoNumerico(metodoSolucion):
-    #pass
+    def __init__(self, dominio, parametros, asociar=None):
+        self.aceptaBarrera=False
+        metodoSolucion.__init__(self,dominio,parametros, asociar)
     def gettipo(self):
         return "numerico"  
 

@@ -113,7 +113,10 @@ class CaliHantush(metodooptimizacion.metodooptimizacion):
                 self.metodo=Hantush(self.d, self.controlador.parametros, None)
                 self.metodo.setearValores([self.T,self.S,self.c])              
                 self.d.optimizacioneshechas[self.__str__()]=self
-                return [self.T,self.S,"",self.obj]
+                retorno={}
+                retorno={'T':self.T,'S':self.S,'C':self.c}
+                return retorno             
+                #return [self.T,self.S,"",self.obj]
 		#return [acui.T,acui.S,acui.c,obj]
 
 

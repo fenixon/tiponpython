@@ -98,11 +98,12 @@ class Proyecto(object):
         self.observaciones.remove(obse)
 
     def creadiscesp(self,Np,lx,m,xp):
+        
 
         #Coordenada de pozos
         Np1=Np
-        if Np>1:
-            xp=np.zeros((Np),float)
+##        if Np>1:
+##            xp=np.zeros((Np),float)
 
         #de 0 a Np-2 numpy. 1 a Np-1 en matlab
         for i in range(Np-1):
@@ -110,15 +111,16 @@ class Proyecto(object):
                 xp[i:Np-2]=xp[i+1:Np-1]
                 xp[Np-1]=0
                 Np=Np-1   
-       
-        if Np>1:
+##        print "Anda aca ", Np
+        
+        if Np>1:           
             Ix=np.zeros((Np+1),float)
             LnIx=np.zeros((Np),float)
             Ndiv=np.zeros((Np),float)
             DT=np.zeros((Np),float)
             AD=np.zeros((Np),float)
-            indde=np.zeros((Np),float)
-            indiz=np.zeros((Np),float)
+            indde=np.zeros((Np),int)
+            indiz=np.zeros((Np),int)
             maxNdiv=0            
             for i in range(Np):
                 Ix[0]=0
@@ -139,12 +141,13 @@ class Proyecto(object):
                 DT[i]=np.log(xp[i]-Ix[i])+np.log(Ix[i+1]-xp[i])
                 AD[i]=DT[i]/Ndiv[i]
 
-            xde=np.zeros((Np,maxNdiv+1),float)
-            xiz=np.zeros((Np,maxNdiv+1),float)
+            xde=np.zeros((Np,maxNdiv),float)
+            xiz=np.zeros((Np,maxNdiv),float)
             
             for i in range(Np):
-                for j in range (Ndiv[i]):
-                    xde[i,j]=xp[i]+np.exp(j*AD[i])
+##                print 'ndiv tope ',round(Ndiv[i],0)
+                for j in range (int(round(Ndiv[i],0))):
+                    xde[i,j]=xp[i]+np.exp((j+1)*AD[i])
                     if (xde[i,j]>Ix[i+1]):
                         if abs(Ix[i]-xde[i,j])<abs(Ix[i+1]-xde[i,j]):
                             xde[i,j]=Ix[i]
@@ -154,41 +157,45 @@ class Proyecto(object):
                         break
 
             for i in range(Np):
-                for j in range (Ndiv[i]):
-                    xiz[i,j]=xp[i]-np.exp(j*AD[i])
+                for j in range (int(round(Ndiv[i],0))):
+                    xiz[i,j]=xp[i]-np.exp((j+1)*AD[i])
                     if xiz[i,j]<Ix[i]:
                         if np.abs(Ix[i]-xiz[i,j])<np.abs(Ix[i+1]-xiz[i,j]):
                             xiz[i,j]=Ix[i]
                         else:
                             xiz[i,j]=Ix[i+1]
+                        print j
                         indiz[i]=j;
                         break
 
-            x=np.zeros((maxNdiv+3+maxNdiv),float)
+##            x=np.zeros((maxNdiv+3+maxNdiv),float)
+            x=[]
             k=0
             for i in range(Np):
                 #for j=indiz(i):-1:1;
                 for j in range(indiz[i],-1,-1):
-                    x[k]=xiz[i,j]
+                    print 'i ',i,'j ',j,'xiz(i,j) ', xiz[i,j]
+                    x.append(xiz[i,j])
                     k=k+1
 
-                x[k]=xp[i]
+                x.append(xp[i])
                 k=k+1
-                for j in range (indde[i]-1):
-                    x[k]=xde[i,j]
+                for j in range (indde[i]):
+                    print 'i ',i,'j ',j,'xiz(i,j) ', xde[i,j]
+                    x.append(xde[i,j])
                     k=k+1
                     
-            x[k]=lx
+            x.append(lx)
 
-            print "Ix ", Ix
-            print "LnIx ", LnIx
-            print "Ndiv ", Ndiv
-            print "DT ", DT
-            print "AD ", AD
-            print "indde ", indde
-            print "indiz ", indiz
-            print "xde ", xde
-            print "xiz ", xiz
+##            print "Ix ", Ix
+##            print "LnIx ", LnIx
+##            print "Ndiv ", Ndiv
+##            print "DT ", DT
+##            print "AD ", AD
+##            print "indde ", indde
+##            print "indiz ", indiz
+##            print "xde ", xde
+##            print "xiz ", xiz
             print "x ", x
 
         else:
@@ -304,6 +311,8 @@ class Proyecto(object):
                     Todoslospbombeo=self.dominio.obtenerPozosdeBombeo()
                 #print Todoslospbombeo
                 Np=len(Todoslospbombeo)
+                print "Np ", Np
+                
                 #xp=np.zeros((Np),float)
                 xp=[]                
                 #yp=np.zeros((Np),float)

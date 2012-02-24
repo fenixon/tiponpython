@@ -749,7 +749,14 @@ class Ui_MainWindow(QtGui.QDialog):
         pob.setX(1600)
         pob.setY(1500)
         pob.id = elementoDominio.ContEnsayo.agregarPozo(1600,1500) 
-        self.ui.caja.botones.append(pob)        
+        self.ui.caja.botones.append(pob)
+
+
+        poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        poz2.setX(250)
+        poz2.setY(100)
+        poz2.id = elementoDominio.ContEnsayo.agregarPozo(250, 100) 
+        self.ui.caja.botones.append(poz2)        
 
         ##No hay barrera en dif finita
         #x0=250
@@ -777,6 +784,14 @@ class Ui_MainWindow(QtGui.QDialog):
         self.importar.ext="txt"
         self.importar.accionaceptar()
         self.importar.close()
+
+
+        self.ventanaImportarProyecto(noexec, True)
+        self.importar.archivo="ficheros/demo1pozo.ods"
+        self.importar.nombre.setText('ens2')
+        self.importar.ext="ods"
+        self.importar.accionaceptar()
+        self.importar.close()        
        
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
@@ -788,7 +803,12 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
-        asoe.asociar()         
+        asoe.asociar()
+
+        asoe.setupUi(frmasociar, poz2.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.ensayos[0]
+        asoe.tipo="e"
+        asoe.asociar()          
         
         print 'se carga el demo'
 
@@ -875,7 +895,7 @@ class Ui_MainWindow(QtGui.QDialog):
         
 
 
-    def cargar_demobarrera1000theis(self):
+    def(self):
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 1000
@@ -933,12 +953,12 @@ class Ui_MainWindow(QtGui.QDialog):
             
         self.ventanaImportarProyecto(noexec, True)
         self.importar.archivo="ficheros/bombeos.txt"
-        #self.importar.archivo="ficheros/haintush.txt"
-        
+        #self.importar.archivo="ficheros/haintush.txt"        
         self.importar.nombre.setText('ens1')
         self.importar.ext="txt"
         self.importar.accionaceptar()
         self.importar.close()
+ 
        
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
@@ -950,7 +970,7 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
-        asoe.asociar()         
+        asoe.asociar()        
         
         print 'se carga el demo'
 

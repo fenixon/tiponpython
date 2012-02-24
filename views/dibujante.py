@@ -37,7 +37,7 @@ class dibujante(QMainWindow):
         #self.tfo=tfo
         self.cardt=0
         self.tiempos=tiempos
-        print 'ti ',ti
+##        print 'ti ',ti
 
         ##LLAMADO AL METODO DE SOLUCION
         ##llamamo al metodo de solucion asociado al dominio para que me de la matriz
@@ -153,7 +153,7 @@ class dibujante(QMainWindow):
 
         #Cambio por la discretizacion espacial
 
-        print "tf ",tf,"dt ",dt, "maximo ",tf/dt
+##        print "tf ",tf,"dt ",dt, "maximo ",tf/dt
 
         if dominio.metodo.gettipo()!="analitico":        
             estadob.setMaximum(int(tf/dt)-1)
@@ -306,8 +306,11 @@ class dibujante(QMainWindow):
     def grafSele(self, i):
 
         self.sel = i
+        self.cardt=0
+        self.estadob.setValue(0)
         self.grafSel(self.cardt)
         self.draw()
+##        self.cardt=1                
 
     def center(self):
 

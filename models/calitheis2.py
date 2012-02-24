@@ -182,8 +182,10 @@ class CaliTheis2(metodooptimizacion.metodooptimizacion):
 		#print "S dominio ",self.controlador.obtenerDominio().metodo.listaParametros[1].valoresParametro.valor
 
                 self.domActual.optimizacioneshechas[self.__str__()]=self
-                
-		return [T, S, f_min,obj]
+                retorno={}
+                retorno={'T':T,'S':S}
+		#return [T, S, f_min,obj]
+                return retorno
 	
 
 

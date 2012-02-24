@@ -267,20 +267,25 @@ class optimizacion(QtGui.QWidget):
         self.dia.setModal(True)
         self.dia.show()
         
-        print "Proceso Calitheis2"
+        print "Proceso La optimizacion"
         opt.setcontrolador(controlador)
         opt.setpozos(controlador.listarPozosObsParaOptimizar()[m])
-        T, S, f_min,obs_sim=opt.calcular()
-        print "Valor optimo de T: " + str(T)
-        print "Valor optimo de S: " +str(S)
-        print "Valor optimo de f_min: " +str(f_min)
-        print "Valor optimo de obs_sim: " +str(obs_sim)
-        print "------------------------------------------------"
-        print "fin"
+        valoresoptimos={}
+        valoresoptimos=opt.calcular()
+        #T, S, f_min,obs_sim=opt.calcular()
+        #print "Valor optimo de T: " + str(T)
+        #print "Valor optimo de S: " +str(S)
+        #print "Valor optimo de f_min: " +str(f_min)
+        #print "Valor optimo de obs_sim: " +str(obs_sim)
+        #print "------------------------------------------------"
+        #print "fin"
+        print str(valoresoptimos)
+        claves=valoresoptimos.keys()
+        mensaje=""
+        for clave in claves:
+            mensaje= mensaje  + clave+ ": " + str(valoresoptimos[clave]) + "\n"
 
-        
-
-        reply = QtGui.QMessageBox.information(self,u"Información",u"El proceso de optimización a concluido")
+        reply = QtGui.QMessageBox.information(self,u"Proceso de optimización finalizado","Los valores optimos son:\n" + mensaje)
         
         self.dia.close()
         self.padre.close()        

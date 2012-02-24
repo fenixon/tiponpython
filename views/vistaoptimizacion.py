@@ -285,9 +285,9 @@ class optimizacion(QtGui.QWidget):
         for clave in claves:
             mensaje= mensaje  + clave+ ": " + str(valoresoptimos[clave]) + "\n"
 
-        reply = QtGui.QMessageBox.information(self,u"Proceso de optimización finalizado","Los valores optimos son:\n" + mensaje)
-        
         self.dia.close()
+        reply = QtGui.QMessageBox.information(self,u"Proceso de optimización finalizado","Los valores optimos son:\n" + mensaje)
+                
         self.padre.close()        
 
 if __name__ == "__main__":

@@ -889,7 +889,7 @@ class Ui_MainWindow(QtGui.QDialog):
         
 
 
-    def(self):
+    def cargar_demobarrera1000theis(self):
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 1000

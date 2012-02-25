@@ -284,7 +284,7 @@ self.scene())
 
 			r = elementoDominio.ContEnsayo.buscarRecta(ident)
 
-			barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
+			barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())	
 
 
 			#self.transformarCoordenada(QtCore.QPoint(barrera.line().x1(), barrera.line().y1()))
@@ -1614,6 +1614,8 @@ np.int32(self.lineEdit_4.text()))
 
                     elementoDominio.Dominio.rectas.append(barrera)
 
+                    r.setearCoef(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_4.text()) )
+
 
 		else:
 
@@ -1631,6 +1633,11 @@ np.int32(self.lineEdit_4.text()))
 		    r = elementoDominio.ContEnsayo.buscarRecta(ident)
 		    
    		    barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
+
+   		    r.setearCoef(elementoDominio.Dominio.rectaCandidata.line().x1()-elementoDominio.Dominio.ejeEscena.x(),
+                                 elementoDominio.Dominio.rectaCandidata.line().x2()-elementoDominio.Dominio.ejeEscena.x(),
+                                 elementoDominio.Dominio.ejeEscena.y()-elementoDominio.Dominio.rectaCandidata.line().y1(),                                 
+                                 elementoDominio.Dominio.ejeEscena.y()-elementoDominio.Dominio.rectaCandidata.line().y2() )
 
 		    barrera.id = ident
                     
@@ -1899,8 +1906,8 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 
             elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPointF(np.int(self.lineEdit_3.text()), np.int(self.lineEdit_4.text())))
 
-            elementoDominio.ContEnsayo.actualizarRectaC(self.idElemento, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
-
+            elementoDominio.ContEnsayo.actualizarRectaC(self.idElemento, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)         
+          
 
             for recta in elementoDominio.Dominio.rectas:
                 if recta.id == self.idElemento:
@@ -1910,6 +1917,10 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
                     #elementoDominio.ContEnsayo.actualizarRectaCoordenada(recta.id, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
                     
 		    r = elementoDominio.ContEnsayo.buscarRecta(recta.id)
+		    r.setearCoef(np.int32(self.lineEdit.text()),
+                                 np.int32(self.lineEdit_3.text()),
+                                 np.int32(self.lineEdit_2.text()),                                 
+                                 np.int32(self.lineEdit_4.text()))
 
    		    #recta.setLine(r.x1, elementoDominio.Dominio.a2, r.x2, elementoDominio.Dominio.b2)
 
@@ -1944,7 +1955,7 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
                     self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
 	    else:
 	        self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.a2, 10))
-
+            print "valor y1 ",recta.y1
 
 	    if recta.x2 <= 0:
                 self.lineEdit_3.setText(QtCore.QString.number(0, 10))
@@ -1963,6 +1974,8 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
                     self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
 	    else:
 	        self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.b2, 10))
+            print "valor y2 ",recta.y2
+            
 
 	    if recta.tipo == "Positivo":
 	        self.cbTipo.setCurrentIndex(1)

@@ -733,24 +733,26 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
-        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-        b.setX(1500)
-        b.setY(1500)
-        b.id = elementoDominio.ContEnsayo.agregarPozo(1500, 1500) 
-        self.ui.caja.botones.append(b)
+        #b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        #b.setX(1500)
+        #b.setY(1500)
+        #b.id = elementoDominio.ContEnsayo.agregarPozo(1500, 1500) 
+        #self.ui.caja.botones.append(b)
+        b=self.agregarPozo(1500, 1500) 
 
-        pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-        pob.setX(1600)
-        pob.setY(1500)
-        pob.id = elementoDominio.ContEnsayo.agregarPozo(1600,1500) 
-        self.ui.caja.botones.append(pob)
+        #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        #pob.setX(1600)
+        #pob.setY(1500)
+        #pob.id = elementoDominio.ContEnsayo.agregarPozo(1600,1500) 
+        #self.ui.caja.botones.append(pob)
+        pob=self.agregarPozo(1600,1500)
 
-
-        poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-        poz2.setX(250)
-        poz2.setY(100)
-        poz2.id = elementoDominio.ContEnsayo.agregarPozo(250, 100) 
-        self.ui.caja.botones.append(poz2)        
+        #pinbi = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        #pinbi.setX(250)
+        #pinbi.setY(100)
+        #pinbi.id = elementoDominio.ContEnsayo.agregarPozo(250, 100) 
+        #self.ui.caja.botones.append(pinbi)
+        pinbi=self.agregarPozo(250, 100)        
 
         ##No hay barrera en dif finita
         #x0=250
@@ -799,7 +801,7 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.tipo="o"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, poz2.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, pinbi.id, ContEnsayo, True)        
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar()          
@@ -831,30 +833,31 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
 
-        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-        b.setX(500)
-        b.setY(250)
-        b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
-        self.ui.caja.botones.append(b)
+        #b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        #b.setX(500)
+        #b.setY(250)
+        #b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
+        #self.ui.caja.botones.append(b)
+        b=self.agregarPozo(500, 250)
 
-        pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-        pob.setX(600)
-        pob.setY(250)
-        pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
-        self.ui.caja.botones.append(pob)        
+        #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        #pob.setX(600)
+        #pob.setY(250)
+        #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
+        #self.ui.caja.botones.append(pob)
+        pob=self.agregarPozo(600, 250) 
 
         x0=250
         y0=0
         x1=500
         y1=1000
-        r = QtCore.QLineF(x0, y0, x1, y1)
-        barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
-        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
-        self.ui.caja.rectas.append(barrera)	        
+        #r = QtCore.QLineF(x0, y0, x1, y1)
+        #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
+        #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
+        #self.ui.caja.rectas.append(barrera)
+        barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
 
-
-        noexec=1     
-
+        noexec=1    
 
         self.ventanaImpoObs(noexec, True)
         #self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"
@@ -889,6 +892,37 @@ class Ui_MainWindow(QtGui.QDialog):
         
 
 
+    def agregarPozo(self,x,y):
+        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        b.id = ContEnsayo.agregarPozo(np.int(x), np.int(y))
+        self.ui.caja.transformarCoordenada(QtCore.QPoint( np.int32(x), np.int32(y) )  )
+        if np.int32(x) == 0:
+            b.setX(0 - 5)
+        else:
+            b.setX(self.ui.caja.a1 - 15)
+        if np.int32(y) == 0:
+            b.setY(self.ui.caja.alto - 10)
+        else:
+            b.setY(self.ui.caja.a2 - 10)
+        self.ui.caja.botones.append(b)
+        return b
+
+    def agregarRecta(self,x1,y1,x2,y2,tipo):
+        print "x no se q ",self.ui.caja.ejeEscena.x()
+        print "y no se q ",self.ui.caja.ejeEscena.y()
+        ident = ContEnsayo.agregarRecta(tipo, np.int32(x1), self.ui.caja.ejeEscena.y() - np.int32(y1),
+        np.int32(x2), self.ui.caja.ejeEscena.y() - np.int32(y2),
+        self.ui.caja.alto, self.ui.caja.ancho)
+        r = ContEnsayo.buscarRecta(ident)               
+        barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", self.ui.caja.scene())
+        barrera.id = ident
+        self.ui.caja.rectas.append(barrera)
+        #print "cordenadas reales como quedaron ",x1,y1,x2,y2
+        #print "cordenadas de la recta ",r.x1, r.y1, r.x2, r.y2        
+        r.setearCoef(x1, x2, y1, y2)        
+        return barrera
+        
+
     def cargar_demobarrera1000theis(self):
         global ContEnsayo
 
@@ -911,31 +945,31 @@ class Ui_MainWindow(QtGui.QDialog):
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
+        #b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        #b.setX(500)
+        #b.setY(750)
+        #b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
+        #self.ui.caja.botones.append(b)
+        b=self.agregarPozo(500, 250) 
 
-        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-        b.setX(500)
-        b.setY(250)
-        b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
-        self.ui.caja.botones.append(b)
-
-        pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
-        pob.setX(600)
-        pob.setY(250)
-        pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
-        self.ui.caja.botones.append(pob)        
+        #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+        #pob.setX(600)
+        #pob.setY(750)
+        #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
+        #self.ui.caja.botones.append(pob)
+        pob=self.agregarPozo(600, 250)
 
         x0=250
         y0=0
         x1=500
         y1=1000
-        r = QtCore.QLineF(x0, y0, x1, y1)
-        barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
-        barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
-        self.ui.caja.rectas.append(barrera)	        
-
+        #r = QtCore.QLineF(x0, y0, x1, y1)
+        #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
+        #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
+        #self.ui.caja.rectas.append(barrera)	        
+        barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
 
         noexec=1     
-
 
         self.ventanaImpoObs(noexec, True)
         self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"

@@ -119,15 +119,10 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionVerObs.setObjectName(_fromUtf8("actionVerObs"))
 
 
+
         self.actionGenerar_graficas2 = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba (Theis)", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))       
-        self.actionGenerar_graficas3 = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas3.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba (Hantush)", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas3.setObjectName(_fromUtf8("actionGenerar_graficas3"))  
-        self.actionGenerar_graficas4 = QtGui.QAction(MainWindow)
-        self.actionGenerar_graficas4.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba (Diferencias Finitas)", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas4.setObjectName(_fromUtf8("actionGenerar_graficas4"))       
+        self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))        
 
         self.actionGenerar_graficas = QtGui.QAction(MainWindow)
         self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Graficar niveles calculados", None, QtGui.QApplication.UnicodeUTF8))
@@ -156,7 +151,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuCaudal_de_bombeo.addAction(self.actionIngresar)
         self.menuCaudal_de_bombeo.addAction(self.actionImportar)
         self.menuCaudal_de_bombeo.addAction(self.actionVerBombeo)
-        
+       
 
         self.menuObservaciones.addAction(self.actionIngObs)
         self.menuObservaciones.addAction(self.actionImpObs)
@@ -167,8 +162,6 @@ class Ui_MainWindow(QtGui.QDialog):
 
         self.menuGraficar.addAction(self.actionGenerar_graficas)
         self.menuDatos.addAction(self.actionGenerar_graficas2)
-        self.menuDatos.addAction(self.actionGenerar_graficas3)
-        self.menuDatos.addAction(self.actionGenerar_graficas4)
 ##        self.menuGraficar.addAction(self.actionGenerar_video)
         self.menuGraficar.addAction(self.actionOptimizacion)
         self.menuGraficar.addAction(self.actionGrafOpt)       
@@ -191,8 +184,6 @@ class Ui_MainWindow(QtGui.QDialog):
 
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
         QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000theis)
-        QtCore.QObject.connect(self.actionGenerar_graficas3, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000hantush)
-        QtCore.QObject.connect(self.actionGenerar_graficas4, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demoNumerico)
         #tCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
 
@@ -761,7 +752,7 @@ class Ui_MainWindow(QtGui.QDialog):
         #pinbi.setY(100)
         #pinbi.id = elementoDominio.ContEnsayo.agregarPozo(250, 100) 
         #self.ui.caja.botones.append(pinbi)
-##        pinbi=self.agregarPozo(250, 100)        
+        pinbi=self.agregarPozo(250, 100)        
 
         ##No hay barrera en dif finita
         #x0=250
@@ -791,12 +782,12 @@ class Ui_MainWindow(QtGui.QDialog):
         self.importar.close()
 
 
-##        self.ventanaImportarProyecto(noexec, True)
-##        self.importar.archivo="ficheros/demo1pozo.ods"
-##        self.importar.nombre.setText('ens2')
-####        self.importar.ext="ods"
-##        self.importar.accionaceptar()
-####        self.importar.close()        
+        self.ventanaImportarProyecto(noexec, True)
+        self.importar.archivo="ficheros/demo1pozo.ods"
+        self.importar.nombre.setText('ens2')
+        self.importar.ext="ods"
+        self.importar.accionaceptar()
+        self.importar.close()        
        
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
@@ -810,10 +801,10 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.tipo="o"
         asoe.asociar()
 
-##        asoe.setupUi(frmasociar, pinbi.id, ContEnsayo, True)        
-##        asoe.oe=ContEnsayo.ensayos[0]
-##        asoe.tipo="e"
-##        asoe.asociar()          
+        asoe.setupUi(frmasociar, pinbi.id, ContEnsayo, True)        
+        asoe.oe=ContEnsayo.ensayos[0]
+        asoe.tipo="e"
+        asoe.asociar()          
         
         print 'se carga el demo'
 

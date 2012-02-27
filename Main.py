@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Main.ui'
-#
-# Created: Thu Dec 08 19:29:21 2011
-#      by: PyQt4 UI code generator 4.8.5
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt4 import QtCore, QtGui
 import sys
 sys.path.append("views")
@@ -25,23 +18,24 @@ import metodooptimizacion
 from theis import *
 from Hantush import *
 from DiferenciaFinita import *
-#from vistaDominio import  *
 from vistaDominiolaRemodelacion import  *
 import discretizaciones
 from views.dibujante import dibujante
 from views.dibujante_interpolacion import dibujante2
 from views.graficarOpt import graficarOpt
 
-import random#Solo para pruebas
-
 try:
+
     _fromUtf8 = QtCore.QString.fromUtf8
+
 except AttributeError:
+
     _fromUtf8 = lambda s: s
 
 class Ui_MainWindow(QtGui.QDialog):
 
     def setupUi(self, MainWindow):
+
         ##Se instancia el controlador
         global ContEnsayo
 
@@ -52,7 +46,7 @@ class Ui_MainWindow(QtGui.QDialog):
 
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(800, 600)
-        
+
         MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Sistema de interpretación de ensayos de bombeo en acuíferos - TIP' 09", None, QtGui.QApplication.UnicodeUTF8))
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -92,8 +86,6 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionAcerca_de.setText(QtGui.QApplication.translate("MainWindow", "Acerca de..", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAcerca_de.setObjectName(_fromUtf8("actionAcerca_de"))
         self.actionCerrar = QtGui.QAction(MainWindow)
-        self.actionCerrar.setText(QtGui.QApplication.translate("MainWindow", "Cerrar", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionCerrar.setObjectName(_fromUtf8("actionCerrar"))
         self.actionSalir = QtGui.QAction(MainWindow)
         self.actionSalir.setText(QtGui.QApplication.translate("MainWindow", "Salir", None, QtGui.QApplication.UnicodeUTF8))
         self.actionSalir.setObjectName(_fromUtf8("actionSalir"))
@@ -118,7 +110,6 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionVerObs.setText(QtGui.QApplication.translate("MainWindow", "Ver", None, QtGui.QApplication.UnicodeUTF8))
         self.actionVerObs.setObjectName(_fromUtf8("actionVerObs"))
 
-
         self.actionGenerar_graficas2 = QtGui.QAction(MainWindow)
         self.actionGenerar_graficas2.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba (Theis)", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGenerar_graficas2.setObjectName(_fromUtf8("actionGenerar_graficas2"))       
@@ -142,21 +133,13 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionGrafOpt.setText(QtGui.QApplication.translate("MainWindow", u"Graficar optimizaciones", None, QtGui.QApplication.UnicodeUTF8))
         self.actionGrafOpt.setObjectName(_fromUtf8("actionGrafOpt"))
 
-
-
-##        self.actionGenerar_video = QtGui.QAction(MainWindow)
-##        self.actionGenerar_video.setText(QtGui.QApplication.translate("MainWindow", "Generar video...", None, QtGui.QApplication.UnicodeUTF8))
-##        self.actionGenerar_video.setObjectName(_fromUtf8("actionGenerar_video"))
-
         self.menuInicio.addAction(self.actionNuevo_Proyecto)
-        self.menuInicio.addAction(self.actionCerrar)
         self.menuInicio.addAction(self.actionSalir)
         self.menuAyuda.addAction(self.actionAcerca_de)
 
         self.menuCaudal_de_bombeo.addAction(self.actionIngresar)
         self.menuCaudal_de_bombeo.addAction(self.actionImportar)
         self.menuCaudal_de_bombeo.addAction(self.actionVerBombeo)
-        
 
         self.menuObservaciones.addAction(self.actionIngObs)
         self.menuObservaciones.addAction(self.actionImpObs)
@@ -169,15 +152,13 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuDatos.addAction(self.actionGenerar_graficas2)
         self.menuDatos.addAction(self.actionGenerar_graficas3)
         self.menuDatos.addAction(self.actionGenerar_graficas4)
-##        self.menuGraficar.addAction(self.actionGenerar_video)
         self.menuGraficar.addAction(self.actionOptimizacion)
-        self.menuGraficar.addAction(self.actionGrafOpt)       
+        self.menuGraficar.addAction(self.actionGrafOpt)
 
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
         self.menubar.addAction(self.menuGraficar.menuAction())
         self.menubar.addAction(self.menuAyuda.menuAction())
-
 
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionSalir, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
@@ -193,41 +174,38 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000theis)
         QtCore.QObject.connect(self.actionGenerar_graficas3, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000hantush)
         QtCore.QObject.connect(self.actionGenerar_graficas4, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demoNumerico)
-        #tCore.QObject.connect(self.actionGenerar_video, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_video)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
 
-        QtCore.QObject.connect(self.actionGrafOpt, QtCore.SIGNAL(_fromUtf8("triggered()")), self.GraficasOptimizacion)                
-        
+        QtCore.QObject.connect(self.actionGrafOpt, QtCore.SIGNAL(_fromUtf8("triggered()")), self.GraficasOptimizacion)
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
         QtCore.QObject.connect(self.menuObservaciones, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despligueObservacion)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
 
-        ##Leer parametros
-        ##ContEnsayo.leerParametros()
         self.grop = None
 
         ####Prueba de instanciar un metodo de solucion
-        ####Se le pasa el dominio, los parametros cargados en el sistema        
-##        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+        ####Se le pasa el dominio, los parametros cargados en el sistema
+##        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)
 ##        m.setearValores([500,0.001])
-
 
     def retranslateUi(self, MainWindow):
         pass
 
     def despliegueCaudal(self):
-        print "abre caudal"
+
+        #print "abre caudal"
+        pass
 
     def despligueObservacion(self):
-        print "abre observaciones"
+
+        #print "abre observaciones"
+        pass
 
     def ventanaNuevoProyecto(self):
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
-        
+
 	#Adherimos la vista del dominio
-	#self.ui = Ui_Form()
 
         self.ui = UiForm()
         ui.setupUi(frmNuevoProyecto, ContEnsayo)
@@ -279,22 +257,27 @@ class Ui_MainWindow(QtGui.QDialog):
         self.vimp=ui
         if noexec==None:
             frmimpobs.exec_()
-        
+
     def ventanaVerObs(self):
 
         global ContEnsayo
         obss=ContEnsayo.observaciones
+
         if len(obss)<=0 :
+
             QtGui.QMessageBox.information(self,
                 u"Información",
                 u"No existe ningún conjunto de observaciones cargado en el sistema y sin asociar")
+
         else:
+
             frmverobs=QtGui.QDialog()
             ui= verObservaciones.Ui_Dialog()
             ui.setupUi(frmverobs, ContEnsayo)
             frmverobs.exec_()
-        
+
     def ventanaIngObs(self):
+
         global ContEnsayo
         frmingobs=QtGui.QDialog()
         ui= ingresarObservaciones.Ui_Dialog()
@@ -302,16 +285,21 @@ class Ui_MainWindow(QtGui.QDialog):
         frmingobs.exec_()
 
     def Optimizacion(self):
+
         global ContEnsayo
         diccionario=elementoDominio.ContEnsayo.listarPozosObsParaOptimizar()
         claves=diccionario.keys()
+
         if (claves!=[]):
-            frmopt=QtGui.QWidget()       
+
+            frmopt=QtGui.QWidget()
             ui= vistaoptimizacion.optimizacion(elementoDominio.ContEnsayo,frmopt)
             frmopt.show()
             self.widget = ui
-            print "muestro la opt"
+            #print "muestro la opt"
+
         else:
+
             #Si no existen asociaciones doy error
             reply = QtGui.QMessageBox.warning(self,
                             "Error",
@@ -319,56 +307,41 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def limpiarDibujante(self):
 
-        self.dibujante = None          
+        self.dibujante = None
 
     def generar_graficas(self):
 
-        
         if self.dibujante != None:
 
-            print u'Ya hay una instancia corriendo'
+            #print u'Ya hay una instancia corriendo'
             self.dibujante.raise_()#Aca mostramos la ventana si ya existe
 
         else:
-            ##Codigo de alvaro para generar una matriz
-            #ran = random.randint(10, 30)
-            #print 'ran: ' + str(ran)
-            #zcol = []
-            #for i in range(0, ran):
-            #    z = np.random.multivariate_normal((1, 1), [[ran, 0], [0, ran]], ran).T
-            #    z = z**2
-            #    zcol.append(z)
 
-            #matrix = [np.arange(0, ran), zcol]                      
-            #print '<Matrix>\n' + str(matrix) + '\n</Matrix>'
             global ContEnsayo
 
             pozo = ContEnsayo.dominio.obtenerPozoBombeo()
 
             if len(ContEnsayo.dominio.listaPozo) < 1:
 
-                print 'No hay ningun pozo'
-                #self.dialogos('No hay ningun pozo')
+                #print 'No hay ningun pozo'
                 QtGui.QMessageBox.information(self,
                     "Error",
-                    "No hay ningun pozo")                
+                    "No hay ningun pozo")
 
             else:
 
                 if pozo != None:
-                    
+
                     if len(pozo.ensayos) > 0:
 
                         poz = ContEnsayo.dominio.obtenerPozoObservacion()
 
-                        #if len(poz.observaciones) > 0:
-
-                            ##formulario de discretizacion temporal
+                        ##formulario de discretizacion temporal
                         frmDiscretizaciones=QtGui.QDialog()
                         ui= discretizaciones.ventanaDiscretizaciones()
                         ui.setupUi(frmDiscretizaciones, ContEnsayo)
                         frmDiscretizaciones.exec_()
-
 
                         self.dia = QtGui.QDialog()
                         hbox1 = QtGui.QHBoxLayout()
@@ -379,60 +352,58 @@ class Ui_MainWindow(QtGui.QDialog):
                         self.dia.setWindowTitle(QtCore.QString(u'Calculando...'))
                         self.dia.setModal(True)
                         self.dia.show()
-                        #self.dia=None
-                        
-                        print 'Formulario de discretizaciones se cerro ' 
+
+                        #print 'Formulario de discretizaciones se cerro ' 
                         nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
                         X, Y,xx, yy, tiempos,tiemposobs, dt, tipodis=ContEnsayo.devolverDiscretizaciones()
-                                                
+
                         self.dibujante = dibujante(self, ContEnsayo.obtenerDominio(), tipodis, X,Y, xx, yy,nix,niy, tiempos,tiemposobs, ti, tf, dt, self.dia)#Hay que pasarle la ventana principal
                         self.dibujante.show()
                         QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
-                        print 'Dibujante invocado'                            
-                                                      
-
-                        #else:
-
-                            #print 'No hay observaciones asociadas al pozo'
-                         #   QtGui.QMessageBox.information(self,
-                         #       "Error",
-                         #       "No hay observaciones asociadas al pozo")                             
+                        #print 'Dibujante invocado'
 
                     else:
 
                         #print 'No hay ensayos asociados al pozo'
                         QtGui.QMessageBox.information(self,
                             "Error",
-                            "No hay ensayos asociados al pozo")                           
+                            "No hay ensayos asociados al pozo")
 
                 else:
 
                     #print 'No hay pozo de bombeo'
                     QtGui.QMessageBox.information(self,
                             "Error",
-                            "No hay pozo de bombeo")                      
-
+                            "No hay pozo de bombeo")
 
     def GraficasOptimizacion(self):
-        
+
         if self.grop != None:
-            print u'Ya hay una instancia corriendo'
+
+            #print u'Ya hay una instancia corriendo'
             self.frm.raise_()#Aca mostramos la ventana si ya existe
-            
+
         else:
+
             global ContEnsayo
             pozo = ContEnsayo.dominio.obtenerPozoBombeo()
+
             if len(ContEnsayo.dominio.listaPozo) < 1:
+
                 QtGui.QMessageBox.information(self,
                     "Error",
                     "No hay ningun pozo")
             else:
-                if pozo != None:
-                    if len(pozo.ensayos) > 0:
-                        poz = ContEnsayo.dominio.obtenerPozoObservacion()
-                        if len(poz.observaciones) > 0:
-                            ##formulario de discretizacion temporal
 
+                if pozo != None:
+
+                    if len(pozo.ensayos) > 0:
+
+                        poz = ContEnsayo.dominio.obtenerPozoObservacion()
+
+                        if len(poz.observaciones) > 0:
+
+                            ##formulario de discretizacion temporal
                             ####aca cambiar todo para mandar al formulario del pozo
 
                             nix, niy, ti, tf, nit, tfo=ContEnsayo.devolverValoresDiscretizaciones()
@@ -441,7 +412,7 @@ class Ui_MainWindow(QtGui.QDialog):
                             self.grop.setupUi(self.frm, ContEnsayo.obtenerDominio(), ti, tf,nit)
                             self.frm.show()
 
-                            print 'Dibujante invocado'
+                            #print 'Dibujante invocado'
 
                         else:
 
@@ -464,23 +435,18 @@ class Ui_MainWindow(QtGui.QDialog):
                             "Error",
                             "No hay pozo de bombeo")
 
-
-
-
     def generar_graficas2(self):
-        global ContEnsayo
-##        self.dibujante2 = dibujante2(self, ContEnsayo)#Hay que pasarle la ventana principal
-##        self.dibujante2.show()
 
+        global ContEnsayo
 
         ContEnsayo.dominio.alto = 100
 
         ContEnsayo.dominio.ancho = 100
 
-
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)
         m.setearValores([500,0.001])
+
         #Adherimos la vista del dominio
         self.ui = Ui_Form()
         self.ui.setupUi(MainWindow, ContEnsayo)
@@ -493,14 +459,14 @@ class Ui_MainWindow(QtGui.QDialog):
         b.show()
 
         noexec=1
-        
+
         self.ventanaImpoObs(noexec)
         self.vimp.archivo="ficheros/ensayo_tchicos.ods"
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
-        
+
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/ensayo_tchicos.ods"
         self.importar.nombre.setText('ens1')
@@ -508,7 +474,6 @@ class Ui_MainWindow(QtGui.QDialog):
         self.importar.accionaceptar()
         self.importar.close()
 
-        
         frmasociar=QtGui.QDialog()
         asoe= asociarEnsayos.Ui_Dialog()
         asoe.setupUi(frmasociar, b.id, ContEnsayo)        
@@ -520,21 +485,23 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar()
-        
-                
-        print 'se carga el demo'
+
+        #print 'se carga el demo'
 
 
     def cargar_demo(self):
+
         global ContEnsayo
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
+
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)
         m.setearValores([1000,0.0001])
+
         #Adherimos la vista del dominio
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
@@ -547,7 +514,6 @@ class Ui_MainWindow(QtGui.QDialog):
         b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
 
         self.ui.caja.botones.append(b)
-
 
         poe = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
@@ -558,9 +524,6 @@ class Ui_MainWindow(QtGui.QDialog):
 
         self.ui.caja.botones.append(poe)
 
-        
- 
-
         noexec=1
 
         self.ventanaImpoObs(noexec)
@@ -569,31 +532,30 @@ class Ui_MainWindow(QtGui.QDialog):
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
-        
+
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/demo.ods"
         self.importar.nombre.setText('ens1')
         self.importar.ext="ods"
         self.importar.accionaceptar()
         self.importar.close()
-        
+
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
-        asoe.setupUi(frmasociar, poe.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, poe.id, ContEnsayo)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, b.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, b.id, ContEnsayo)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar()
-        
-                
-        print 'se carga el demo'
-        
+
+        #print 'se carga el demo'
 
     def cargar_demobarrera1000(self):
+
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 1000
@@ -601,24 +563,23 @@ class Ui_MainWindow(QtGui.QDialog):
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
+
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)
         m.setearValores([1000,0.0001])
+
         #Adherimos la vista del dominio
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
-
-
 
         b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
         b.setX(500)
         b.setY(250)
 
-        b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
+        b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250)
 
         self.ui.caja.botones.append(b)
-
 
         poe = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
@@ -629,8 +590,6 @@ class Ui_MainWindow(QtGui.QDialog):
 
         self.ui.caja.botones.append(poe)
 
-       
-
         x0=1
         y0=0
         x1=2
@@ -638,10 +597,7 @@ class Ui_MainWindow(QtGui.QDialog):
         r = QtCore.QLineF(x0, y0, x1, y1)
         barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
         barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
-        self.ui.caja.rectas.append(barrera)	
-
-
-
+        self.ui.caja.rectas.append(barrera)
 
         poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
@@ -652,43 +608,37 @@ class Ui_MainWindow(QtGui.QDialog):
 
         self.ui.caja.botones.append(poz2)
 
-
         pobs2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
         pobs2.setX(500)
         pobs2.setY(500)
 
-        pobs2.id = elementoDominio.ContEnsayo.agregarPozo(500, 500) 
+        pobs2.id = elementoDominio.ContEnsayo.agregarPozo(500, 500)
 
-        self.ui.caja.botones.append(pobs2)        
-        
-
-
+        self.ui.caja.botones.append(pobs2)
 
         noexec=1
-        
+
         self.ventanaImpoObs(noexec, True)
-        self.vimp.archivo="ficheros/observaciones.txt"        
+        self.vimp.archivo="ficheros/observaciones.txt"
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="txt"
         self.vimp.accionaceptar()
         self.vimp.close()
 
         self.ventanaImpoObs(noexec, True)
-        self.vimp.archivo="ficheros/demoobs.ods"        
+        self.vimp.archivo="ficheros/demoobs.ods"
         self.vimp.nombre.setText('obs2')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
-        
-        
+
         self.ventanaImportarProyecto(noexec, True)
         self.importar.archivo="ficheros/demo1pozo.ods"
         self.importar.nombre.setText('ens1')
         self.importar.ext="ods"
         self.importar.accionaceptar()
         self.importar.close()
-
 
         self.ventanaImportarProyecto(noexec, True)
         self.importar.archivo="ficheros/demo2pozo.ods"
@@ -697,47 +647,46 @@ class Ui_MainWindow(QtGui.QDialog):
         self.importar.accionaceptar()
         self.importar.close()
 
-        
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
-        asoe.setupUi(frmasociar, poe.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, poe.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
-        asoe.asociar() 
-        
+        asoe.asociar()
 
-        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
-        asoe.asociar()       
+        asoe.asociar()
 
-        asoe.setupUi(frmasociar, poz2.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, poz2.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
-        asoe.asociar() 
-        
-        print 'se carga el demo'
+        asoe.asociar()
 
+        #print 'se carga el demo'
 
     def cargar_demoNumerico(self):
+
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 3000
         ContEnsayo.dominio.ancho = 3000
-        
+
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
+
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-        m=DiferenciaFinita(ContEnsayo.dominio, ContEnsayo.parametros, True)              
-        m.setearValores([850,1.3e-4])        
-        ContEnsayo.metodo=m        
-        
+        m=DiferenciaFinita(ContEnsayo.dominio, ContEnsayo.parametros, True)
+        m.setearValores([850,1.3e-4])
+        ContEnsayo.metodo=m
+
         #Adherimos la vista del dominio
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
@@ -745,9 +694,9 @@ class Ui_MainWindow(QtGui.QDialog):
         #b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
         #b.setX(1500)
         #b.setY(1500)
-        #b.id = elementoDominio.ContEnsayo.agregarPozo(1500, 1500) 
+        #b.id = elementoDominio.ContEnsayo.agregarPozo(1500, 1500)
         #self.ui.caja.botones.append(b)
-        b=self.agregarPozo(1500, 1500) 
+        b=self.agregarPozo(1500, 1500)
 
         #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
         #pob.setX(1600)
@@ -761,7 +710,7 @@ class Ui_MainWindow(QtGui.QDialog):
         #pinbi.setY(100)
         #pinbi.id = elementoDominio.ContEnsayo.agregarPozo(250, 100) 
         #self.ui.caja.botones.append(pinbi)
-##        pinbi=self.agregarPozo(250, 100)        
+##        pinbi=self.agregarPozo(250, 100)
 
         ##No hay barrera en dif finita
         #x0=250
@@ -771,90 +720,89 @@ class Ui_MainWindow(QtGui.QDialog):
         #r = QtCore.QLineF(x0, y0, x1, y1)
         #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
         #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
-        #self.ui.caja.rectas.append(barrera)	      
+        #self.ui.caja.rectas.append(barrera)
 
-        noexec=1   
+        noexec=1
 
         self.ventanaImpoObs(noexec, True)
         #self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"
-        self.vimp.archivo="ficheros/obsdiferenciaf.ods"        
+        self.vimp.archivo="ficheros/obsdiferenciaf.ods"
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
-            
+
         self.ventanaImportarProyecto(noexec, True)
-        self.importar.archivo="ficheros/bombeos.txt"        
+        self.importar.archivo="ficheros/bombeos.txt"
         self.importar.nombre.setText('ens1')
         self.importar.ext="txt"
         self.importar.accionaceptar()
         self.importar.close()
 
-
 ##        self.ventanaImportarProyecto(noexec, True)
 ##        self.importar.archivo="ficheros/demo1pozo.ods"
 ##        self.importar.nombre.setText('ens2')
-####        self.importar.ext="ods"
+###        self.importar.ext="ods"
 ##        self.importar.accionaceptar()
-####        self.importar.close()        
-       
+###        self.importar.close()
+
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
-        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
 
-##        asoe.setupUi(frmasociar, pinbi.id, ContEnsayo, True)        
+##        asoe.setupUi(frmasociar, pinbi.id, ContEnsayo, True)
 ##        asoe.oe=ContEnsayo.ensayos[0]
 ##        asoe.tipo="e"
-##        asoe.asociar()          
-        
-        print 'se carga el demo'
+##        asoe.asociar()
 
-        
+        #print 'se carga el demo'
 
     def cargar_demobarrera1000hantush(self):
+
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
-        
+
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
+
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
         m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros, True) 
-        #m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)                
+
+        #m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)
         m.setearValores([1000,1.e-4,676.7])
         #m.setearValores([700,1.1e-4])
 
         #print "c ",ContEnsayo.metodo.dominio.c
-        ContEnsayo.metodo=m        
-        
+        ContEnsayo.metodo=m
+
         #Adherimos la vista del dominio
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
-
         #b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
         #b.setX(500)
         #b.setY(250)
-        #b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
+        #b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250)
         #self.ui.caja.botones.append(b)
         b=self.agregarPozo(500, 250)
 
         #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
         #pob.setX(600)
         #pob.setY(250)
-        #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
+        #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250)
         #self.ui.caja.botones.append(pob)
-        pob=self.agregarPozo(600, 250) 
+        pob=self.agregarPozo(600, 250)
 
         x0=250
         y0=0
@@ -866,90 +814,104 @@ class Ui_MainWindow(QtGui.QDialog):
         #self.ui.caja.rectas.append(barrera)
         barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
 
-        noexec=1    
+        noexec=1
 
         self.ventanaImpoObs(noexec, True)
         #self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"
-        self.vimp.archivo="ficheros/obsHantush.ods"        
+        self.vimp.archivo="ficheros/obsHantush.ods"
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
-            
+
         self.ventanaImportarProyecto(noexec, True)
         #self.importar.archivo="ficheros/bombeos.txt"
         self.importar.archivo="ficheros/haintush.txt"
-        
+
         self.importar.nombre.setText('ens1')
         self.importar.ext="txt"
         self.importar.accionaceptar()
         self.importar.close()
-       
+
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
-        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
-        asoe.asociar()         
-        
-        print 'se carga el demo'
-        
+        asoe.asociar()
 
+        #print 'se carga el demo'
 
     def agregarPozo(self,x,y):
-        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
+
+        b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"), "pozo", self.ui.caja.scene())
         b.id = ContEnsayo.agregarPozo(np.int(x), np.int(y))
-        self.ui.caja.transformarCoordenada(QtCore.QPoint( np.int32(x), np.int32(y) )  )
+        self.ui.caja.transformarCoordenada(QtCore.QPoint(np.int32(x), np.int32(y)))
+
         if np.int32(x) == 0:
+
             b.setX(0 - 5)
+
         else:
+
             b.setX(self.ui.caja.a1 - 15)
+
         if np.int32(y) == 0:
+
             b.setY(self.ui.caja.alto - 10)
+
         else:
+
             b.setY(self.ui.caja.a2 - 10)
+
         self.ui.caja.botones.append(b)
         return b
 
     def agregarRecta(self,x1,y1,x2,y2,tipo):
+
         print "x no se q ",self.ui.caja.ejeEscena.x()
         print "y no se q ",self.ui.caja.ejeEscena.y()
+
         ident = ContEnsayo.agregarRecta(tipo, np.int32(x1), self.ui.caja.ejeEscena.y() - np.int32(y1),
-        np.int32(x2), self.ui.caja.ejeEscena.y() - np.int32(y2),
-        self.ui.caja.alto, self.ui.caja.ancho)
-        r = ContEnsayo.buscarRecta(ident)               
+            np.int32(x2), self.ui.caja.ejeEscena.y() - np.int32(y2),
+            self.ui.caja.alto, self.ui.caja.ancho)
+
+        r = ContEnsayo.buscarRecta(ident)
         barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", self.ui.caja.scene())
         barrera.id = ident
         self.ui.caja.rectas.append(barrera)
+
         #print "cordenadas reales como quedaron ",x1,y1,x2,y2
-        #print "cordenadas de la recta ",r.x1, r.y1, r.x2, r.y2        
-        r.setearCoef(x1, x2, y1, y2)        
+        #print "cordenadas de la recta ",r.x1, r.y1, r.x2, r.y2
+
+        r.setearCoef(x1, x2, y1, y2)
         return barrera
-        
 
     def cargar_demobarrera1000theis(self):
+
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
-        
+
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
+
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
         #m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros, True) 
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)                
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)
         #m.setearValores([1000,1.e-4,676.7])
         m.setearValores([700,1.1e-4])
 
         #print "c ",ContEnsayo.metodo.dominio.c
-        ContEnsayo.metodo=m        
-        
+        ContEnsayo.metodo=m
+
         #Adherimos la vista del dominio
         self.ui = UiForm()
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
@@ -964,7 +926,7 @@ class Ui_MainWindow(QtGui.QDialog):
         #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
         #pob.setX(600)
         #pob.setY(750)
-        #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250) 
+        #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250)
         #self.ui.caja.botones.append(pob)
         pob=self.agregarPozo(600, 250)
 
@@ -972,48 +934,48 @@ class Ui_MainWindow(QtGui.QDialog):
         y0=0
         x1=500
         y1=1000
+
         #r = QtCore.QLineF(x0, y0, x1, y1)
         #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
         #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
-        #self.ui.caja.rectas.append(barrera)	        
+        #self.ui.caja.rectas.append(barrera)
+
         barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
 
-        noexec=1     
+        noexec=1
 
         self.ventanaImpoObs(noexec, True)
         self.vimp.archivo="ficheros/obsTheiscnbarrera.ods"
-        #self.vimp.archivo="ficheros/obsHantush.ods"        
+        #self.vimp.archivo="ficheros/obsHantush.ods"
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
         self.vimp.close()
-            
+
         self.ventanaImportarProyecto(noexec, True)
         self.importar.archivo="ficheros/bombeos.txt"
-        #self.importar.archivo="ficheros/haintush.txt"        
+        #self.importar.archivo="ficheros/haintush.txt"
         self.importar.nombre.setText('ens1')
         self.importar.ext="txt"
         self.importar.accionaceptar()
         self.importar.close()
  
-       
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
-        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, b.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)        
+        asoe.setupUi(frmasociar, pob.id, ContEnsayo, True)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
-        asoe.asociar()        
-        
-        print 'se carga el demo'
+        asoe.asociar()
 
+        #print 'se carga el demo'
 
     def cargar_demobarrera(self):
-         
+
         global ContEnsayo
 
         ContEnsayo.dominio.alto = 10
@@ -1022,7 +984,7 @@ class Ui_MainWindow(QtGui.QDialog):
         ContEnsayo.dominio.b=0
         ContEnsayo.dominio.c=10
         ##Como prueba se elijio el metodo Theis de una, esto ya asocia el metodo al dominio
-        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)                
+        m=Theis(ContEnsayo.dominio, ContEnsayo.parametros)
         m.setearValores([1000,0.0001])
         ContEnsayo.metodo=m 
         #Adherimos la vista del dominio
@@ -1030,16 +992,14 @@ class Ui_MainWindow(QtGui.QDialog):
 
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
 
-
         b = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
         b.setX(5)
         b.setY(2.5)
 
-        b.id = elementoDominio.ContEnsayo.agregarPozo(5, 2.5) 
+        b.id = elementoDominio.ContEnsayo.agregarPozo(5, 2.5)
 
         self.ui.caja.botones.append(b)
-
 
         x0=1
         y0=0
@@ -1048,27 +1008,23 @@ class Ui_MainWindow(QtGui.QDialog):
         r = QtCore.QLineF(x0, y0, x1, y1)
         ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1)
 
-        
         poz2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
         poz2.setX(2.5)
         poz2.setY(1)
 
-        poz2.id = elementoDominio.ContEnsayo.agregarPozo(2.5, 1) 
+        poz2.id = elementoDominio.ContEnsayo.agregarPozo(2.5, 1)
 
         self.ui.caja.botones.append(poz2)
-
 
         poe = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
         poe.setX(7.5)
         poe.setY(2.5)
 
-        poe.id = elementoDominio.ContEnsayo.agregarPozo(7.5, 2.5) 
+        poe.id = elementoDominio.ContEnsayo.agregarPozo(7.5, 2.5)
 
         self.ui.caja.botones.append(poe)
-
-
 
         pobs2 = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
 
@@ -1079,33 +1035,29 @@ class Ui_MainWindow(QtGui.QDialog):
 
         self.ui.caja.botones.append(pobs2)
 
-        
-
-
         noexec=1
-        
+
         self.ventanaImpoObs(noexec)
 ##        self.vimp.archivo="ficheros/demoobs.ods"
-        self.vimp.archivo="ficheros/observaciones.txt"        
+        self.vimp.archivo="ficheros/observaciones.txt"
         self.vimp.nombre.setText('obs1')
         self.vimp.ext="txt"
         self.vimp.accionaceptar()
         self.vimp.close()
 
         self.ventanaImpoObs(noexec)
-        self.vimp.archivo="ficheros/demoobs.ods"        
+        self.vimp.archivo="ficheros/demoobs.ods"
         self.vimp.nombre.setText('obs2')
         self.vimp.ext="ods"
         self.vimp.accionaceptar()
-        self.vimp.close()        
-        
+        self.vimp.close()
+
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/demo1pozo.ods"
         self.importar.nombre.setText('ens1')
         self.importar.ext="ods"
         self.importar.accionaceptar()
         self.importar.close()
-
 
         self.ventanaImportarProyecto(noexec)
         self.importar.archivo="ficheros/demo2pozo.ods"
@@ -1114,37 +1066,32 @@ class Ui_MainWindow(QtGui.QDialog):
         self.importar.accionaceptar()
         self.importar.close()
 
-        
         frmasociar=QtGui.QDialog()
         asoe=asociarEnsayos.Ui_Dialog()
-        asoe.setupUi(frmasociar, poe.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, poe.id, ContEnsayo)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
         asoe.asociar()
 
-        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, pobs2.id, ContEnsayo)
         asoe.oe=ContEnsayo.observaciones[0]
         asoe.tipo="o"
-        asoe.asociar()        
+        asoe.asociar()
 
-        asoe.setupUi(frmasociar, b.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, b.id, ContEnsayo)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
-        asoe.asociar()       
+        asoe.asociar()
 
-        asoe.setupUi(frmasociar, poz2.id, ContEnsayo)        
+        asoe.setupUi(frmasociar, poz2.id, ContEnsayo)
         asoe.oe=ContEnsayo.ensayos[0]
         asoe.tipo="e"
-        asoe.asociar()  
-        
-        print 'se carga el demo'
+        asoe.asociar()
 
-
-    def generar_video(self):
-
-        print u'Próximamente se exportará un video con esta opción'
+        #print 'se carga el demo'
 
 if __name__ == "__main__":
+
     import sys
     app = QtGui.QApplication(sys.argv)
 
@@ -1165,10 +1112,9 @@ if __name__ == "__main__":
 
     #QtCore.QLibraryInfo.location(QtCore.QLibraryInfo.TranslationsPath)
 
-    
     app.installTranslator(qtTranslator)
 
-    MainWindow = QtGui.QMainWindow()   
+    MainWindow = QtGui.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.showMaximized()

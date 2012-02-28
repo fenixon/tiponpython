@@ -36,6 +36,18 @@ class barrera():
                                 self.y2 = y2
                                 self.calcularRecta(alto, ancho)
 
+                def setearCoef(self, x1, x2, y1, y2):
+                                ## calculo de los coeficientes de la recta
+                                ## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
+                                self.alfa=-y1+y2
+                                self.beta=x1-x2
+                                self.gamma=-x1*y2 + y1*x2
+
+                                print "valores x1 y1",x1,y1
+                                print "valores x2 y2",x2,y2
+                                
+
+                                print self.devolverCoef()
 
                 def setearSigno(self,s):
                                 self.signo=s
@@ -120,13 +132,6 @@ class barrera():
 					self.y1 = np.int(self.y5) 
 					self.x2 = np.int(self.x6)
 					self.y2 = np.int(self.y6)
-
-
-					## calculo de los coeficientes de la recta
-					## (-y1+y2)x + (x1-x2)y + (-x1y2 + y1x2)=0
-					self.alfa=-self.y1+self.y2
-					self.beta=self.x1-self.x2
-					self.gamma=-self.x1*self.y2 + self.y1*self.x2
 
 
 

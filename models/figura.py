@@ -198,30 +198,37 @@ class figura():
 
         ##Esta pregunta es para que no salten los warnings porque los vectores son 000
         divi=np.zeros((len(self.Y),len(self.X)), float)
+
         if not p.all(np.equal(u,divi)):
+
             if self.tipodis!=None and self.tipodis=="Logaritmica":
+
                 print 'Aún no disponible para este tipo de discretización'
-                    
+
             else:
+
                 if self.tipodis==None:
+
                     v = self.maty[t]*-1
-                elif self.tipodis=="Lineal":                    
+
+                elif self.tipodis=="Lineal":
+
                     #quiver(x,y,gxh(:,:,i),gyh(:,:,i));
                     v = self.maty[t]
+
                 q = ax.quiver(X, Y, u, v, color=['r'])
-           
 
     def salvar(self, filename = None, width = None, height = None, velocidad = None, directorio = None):#Esto se lo pasa el dialogo
 
         self.fig.clf()
 
         self.fig.delaxes(self.ax)
+        self.fig.delaxes(self.axt)
 
         self.axu = self.fig.add_subplot(2, 2, 1)
         self.axd = self.fig.add_subplot(2, 2, 2)
         self.axt = self.fig.add_subplot(2, 2, 3, projection = '3d')
         self.axc = self.fig.add_subplot(2, 2, 4)
-
 
         aux = len(self.matrix)
         for i in range(0, aux):
@@ -237,18 +244,37 @@ class figura():
 
             self.fig.savefig(tmpfilename, dpi=ppp)
 
-        command = ('mplayer/mencoder.exe',#Para la version de linux hay que cambiar esto y sacar el .exe
-            'mf://temp/_tmp_%d.png',
-            '-mf',
-            'type=png:w=' + str(width) + ':h=' + str(height) + ':fps=' + velocidad,
-            '-ovc',
-            'lavc',
-            '-lavcopts',
-            'vcodec=mpeg4',
-            '-oac',
-            'copy',
-            '-o',
-            directorio + '/' + filename + '.avi')
+        if os.platform == 'linux2':
+
+            command = ('mencoder',
+                'mf://temp/_tmp_%d.png',
+                '-mf',
+                'type=png:w=' + str(width) + ':h=' + str(height) + ':fps=' + velocidad,
+                '-ovc',
+                'lavc',
+                '-lavcopts',
+                'vcodec=mpeg4',
+                '-oac',
+                'copy',
+                '-o',
+                directorio + '/' + filename + '.avi')
+
+        #elif os.platform == 'darwin':
+
+        else:
+
+            command = ('mplayer/mencoder.exe',
+                'mf://temp/_tmp_%d.png',
+                '-mf',
+                'type=png:w=' + str(width) + ':h=' + str(height) + ':fps=' + velocidad,
+                '-ovc',
+                'lavc',
+                '-lavcopts',
+                'vcodec=mpeg4',
+                '-oac',
+                'copy',
+                '-o',
+                directorio + '/' + filename + '.avi')
 
         subprocess.check_call(command)
 

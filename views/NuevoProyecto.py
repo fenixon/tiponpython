@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'NuevoProyecto.ui'
-#
-# Created: Tue Jan 31 19:14:24 2012
-#      by: PyQt4 UI code generator 4.8.5
-#
-# WARNING! All changes made in this file will be lost!
-
 from PyQt4 import QtCore, QtGui
 import sys
 import condicionExterna
@@ -18,44 +11,58 @@ from DiferenciaFinita import DiferenciaFinita
 import CondicionesExternas
 import numpy as np
 
-
 try:
+
     _fromUtf8 = QtCore.QString.fromUtf8
+
 except AttributeError:
+
     _fromUtf8 = lambda s: s
 
 class cajaTexto(QtGui.QLineEdit):
+
         def __init__(self, padre):
+
             super(cajaTexto, self).__init__(padre)
             self.setFocusPolicy(QtCore.Qt.StrongFocus)
             self.setText('0')
 
         def focusOutEvent(self, evento):
+
             if str(self.text()) == '':
+
                 self.setText('0')
+
             evento.lostFocus()
             self.setStyleSheet("background-color: white")
             self.setCursor(QtCore.Qt.IBeamCursor)
 
         def focusInEvent(self, evento):
+
             if self.text()=='0' :
+
                 self.setText('')
+
             self.setStyleSheet("background-color:  rgb(40, 255, 40)")
             #evento.gotFocus()
             self.setCursor(QtCore.Qt.IBeamCursor)
 
-	def leaveEvent(self, evento):
-		self.setCursor(QtCore.Qt.IBeamCursor)
+        def leaveEvent(self, evento):
 
-	def mouseDoubleClickEvent(self, evento):
-		evento.ignore()
+            self.setCursor(QtCore.Qt.IBeamCursor)
 
-	def mouseMoveEvent(self, evento):
-		evento.ignore()
+        def mouseDoubleClickEvent(self, evento):
 
+            evento.ignore()
+
+        def mouseMoveEvent(self, evento):
+
+            evento.ignore()
 
 class Ui_frmNuevoProyecto(object):
+
     def setupUi(self, frmNuevoProyecto,controlo):
+
         global controlador
         controlador = controlo
 
@@ -64,6 +71,7 @@ class Ui_frmNuevoProyecto(object):
         frmNuevoProyecto.setObjectName(_fromUtf8("frmNuevoProyecto"))
         frmNuevoProyecto.resize(405, 496)
         frmNuevoProyecto.setWindowTitle(QtGui.QApplication.translate("frmNuevoProyecto", "Crear un nuevo proyecto", None, QtGui.QApplication.UnicodeUTF8))
+        self.esNuevo = True
         self.btnNuevo = QtGui.QPushButton(frmNuevoProyecto)
         self.btnNuevo.setGeometry(QtCore.QRect(230, 460, 99, 23))
         self.btnNuevo.setText(QtGui.QApplication.translate("frmNuevoProyecto", "Nuevo", None, QtGui.QApplication.UnicodeUTF8))
@@ -150,7 +158,6 @@ class Ui_frmNuevoProyecto(object):
         self.txtB.setValidator(self.validador)
         self.txtC.setValidator(self.validador)
 
-
         self.retranslateUi(frmNuevoProyecto)
         QtCore.QObject.connect(self.btnNuevo, QtCore.SIGNAL(_fromUtf8("clicked()")), self.guardarSalir)
         QtCore.QObject.connect(self.cmbTipo, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QString)")), self.cambioTipo)
@@ -160,28 +167,39 @@ class Ui_frmNuevoProyecto(object):
 
 
     def ventanaCondicionesExternas(self):
+
         frmCondicionesExternas = QtGui.QDialog()
         ui = CondicionesExternas.Ui_frmCondicionesExternas()
         ui.setupUi(frmCondicionesExternas,controlador)
         frmCondicionesExternas.exec_()
 
     def cambioMetodo(self,nombreMetodo):
+
         if nombreMetodo != '':
+
             if(controlador.metodo != None):
-                for n in range(0,len(controlador.metodo.listaParametros)):
-                    ejec='self.txtParam'+ str(n) +'.setVisible(False)'
-                    exec(ejec)
-                    ejec='del self.txtParam'+ str(n)
-                    exec(ejec)
-                    print 'chau caja'
-                    ejec='self.lblParam'+ str(n) +'.setVisible(False)'
-                    exec(ejec)
-                    ejec='del self.lblParam'+ str(n)
-                    exec(ejec)
+
+                if self.esNuevo == False:
+
+                    for n in range(0,len(controlador.metodo.listaParametros)):
+
+                        ejec='self.txtParam'+ str(n) +'.setVisible(False)'
+                        exec(ejec)
+                        ejec='del self.txtParam'+ str(n)
+                        exec(ejec)
+                        print 'chau caja'
+                        ejec='self.lblParam'+ str(n) +'.setVisible(False)'
+                        exec(ejec)
+                        ejec='del self.lblParam'+ str(n)
+                        exec(ejec)
+
+                self.esNuevo = False
                 controlador.metodo = None
+
             ejec = 'metodo= %s(controlador.dominio, controlador.parametros, True)' % (nombreMetodo)
             exec(ejec)
             controlador.metodo=metodo
+
             #seteando dimension de interfaz por defecto
             ventanaY=496
             groupboxY=21
@@ -190,9 +208,12 @@ class Ui_frmNuevoProyecto(object):
             self.gbParametrosDominio.setGeometry(QtCore.QRect(30, 430, 351, groupboxY))
             self.btnNuevo.setGeometry(QtCore.QRect(230, botonY , 99, 23))
             ventana.resize(405, ventanaY)
+
             #agregando nuevos elementos
             self.val = QtGui.QDoubleValidator(-100, 900, 5, self.gbParametrosDominio)
+
             for n in range(0,len(controlador.metodo.listaParametros)):
+
                 ejec='self.txtParam'+ str(n) +' = cajaTexto(self.gbParametrosDominio)'
                 exec(ejec)
                 ejec='self.txtParam'+ str(n) +'.setGeometry(QtCore.QRect(200, '+ str(elementoNuevoY) +', 113, 28))'
@@ -216,6 +237,7 @@ class Ui_frmNuevoProyecto(object):
                 exec(ejec)
                 ejec= 'self.lblParam'+ str(n) +'.setVisible(True)'
                 exec(ejec)
+
                 #alargando la interfaz
                 elementoNuevoY = elementoNuevoY + 40
                 groupboxY = groupboxY + 40
@@ -225,10 +247,8 @@ class Ui_frmNuevoProyecto(object):
                 self.gbParametrosDominio.setGeometry(QtCore.QRect(30, 430 , 351, groupboxY))
                 self.btnNuevo.setGeometry(QtCore.QRect(230, botonY , 99, 23))
 
-
-
-
     def guardarSalir(self):
+
         controlador.dominio.alto = np.int32(self.txtAlto.text())
         controlador.dominio.ancho = np.int32(self.txtAncho.text())
         controlador.dominio.a = np.int32(self.txtA.text())
@@ -236,7 +256,9 @@ class Ui_frmNuevoProyecto(object):
         controlador.dominio.c = np.int32(self.txtC.text())
 
         lista=[]
+
         for n in range(0,len(controlador.metodo.listaParametros)):
+
             ejec='lista.append(float(self.txtParam'+ str(n) +'.text()))'
             exec(ejec)
 
@@ -251,20 +273,27 @@ class Ui_frmNuevoProyecto(object):
         ventana.close()
 
     def cambioTipo(self, tipo):
+
         self.cmbMetodo.clear()
+
         if tipo == 'Numerico':
+
             metodos = ['DiferenciaFinita']
             self.btnCondicionesExternas.setEnabled(True)
+
         else:
+
             metodos = ['Theis', 'Hantush']
             self.btnCondicionesExternas.setEnabled(False)
+
         self.cmbMetodo.addItems(metodos)
 
     def retranslateUi(self, frmNuevoProyecto):
+
         pass
 
-
 if __name__ == "__main__":
+
     import sys
     app = QtGui.QApplication(sys.argv)
     frmNuevoProyecto = QtGui.QWidget()
@@ -272,4 +301,3 @@ if __name__ == "__main__":
     ui.setupUi(frmNuevoProyecto)
     frmNuevoProyecto.show()
     sys.exit(app.exec_())
-

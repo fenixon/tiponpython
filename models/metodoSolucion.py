@@ -43,6 +43,7 @@ class metodoSolucion(object):
 
     def setearValores(self, valores):
         i=0
+        self.dominio.valores=[]
         for i in range(len(valores)):
             #print "indice "+str(i)
             ##Se crea una nueva instancia de valoresparametros que va a tener un link bidireccional con parametros            
@@ -75,16 +76,13 @@ class metodoAnalitico(metodoSolucion):
 
     ## Este meotod tiene que llamar alvaro al momento de graficar y le devuelve la matriz
     def calcular(self,tiempos, ti, tf,dt, nix, niy, xx,yy, X, Y):
-        # Se indentifica donde esta el pozo de bombeo           
-        # Por ahora tomar el primero de bombeo que se detecte. Luego cambia cuando hayan mas pozos
-                
+               
         # Recorrer todo el dominio
         d=self.dominio
 
         ##Llamado a procesar la barrera.. para generar los pozos virtuales porque se duplican por precensia de la barrera
         if self.aceptaBarrera==True :
             d.procesarBarrera()
-
         
         #Se guardan los valores para usarlos en todos los metodos
         self.tiempos=tiempos
@@ -97,7 +95,6 @@ class metodoAnalitico(metodoSolucion):
         #####ver como llamar la matriz de los tiempos
         ## por ahora consideramos que va a ser lineal que arranca en el tiempo 0 al 10
 
-        ##el tiempo va desde 0 a 4, el 0 no se usa
         ##se toman los tamanios de la discretizacion espacial y temporal
         ##la matriz se tiene que generar primero en y y dps en x para darle bien los datos a las graficas
         self.matrizDescenso=np.zeros((len(tiempos),len(yy),len(xx)), float)  

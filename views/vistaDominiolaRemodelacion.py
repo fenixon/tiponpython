@@ -1,29 +1,9 @@
 # -*- coding: cp1252 -*-
-
 """
-	tiponpython Simulacion de ensayos de acuiferos
-	Copyright 2012 Sebastian Daloia, Jesus Guibert, Andres Pias
-	
-	This file is part of tiponpython.
-
-	tiponpython is free software: you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation, either version 3 of the License, or
-	any later version.
-
-	tiponpython is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You should have received a copy of the GNU General Public License
-	along with tiponpython.  If not, see http://www.gnu.org/licenses/gpl.txt.
-
-
-
 Esta es la vista que definira la GUI del dominio.
 Con sus clases, y codigo auxiliar.
 
+Creado por TIPONPYTHON Cooperative
 
 """
 
@@ -44,7 +24,13 @@ de caracter global.
 
 Sus atributos, a modo de banderas, van a ser aprovechados por las
 instancias de la clases boton y box, gbCoordenadas y menu.
- 
+
+Los valores por defecto de estos atributos sonfocusOutEvent
+
+elementoDominio = 0
+existe = False
+idElemento = 1000
+
 ---
 
 Descripcion de elementoDominio
@@ -62,7 +48,9 @@ elementoDominio = 1
 
 Es usado para insertar una barrera
 
-elementoDominio es cambiado en la funcion mouseMoveEvent de la clase vistaGrafica.
+elementoDominio es cambiado en la funcion mouseMoveEvent de la clase
+boton, mientras que es evaluado en la funcion dropEvent de la clase
+box.
 
 ---
 
@@ -136,22 +124,6 @@ de efectuar las acciones del menu desplegado.
 
 --------------
 
-pozoSeleccionado
-
-Determina si hay algun pozo seleccionado.
-Su valor por defecto es 0, lo cual indica que no hay pozo seleccionado.
-
-
-pozoCandidato 
-Su valor por defecto es None, en caso de contener una instancia
-será de un nuevo pozo que es candidato a ser agregado, esto es
-utilizado cuando se utiliza la vista previa al momento de agregar 
-pozo mediante coordenadas.
-
-hayPozoCandidato bool 
-Valor por defecto: False
-Indica si existe algun pozo candidato.
-
 
 """
 
@@ -175,7 +147,6 @@ class elementoDominio(object):
 
     #Pozo candidato a ser agregado
     pozoCandidato = ""
-
     hayPozoCandidato = False
 
     pozoSeleccionado = 0
@@ -185,12 +156,10 @@ class elementoDominio(object):
         super(elementoDominio, self).__init__()
 
 
-#Vista de las graficas, es la Vista del modelo MVC.
+#Vista de las graficas
 class vistaGrafica(QtGui.QGraphicsView):
 
-	#Se declara global el elementoDominio, con sus propiedades ya especificadas-
 	global elementoDominio
-
 	id = 0
 
 	def __init__(self, escena, parent, anchoView, altoView):
@@ -202,6 +171,7 @@ class vistaGrafica(QtGui.QGraphicsView):
 	def init(self):
 
 		self.setGeometry(0, 30, self.anchoView+30, self.altoView+20)
+
 		self.setSceneRect(0, 0, elementoDominio.ContEnsayo.dominio.ancho, elementoDominio.ContEnsayo.dominio.alto)
 
 
@@ -230,10 +200,6 @@ class vistaGrafica(QtGui.QGraphicsView):
 
 		self.movido = ""
 
-		#Se calculan y dibujan los ejes de acuerdo a la resolucion de la pantalla
-		# y a los valores de alto y ancho ingresados.
-		#Son agregados algunos items, que forman parte del Modelo, del modelo MVC
-
 		self.eje = QtGui.QGraphicsPixmapItem(QtGui.QPixmap(""), None, self.scene())
 		self.eje.setX(5)
 		self.eje.setY(elementoDominio.ContEnsayo.dominio.alto)
@@ -250,14 +216,6 @@ self.scene())
 self.scene())
 
 		self.ejeEscena = self.mapToScene(self.eje.x(), self.eje.y())
-		
-		#Estas cuatro variables siguiente van a contener la posicion relativa del item sobre la 		#escena, los valores de estas variables seran una mascara para los valores verdaderos de 
-		#posicionamiento de los items. Estas mascaras le permiten dar una apariencia de grafica
-		#con coordenadas que se leen desde el margen inferior izquierdo, en aumento las x hacia la
-		#derecha, y en aumento las y hacia arriba. Cuando en realidad Qt tiene un posicionamiento
-		#de coordenadas inverso.
-		#Por lo tanto las coordenadas para el graficado debieron de ser formuladas de cero.
-		#La escena vendria a ser la capa Controlador del modelo MVC, para esto consultar documentacion.
 
 		self.a1 = 0
 
@@ -293,8 +251,6 @@ self.scene())
 
 		self.transformarCoordenada(position)
 
-		#Si el icono es soltado fuera del dominio no se dibuja ningun item
-		#De lo contrario se crea una pozo o una barrera.
 
 		if self.a1 < 0 or self.a2 < 0 or self.a1 > self.ancho or self.a2 > self.alto:
 			return
@@ -317,13 +273,22 @@ self.scene())
 
 
 		else:
+
+			#barrera = vistaBarrera(position.x(), position.y(), (position.x() + 350), (position.y() + 350), "barrera", elementoDominio.Dominio.scene())
+
+			#self.transformarCoordenada(QtCore.QPoint(position.x(), position.y()))
 			self.transformarCoordenadaY(QtCore.QPoint((position.x() + 50), (position.y() + 50)))
+
 
 			ident = elementoDominio.ContEnsayo.agregarRecta(elementoDominio.gbCoord.cbTipo.currentText(), self.a1, self.a2, self.b1, self.b2, self.alto, self.ancho)
 
 			r = elementoDominio.ContEnsayo.buscarRecta(ident)
 
 			barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())	
+
+
+			#self.transformarCoordenada(QtCore.QPoint(barrera.line().x1(), barrera.line().y1()))
+			#self.transformarCoordenadaY(QtCore.QPoint(barrera.line().x2(), barrera.line().y2()))
 
 			barrera.id = ident
 
@@ -346,10 +311,6 @@ self.scene())
 		self.transformarCoordenada(punto)
 
 		elementoDominio.coordenadas.setText("x ->" + QtCore.QString.number(self.a1, 10) + " y -> " + QtCore.QString.number(self.a2, 10) )
-
-		#La variable moviendo es seteada a verdadero cuando se presiona algun item dentro del dominio.
-		#A continuacion una serie de evaluaciones logicas, para mostrar las correctas coordenadas del
-		#item a medida que se va moviendo por todo el dominio.
 
 		if self.moviendo:
 
@@ -449,6 +410,8 @@ self.scene())
 
 				valor1 = np.absolute(recta.dx() /2)
 				valor2 = np.absolute(recta.dy() /2)
+
+				#self.transformarCoordenada(QtCore.QPoint(punto.x(), punto.y()))
 
 				self.transformarCoordenadaY(QtCore.QPoint(punto.x(), punto.y()))
 
@@ -572,6 +535,7 @@ self.scene())
 							elementoDominio.ContEnsayo.actualizarRecta(self.movido.id, self.alto, punto.y(), "X", self.alto, self.ancho)
 
 					else:
+						print "SE DEBERIA DE ENTRAR SIEMPRE POR ACA"
 						self.movido.setLine(punto.x(), punto.y(), self.movido.line().x2(), self.movido.line().y2())
 
 						self.transformarX = True
@@ -675,9 +639,16 @@ self.scene())
 
 					self.setCursor(QtGui.QCursor(QtCore.Qt.SizeBDiagCursor))
 
+				#self.transformarCoordenada(QtCore.QPoint(self.movido.line().x1(), self.movido.line().y1()))
+
+				#self.transformarCoordenadaY(QtCore.QPoint(self.movido.line().x2(), self.movido.line().y2()))
+
+				#elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.movido.line().x1(), self.a2, self.movido.line().x2(), self.b2, self.alto, self.ancho)
+				#elementoDominio.ContEnsayo.actualizarRectaC(self.movido.id, self.a1, self.a2, self.b1, self.b2, self.alto, self.ancho)
+
 				elementoDominio.gbCoord.setRectaExistente(self.movido.id, 0)
 
-	#Diferentes acciones dependiendo si un elemento es clickado con el boton izquierdo o derecho.
+
 	def mousePressEvent(self, e):
 
 		item = None
@@ -739,7 +710,7 @@ self.scene())
 					elementoDominio.menuMouse.modelo.setData(modelo3, "MENU")
 
 
-                                        # Averiguar si un pozo tiene observaciones
+                                        ## Averiguar si un pozo tiene observaciones
                                         if len(elementoDominio.ContEnsayo.buscarPozo(item.id).observaciones)>0:
 
                                             modelo = elementoDominio.menuMouse.modelo.createIndex(1, 0)
@@ -825,10 +796,7 @@ self.scene())
 
 	def mouseReleaseEvent(self, e):
 
-		#Cuando una recta seleccionada es soltada,
-		#inmediatamente se actualizan sus coordenadas.
 		if self.rectaSeleccionada['id'] > 0:
-
 			r = elementoDominio.ContEnsayo.buscarRecta(self.rectaSeleccionada['id'])
 
 
@@ -931,6 +899,73 @@ self.scene())
 			self.b2 = - np.absolute(punto.y() - self.ejeEscena.y())
 
 
+	def modificarTamDominio(self):
+
+
+		if self.a2 < 0:
+
+			aumento = self.scene().height() + np.absolute( self.a2 ) + 20
+
+			self.ejeEscena.setY(self.ejeEscena.y() +  np.absolute( self.a2 ) )
+
+
+			self.ejeX.setLine(self.ejeX.line().x1(), self.ejeEscena.y(), self.ejeX.line().x2(), self.ejeEscena.y())
+
+			self.ejeY.setLine(self.ejeY.line().x1(), self.ejeEscena.y(),self.ejeY.line().x2(),self.ejeY.line().y2())
+
+			self.transformarCoordenada(QtCore.QPointF(np.int32(elementoDominio.gbCoord.lineEdit.text()), np.int32(elementoDominio.gbCoord.lineEdit_2.text())))
+
+
+			self.setSceneRect(QtCore.QRectF(0, 0, self.scene().width(), aumento) )
+			self.ancho = self.scene().width()
+			self.alto = self.scene().height() - (self.scene().height() - self.ejeEscena.y())
+			self.setSceneRect(QtCore.QRectF(0, 0, self.scene().width(), self.scene().height() - (self.scene().height() - self.ejeEscena.y()) ) )
+
+
+		if self.a1 > self.scene().width():
+
+			aumento = self.scene().width() + np.absolute( self.a1 - self.scene().width()) + 20
+
+
+			self.setSceneRect(QtCore.QRectF(0, 0, aumento, self.scene().height()))
+			self.ancho = aumento
+			self.alto = self.scene().height()
+
+
+	def dibujarRecta(self, bid):
+		for x in self.rectas:
+			if bid == x.id:
+				r = elementoDominio.ContEnsayo.buscarRecta(x.id)
+				print "x1 ", r.x1, " y1 ", r.y1, " x3 ", r.x3, " y3 ", r.y3
+				print "x4 ", r.x4, " y4 ", r.y4, " x2 ", r.x2, " y2 ", r.y2
+				x.setPen(QtCore.Qt.red)
+				if r.x1 < r.x2 :
+					x.setLine(QtCore.QLineF( r.x4, r.y4, r.x3, r.y3))
+				else:
+					x.setLine(QtCore.QLineF( r.x3, r.y3, r.x4, r.y4))
+
+		"""
+			else:
+				painter.setPen(QtCore.Qt.blue)
+				painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+				if x.x1 < x.x2 :
+					painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+					painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+				else:
+					painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+					painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
+		
+		else:
+			painter.setPen(QtCore.Qt.blue)
+			painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x2, x.y2))
+			if x.x1 < x.x2 :
+				painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x3, x.y3))
+				painter.drawLine(QtCore.QLineF( x.x4, x.y4, x.x2, x.y2))
+			else:
+				painter.drawLine(QtCore.QLineF( x.x1, x.y1, x.x4, x.y4))
+				painter.drawLine(QtCore.QLineF( x.x3, x.y3, x.x2, x.y2))
+		"""
+
 #Escena contenedora de los items graficos
 class escenaGrafica(QtGui.QGraphicsScene):
 	def __init__(self):
@@ -1008,6 +1043,12 @@ class vistaBarrera(QtGui.QGraphicsLineItem):
 
 	def __init__(self, x1, y1, x2, y2, tooltip, escena):
 
+		#elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(x1, y1))
+
+		#elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(x2, y2))
+
+		#super(vistaBarrera, self).__init__(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2), None, escena)
+
 		super(vistaBarrera, self).__init__(QtCore.QLineF(x1, y1, x2, y2), None, escena)
 
 		self.init(tooltip)
@@ -1032,7 +1073,6 @@ Por defecto el identificador de toda instancia es 1000
 1001 = Boton Recta
 
 """
-
 class boton(QtGui.QPushButton):
 
     global elementoDominio
@@ -1136,6 +1176,7 @@ class lista(QtGui.QStringListModel):
 	def __init__(self, cadenaCar):
 		super(lista, self).__init__(cadenaCar)
 
+	#def removeRows (fila, cantidad)
 
 """
 Menu utilizado en definir dominio
@@ -1558,7 +1599,18 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 
 		    r = elementoDominio.ContEnsayo.buscarRecta(ident)
 		    barrera = vistaBarrera(r.x1, r.y1, r.x2, r.y2, "barrera", elementoDominio.Dominio.scene())
+   		    #barrera = vistaBarrera(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
+
 		    barrera.id = ident
+
+		    """
+                    barrera = vistaBarrera(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+np.int32(self.lineEdit_4.text()), "barrera", elementoDominio.Dominio.scene())
+
+
+                    barrera.id = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),
+np.int32(self.lineEdit_4.text()))
+		    """
 
                     elementoDominio.Dominio.rectas.append(barrera)
 
@@ -1566,6 +1618,15 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 
 
 		else:
+
+		    """
+                    barrera = vistaBarrera(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2, "barrera", elementoDominio.Dominio.scene())
+
+		    """
+		    
+                    #elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.a1 - 15, elementoDominio.Dominio.a2 - 10, elementoDominio.Dominio.b1 - 15, elementoDominio.Dominio.b2 - 10)
+
+                    #barrera.id = elementoDominio.ContEnsayo.incluirCandidata(self.cbTipo.currentText())
 
                     ident = elementoDominio.ContEnsayo.agregarRecta(self.cbTipo.currentText(), elementoDominio.Dominio.rectaCandidata.line().x1(), elementoDominio.Dominio.rectaCandidata.line().y1(), elementoDominio.Dominio.rectaCandidata.line().x2(), elementoDominio.Dominio.rectaCandidata.line().y2(), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
@@ -1717,13 +1778,21 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
         else:
             if self.lineEdit.text() != "" and self.lineEdit_2.text() != "" and self.lineEdit_3.text()!= "" and self.lineEdit_4.text() != "":
 	        if not elementoDominio.ContEnsayo.hayRectaCandidata():
+		    #elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(),np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text()), np.int32(self.lineEdit_3.text()),np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
+
 
 		    ident = elementoDominio.ContEnsayo.agregarRectaCandidata(self.cbTipo.currentText(), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit.text()), elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_2.text()), elementoDominio.Dominio.ejeEscena.x() + np.int32(self.lineEdit_3.text()),
 elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
+
+		    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()) , np.int32(self.lineEdit_2.text())))
+
+		    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
+
 		    candidata = elementoDominio.ContEnsayo.obtenerCandidata()
 
 		    elementoDominio.Dominio.rectaCandidata = QtGui.QGraphicsLineItem(QtCore.QLineF(candidata.x1, candidata.y1, candidata.x2, candidata.y2), None, elementoDominio.Dominio.scene())
+
 
 		else:
 
@@ -1731,8 +1800,14 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elementoDominio.Dominio.alto, elementoDominio.Dominio.ancho)
 
 
+		    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(  np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
+
+		    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint( np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
+
 		    candidata = elementoDominio.ContEnsayo.obtenerCandidata()
 
+
+		    #elementoDominio.Dominio.rectaCandidata.setLine(QtCore.QLineF(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2))
 
 		    elementoDominio.Dominio.rectaCandidata.setLine(QtCore.QLineF(candidata.x1, candidata.y1, candidata.x2, candidata.y2))
 
@@ -1836,12 +1911,18 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 
             for recta in elementoDominio.Dominio.rectas:
                 if recta.id == self.idElemento:
+                    #elementoDominio.Dominio.transformarCoordenada(QtCore.QPoint(np.int32(self.lineEdit.text()), np.int32(self.lineEdit_2.text())))
+                    #elementoDominio.Dominio.transformarCoordenadaY(QtCore.QPoint(np.int32(self.lineEdit_3.text()), np.int32(self.lineEdit_4.text())))
+                    #recta.setLine(elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
+                    #elementoDominio.ContEnsayo.actualizarRectaCoordenada(recta.id, elementoDominio.Dominio.a1, elementoDominio.Dominio.a2, elementoDominio.Dominio.b1, elementoDominio.Dominio.b2)
                     
 		    r = elementoDominio.ContEnsayo.buscarRecta(recta.id)
 		    r.setearCoef(np.int32(self.lineEdit.text()),
                                  np.int32(self.lineEdit_3.text()),
                                  np.int32(self.lineEdit_2.text()),                                 
                                  np.int32(self.lineEdit_4.text()))
+
+   		    #recta.setLine(r.x1, elementoDominio.Dominio.a2, r.x2, elementoDominio.Dominio.b2)
 
 		    recta.setLine(r.x1, r.y1, r.x2, r.y2)
                     recta.setPen(QtCore.Qt.black)
@@ -1901,6 +1982,41 @@ elementoDominio.Dominio.ejeEscena.y() - np.int32(self.lineEdit_4.text()), elemen
 	    else:
 	        self.cbTipo.setCurrentIndex(0)
 
+	"""
+        else:
+
+            recta = elementoDominio.ContEnsayo.buscarRecta(irRE)
+	    if recta.x1 <= 0:
+                self.lineEdit.setText(QtCore.QString.number(0, 10))
+	    elif recta.x1 >= elementoDominio.Dominio.ancho:
+                self.lineEdit.setText(QtCore.QString.number(elementoDominio.Dominio.ancho, 10))
+	    else:
+                self.lineEdit.setText(QtCore.QString.number(recta.x1, 10))
+
+	    if recta.y1 <= 0:
+                self.lineEdit_2.setText(QtCore.QString.number(0, 10))
+	    elif recta.y1 >= elementoDominio.Dominio.alto:
+                self.lineEdit_2.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    else:
+                self.lineEdit_2.setText(QtCore.QString.number(recta.y1, 10))
+
+	    if recta.x2 <= 0:
+                self.lineEdit_3.setText(QtCore.QString.number(0, 10))
+	    elif recta.x2 >= elementoDominio.Dominio.ancho:
+                self.lineEdit_3.setText(QtCore.QString.number(elementoDominio.Dominio.ancho, 10))
+	    else:
+                self.lineEdit_3.setText(QtCore.QString.number(recta.x2, 10))
+	    if recta.y2 <= 0:
+                self.lineEdit_4.setText(QtCore.QString.number(0, 10))
+	    elif recta.y2 >= elementoDominio.Dominio.alto:
+                self.lineEdit_4.setText(QtCore.QString.number(elementoDominio.Dominio.alto, 10))
+	    else:
+                self.lineEdit_4.setText(QtCore.QString.number(recta.y2, 10))
+	    if recta.tipo == "Positivo":
+	        self.cbTipo.setCurrentIndex(1)
+	    else:
+	        self.cbTipo.setCurrentIndex(0)
+	"""
 
 
         if not self.btnActualizar.isVisible():
@@ -2022,12 +2138,17 @@ crear dominio
 
 class UiForm(object):
 
+        def cerrar(self):
+                #self.groupBoxDominio.setVisible(False)
+                #elementoDominio.gbCoord.setVisible(False)
+                #elementoDominio.coordenadas.setVisible(False)
+                #self.caja.setVisible(False)
+                self.caja.close()
+                self.frame.close()
+
 	def setupUi(self, Form, ContEnsayo, appalto, appancho):
 
 		elementoDominio.ContEnsayo = ContEnsayo
-
-		#Procedimiento para redimensionar la pantalla de acuerdo 
-		# a la resolucion del monitor y al largo y ancho ingresado para el dominio.
 
 		resolucionX=appalto
 		resolucionY=appancho

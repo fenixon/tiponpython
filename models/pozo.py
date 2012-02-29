@@ -72,7 +72,7 @@ class pozo(object):
                 bombeosn=[]                
                 bombeosp=p.ensayos[0].devolverBProc()
                 
-                if tipo == "positivo":
+                if tipo == "positivo" or tipo == "Positivo":
                     #si en positiva se restan todos los caudales
                     for b in bombeosp:
                           bombeosn.append(bombeo(b.tiempo, -b.caudal))

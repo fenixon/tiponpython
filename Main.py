@@ -812,7 +812,7 @@ class Ui_MainWindow(QtGui.QDialog):
         #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
         #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
         #self.ui.caja.rectas.append(barrera)
-        barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
+        #barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
 
         noexec=1
 
@@ -896,8 +896,8 @@ class Ui_MainWindow(QtGui.QDialog):
 
         global ContEnsayo
 
-        ContEnsayo.dominio.alto = 1000
-        ContEnsayo.dominio.ancho = 1000
+        ContEnsayo.dominio.alto = 3000
+        ContEnsayo.dominio.ancho = 3000
 
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
@@ -907,7 +907,7 @@ class Ui_MainWindow(QtGui.QDialog):
         #m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros, True) 
         m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)
         #m.setearValores([1000,1.e-4,676.7])
-        m.setearValores([700,1.1e-4])
+        m.setearValores([1000,1.e-4])
 
         #print "c ",ContEnsayo.metodo.dominio.c
         ContEnsayo.metodo=m
@@ -921,26 +921,26 @@ class Ui_MainWindow(QtGui.QDialog):
         #b.setY(750)
         #b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
         #self.ui.caja.botones.append(b)
-        b=self.agregarPozo(500, 250) 
+        b=self.agregarPozo(1500, 1500) 
 
         #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
         #pob.setX(600)
         #pob.setY(750)
         #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250)
         #self.ui.caja.botones.append(pob)
-        pob=self.agregarPozo(600, 250)
+        pob=self.agregarPozo(1600, 1500)
 
-        x0=250
-        y0=0
-        x1=500
-        y1=1000
+        x0=1200
+        y0=550
+        x1=1300
+        y1=950
 
         #r = QtCore.QLineF(x0, y0, x1, y1)
         #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
         #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
         #self.ui.caja.rectas.append(barrera)
 
-        barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
+        barrera=self.agregarRecta(x0, y0, x1, y1, "Positivo")
 
         noexec=1
 

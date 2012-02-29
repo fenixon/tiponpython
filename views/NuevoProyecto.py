@@ -88,7 +88,7 @@ class Ui_frmNuevoProyecto(object):
         self.txtAncho.setObjectName(_fromUtf8("txtAncho"))
         self.lblAlto = QtGui.QLabel(self.gbDimensionesDominio)
         self.lblAlto.setGeometry(QtCore.QRect(80, 40, 70, 18))
-        self.lblAlto.setText(QtGui.QApplication.translate("frmNuevoProyecto", "Alto", None, QtGui.QApplication.UnicodeUTF8))
+        self.lblAlto.setText(QtGui.QApplication.translate("frmNuevoProyecto", "Largo", None, QtGui.QApplication.UnicodeUTF8))
         self.lblAlto.setObjectName(_fromUtf8("lblAlto"))
         self.lblAncho = QtGui.QLabel(self.gbDimensionesDominio)
         self.lblAncho.setGeometry(QtCore.QRect(70, 80, 51, 18))

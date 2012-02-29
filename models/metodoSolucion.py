@@ -152,15 +152,15 @@ class metodoAnalitico(metodoSolucion):
             #comentar cuando el pozo de bombeo esta bien posicioando
             #x0=5
             #y0=5
-##            print 'x0: ' + str(x0)
-##            print 'y0: ' + str(y0)
+            print 'x0: ' + str(x0)
+            print 'y0: ' + str(y0)
 
             ##Obtener el ensayo de bombeo, los caudales y tiempos(al menos hay uno) ...que pasa cuando hay mas de un ensayo asociado?????        
             bombeos=pozoBombeo.ensayos[0].devolverBProc()
 
-            #for bom in bombeos:
-            #    print 'tiempos: '+str(bom.tiempo)
-            #    print 'caudal: '+str(bom.caudal)
+            for bom in bombeos:
+                print 'tiempos: '+str(bom.tiempo)
+                print 'caudal: '+str(bom.caudal)
                 
             cardt=0
             for t in tiempos:

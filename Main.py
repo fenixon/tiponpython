@@ -185,6 +185,8 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionGenerar_graficas3, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000hantush)
         QtCore.QObject.connect(self.actionGenerar_graficas4, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demoNumerico)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
+        QtCore.QObject.connect(self.actionAcerca_de, QtCore.SIGNAL(_fromUtf8("triggered()")), self.acercaDe)
+
 
         QtCore.QObject.connect(self.actionGrafOpt, QtCore.SIGNAL(_fromUtf8("triggered()")), self.GraficasOptimizacion)
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
@@ -1106,7 +1108,14 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.tipo="e"
         asoe.asociar()
 
-        #print 'se carga el demo'
+    def acercaDe(self):
+	dialogoAcerca = QtGui.QDialog(self)
+	dialogoAcerca.setWindowTitle("Acerca de...")
+	dialogoAcerca.setGeometry(QtCore.QRect(320, 127, 500, 335))
+	etiqueta = QtGui.QLabel(dialogoAcerca)	
+	etiqueta.setStyleSheet("color: black")
+	etiqueta.setText("tiponpython Desarrollado por: \n\n        *Mathias Chubrega \n\n        *Alvaro Correa \n\n        *Jesus Guibert \n\n        *Sebastian Daloia \n\n        *Andres Pias\n\ntiponpython es software libre: Tu puedes distribuirlo \ny/o modficarlo de acuerdo a los terminos de GNU\nGeneral Public License, publicada por la Free Software Foundation, \ntanto en su tercera version como en versiones anteriores.\ntiponpythos es distribuido con la esperanza de que sera de utilidad\npero sin ninguna garantia de ello. Sin siquiera la garantia implicita \nde mercantibilidad o de idoneidad para cualquier negocio.")
+	dialogoAcerca.show()
 
 if __name__ == "__main__":
 

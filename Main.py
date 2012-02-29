@@ -8,6 +8,7 @@ import importarCaudal
 import controlador
 import verensayos
 import NuevoProyecto
+import editarParametros
 import ingresarCaudal
 import importarObservaciones
 import ingresarObservaciones
@@ -82,6 +83,8 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionNuevo_Proyecto = QtGui.QAction(MainWindow)
         self.actionNuevo_Proyecto.setText(QtGui.QApplication.translate("MainWindow", "Nuevo Proyecto", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNuevo_Proyecto.setObjectName(_fromUtf8("actionNuevo_Proyecto"))
+
+        
         self.actionAcerca_de = QtGui.QAction(MainWindow)
         self.actionAcerca_de.setText(QtGui.QApplication.translate("MainWindow", "Acerca de..", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAcerca_de.setObjectName(_fromUtf8("actionAcerca_de"))
@@ -118,7 +121,11 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionGenerar_graficas3.setObjectName(_fromUtf8("actionGenerar_graficas3"))  
         self.actionGenerar_graficas4 = QtGui.QAction(MainWindow)
         self.actionGenerar_graficas4.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba (Diferencias Finitas)", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas4.setObjectName(_fromUtf8("actionGenerar_graficas4"))       
+        self.actionGenerar_graficas4.setObjectName(_fromUtf8("actionGenerar_graficas4"))
+
+        self.actionEditarParametros = QtGui.QAction(MainWindow)
+        self.actionEditarParametros.setText(QtGui.QApplication.translate("MainWindow", "Editar Parametros", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionEditarParametros.setObjectName(_fromUtf8("EditarParametros"))              
 
         self.actionGenerar_graficas = QtGui.QAction(MainWindow)
         self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Graficar niveles calculados", None, QtGui.QApplication.UnicodeUTF8))
@@ -145,16 +152,17 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuObservaciones.addAction(self.actionImpObs)
         self.menuObservaciones.addAction(self.actionVerObs)
 
+        self.menuDatos.addAction(self.actionEditarParametros)
         self.menuDatos.addAction(self.menuCaudal_de_bombeo.menuAction())
-        self.menuDatos.addAction(self.menuObservaciones.menuAction())
-
-        self.menuGraficar.addAction(self.actionGenerar_graficas)
+        self.menuDatos.addAction(self.menuObservaciones.menuAction())        
         self.menuDatos.addAction(self.actionGenerar_graficas2)
         self.menuDatos.addAction(self.actionGenerar_graficas3)
         self.menuDatos.addAction(self.actionGenerar_graficas4)
+
+        self.menuGraficar.addAction(self.actionGenerar_graficas)
         self.menuGraficar.addAction(self.actionOptimizacion)
         self.menuGraficar.addAction(self.actionGrafOpt)
-
+        
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
         self.menubar.addAction(self.menuGraficar.menuAction())
@@ -170,6 +178,8 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionVerObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerObs)
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
+
+        QtCore.QObject.connect(self.actionEditarParametros, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaEditarParametros)
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
         QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000theis)
         QtCore.QObject.connect(self.actionGenerar_graficas3, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000hantush)
@@ -213,6 +223,14 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL('clicked()'), self.abrirDominio)
 
         frmNuevoProyecto.exec_()
+
+    def ventanaEditarParametros(self):
+        frmEditarParametros = QtGui.QDialog()
+        ui = editarParametros.UifrmEditarParametros()
+        ui.setupUi(frmEditarParametros, ContEnsayo)
+        frmEditarParametros.exec_()
+        for v in ContEnsayo.dominio.valores:
+            print "valor. ",v.valor
 
     def abrirDominio(self):
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
@@ -874,8 +892,8 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def agregarRecta(self,x1,y1,x2,y2,tipo):
 
-        print "x no se q ",self.ui.caja.ejeEscena.x()
-        print "y no se q ",self.ui.caja.ejeEscena.y()
+        #print "x no se q ",self.ui.caja.ejeEscena.x()
+        #print "y no se q ",self.ui.caja.ejeEscena.y()
 
         ident = ContEnsayo.agregarRecta(tipo, np.int32(x1), self.ui.caja.ejeEscena.y() - np.int32(y1),
             np.int32(x2), self.ui.caja.ejeEscena.y() - np.int32(y2),

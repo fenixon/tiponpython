@@ -190,9 +190,9 @@ class dibujante(QMainWindow):
         self.timer.setInterval(1000 * self.vel[self.velActual])
         QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"), self.reproducirBucle)
 
-        if self.dia!=None:
-            self.dia.close()
-            self.dia = None
+        #if self.dia!=None:
+        self.dia.close()
+        self.dia = None
 
     def draw(self):
         self.canvas.draw()

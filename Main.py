@@ -35,12 +35,7 @@ except AttributeError:
 
 class Ui_MainWindow(QtGui.QDialog):
 
-    def setupUi(self, MainWindow):
-
-        ##Se instancia el controlador
-        global ContEnsayo
-
-        ContEnsayo=controlador.Proyecto()
+    def setupUi(self, MainWindow):      
 
         self.dibujante = None
         self.dibujaten2=None
@@ -83,6 +78,10 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionNuevo_Proyecto = QtGui.QAction(MainWindow)
         self.actionNuevo_Proyecto.setText(QtGui.QApplication.translate("MainWindow", "Nuevo Proyecto", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNuevo_Proyecto.setObjectName(_fromUtf8("actionNuevo_Proyecto"))
+
+        self.actionCerrar_Proyecto = QtGui.QAction(MainWindow)
+        self.actionCerrar_Proyecto.setText(QtGui.QApplication.translate("MainWindow", "Cerrar Proyecto", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCerrar_Proyecto.setObjectName(_fromUtf8("actionCerrar_Proyecto"))
 
         
         self.actionAcerca_de = QtGui.QAction(MainWindow)
@@ -141,6 +140,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionGrafOpt.setObjectName(_fromUtf8("actionGrafOpt"))
 
         self.menuInicio.addAction(self.actionNuevo_Proyecto)
+        self.menuInicio.addAction(self.actionCerrar_Proyecto)        
         self.menuInicio.addAction(self.actionSalir)
         self.menuAyuda.addAction(self.actionAcerca_de)
 
@@ -171,6 +171,9 @@ class Ui_MainWindow(QtGui.QDialog):
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionSalir, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QObject.connect(self.actionNuevo_Proyecto, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaNuevoProyecto)
+        
+        QtCore.QObject.connect(self.actionCerrar_Proyecto, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cerrarProyecto)
+        
         QtCore.QObject.connect(self.actionImportar, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaImportarProyecto)
         QtCore.QObject.connect(self.actionVerBombeo, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerBombeo)
         QtCore.QObject.connect(self.actionIngresar, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngresarBombeo)
@@ -214,17 +217,27 @@ class Ui_MainWindow(QtGui.QDialog):
         pass
 
     def ventanaNuevoProyecto(self):
+        ##Se instancia el controlador
+        global ContEnsayo
+        ContEnsayo=controlador.Proyecto()
+        
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
 
 	#Adherimos la vista del dominio
-
         self.ui = UiForm()
         ui.setupUi(frmNuevoProyecto, ContEnsayo)
 
         QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL('clicked()'), self.abrirDominio)
-
         frmNuevoProyecto.exec_()
+
+    def cerrarProyecto(self):
+        global ContEnsayo
+        self.ui.cerrar()
+        self.ui=None
+        ContEnsayo.metodo=None
+        ContEnsayo.dominio=None
+        ContEnsayo=None        
 
     def ventanaEditarParametros(self):
         frmEditarParametros = QtGui.QDialog()
@@ -382,6 +395,10 @@ class Ui_MainWindow(QtGui.QDialog):
                         QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
                         #print 'Dibujante invocado'
 
+                        if self.dia!=None:
+                            self.dia.close()
+                            self.dia = None
+
                     else:
 
                         #print 'No hay ensayos asociados al pozo'
@@ -458,6 +475,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def generar_graficas2(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 100
 
@@ -512,6 +530,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demo(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
         ContEnsayo.dominio.a=0
@@ -577,6 +596,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera1000(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
@@ -694,6 +714,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demoNumerico(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 3000
         ContEnsayo.dominio.ancho = 3000
@@ -788,6 +809,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera1000hantush(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
@@ -915,6 +937,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera1000theis(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 3000
         ContEnsayo.dominio.ancho = 3000
@@ -997,6 +1020,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 10
         ContEnsayo.dominio.ancho = 10
@@ -1109,13 +1133,13 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.asociar()
 
     def acercaDe(self):
-	dialogoAcerca = QtGui.QDialog(self)
-	dialogoAcerca.setWindowTitle("Acerca de...")
-	dialogoAcerca.setGeometry(QtCore.QRect(320, 127, 500, 335))
-	etiqueta = QtGui.QLabel(dialogoAcerca)	
-	etiqueta.setStyleSheet("color: black")
-	etiqueta.setText("tiponpython Desarrollado por: \n\n        *Mathias Chubrega \n\n        *Alvaro Correa \n\n        *Jesus Guibert \n\n        *Sebastian Daloia \n\n        *Andres Pias\n\ntiponpython es software libre: Tu puedes distribuirlo \ny/o modficarlo de acuerdo a los terminos de GNU\nGeneral Public License, publicada por la Free Software Foundation, \ntanto en su tercera version como en versiones anteriores.\ntiponpythos es distribuido con la esperanza de que sera de utilidad\npero sin ninguna garantia de ello. Sin siquiera la garantia implicita \nde mercantibilidad o de idoneidad para cualquier negocio.")
-	dialogoAcerca.show()
+        dialogoAcerca = QtGui.QDialog(self)
+        dialogoAcerca.setWindowTitle("Acerca de...")
+        dialogoAcerca.setGeometry(QtCore.QRect(320, 127, 500, 335))
+        etiqueta = QtGui.QLabel(dialogoAcerca)
+        etiqueta.setStyleSheet("color: black")
+        etiqueta.setText("tiponpython Desarrollado por: \n\n        *Mathias Chubrega \n\n        *Alvaro Correa \n\n        *Jesus Guibert \n\n        *Sebastian Daloia \n\n        *Andres Pias\n\ntiponpython es software libre: Tu puedes distribuirlo \ny/o modficarlo de acuerdo a los terminos de GNU\nGeneral Public License, publicada por la Free Software Foundation, \ntanto en su tercera version como en versiones anteriores.\ntiponpythos es distribuido con la esperanza de que sera de utilidad\npero sin ninguna garantia de ello. Sin siquiera la garantia implicita \nde mercantibilidad o de idoneidad para cualquier negocio.")
+        dialogoAcerca.show()
 
 if __name__ == "__main__":
 

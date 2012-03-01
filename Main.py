@@ -395,6 +395,10 @@ class Ui_MainWindow(QtGui.QDialog):
                         QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
                         #print 'Dibujante invocado'
 
+                        if self.dia!=None:
+                            self.dia.close()
+                            self.dia = None
+
                     else:
 
                         #print 'No hay ensayos asociados al pozo'

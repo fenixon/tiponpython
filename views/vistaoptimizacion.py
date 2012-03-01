@@ -287,7 +287,9 @@ class optimizacion(QtGui.QWidget):
 
         self.dia.close()
         reply = QtGui.QMessageBox.information(self,u"Proceso de optimización finalizado","Los valores optimos son:\n" + mensaje)
-                
+        if self.dia!=None:
+            self.dia.close()
+            self.dia = None                
         self.padre.close()        
 
 if __name__ == "__main__":

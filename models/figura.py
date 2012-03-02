@@ -369,7 +369,6 @@ class figura():
             fig2.savefig(tmpfilename, dpi=ppp)
 ##            self.fig.savefig(tmpfilename, dpi=ppp)
 
-
         if sys.platform == 'linux2':
 
             command = ('mencoder',
@@ -384,6 +383,7 @@ class figura():
                 'copy',
                 '-o',
                 directorio + '/' + filename + '.avi')
+                #mencoder mf://temp/_tmp_%d.png -mf type=png:w=800:h=600:fps=25 -ovc lavc -lavcopts vcodec=mpeg4 -oac copy -o /home/alvaro/tiponpython/videos/video.avi
 
         #elif os.platform == 'darwin':
 
@@ -412,5 +412,5 @@ class figura():
 ##        self.fig.delaxes(self.axu)
 ##        self.fig.delaxes(self.axd)
 ##        self.fig.delaxes(self.axt)
-##        self.fig.delaxes(self.axc)            
+##        self.fig.delaxes(self.axc)
 

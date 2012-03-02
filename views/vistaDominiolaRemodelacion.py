@@ -2138,6 +2138,14 @@ crear dominio
 
 class UiForm(object):
 
+        def cerrar(self):
+                #self.groupBoxDominio.setVisible(False)
+                #elementoDominio.gbCoord.setVisible(False)
+                #elementoDominio.coordenadas.setVisible(False)
+                #self.caja.setVisible(False)
+                self.caja.close()
+                self.frame.close()
+
 	def setupUi(self, Form, ContEnsayo, appalto, appancho):
 
 		elementoDominio.ContEnsayo = ContEnsayo

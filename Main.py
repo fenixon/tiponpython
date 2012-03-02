@@ -8,6 +8,7 @@ import importarCaudal
 import controlador
 import verensayos
 import NuevoProyecto
+import editarParametros
 import ingresarCaudal
 import importarObservaciones
 import ingresarObservaciones
@@ -34,12 +35,7 @@ except AttributeError:
 
 class Ui_MainWindow(QtGui.QDialog):
 
-    def setupUi(self, MainWindow):
-
-        ##Se instancia el controlador
-        global ContEnsayo
-
-        ContEnsayo=controlador.Proyecto()
+    def setupUi(self, MainWindow):      
 
         self.dibujante = None
         self.dibujaten2=None
@@ -82,6 +78,12 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionNuevo_Proyecto = QtGui.QAction(MainWindow)
         self.actionNuevo_Proyecto.setText(QtGui.QApplication.translate("MainWindow", "Nuevo Proyecto", None, QtGui.QApplication.UnicodeUTF8))
         self.actionNuevo_Proyecto.setObjectName(_fromUtf8("actionNuevo_Proyecto"))
+
+        self.actionCerrar_Proyecto = QtGui.QAction(MainWindow)
+        self.actionCerrar_Proyecto.setText(QtGui.QApplication.translate("MainWindow", "Cerrar Proyecto", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionCerrar_Proyecto.setObjectName(_fromUtf8("actionCerrar_Proyecto"))
+
+        
         self.actionAcerca_de = QtGui.QAction(MainWindow)
         self.actionAcerca_de.setText(QtGui.QApplication.translate("MainWindow", "Acerca de..", None, QtGui.QApplication.UnicodeUTF8))
         self.actionAcerca_de.setObjectName(_fromUtf8("actionAcerca_de"))
@@ -118,7 +120,11 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionGenerar_graficas3.setObjectName(_fromUtf8("actionGenerar_graficas3"))  
         self.actionGenerar_graficas4 = QtGui.QAction(MainWindow)
         self.actionGenerar_graficas4.setText(QtGui.QApplication.translate("MainWindow", u"Cargar datos de prueba (Diferencias Finitas)", None, QtGui.QApplication.UnicodeUTF8))
-        self.actionGenerar_graficas4.setObjectName(_fromUtf8("actionGenerar_graficas4"))       
+        self.actionGenerar_graficas4.setObjectName(_fromUtf8("actionGenerar_graficas4"))
+
+        self.actionEditarParametros = QtGui.QAction(MainWindow)
+        self.actionEditarParametros.setText(QtGui.QApplication.translate("MainWindow", "Editar Parametros", None, QtGui.QApplication.UnicodeUTF8))
+        self.actionEditarParametros.setObjectName(_fromUtf8("EditarParametros"))              
 
         self.actionGenerar_graficas = QtGui.QAction(MainWindow)
         self.actionGenerar_graficas.setText(QtGui.QApplication.translate("MainWindow", u"Graficar niveles calculados", None, QtGui.QApplication.UnicodeUTF8))
@@ -134,6 +140,7 @@ class Ui_MainWindow(QtGui.QDialog):
         self.actionGrafOpt.setObjectName(_fromUtf8("actionGrafOpt"))
 
         self.menuInicio.addAction(self.actionNuevo_Proyecto)
+        self.menuInicio.addAction(self.actionCerrar_Proyecto)        
         self.menuInicio.addAction(self.actionSalir)
         self.menuAyuda.addAction(self.actionAcerca_de)
 
@@ -145,16 +152,17 @@ class Ui_MainWindow(QtGui.QDialog):
         self.menuObservaciones.addAction(self.actionImpObs)
         self.menuObservaciones.addAction(self.actionVerObs)
 
+        self.menuDatos.addAction(self.actionEditarParametros)
         self.menuDatos.addAction(self.menuCaudal_de_bombeo.menuAction())
-        self.menuDatos.addAction(self.menuObservaciones.menuAction())
-
-        self.menuGraficar.addAction(self.actionGenerar_graficas)
+        self.menuDatos.addAction(self.menuObservaciones.menuAction())        
         self.menuDatos.addAction(self.actionGenerar_graficas2)
         self.menuDatos.addAction(self.actionGenerar_graficas3)
         self.menuDatos.addAction(self.actionGenerar_graficas4)
+
+        self.menuGraficar.addAction(self.actionGenerar_graficas)
         self.menuGraficar.addAction(self.actionOptimizacion)
         self.menuGraficar.addAction(self.actionGrafOpt)
-
+        
         self.menubar.addAction(self.menuInicio.menuAction())
         self.menubar.addAction(self.menuDatos.menuAction())
         self.menubar.addAction(self.menuGraficar.menuAction())
@@ -163,6 +171,9 @@ class Ui_MainWindow(QtGui.QDialog):
         self.retranslateUi(MainWindow)
         QtCore.QObject.connect(self.actionSalir, QtCore.SIGNAL(_fromUtf8("triggered()")), MainWindow.close)
         QtCore.QObject.connect(self.actionNuevo_Proyecto, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaNuevoProyecto)
+        
+        QtCore.QObject.connect(self.actionCerrar_Proyecto, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cerrarProyecto)
+        
         QtCore.QObject.connect(self.actionImportar, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaImportarProyecto)
         QtCore.QObject.connect(self.actionVerBombeo, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerBombeo)
         QtCore.QObject.connect(self.actionIngresar, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngresarBombeo)
@@ -170,11 +181,15 @@ class Ui_MainWindow(QtGui.QDialog):
         QtCore.QObject.connect(self.actionVerObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaVerObs)
         QtCore.QObject.connect(self.actionIngObs, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaIngObs)
 
+
+        QtCore.QObject.connect(self.actionEditarParametros, QtCore.SIGNAL(_fromUtf8("triggered()")), self.ventanaEditarParametros)
         QtCore.QObject.connect(self.actionGenerar_graficas, QtCore.SIGNAL(_fromUtf8("triggered()")), self.generar_graficas)
         QtCore.QObject.connect(self.actionGenerar_graficas2, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000theis)
         QtCore.QObject.connect(self.actionGenerar_graficas3, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demobarrera1000hantush)
         QtCore.QObject.connect(self.actionGenerar_graficas4, QtCore.SIGNAL(_fromUtf8("triggered()")), self.cargar_demoNumerico)
         QtCore.QObject.connect(self.actionOptimizacion, QtCore.SIGNAL(_fromUtf8("triggered()")), self.Optimizacion)
+        QtCore.QObject.connect(self.actionAcerca_de, QtCore.SIGNAL(_fromUtf8("triggered()")), self.acercaDe)
+
 
         QtCore.QObject.connect(self.actionGrafOpt, QtCore.SIGNAL(_fromUtf8("triggered()")), self.GraficasOptimizacion)
         QtCore.QObject.connect(self.menuCaudal_de_bombeo, QtCore.SIGNAL(_fromUtf8("hovered()")), self.despliegueCaudal)
@@ -202,17 +217,35 @@ class Ui_MainWindow(QtGui.QDialog):
         pass
 
     def ventanaNuevoProyecto(self):
+        ##Se instancia el controlador
+        global ContEnsayo
+        ContEnsayo=controlador.Proyecto()
+        
         frmNuevoProyecto = QtGui.QDialog()
         ui = NuevoProyecto.Ui_frmNuevoProyecto()
 
 	#Adherimos la vista del dominio
-
         self.ui = UiForm()
         ui.setupUi(frmNuevoProyecto, ContEnsayo)
 
         QtCore.QObject.connect(ui.btnNuevo, QtCore.SIGNAL('clicked()'), self.abrirDominio)
-
         frmNuevoProyecto.exec_()
+
+    def cerrarProyecto(self):
+        global ContEnsayo
+        self.ui.cerrar()
+        self.ui=None
+        ContEnsayo.metodo=None
+        ContEnsayo.dominio=None
+        ContEnsayo=None        
+
+    def ventanaEditarParametros(self):
+        frmEditarParametros = QtGui.QDialog()
+        ui = editarParametros.UifrmEditarParametros()
+        ui.setupUi(frmEditarParametros, ContEnsayo)
+        frmEditarParametros.exec_()
+        for v in ContEnsayo.dominio.valores:
+            print "valor. ",v.valor
 
     def abrirDominio(self):
         self.ui.setupUi(MainWindow, ContEnsayo, app.desktop().size().width(), app.desktop().size().height())
@@ -362,6 +395,10 @@ class Ui_MainWindow(QtGui.QDialog):
                         QtCore.QObject.connect(self.dibujante, QtCore.SIGNAL(_fromUtf8("destroyed()")), self.limpiarDibujante)
                         #print 'Dibujante invocado'
 
+                        if self.dia!=None:
+                            self.dia.close()
+                            self.dia = None
+
                     else:
 
                         #print 'No hay ensayos asociados al pozo'
@@ -438,6 +475,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def generar_graficas2(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 100
 
@@ -492,6 +530,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demo(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
         ContEnsayo.dominio.a=0
@@ -557,6 +596,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera1000(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
@@ -674,6 +714,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demoNumerico(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 3000
         ContEnsayo.dominio.ancho = 3000
@@ -768,6 +809,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera1000hantush(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 1000
         ContEnsayo.dominio.ancho = 1000
@@ -812,7 +854,7 @@ class Ui_MainWindow(QtGui.QDialog):
         #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
         #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
         #self.ui.caja.rectas.append(barrera)
-        barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
+        #barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
 
         noexec=1
 
@@ -874,8 +916,8 @@ class Ui_MainWindow(QtGui.QDialog):
 
     def agregarRecta(self,x1,y1,x2,y2,tipo):
 
-        print "x no se q ",self.ui.caja.ejeEscena.x()
-        print "y no se q ",self.ui.caja.ejeEscena.y()
+        #print "x no se q ",self.ui.caja.ejeEscena.x()
+        #print "y no se q ",self.ui.caja.ejeEscena.y()
 
         ident = ContEnsayo.agregarRecta(tipo, np.int32(x1), self.ui.caja.ejeEscena.y() - np.int32(y1),
             np.int32(x2), self.ui.caja.ejeEscena.y() - np.int32(y2),
@@ -895,9 +937,10 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera1000theis(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
-        ContEnsayo.dominio.alto = 1000
-        ContEnsayo.dominio.ancho = 1000
+        ContEnsayo.dominio.alto = 3000
+        ContEnsayo.dominio.ancho = 3000
 
         ContEnsayo.dominio.a=0
         ContEnsayo.dominio.b=0
@@ -907,7 +950,7 @@ class Ui_MainWindow(QtGui.QDialog):
         #m=Hantush(ContEnsayo.dominio, ContEnsayo.parametros, True) 
         m=Theis(ContEnsayo.dominio, ContEnsayo.parametros, True)
         #m.setearValores([1000,1.e-4,676.7])
-        m.setearValores([700,1.1e-4])
+        m.setearValores([1000,1.e-4])
 
         #print "c ",ContEnsayo.metodo.dominio.c
         ContEnsayo.metodo=m
@@ -921,26 +964,26 @@ class Ui_MainWindow(QtGui.QDialog):
         #b.setY(750)
         #b.id = elementoDominio.ContEnsayo.agregarPozo(500, 250) 
         #self.ui.caja.botones.append(b)
-        b=self.agregarPozo(500, 250) 
+        b=self.agregarPozo(1500, 1500) 
 
         #pob = vistaPozo(QtGui.QPixmap("content/images/blackDotIcon.png"),  "pozo", self.ui.caja.scene())
         #pob.setX(600)
         #pob.setY(750)
         #pob.id = elementoDominio.ContEnsayo.agregarPozo(600, 250)
         #self.ui.caja.botones.append(pob)
-        pob=self.agregarPozo(600, 250)
+        pob=self.agregarPozo(1600, 1500)
 
-        x0=250
-        y0=0
-        x1=500
-        y1=1000
+        x0=1200
+        y0=550
+        x1=1300
+        y1=950
 
         #r = QtCore.QLineF(x0, y0, x1, y1)
         #barrera = vistaBarrera(x0, y0, x1, y1, "barrera", self.ui.caja.scene())
         #barrera.id = ContEnsayo.agregarRecta("positivo", x0, y0, x1, y1, ContEnsayo.dominio.alto, ContEnsayo.dominio.ancho)
         #self.ui.caja.rectas.append(barrera)
 
-        barrera=self.agregarRecta(x0, y0, x1, y1, "positivo")
+        barrera=self.agregarRecta(x0, y0, x1, y1, "Positivo")
 
         noexec=1
 
@@ -977,6 +1020,7 @@ class Ui_MainWindow(QtGui.QDialog):
     def cargar_demobarrera(self):
 
         global ContEnsayo
+        ContEnsayo=controlador.Proyecto()  
 
         ContEnsayo.dominio.alto = 10
         ContEnsayo.dominio.ancho = 10
@@ -1088,7 +1132,14 @@ class Ui_MainWindow(QtGui.QDialog):
         asoe.tipo="e"
         asoe.asociar()
 
-        #print 'se carga el demo'
+    def acercaDe(self):
+        dialogoAcerca = QtGui.QDialog(self)
+        dialogoAcerca.setWindowTitle("Acerca de...")
+        dialogoAcerca.setGeometry(QtCore.QRect(320, 127, 500, 335))
+        etiqueta = QtGui.QLabel(dialogoAcerca)
+        etiqueta.setStyleSheet("color: black")
+        etiqueta.setText("tiponpython Desarrollado por: \n\n        *Mathias Chubrega \n\n        *Alvaro Correa \n\n        *Jesus Guibert \n\n        *Sebastian Daloia \n\n        *Andres Pias\n\ntiponpython es software libre: Tu puedes distribuirlo \ny/o modficarlo de acuerdo a los terminos de GNU\nGeneral Public License, publicada por la Free Software Foundation, \ntanto en su tercera version como en versiones anteriores.\ntiponpythos es distribuido con la esperanza de que sera de utilidad\npero sin ninguna garantia de ello. Sin siquiera la garantia implicita \nde mercantibilidad o de idoneidad para cualquier negocio.")
+        dialogoAcerca.show()
 
 if __name__ == "__main__":
 

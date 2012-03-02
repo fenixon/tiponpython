@@ -153,7 +153,7 @@ class DiferenciaFinita(metodoSolucion.metodoNumerico):
         for i in range(m):
             h[n*i:n+n*i]=h0[0:n,i]
 
-        tetha=0.5
+        tetha=0.66
         E=A*tetha-S/(At)
 
         #Para los elementos conocidos

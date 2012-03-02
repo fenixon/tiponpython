@@ -186,7 +186,7 @@ class Ui_Dialog(QtGui.QDialog):
 
     def aceptar(self):
         if self.demo!=True :
-            reply = QtGui.QMessageBox.question(self,
+            reply = QtGui.QMessageBox.information(self,
                             "Información",
                             "Los datos han sido almacenados")
         self.guardar.close()
@@ -195,7 +195,7 @@ class Ui_Dialog(QtGui.QDialog):
         ContEnsayo.restaurarObservacionesEnsayos()
         self.p.restaurarPozo(self.pcopia)
         if self.demo!=True :
-            reply = QtGui.QMessageBox.question(self,
+            reply = QtGui.QMessageBox.information(self,
                             "Información",
                             "Todas las acciones han sido canceladas")         
         self.guardar.close()

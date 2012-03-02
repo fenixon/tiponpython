@@ -1,4 +1,23 @@
 # -*- coding: utf-8 -*-
+"""
+	tiponpython Simulacion de ensayos de acuiferos
+	Copyright 2012 Andres Pias, Mathias Chubrega, Alvaro Correa, Sebastian Daloia, Jesus Guibert
+	
+	This file is part of tiponpython.
+
+	tiponpython is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	any later version.
+
+	tiponpython is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You should have received a copy of the GNU General Public License
+	along with tiponpython.  If not, see http://www.gnu.org/licenses/gpl.txt.
+"""
 
 from PyQt4 import QtCore, QtGui
 import sys
@@ -1138,7 +1157,7 @@ class Ui_MainWindow(QtGui.QDialog):
         dialogoAcerca.setGeometry(QtCore.QRect(320, 127, 500, 335))
         etiqueta = QtGui.QLabel(dialogoAcerca)
         etiqueta.setStyleSheet("color: black")
-        etiqueta.setText("tiponpython Desarrollado por: \n\n        *Mathias Chubrega \n\n        *Alvaro Correa \n\n        *Jesus Guibert \n\n        *Sebastian Daloia \n\n        *Andres Pias\n\ntiponpython es software libre: Tu puedes distribuirlo \ny/o modficarlo de acuerdo a los terminos de GNU\nGeneral Public License, publicada por la Free Software Foundation, \ntanto en su tercera version como en versiones anteriores.\ntiponpythos es distribuido con la esperanza de que sera de utilidad\npero sin ninguna garantia de ello. Sin siquiera la garantia implicita \nde mercantibilidad o de idoneidad para cualquier negocio.")
+        etiqueta.setText("tiponpython Desarrollado por: \n\n        *Mathias Chubrega \n\n        *Alvaro Correa \n\n        *Jesus Guibert \n\n        *Sebastian Daloia \n\n        *Andres Pias\n\ntiponpython 1.0 es software libre: Tu puedes distribuirlo \ny/o modficarlo de acuerdo a los terminos de GNU\nGeneral Public License, publicada por la Free Software Foundation, \ntanto en su tercera version como en versiones anteriores.\ntiponpythos es distribuido con la esperanza de que sera de utilidad\npero sin ninguna garantia de ello. Sin siquiera la garantia implicita \nde mercantibilidad o de idoneidad para cualquier negocio.")
         dialogoAcerca.show()
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 	tiponpython Simulacion de ensayos de acuiferos
 	Copyright 2012 Andres Pias, Mathias Chubrega, Alvaro Correa, Sebastian Daloia, Jesus Guibert
@@ -17,7 +18,6 @@
 	You should have received a copy of the GNU General Public License
 	along with tiponpython.  If not, see http://www.gnu.org/licenses/gpl.txt.
 """
-# -*- coding: utf-8 -*-
 #-----------------------------------------------------------------------------------------------------------------------------------------------
 #Acá se van a calcular las gráficas
 #-----------------------------------------------------------------------------------------------------------------------------------------------

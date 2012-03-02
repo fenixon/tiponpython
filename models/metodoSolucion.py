@@ -21,10 +21,6 @@
 import numpy as np
 from valoresParametros import valoresParametros
 from parametros import parametros
-##from matplotlib.figure import Figure
-####from mpl_toolkits.mplot3d.axes3d import Axes3D
-##import matplotlib.mlab as mlab
-##from matplotlib import cm
 
 
 class metodoSolucion(object):

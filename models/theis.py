@@ -24,7 +24,7 @@ sys.path.append("models")
 import numpy
 
 import metodoSolucion
-##from scipy.interpolate import interp2d
+
 from numpy import hypot, mgrid, linspace
 
 import numpy as np

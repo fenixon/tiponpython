@@ -361,7 +361,8 @@ class Proyecto(object):
             tiempos=np.zeros((nit),float)
             tiempos[0]=ti
             tiemposobs=np.zeros((nit),float)
-            dtobs=round((tf-ti)/(nit-1),2)
+##            dtobs=round((tf-ti)/(nit-1),2)
+            dtobs=(tf-ti)/(nit-1)
             tiemposobs[0]=dtobs            
             for i in range(1,nit):
                 tiempos[i]=tiempos[i-1]+dt
